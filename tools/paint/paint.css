@@ -1,0 +1,110 @@
+/* ペイントの画面。描く場所と、その下の道具入れ */
+.content {
+  align-items: stretch;
+  padding: 8px 10px calc(env(safe-area-inset-bottom, 0px) + 10px);
+  min-height: 0;
+}
+.app {
+  flex: 1;
+  min-height: 0;
+  gap: 8px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--fn-bg);
+  overflow: hidden;
+}
+#cv {
+  display: block;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+  touch-action: none;
+  cursor: crosshair;
+}
+.bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pill {
+  padding: 9px 12px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 14px;
+}
+.pill.icon {
+  padding: 9px 10px;
+  line-height: 0;
+}
+.pill.icon svg {
+  width: 20px;
+  height: 20px;
+}
+.pill:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.swatch {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 2px solid var(--panel);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--sub);
+  cursor: pointer;
+}
+.swatch[aria-pressed='true'] {
+  box-shadow: 0 0 0 3px var(--func);
+}
+#color {
+  width: 36px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+}
+.size,
+.size-val {
+  font-size: 13px;
+  color: var(--sub);
+}
+.size-val {
+  min-width: 3.2em;
+}
+#size {
+  flex: 1;
+  max-width: 320px;
+  accent-color: var(--func);
+}
+.status {
+  margin: 0;
+  font-size: 12px;
+}
+.status:empty {
+  display: none;
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  .app {
+    flex-direction: row;
+    max-width: none;
+  }
+  .bar {
+    width: 250px;
+    flex: none;
+    overflow-y: auto;
+  }
+}

@@ -37,6 +37,7 @@
   {"cat": "メディア", "slug": "piano", "title": "ピアノ", "en": "Piano", "desc": "音色・録音・練習のピアノ"},
   {"cat": "情報・言語・テキスト", "slug": "ocr", "title": "文字認識(OCR)", "en": "OCR", "desc": "画像の文字をテキストに", "tags": ["要 外部通信"]},
   {"cat": "情報・言語・テキスト", "slug": "text-to-speech", "title": "音声読み上げ", "en": "Text to Speech", "desc": "文章を声で読み上げ"},
+  {"cat": "デザイン", "slug": "paint", "title": "ペイント", "en": "Paint", "desc": "指やペンで描く・塗りつぶし・写真に書き込み・PNG保存"},
   {"cat": "デザイン", "slug": "color-picker", "title": "カラーピッカー", "en": "Color Picker", "desc": "色を選ぶ・カメラで判定・色名を調べる", "tags": ["要 外部通信", "要 カメラ"]},
   {"cat": "診断・開発", "slug": "speed-test", "title": "回線速度テスト", "en": "Speed Test", "desc": "回線の速度を測る", "tags": ["要 外部通信"]},
   {"cat": "メディア", "slug": "dj-turntable", "title": "DJターンテーブル", "en": "DJ Turntable", "desc": "レコード盤で鳴らす音楽プレーヤー。指でスクラッチ、ピッチ調整もできる"}
