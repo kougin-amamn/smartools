@@ -384,18 +384,18 @@
     return [
       ['OS', os],
       ['ブラウザ', br],
-      ['画面', screen.width + '×' + screen.height + '(倍率 ' + (window.devicePixelRatio || 1) + ')'],
-      ['表示領域', innerWidth + '×' + innerHeight + (innerWidth > innerHeight ? '(横向き)' : '(縦向き)')],
+      ['画面の幅', screen.width + 'px'],
+      ['画面の高さ', screen.height + 'px'],
+      ['画面の倍率', String(window.devicePixelRatio || 1)],
+      ['表示領域の幅', innerWidth + 'px'],
+      ['表示領域の高さ', innerHeight + 'px'],
+      ['向き', innerWidth > innerHeight ? '横向き' : '縦向き'],
       ['https', yesNo(window.isSecureContext)],
       ['通信', (navigator.onLine ? 'オンライン' : 'オフライン') + (net ? '(' + net + ')' : '')],
       ['言語', navigator.language || '不明'],
       ['タイムゾーン', tz || '不明'],
       ['振動', yesNo('vibrate' in navigator)],
       ['保存領域', canStore() ? '使える' : '使えない'],
-      [
-        'テーマ',
-        N[root.getAttribute('data-theme')] + ' / カラー ' + (color && color.name ? color.name : '標準'),
-      ],
     ];
   }
   function fillInfo() {

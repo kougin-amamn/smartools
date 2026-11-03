@@ -44,7 +44,14 @@
     desc.className = 'desc';
     desc.textContent = t.desc || '';
     body.className = 'body';
-    body.append(title, desc);
+    body.append(title);
+    if (t.en) {
+      var en = document.createElement('p');
+      en.className = 'en';
+      en.textContent = t.en;
+      body.append(en);
+    }
+    body.append(desc);
     if (t.tags && t.tags.length) {
       var tags = document.createElement('div');
       tags.className = 'tags';

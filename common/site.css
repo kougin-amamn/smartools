@@ -138,3 +138,17 @@
   margin: 0;
   overflow-wrap: anywhere;
 }
+
+.site-bar h1 {
+  min-width: 0;
+  line-height: 1.2;
+}
+.site-bar h1 .en {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 400;
+  opacity: 0.8;
+}

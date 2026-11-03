@@ -293,7 +293,7 @@
           'launcher-return',
           JSON.stringify({
             href: location.href.split('#')[0],
-            title: h1 ? h1.textContent.trim() : document.title,
+            title: h1 ? h1.firstChild.textContent.trim() : document.title,
           })
         );
       }

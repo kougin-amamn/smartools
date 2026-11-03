@@ -3,5 +3,4 @@
   <g transform="translate(9.6 9.6) scale(1.867)">
     <rect x="2" y="4.5" width="20" height="14" rx="2.5" fill="#2f3550"/><circle cx="12" cy="11.5" r="4.3" fill="#ff6b6b"/><path d="M10.6 9.2l3.8 2.3-3.8 2.3z" fill="#ffffff"/><rect x="5" y="20" width="14" height="1.6" rx=".8" fill="#e9ecf5"/><rect x="5" y="20" width="6" height="1.6" rx=".8" fill="#ff6b6b"/>
   </g>
-  <circle cx="50.7" cy="50.7" r="8.67" fill="#5cc4b6" stroke="#4a4e7a" stroke-width="2.67"/>
 </svg>
