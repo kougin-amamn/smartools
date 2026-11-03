@@ -357,6 +357,113 @@
     });
   }
 
+  /* 環境情報
+     ヘッダの「i」ボタンで、この端末・ブラウザの情報を表示する(端末の外には送らない)。開くたびに最新の値を読み直す */
+  var ibtn = null,
+    imenu = null;
+  function yesNo(v) {
+    return v ? 'あり' : 'なし';
+  }
+  function canStore() {
+    try {
+      localStorage.setItem('site-probe', '1');
+      localStorage.removeItem('site-probe');
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  function envRows() {
+    var tz = '';
+    try {
+      tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch (e) {
+      tz = '不明';
+    }
+    var net = navigator.connection && navigator.connection.effectiveType;
+    return [
+      ['OS', os],
+      ['ブラウザ', br],
+      ['画面', screen.width + '×' + screen.height + '(倍率 ' + (window.devicePixelRatio || 1) + ')'],
+      ['表示領域', innerWidth + '×' + innerHeight + (innerWidth > innerHeight ? '(横向き)' : '(縦向き)')],
+      ['https', yesNo(window.isSecureContext)],
+      ['通信', (navigator.onLine ? 'オンライン' : 'オフライン') + (net ? '(' + net + ')' : '')],
+      ['言語', navigator.language || '不明'],
+      ['タイムゾーン', tz || '不明'],
+      ['振動', yesNo('vibrate' in navigator)],
+      ['保存領域', canStore() ? '使える' : '使えない'],
+      [
+        'テーマ',
+        N[root.getAttribute('data-theme')] + ' / カラー ' + (color && color.name ? color.name : '標準'),
+      ],
+    ];
+  }
+  function fillInfo() {
+    var dl = imenu.querySelector('.info-list');
+    dl.textContent = '';
+    envRows().forEach(function (r) {
+      var dt = document.createElement('dt'),
+        dd = document.createElement('dd');
+      dt.textContent = r[0];
+      dd.textContent = r[1];
+      dl.append(dt, dd);
+    });
+  }
+  function closeInfo(why) {
+    if (!imenu || imenu.hidden) return;
+    imenu.hidden = true;
+    ibtn.setAttribute('aria-expanded', 'false');
+    log('環境情報を閉じました' + (why ? '(' + why + ')' : ''));
+  }
+  function openInfo() {
+    fillInfo();
+    imenu.style.top = bar.getBoundingClientRect().bottom + 6 + 'px';
+    imenu.hidden = false;
+    ibtn.setAttribute('aria-expanded', 'true');
+    log('環境情報を開きました(' + os + ' ' + br + ' / ' + innerWidth + '×' + innerHeight + ')');
+  }
+  /* カラーボタンの前に足す(ヘッダのあるページだけ)。操作ログは tool-kit.js の自動ログと重ならないよう data-log="off" にしてここで書く */
+  if (bar) {
+    ibtn = document.createElement('button');
+    ibtn.className = 'dbg-btn';
+    ibtn.id = 'infoBtn';
+    ibtn.type = 'button';
+    ibtn.dataset.log = 'off';
+    ibtn.title = '環境情報';
+    ibtn.setAttribute('aria-label', '環境情報');
+    ibtn.setAttribute('aria-haspopup', 'dialog');
+    ibtn.setAttribute('aria-expanded', 'false');
+    ibtn.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.6" r=".7"/></svg>';
+    bar.insertBefore(ibtn, cbtn || tbtn);
+
+    imenu = document.createElement('div');
+    imenu.className = 'color-menu info-menu';
+    imenu.id = 'infoMenu';
+    imenu.hidden = true;
+    imenu.dataset.log = 'off';
+    imenu.setAttribute('role', 'dialog');
+    imenu.setAttribute('aria-label', '環境情報');
+    imenu.innerHTML = '<p class="color-menu-title">環境情報</p><dl class="info-list"></dl>';
+    document.body.appendChild(imenu);
+    ibtn.setAttribute('aria-controls', imenu.id);
+
+    ibtn.onclick = function () {
+      log('環境情報ボタンを押下しました');
+      if (imenu.hidden) openInfo();
+      else closeInfo();
+    };
+    document.addEventListener('click', function (e) {
+      if (!imenu.hidden && !imenu.contains(e.target) && !ibtn.contains(e.target)) closeInfo('外側を押下');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !imenu.hidden) {
+        closeInfo('Escapeキー');
+        ibtn.focus();
+      }
+    });
+  }
+
   /* デバッグ画面(eruda) */
   var dbtn = document.getElementById('dbgBtn'),
     loaded = false,

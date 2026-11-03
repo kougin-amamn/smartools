@@ -124,3 +124,17 @@
   margin: 0;
   color: var(--sub);
 }
+.info-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 12px;
+  margin: 0;
+}
+.info-list dt {
+  color: var(--sub);
+  white-space: nowrap;
+}
+.info-list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
