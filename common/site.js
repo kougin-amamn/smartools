@@ -382,13 +382,11 @@
     }
     var net = navigator.connection && navigator.connection.effectiveType;
     return [
-      ['OS', os],
+      ['OS', os + (osVer ? ' ' + osVer : '')],
       ['ブラウザ', br],
-      ['画面の幅', screen.width + 'px'],
-      ['画面の高さ', screen.height + 'px'],
+      ['画面(縦×横)', screen.height + '×' + screen.width + 'px'],
       ['画面の倍率', String(window.devicePixelRatio || 1)],
-      ['表示領域の幅', innerWidth + 'px'],
-      ['表示領域の高さ', innerHeight + 'px'],
+      ['表示領域(縦×横)', innerHeight + '×' + innerWidth + 'px'],
       ['向き', innerWidth > innerHeight ? '横向き' : '縦向き'],
       ['https', yesNo(window.isSecureContext)],
       ['通信', (navigator.onLine ? 'オンライン' : 'オフライン') + (net ? '(' + net + ')' : '')],
@@ -420,7 +418,7 @@
     imenu.style.top = bar.getBoundingClientRect().bottom + 6 + 'px';
     imenu.hidden = false;
     ibtn.setAttribute('aria-expanded', 'true');
-    log('環境情報を開きました(' + os + ' ' + br + ' / ' + innerWidth + '×' + innerHeight + ')');
+    log('環境情報を開きました(' + os + ' ' + br + ' / ' + innerHeight + '×' + innerWidth + 'px)');
   }
   /* カラーボタンの前に足す(ヘッダのあるページだけ)。操作ログは tool-kit.js の自動ログと重ならないよう data-log="off" にしてここで書く */
   if (bar) {
@@ -517,4 +515,21 @@
         : /Safari/.test(u)
           ? 'Safari'
           : '不明ブラウザ';
+  /* 「PC版サイト」表示にすると Android でも UA が Linux になるため、対応ブラウザでは userAgentData の platform を優先する */
+  var osVer = '';
+  var uad = navigator.userAgentData;
+  if (uad) {
+    if (uad.platform === 'Android') os = 'Android';
+    else if (uad.platform === 'Chrome OS') os = 'ChromeOS';
+    if (uad.getHighEntropyValues)
+      uad.getHighEntropyValues(['platformVersion']).then(
+        function (v) {
+          if (os === 'Android' && v.platformVersion) osVer = v.platformVersion.split('.')[0];
+          if (imenu && !imenu.hidden) fillInfo();
+        },
+        function () {
+          /* 取得できない時はバージョンなしで表示する */
+        }
+      );
+  }
 })();
