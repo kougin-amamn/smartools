@@ -1,0 +1,239 @@
+:root {
+  --hint: #b9bdf0;
+  --chord: #bfeee7;
+  --root: #8fdcd1;
+}
+:root[data-theme='dark'] {
+  --hint: #6c72c4;
+  --chord: #2d7a72;
+  --root: #3d9a90;
+}
+.content {
+  flex-direction: column;
+  padding: 12px 10px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  gap: 12px;
+  overflow-y: auto;
+}
+.app {
+  max-width: 760px;
+  gap: 12px;
+}
+.info {
+  font-size: 13px;
+  color: var(--sub);
+  text-align: center;
+  min-height: 1.4em;
+}
+/* 鍵盤 */
+.keyboard {
+  position: relative;
+  display: flex;
+  height: min(46vw, 220px);
+  min-height: 150px;
+  background: #1c1d22;
+  padding: 6px 6px 0;
+  border-radius: 12px 12px 8px 8px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.white {
+  position: relative;
+  flex: 1;
+  background: #fbfbfd;
+  border: 1px solid #b9bbc6;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+  font-size: 10px;
+  color: #6f7280;
+  min-width: 0;
+}
+.black {
+  position: absolute;
+  top: 6px;
+  height: 62%;
+  background: #25262d;
+  border-radius: 0 0 4px 4px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4px;
+  font-size: 8px;
+  color: #aeb1c0;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+}
+.white.chord {
+  background: var(--chord);
+}
+.white.root {
+  background: var(--root);
+}
+.white.hint {
+  background: var(--hint);
+}
+.white.active {
+  background: var(--func);
+  color: var(--func-fg);
+}
+.black.chord {
+  background: #2d7a72;
+}
+.black.root {
+  background: #3d9a90;
+}
+.black.hint {
+  background: #6c72c4;
+}
+.black.active {
+  background: var(--func);
+  color: var(--func-fg);
+}
+.ctrl-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.round {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+  font-weight: 700;
+  touch-action: manipulation;
+}
+.oct-label {
+  min-width: 92px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+.pill {
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  text-align: center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pill small {
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+.pill.small {
+  font-size: 13px;
+  padding: 9px 14px;
+}
+.pill.on {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.pill:active {
+  filter: brightness(0.9);
+}
+.pill:disabled {
+  opacity: 0.4;
+}
+#pedal {
+  padding: 6px 14px;
+  line-height: 1.2;
+}
+.sec {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 0 14px;
+}
+.sec summary {
+  padding: 13px 0;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+.sec summary::-webkit-details-marker {
+  display: none;
+}
+.sec summary::after {
+  content: '▾';
+  color: var(--sub);
+}
+.sec[open] summary::after {
+  content: '▴';
+}
+.sec-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 0 14px;
+}
+.f {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--sub);
+}
+.f select {
+  font-size: 14px;
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: none;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-family: inherit;
+  min-width: 150px;
+}
+.f input[type='range'] {
+  flex: 1;
+  max-width: 220px;
+  accent-color: var(--accent);
+}
+.chk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--sub);
+}
+.btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.note {
+  font-size: 12px;
+  min-height: 1.2em;
+}
+.stage {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  padding: 4px 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* 横向き: 鍵盤を画面の高さに収める。上に貼り付けたままだと画面が鍵盤で埋まり、下の設定までスクロールで見られなくなるので、貼り付けもやめる */
+@media (orientation: landscape) and (max-height: 600px) {
+  .stage {
+    position: static;
+  }
+  .keyboard {
+    height: max(150px, min(220px, calc(var(--land-h) - 110px)));
+    min-height: 0;
+  }
+}

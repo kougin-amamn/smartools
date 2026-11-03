@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>万歩計 | モーションセンサーで歩数をカウント</title>
+    <meta
+      name="description"
+      content="万歩計(歩数計・pedometer)は、端末のモーションセンサーで歩数を数え、距離とカロリーの目安も表示します。画面が自動で消えないようにするスリープ防止付きです。"
+    />
+    <meta property="og:title" content="万歩計 | モーションセンサーで歩数をカウント" />
+    <meta
+      property="og:description"
+      content="万歩計(歩数計・pedometer)は、端末のモーションセンサーで歩数を数え、距離とカロリーの目安も表示します。画面が自動で消えないようにするスリープ防止付きです。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-step-counter.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./step-counter.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "万歩計",
+        "alternateName": ["Step Counter", "歩数計", "Pedometer"],
+        "description": "万歩計(歩数計・pedometer)は、端末のモーションセンサーで歩数を数え、距離とカロリーの目安も表示します。画面が自動で消えないようにするスリープ防止付きです。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-step-counter.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">万歩計</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app" data-land="split">
+        <div class="count-ring" data-land-main>
+          <div class="count-val" id="countVal">0</div>
+          <div class="count-label">歩</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="label">歩幅換算の距離</span><span class="val" id="distVal">0.0 km</span>
+          </div>
+          <div class="stat">
+            <span class="label">消費カロリー目安</span><span class="val" id="calVal">0 kcal</span>
+          </div>
+        </div>
+
+        <button class="pill primary" id="startBtn">計測開始</button>
+        <button class="pill" id="stopBtn" hidden>計測停止</button>
+        <label class="row chk"
+          ><input type="checkbox" id="wakeLockChk" data-log="スリープ防止" />
+          計測中は画面を消灯させない</label
+        >
+        <button class="pill small" id="resetBtn">歩数をリセット</button>
+
+        <div class="status" id="statusText"></div>
+
+        <p class="note">
+          端末のモーションセンサー(加速度)を使い、合成加速度の変化からピークを検出して歩数を数える簡易的な方式です。歩数計専用機ほどの精度はありません。iPhoneでは初回にモーションセンサーの利用許可が必要です。<br />
+          距離・カロリーは一般的な歩幅(約70cm)・消費量(体重60kg想定)を仮定した概算です。<br />
+          「画面を消灯させない」はWake Lock APIを使っています。対応していないブラウザでは効果がありません。
+        </p>
+      </div>
+    </main>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./step-counter-core.js"></script>
+    <script src="./step-counter.js"></script>
+  </body>
+</html>

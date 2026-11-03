@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>画像変換 | PNG・JPEG・WebP・GIF・BMP・ICOを一括変換</title>
+    <meta
+      name="description"
+      content="複数の画像をPNG・JPEG・WebP・GIF・BMP・ICOに一括変換し、リサイズや画質の調整もできるツールです。iPhoneのHEICにも対応し、まとめてZIPで保存できます。画像は端末の中だけで変換します。"
+    />
+    <meta property="og:title" content="画像変換 | PNG・JPEG・WebP・GIF・BMP・ICOを一括変換" />
+    <meta
+      property="og:description"
+      content="複数の画像をPNG・JPEG・WebP・GIF・BMP・ICOに一括変換し、リサイズや画質の調整もできるツールです。iPhoneのHEICにも対応し、まとめてZIPで保存できます。画像は端末の中だけで変換します。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-image-converter.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./image-converter.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "画像変換",
+        "alternateName": ["Image Converter", "画像形式変換", "HEIC変換"],
+        "description": "複数の画像をPNG・JPEG・WebP・GIF・BMP・ICOに一括変換し、リサイズや画質の調整もできるツールです。iPhoneのHEICにも対応し、まとめてZIPで保存できます。画像は端末の中だけで変換します。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-image-converter.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">画像変換</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <label class="pill primary file-label"
+          >画像を選択(複数可)<input
+            type="file"
+            id="fileInput"
+            data-log="画像"
+            accept="image/*"
+            multiple
+            hidden
+        /></label>
+
+        <div class="panel" id="settingsPanel" hidden>
+          <div class="row">
+            <span>変換後の形式</span>
+            <select id="formatSelect" data-log="変換先の形式">
+              <option value="image/png">PNG</option>
+              <option value="image/jpeg" selected>JPEG</option>
+              <option value="image/webp">WebP</option>
+              <option value="image/bmp">BMP</option>
+              <option value="image/gif">GIF</option>
+              <option value="image/x-icon">ICO</option>
+            </select>
+          </div>
+          <div class="row" id="qualityRow">
+            <span>画質</span>
+            <input
+              type="range"
+              id="qualitySlider"
+              data-log="画質"
+              data-log-value="#qualityVal"
+              min="0.3"
+              max="1"
+              step="0.01"
+              value="0.85"
+            />
+            <span id="qualityVal">85%</span>
+          </div>
+          <div class="row">
+            <label class="chk"
+              ><input type="checkbox" id="resizeChk" data-log="リサイズ" /> 長辺をリサイズする</label
+            >
+            <input type="number" id="maxSideInput" value="1600" min="64" max="8000" step="10" />
+            <span class="unit">px</span>
+          </div>
+          <button class="pill primary" id="convertBtn">すべて変換</button>
+        </div>
+
+        <div class="list" id="list" data-log="off"></div>
+
+        <div class="batch-row" id="batchRow" hidden>
+          <button class="pill" id="zipBtn">まとめてZIPでダウンロード</button>
+        </div>
+        <p class="note">
+          すべて端末内で処理されます(画像はサーバーに送信されません)。PNG/JPEG/WebPはブラウザ標準機能で、BMP/GIF/ICOは自前の変換処理で書き出しています。<br />
+          GIFは256色までの近似(減色)になり、処理負荷のため長辺600pxを超える場合は自動的に縮小されます。ICOは1枚のPNGを埋め込む形式のため、小さいサイズ(16〜256px程度)での利用を想定しています。<br />
+          iPhoneのHEIC/HEIF写真は、選択すると自動でJPEGに変換してから読み込みます(heic2anyというライブラリを使用、外部から読み込むため初回は少し時間がかかります)。複数画像入りのHEIC(Live
+          Photos等)は1枚目のみ扱います。<br />
+          AVIF・TIFFは、ブラウザや本ツールの制約により対応していません。
+        </p>
+      </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./image-converter-codecs.js"></script>
+    <script src="./image-converter.js"></script>
+  </body>
+</html>

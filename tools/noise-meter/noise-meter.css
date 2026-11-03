@@ -1,0 +1,85 @@
+:root {
+  --mid: #8086c9;
+}
+:root[data-theme='dark'] {
+  --mid: #9aa0dd;
+}
+.content {
+  justify-content: center;
+  padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+.app {
+  max-width: 340px;
+  align-items: center;
+  gap: 12px;
+}
+.db-num {
+  font-size: 60px;
+  font-weight: 700;
+  color: var(--func);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.db-unit {
+  font-size: 12px;
+  color: var(--sub);
+  margin-top: -6px;
+}
+.gauge {
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--fn-bg);
+  overflow: hidden;
+}
+.gauge-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--func), var(--mid), var(--danger));
+  transition: width 0.1s linear;
+}
+.grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.stat {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--sub);
+}
+.stat-val {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+.status {
+  font-size: 13px;
+  min-height: 16px;
+}
+.controls {
+  display: flex;
+  gap: 12px;
+}
+.pill {
+  padding: 12px 22px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 14px;
+  -webkit-tap-highlight-color: transparent;
+}
+.note {
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+}

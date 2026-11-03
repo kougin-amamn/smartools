@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>写真情報(Exif)ビューア | 撮影日時・カメラ機種・GPSを一覧表示</title>
+    <meta
+      name="description"
+      content="写真に埋め込まれたExif情報(撮影日時・カメラ機種・レンズ・露出・GPS位置など)を一覧で表示します。複数枚を並べて比べられます。写真はサーバーに送らず、端末の中だけで読み取ります。"
+    />
+    <meta property="og:title" content="写真情報(Exif)ビューア | 撮影日時・カメラ機種・GPSを一覧表示" />
+    <meta
+      property="og:description"
+      content="写真に埋め込まれたExif情報(撮影日時・カメラ機種・レンズ・露出・GPS位置など)を一覧で表示します。複数枚を並べて比べられます。写真はサーバーに送らず、端末の中だけで読み取ります。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-exif-viewer.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./exif-viewer.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "写真情報(Exif)ビューア",
+        "alternateName": ["Exif Viewer", "写真情報", "メタデータ確認"],
+        "description": "写真に埋め込まれたExif情報(撮影日時・カメラ機種・レンズ・露出・GPS位置など)を一覧で表示します。複数枚を並べて比べられます。写真はサーバーに送らず、端末の中だけで読み取ります。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-exif-viewer.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">写真情報(Exif)ビューア</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <label class="pill primary file-label"
+          >写真を選択(複数可)<input
+            type="file"
+            id="fileInput"
+            data-log="写真"
+            accept="image/*"
+            multiple
+            hidden
+        /></label>
+        <div class="status" id="statusText"></div>
+
+        <div class="table-wrap" id="tableWrap" data-log="off" hidden>
+          <table id="compareTable">
+            <thead>
+              <tr id="headRow">
+                <th class="field-col">項目</th>
+              </tr>
+            </thead>
+            <tbody id="bodyRows"></tbody>
+          </table>
+        </div>
+
+        <p class="note">
+          すべて端末内で処理されます(画像はサーバーに送信されません)。<a
+            href="https://github.com/MikeKovarik/exifr"
+            target="_blank"
+            rel="noopener"
+            >exifr</a
+          >というライブラリで読み取っています。<br />
+          スクリーンショットやSNS経由で保存した画像、編集済みの画像はExif情報が失われていることが多く、その場合は空欄になります。
+        </p>
+      </div>
+    </main>
+    <script
+      src="https://cdn.jsdelivr.net/npm/exifr/dist/full.umd.min.js"
+      onerror="window.__exifrFailed = true"
+    ></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./exif-viewer.js"></script>
+  </body>
+</html>

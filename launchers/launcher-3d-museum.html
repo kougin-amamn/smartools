@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>3Dミュージアムランチャー | 美術館の絵画からツールを開くアプリランチャー</title>
+    <meta
+      name="description"
+      content="ツールを開くアプリランチャーです。ホワイトキューブの美術館に、ツールが一枚ずつ絵画として飾られます。カテゴリごとの展示室、新着とよく使うの壁があり、絵画をタップで正面へ、もう一度タップでツールを開けます。"
+    />
+    <meta
+      property="og:title"
+      content="3Dミュージアムランチャー | 美術館の絵画からツールを開くアプリランチャー"
+    />
+    <meta
+      property="og:description"
+      content="ツールを開くアプリランチャーです。ホワイトキューブの美術館に、ツールが一枚ずつ絵画として飾られます。カテゴリごとの展示室、新着とよく使うの壁があり、絵画をタップで正面へ、もう一度タップでツールを開けます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-launcher-3d-museum.svg" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="stylesheet" href="../common/site.css" />
+    <link rel="stylesheet" href="./launcher.css" />
+    <link rel="stylesheet" href="./launcher-3d-museum.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "3Dミュージアムランチャー",
+        "alternateName": [
+          "3D Museum Launcher",
+          "ミュージアムランチャー",
+          "美術館ランチャー",
+          "アプリランチャー"
+        ],
+        "description": "ツールを開くアプリランチャーです。ホワイトキューブの美術館に、ツールが一枚ずつ絵画として飾られます。カテゴリごとの展示室、新着とよく使うの壁があり、絵画をタップで正面へ、もう一度タップでツールを開けます。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-launcher-3d-museum.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">3Dミュージアムランチャー</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="stage" id="stage">
+        <canvas id="gl" aria-label="3Dミュージアムの部屋"></canvas>
+        <div class="hint" id="hint">
+          <span>ドラッグで見回す</span> ／ <span>ピンチ・ホイールで拡大</span> ／
+          <span>絵画をタップで近づく</span> ／ <span>入口をタップで移動</span>
+        </div>
+
+        <div class="room-name" id="roomName" hidden></div>
+        <div class="fade" id="fade"></div>
+
+        <div class="card" id="card" hidden>
+          <div class="card-head">
+            <button class="nav-btn" id="prevBtn" aria-label="前の作品" title="前の作品" hidden>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M15 5l-7 7 7 7" />
+              </svg>
+            </button>
+            <div class="card-no" id="cardNo"></div>
+            <button class="nav-btn" id="nextBtn" aria-label="次の作品" title="次の作品" hidden>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+          <div class="card-title" id="cardTitle"></div>
+          <div class="card-desc" id="cardDesc"></div>
+          <div class="card-tags" id="cardTags"></div>
+          <div class="card-actions">
+            <button class="pill primary" id="openBtn">このツールを開く</button>
+          </div>
+        </div>
+
+        <div class="bar" id="bar">
+          <button class="pill small" id="zoomBtn" hidden>等倍に戻す</button>
+          <button class="pill small" id="homeBtn" hidden>全体に戻る</button>
+          <button class="pill small" id="hallBtn" hidden>ホールへ</button>
+          <button class="pill small" id="listBtn">一覧</button>
+        </div>
+
+        <section class="list-panel" id="listPanel" hidden>
+          <div class="list-head">
+            <div class="list-title" id="listTitle">ツール一覧</div>
+            <button class="pill small" id="listClose">閉じる</button>
+          </div>
+          <p class="list-note" id="listNote" hidden></p>
+          <ul class="list" id="list"></ul>
+        </section>
+      </div>
+      <div class="loading" id="loading" role="status" aria-live="polite">
+        <div class="ld-box">
+          <div class="ld-title">3Dミュージアムランチャーを準備しています</div>
+          <div class="ld-bar"><i id="ldBar" style="width: 5%"></i></div>
+          <div class="ld-step" id="ldStep">3D表示の部品を読み込んでいます…</div>
+        </div>
+      </div>
+    </main>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+      onerror="window.__threeFailed = true"
+    ></script>
+    <script src="../common/site.js"></script>
+    <script>
+      window.log ||
+        (function () {
+          var m =
+            '共通ファイル(common/site.js)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          window.log = f;
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script
+      defer
+      src="./launcher-common.js"
+      onerror="(window.__missing = window.__missing || []).push('launcher-common.js')"
+    ></script>
+    <script
+      defer
+      src="./launcher-3d-museum-core.js"
+      onerror="(window.__missing = window.__missing || []).push('launcher-3d-museum-core.js')"
+    ></script>
+    <script
+      defer
+      src="./launcher-3d-museum-textures.js"
+      onerror="(window.__missing = window.__missing || []).push('launcher-3d-museum-textures.js')"
+    ></script>
+    <script
+      defer
+      src="./launcher-3d-museum-scene.js"
+      onerror="(window.__missing = window.__missing || []).push('launcher-3d-museum-scene.js')"
+    ></script>
+    <script
+      defer
+      src="./launcher-3d-museum.js"
+      onerror="(window.__missing = window.__missing || []).push('launcher-3d-museum.js')"
+    ></script>
+    <script>
+      /* __missingCheck: 読み込めなかったファイルがあり、画面が始まらなかった時にファイル名を表示する */
+      window.addEventListener('load', function () {
+        var miss = window.__missing || [],
+          ld = document.getElementById('loading');
+        if (!miss.length || !ld || ld.classList.contains('done')) return;
+        var msg =
+          '表示に必要なファイル(' +
+          miss.join('、') +
+          ')を読み込めませんでした。サーバーにファイルが置かれているか、名前が合っているか確認してください';
+        log.error(msg);
+        var st = document.getElementById('ldStep');
+        if (st) st.textContent = msg;
+        ld.classList.add('err');
+      });
+    </script>
+  </body>
+</html>

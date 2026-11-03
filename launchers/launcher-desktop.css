@@ -1,0 +1,420 @@
+/* ランチャーの「デスクトップ」表示のスタイル(配色は site.css のトークンのみ。ページの枠は launcher.css) */
+:root {
+  --wall-1: #dfe2f2;
+  --wall-2: #cdeee8;
+  --wall-3: #eef0f8;
+  --label: #1c1d22;
+  --label-shadow: rgba(255, 255, 255, 0.75);
+  --sel-bg: rgba(92, 196, 182, 0.22);
+  --sel-line: rgba(92, 196, 182, 0.75);
+  --task-bg: rgba(245, 245, 247, 0.86);
+}
+:root[data-theme='dark'] {
+  --wall-1: #1d2030;
+  --wall-2: #123631;
+  --wall-3: #262a40;
+  --label: #f0f0f4;
+  --label-shadow: rgba(0, 0, 0, 0.7);
+  --sel-bg: rgba(127, 224, 210, 0.18);
+  --sel-line: rgba(127, 224, 210, 0.7);
+  --task-bg: rgba(30, 32, 41, 0.88);
+}
+
+/* 壁紙: 紺紫とミントのやわらかなグラデーション */
+.desk {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  outline: none;
+  touch-action: pan-y;
+  background:
+    radial-gradient(120% 90% at 85% 110%, var(--wall-2) 0%, transparent 60%),
+    radial-gradient(90% 80% at 0% 0%, var(--wall-3) 0%, transparent 65%), var(--wall-1);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.sizer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  pointer-events: none;
+}
+
+/* アイコン: 絵と名前。選ぶと半透明のミントの枠 */
+.ic {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 4px 4px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: default;
+  outline: none;
+  transition:
+    left 0.16s ease,
+    top 0.16s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.ic.no-anim {
+  transition: none;
+}
+.ic:hover {
+  background: var(--sel-bg);
+  background: color-mix(in srgb, var(--sel-bg) 55%, transparent);
+}
+.ic.sel {
+  background: var(--sel-bg);
+  border-color: var(--sel-line);
+}
+.ic.focus {
+  border-color: var(--sel-line);
+}
+.ic.drag {
+  transition: none;
+  opacity: 0.85;
+  z-index: 5;
+  pointer-events: none;
+}
+.ic img,
+.ic .mk {
+  display: block;
+  border-radius: 22%;
+  flex: none;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.22));
+  -webkit-user-drag: none;
+}
+.ic .mk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+.ic .lb {
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--label);
+  max-width: 100%;
+  text-shadow: 0 1px 2px var(--label-shadow);
+  word-break: normal;
+  overflow-wrap: anywhere;
+  line-break: strict;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ic.sel .lb {
+  -webkit-line-clamp: 4;
+}
+.ic.small .lb {
+  font-size: 11px;
+}
+
+/* 範囲選択の枠 */
+.band {
+  position: absolute;
+  border: 1px solid var(--sel-line);
+  background: var(--sel-bg);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* 右クリック(長押し)メニュー */
+.menu {
+  position: fixed;
+  z-index: 20;
+  min-width: 200px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  font-size: 14px;
+}
+.menu li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.menu li:hover,
+.menu li:focus {
+  background: var(--fn-bg);
+  outline: none;
+}
+.menu li .ck {
+  width: 16px;
+  text-align: center;
+  color: var(--func);
+  font-weight: 700;
+  flex: none;
+}
+.menu li.head {
+  cursor: default;
+  color: var(--sub);
+  font-size: 12px;
+  padding: 8px 10px 2px;
+}
+.menu li.head:hover {
+  background: none;
+}
+.menu li.sep {
+  height: 1px;
+  padding: 0;
+  margin: 5px 6px;
+  background: var(--fn-bg);
+  cursor: default;
+}
+.menu li.off {
+  color: var(--sub);
+  cursor: default;
+}
+.menu li.off:hover {
+  background: none;
+}
+
+/* はじめての操作案内 */
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: 64px;
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  padding: 7px 14px;
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--sub);
+  font-size: 13px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+  transition: opacity 0.4s;
+  z-index: 6;
+}
+.hint.off {
+  opacity: 0;
+}
+.hint span {
+  white-space: nowrap;
+}
+
+/* タスクバー: 左にメニュー、右に時計 */
+.taskbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 12px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: content-box;
+  background: var(--task-bg);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--fn-bg);
+}
+.start {
+  width: 40px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.start:hover,
+.start.on {
+  background: var(--fn-bg);
+}
+.start svg {
+  width: 22px;
+  height: 22px;
+}
+.status {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.hint.err {
+  color: var(--danger);
+}
+
+/* フォルダ: 絵の上に中のツールのアイコンを小さく4つまで */
+.ic .fd {
+  position: relative;
+  flex: none;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.22));
+}
+.ic .fd svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.ic .fdm {
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  top: 38%;
+  bottom: 12%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8%;
+  align-content: center;
+  align-items: center;
+}
+.ic .fdm img,
+.ic .fdm .mk {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1;
+  border-radius: 22%;
+  filter: none;
+  font-size: 0 !important;
+}
+.ic .lb .rename,
+.win-title .rename {
+  width: 100%;
+  font: inherit;
+  font-size: 12px;
+  text-align: center;
+  border: 1px solid var(--sel-line);
+  border-radius: 3px;
+  padding: 1px 2px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* フォルダのウインドウ */
+.win {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: min(560px, calc(100% - 24px));
+  max-height: calc(100% - 90px);
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+.win-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 14px;
+  background: var(--fn-bg);
+  font-weight: 600;
+  font-size: 14px;
+}
+.win-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+}
+.win-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.win-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.win-x {
+  width: 30px;
+  padding: 4px 0;
+  font-size: 16px;
+}
+.win-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 4px;
+  padding: 12px;
+  overflow-y: auto;
+}
+.wi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+.wi:hover {
+  background: var(--fn-bg);
+}
+.wi.sel {
+  background: var(--sel-bg);
+  border-color: var(--sel-line);
+}
+.wi img,
+.wi .mk {
+  width: 44px;
+  height: 44px;
+  border-radius: 22%;
+  pointer-events: none;
+}
+.wi .mk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+.wi .lb {
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.3;
+}
+.win-empty {
+  padding: 24px 16px 28px;
+  color: var(--sub);
+  font-size: 13px;
+  text-align: center;
+}

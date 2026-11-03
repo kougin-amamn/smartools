@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>動画プレイヤー | 端末の動画を速度変更・連続再生</title>
+    <meta
+      name="description"
+      content="端末の動画ファイルをプレイリストで再生できる動画プレイヤーです。0.5〜2倍の速度変更、シャッフル・リピート、全画面表示に対応しています。動画はサーバーに送らず、端末の中だけで再生します。"
+    />
+    <meta property="og:title" content="動画プレイヤー | 端末の動画を速度変更・連続再生" />
+    <meta
+      property="og:description"
+      content="端末の動画ファイルをプレイリストで再生できる動画プレイヤーです。0.5〜2倍の速度変更、シャッフル・リピート、全画面表示に対応しています。動画はサーバーに送らず、端末の中だけで再生します。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-video-player.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./video-player.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "動画プレイヤー",
+        "alternateName": ["Video Player", "動画再生", "MP4プレイヤー"],
+        "description": "端末の動画ファイルをプレイリストで再生できる動画プレイヤーです。0.5〜2倍の速度変更、シャッフル・リピート、全画面表示に対応しています。動画はサーバーに送らず、端末の中だけで再生します。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-video-player.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">動画プレイヤー</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app" data-land="split">
+        <label class="pill small file-label"
+          >動画を追加<input type="file" id="fileInput" data-log="動画" accept="video/*" multiple hidden
+        /></label>
+
+        <div class="player-wrap" data-land-main="fill">
+          <video id="video" playsinline></video>
+          <button class="exit-fs" id="exitFsBtn" type="button" hidden>全画面を終了</button>
+          <div class="empty-state" id="emptyState">
+            <svg viewBox="0 0 24 24" width="40" height="40">
+              <rect
+                x="3"
+                y="6"
+                width="15"
+                height="12"
+                rx="2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+              <path d="M9 9.5l5 2.5-5 2.5z" fill="currentColor" />
+            </svg>
+            <span>動画を追加してください</span>
+          </div>
+        </div>
+
+        <div class="track-title" id="trackTitle"></div>
+
+        <div class="seek-row">
+          <span class="time" id="curTime">0:00</span>
+          <input type="range" id="seekSlider" min="0" max="100" value="0" />
+          <span class="time" id="durTime">0:00</span>
+        </div>
+
+        <div class="controls">
+          <button class="round" id="shuffleBtn" aria-label="シャッフル">
+            <svg viewBox="0 0 24 24" width="17" height="17">
+              <path
+                d="M4 7h4l3 4 3-4h6m-3-3l3 3-3 3"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M4 17h4l3-4M14 17h6m-3-3l3 3-3 3"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <button class="round" id="prevBtn" data-log="前の動画" aria-label="前へ">
+            <svg viewBox="0 0 24 24" width="17" height="17">
+              <rect x="6" y="6" width="2" height="12" fill="currentColor" />
+              <path d="M18 6L9 12l9 6V6z" fill="currentColor" />
+            </svg>
+          </button>
+          <button class="round big" id="playBtn" aria-label="再生">
+            <svg id="playIcon" viewBox="0 0 24 24" width="22" height="22">
+              <path d="M8 5v14l11-7z" fill="currentColor" />
+            </svg>
+            <svg id="pauseIcon" viewBox="0 0 24 24" width="22" height="22" style="display: none">
+              <path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" />
+            </svg>
+          </button>
+          <button class="round" id="nextBtn" data-log="次の動画" aria-label="次へ">
+            <svg viewBox="0 0 24 24" width="17" height="17">
+              <path d="M7 6l9 6-9 6V6z" fill="currentColor" />
+              <rect x="17" y="6" width="2" height="12" fill="currentColor" />
+            </svg>
+          </button>
+          <button class="round" id="repeatBtn" aria-label="リピート">
+            <svg id="repeatIcon" viewBox="0 0 24 24" width="17" height="17">
+              <path
+                d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <svg id="repeatOneIcon" viewBox="0 0 24 24" width="17" height="17" style="display: none">
+              <path
+                d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <text x="12" y="15" font-size="8" text-anchor="middle" fill="currentColor">1</text>
+            </svg>
+          </button>
+        </div>
+
+        <div class="sub-row">
+          <button class="chip" id="speedBtn" data-log="速度">1.0x</button>
+          <div class="volume-row">
+            <svg viewBox="0 0 24 24" width="15" height="15">
+              <path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor" />
+              <path
+                d="M16.5 8.5a5 5 0 0 1 0 7"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+              />
+            </svg>
+            <input
+              type="range"
+              id="volumeSlider"
+              data-log="音量"
+              data-log-scale="100"
+              data-log-unit="%"
+              min="0"
+              max="1"
+              step="0.01"
+              value="1"
+            />
+          </div>
+          <button class="chip" id="fullscreenBtn" aria-label="全画面">
+            <svg viewBox="0 0 24 24" width="15" height="15">
+              <path
+                d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="playlist" id="playlist" data-log="off"></div>
+        <div class="status" id="statusText">
+          端末内の動画ファイルを追加してください(サーバーには送信されません)
+        </div>
+      </div>
+    </main>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./video-player.js"></script>
+  </body>
+</html>

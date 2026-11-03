@@ -1,0 +1,71 @@
+.content {
+  justify-content: center;
+  padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+.app {
+  max-width: 320px;
+  align-items: center;
+  gap: 14px;
+}
+.level-outer {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: var(--panel);
+  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.12);
+}
+.crosshair {
+  position: absolute;
+  inset: 0;
+}
+.crosshair::before,
+.crosshair::after {
+  content: '';
+  position: absolute;
+  background: var(--fn-bg);
+}
+.crosshair::before {
+  left: 50%;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  transform: translateX(-50%);
+}
+.crosshair::after {
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  transform: translateY(-50%);
+}
+.bubble {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: background-color 0.15s ease;
+}
+.bubble.ok {
+  background: var(--func);
+}
+.angles {
+  font-size: 16px;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.status {
+  font-size: 13px;
+  min-height: 16px;
+}
+.pill {
+  padding: 10px 20px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 14px;
+  -webkit-tap-highlight-color: transparent;
+}

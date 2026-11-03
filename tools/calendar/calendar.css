@@ -1,0 +1,290 @@
+/* カレンダーの見た目(配色は site.css のトークン) */
+:root {
+  --sun: #c93a3a;
+  --sat: #3d5fae;
+  --taian: #5cc4b6;
+  --ichi: #e0a83a;
+  --ten: #8a5ad0;
+  --cell: var(--panel);
+}
+:root[data-theme='dark'] {
+  --sun: #ff7a7a;
+  --sat: #8ea8ff;
+  --taian: #7fe0d2;
+  --ichi: #f2c45a;
+  --ten: #b892f0;
+}
+.content {
+  flex-direction: column;
+  padding: 12px 10px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  gap: 10px;
+  overflow-y: auto;
+  align-items: center;
+}
+.app {
+  max-width: 560px;
+  gap: 10px;
+}
+
+/* 月の切り替え */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav .title {
+  flex: 1;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.nav .title small {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sub);
+}
+.round {
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* 月の表 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  touch-action: pan-y;
+}
+.wd {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sub);
+  padding: 2px 0 4px;
+}
+.wd.sun {
+  color: var(--sun);
+}
+.wd.sat {
+  color: var(--sat);
+}
+.cell {
+  position: relative;
+  min-height: 64px;
+  padding: 4px 4px 3px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--cell);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.cell.out {
+  opacity: 0.38;
+}
+.cell .n {
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.cell.sun .n,
+.cell.hol .n {
+  color: var(--sun);
+}
+.cell.sat .n {
+  color: var(--sat);
+}
+.cell .rk,
+.cell .lu,
+.cell .hn,
+.cell .sk {
+  font-size: 10px;
+  line-height: 1.25;
+  color: var(--sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cell .rk.taian {
+  color: var(--func-fg);
+  background: var(--taian);
+  border-radius: 4px;
+  padding: 0 3px;
+  align-self: flex-start;
+  font-weight: 700;
+}
+.cell .hn {
+  color: var(--sun);
+  font-weight: 600;
+}
+.cell .sk {
+  color: var(--accent);
+}
+.cell .moon {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 12px;
+  height: 12px;
+}
+/* 新月・上弦・満月・下弦の日は少し大きく */
+.cell .moon.key {
+  top: 3px;
+  right: 3px;
+  width: 14px;
+  height: 14px;
+}
+.cell .marks {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  display: flex;
+  gap: 2px;
+}
+.mk {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.mk.taian {
+  background: var(--taian);
+  border-radius: 2px;
+}
+.mk.ichi {
+  background: var(--ichi);
+}
+.mk.ten {
+  background: var(--ten);
+}
+.cell.today {
+  border-color: var(--func);
+  box-shadow: inset 0 0 0 1px var(--func);
+}
+.cell.sel {
+  background: var(--fn-bg);
+}
+.legend {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--sub);
+}
+.legend .mk {
+  margin-right: 4px;
+}
+
+/* 選んだ日の詳しい暦 */
+.detail {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+}
+.detail h2 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+.detail dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+  margin: 0;
+  font-size: 14px;
+}
+.detail dt {
+  color: var(--sub);
+}
+.detail dd {
+  margin: 0;
+}
+.detail .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.detail .tag {
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--fn-bg);
+}
+.detail .tag.taian {
+  background: var(--taian);
+  color: var(--func-fg);
+}
+.detail .tag.ichi {
+  background: var(--ichi);
+  color: #2a1e05;
+}
+.detail .tag.ten {
+  background: var(--ten);
+  color: #fff;
+}
+.detail .tag.hol {
+  background: var(--sun);
+  color: #fff;
+}
+
+/* 設定 */
+.opts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+}
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.opt select {
+  margin-left: auto;
+  font: inherit;
+  padding: 4px 8px;
+}
+.opt input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--func);
+}
+.note {
+  font-size: 12px;
+  color: var(--sub);
+  line-height: 1.6;
+  margin: 14px 0 0;
+}
+@media (max-width: 380px) {
+  .cell {
+    min-height: 56px;
+    padding: 3px 2px;
+  }
+  .cell .n {
+    font-size: 14px;
+  }
+}
+/* 横向き: 月の表を左、月の切り替え・凡例・その日の詳細を右に並べるのは共通の tool.css(data-land)。
+   ここは表を画面の高さに収める(曜日の行と最大6週。マスの高さを画面の高さから決める) */
+@media (orientation: landscape) and (max-height: 600px) {
+  .grid {
+    width: min(56vw, 560px);
+  }
+  .cell {
+    min-height: calc((var(--land-h) - 40px) / 6 - 3px);
+    padding: 2px 4px;
+  }
+}

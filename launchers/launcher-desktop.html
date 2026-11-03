@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>デスクトップ風ランチャー | パソコンのデスクトップのようにアイコンを並べるアプリランチャー</title>
+    <meta
+      name="description"
+      content="ツールを開くアプリランチャーです。パソコンのデスクトップのように、ツールのアイコンを自由に並べ替えられます。ダブルクリック(スマホはタップ)で開き、ドラッグで移動、範囲選択、右クリックのメニューで整列やアイコンの大きさを変えられます。配置は保存されます。"
+    />
+    <meta
+      property="og:title"
+      content="デスクトップ風ランチャー | パソコンのデスクトップのようにアイコンを並べるアプリランチャー"
+    />
+    <meta
+      property="og:description"
+      content="ツールを開くアプリランチャーです。パソコンのデスクトップのように、ツールのアイコンを自由に並べ替えられます。ダブルクリック(スマホはタップ)で開き、ドラッグで移動、範囲選択、右クリックのメニューで整列やアイコンの大きさを変えられます。配置は保存されます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-launcher-desktop.svg" />
+    <link rel="stylesheet" href="../common/site.css" />
+    <link rel="stylesheet" href="./launcher.css" />
+    <link rel="stylesheet" href="./launcher-desktop.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "デスクトップ風ランチャー",
+        "alternateName": ["Desktop Launcher", "デスクトップ", "アイコンランチャー", "アプリランチャー"],
+        "description": "ツールを開くアプリランチャーです。パソコンのデスクトップのように、ツールのアイコンを自由に並べ替えられます。ダブルクリック(スマホはタップ)で開き、ドラッグで移動、範囲選択、右クリックのメニューで整列やアイコンの大きさを変えられます。配置は保存されます。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-launcher-desktop.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">デスクトップ風ランチャー</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div
+        class="desk"
+        id="desk"
+        tabindex="0"
+        role="listbox"
+        aria-multiselectable="true"
+        aria-label="ツールのアイコン"
+      >
+        <div class="sizer" id="sizer"></div>
+        <div class="band" id="band" hidden></div>
+      </div>
+      <div class="hint" id="hint"></div>
+      <ul class="menu" id="menu" role="menu" hidden></ul>
+      <div class="taskbar">
+        <button class="start" id="startBtn" aria-label="メニュー" title="メニュー" aria-haspopup="menu">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="4" y="4" width="7" height="7" rx="1.5" />
+            <rect x="13" y="4" width="7" height="7" rx="1.5" />
+            <rect x="4" y="13" width="7" height="7" rx="1.5" />
+            <rect x="13" y="13" width="7" height="7" rx="1.5" />
+          </svg>
+        </button>
+        <div class="status" id="status"></div>
+        <div class="clock" id="clock"><span id="clockTime"></span><span id="clockDate"></span></div>
+      </div>
+      <div class="loading" id="loading" role="status" aria-live="polite">
+        <div class="ld-box">
+          <div class="ld-title">デスクトップ風ランチャーを準備しています</div>
+          <div class="ld-bar"><i id="ldBar" style="width: 5%"></i></div>
+          <div class="ld-step" id="ldStep">画面を準備しています…</div>
+        </div>
+      </div>
+    </main>
+    <script src="../common/site.js"></script>
+    <script>
+      window.log ||
+        (function () {
+          var m =
+            '共通ファイル(common/site.js)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          window.log = f;
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script
+      defer
+      src="./launcher-common.js"
+      onerror="(window.__missing = window.__missing || []).push('launcher-common.js')"
+    ></script>
+    <script
+      defer
+      src="./launcher-desktop-core.js"
+      onerror="(window.__missing = window.__missing || []).push('launcher-desktop-core.js')"
+    ></script>
+    <script
+      defer
+      src="./launcher-desktop.js"
+      onerror="(window.__missing = window.__missing || []).push('launcher-desktop.js')"
+    ></script>
+    <script>
+      /* __missingCheck: 読み込めなかったファイルがあり、画面が始まらなかった時にファイル名を表示する */
+      window.addEventListener('load', function () {
+        var miss = window.__missing || [],
+          ld = document.getElementById('loading');
+        if (!miss.length || !ld || ld.classList.contains('done')) return;
+        var msg =
+          '表示に必要なファイル(' +
+          miss.join('、') +
+          ')を読み込めませんでした。サーバーにファイルが置かれているか、名前が合っているか確認してください';
+        log.error(msg);
+        var st = document.getElementById('ldStep');
+        if (st) st.textContent = msg;
+        ld.classList.add('err');
+      });
+    </script>
+  </body>
+</html>

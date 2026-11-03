@@ -1,0 +1,292 @@
+.content {
+  flex-direction: column;
+  padding: 16px 18px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  gap: 12px;
+  overflow-y: auto;
+}
+.app {
+  max-width: 380px;
+  align-items: center;
+  gap: 12px;
+}
+
+/* モードのタブ */
+.tabs {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+.tab {
+  flex: 1;
+  border: none;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  -webkit-tap-highlight-color: transparent;
+}
+.tab.active {
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+}
+.mode-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 色を選ぶ */
+.swatch-wrap {
+  width: 100%;
+  max-width: 180px;
+  aspect-ratio: 1/1;
+}
+input[type='color'] {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type='color']::-webkit-color-swatch {
+  border: none;
+  border-radius: 20px;
+}
+
+/* カメラで判定 */
+.cam-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  max-width: 320px;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.2);
+}
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #000;
+}
+.sample-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16%;
+  aspect-ratio: 1/1;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 0 12px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+.empty-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9fb6c4;
+  font-size: 12px;
+  text-align: center;
+  padding: 0 20px;
+  background: rgba(0, 0, 0, 0.35);
+}
+.empty-state.hide {
+  display: none;
+}
+.row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--sub);
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 3px 12px rgba(20, 20, 30, 0.06);
+}
+.row input[type='range'] {
+  flex: 1;
+  accent-color: var(--func);
+}
+
+/* 結果(両モード共通) */
+.result-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+}
+.swatch {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  flex: none;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.values {
+  flex: 1;
+  min-width: 0;
+}
+.values input[type='text'] {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 6px;
+  margin: -4px -6px 2px;
+  font-size: 16px;
+  background: transparent;
+  color: var(--text);
+  font-family: monospace;
+  text-transform: uppercase;
+}
+.values input[type='text']:focus {
+  outline: 2px solid var(--func);
+  background: var(--bg);
+}
+.values .sub {
+  font-size: 11px;
+  color: var(--sub);
+  margin-top: 2px;
+}
+.nearest-card {
+  width: 100%;
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+}
+.nearest-label {
+  font-size: 11px;
+  color: var(--sub);
+  margin-bottom: 6px;
+}
+.nearest-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nearest-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  flex: none;
+}
+.nearest-en {
+  font-size: 14px;
+  color: var(--text);
+}
+.nearest-ja {
+  font-size: 12px;
+  color: var(--sub);
+}
+
+.pill {
+  padding: 10px 16px;
+  width: 100%;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 13px;
+  -webkit-tap-highlight-color: transparent;
+}
+.pill.small {
+  width: auto;
+  padding: 9px 14px;
+  font-size: 12px;
+  flex: none;
+}
+.pill.active {
+  background: var(--func);
+  color: var(--func-fg);
+}
+.pill:disabled {
+  opacity: 0.5;
+}
+
+/* 色名で検索 */
+.search-row {
+  width: 100%;
+  margin-top: 4px;
+}
+.search-row input {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+}
+.results {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(20, 20, 30, 0.06);
+}
+.result-row .sw {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex: none;
+}
+.result-row .info {
+  flex: 1;
+  overflow: hidden;
+}
+.result-row .en {
+  font-size: 13px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.result-row .ja {
+  font-size: 11px;
+  color: var(--sub);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.result-row .hex {
+  font-size: 11px;
+  color: var(--sub);
+  font-family: monospace;
+}
+.status {
+  font-size: 11px;
+  line-height: 1.6;
+}

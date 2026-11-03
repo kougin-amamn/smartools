@@ -1,0 +1,17 @@
+[
+  { "no": "00", "id": "standard", "name": "紺紫×ミント(標準)", "main": "#4a4e7a", "sub": "#5cc4b6" },
+  { "no": "01", "id": "blue", "name": "ブルー", "main": "#2563EB", "sub": "#93C5FD" },
+  { "no": "02", "id": "purple", "name": "パープル", "main": "#7C3AED", "sub": "#C4B5FD" },
+  { "no": "03", "id": "green", "name": "グリーン", "main": "#16865B", "sub": "#86D6AE" },
+  { "no": "04", "id": "orange", "name": "オレンジ", "main": "#EA7A24", "sub": "#FDBA74" },
+  { "no": "05", "id": "red", "name": "レッド", "main": "#DC3F4F", "sub": "#FCA5A5" },
+  { "no": "06", "id": "cyan", "name": "シアン", "main": "#0891B2", "sub": "#67E8F9" },
+  { "no": "07", "id": "teal", "name": "ティール", "main": "#0F766E", "sub": "#5EEAD4" },
+  { "no": "08", "id": "pink", "name": "ピンク", "main": "#DB2777", "sub": "#F9A8D4" },
+  { "no": "09", "id": "magenta", "name": "マゼンタ", "main": "#C026D3", "sub": "#E879F9" },
+  { "no": "10", "id": "yellow", "name": "イエロー", "main": "#CA8A04", "sub": "#FDE047" },
+  { "no": "11", "id": "lime", "name": "ライム", "main": "#65A30D", "sub": "#BEF264" },
+  { "no": "12", "id": "brown", "name": "ブラウン", "main": "#92400E", "sub": "#D6A77A" },
+  { "no": "13", "id": "gray", "name": "グレー", "main": "#64748B", "sub": "#CBD5E1" },
+  { "no": "14", "id": "indigo", "name": "インディゴ", "main": "#4338CA", "sub": "#A5B4FC" }
+]

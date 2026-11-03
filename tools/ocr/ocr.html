@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>文字認識(OCR) | 写真やカメラの文字をテキストに</title>
+    <meta
+      name="description"
+      content="写真やカメラで撮った画像から文字を読み取ってテキストにする文字認識(OCR)ツールです。日本語と英語に対応し、読み取った文字のコピーや読み上げもできます。初回は言語データの読み込みに通信が必要です。"
+    />
+    <meta property="og:title" content="文字認識(OCR) | 写真やカメラの文字をテキストに" />
+    <meta
+      property="og:description"
+      content="写真やカメラで撮った画像から文字を読み取ってテキストにする文字認識(OCR)ツールです。日本語と英語に対応し、読み取った文字のコピーや読み上げもできます。初回は言語データの読み込みに通信が必要です。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-ocr.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./ocr.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "文字認識(OCR)",
+        "alternateName": ["OCR", "文字読み取り", "テキスト抽出"],
+        "description": "写真やカメラで撮った画像から文字を読み取ってテキストにする文字認識(OCR)ツールです。日本語と英語に対応し、読み取った文字のコピーや読み上げもできます。初回は言語データの読み込みに通信が必要です。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-ocr.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">文字認識(OCR)</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="tabs">
+          <button class="tab active" data-mode="file">画像を選択</button>
+          <button class="tab" data-mode="camera">カメラで撮影</button>
+        </div>
+
+        <div class="panel" id="filePanel">
+          <input type="file" id="fileInput" data-log="画像" accept="image/*" />
+        </div>
+
+        <div class="panel" id="cameraPanel" hidden>
+          <div class="cam-wrap">
+            <video id="video" playsinline muted></video>
+            <div class="empty-state" id="camEmptyState">
+              <span id="camStatus">カメラを起動しています…</span>
+            </div>
+          </div>
+          <button class="pill" id="shotBtn">この画面を撮影</button>
+        </div>
+
+        <div class="preview-wrap" id="previewWrap" hidden>
+          <img id="previewImg" alt="" />
+        </div>
+
+        <div class="lang-row">
+          <span>言語</span>
+          <select id="langSelect" data-log="認識する言語">
+            <option value="jpn+eng" selected>日本語+英語</option>
+            <option value="jpn">日本語のみ</option>
+            <option value="eng">英語のみ</option>
+          </select>
+        </div>
+
+        <button class="pill primary" id="recognizeBtn" disabled>文字を認識する</button>
+        <div class="progress-wrap" id="progressWrap" hidden>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-label" id="progressLabel"></div>
+        </div>
+        <div class="status" id="statusText">画像を選択するか、カメラで撮影してください</div>
+
+        <div class="result-box" id="resultBox" hidden>
+          <textarea id="resultText" rows="8"></textarea>
+          <div class="result-actions">
+            <button class="pill small" id="copyBtn">コピー</button>
+            <button class="pill small" id="speakBtn">▶ 読み上げ</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <canvas id="workCanvas" style="display: none"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./ocr.js"></script>
+  </body>
+</html>

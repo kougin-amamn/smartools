@@ -1,0 +1,125 @@
+.content {
+  justify-content: center;
+  padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+.app {
+  max-width: 360px;
+  align-items: center;
+  gap: 18px;
+}
+.scan-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  max-width: 300px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000;
+}
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--func);
+}
+.corner.tl {
+  top: 8px;
+  left: 8px;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 8px 0 0 0;
+}
+.corner.tr {
+  top: 8px;
+  right: 8px;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0 8px 0 0;
+}
+.corner.bl {
+  bottom: 8px;
+  left: 8px;
+  border-right: none;
+  border-top: none;
+  border-radius: 0 0 0 8px;
+}
+.corner.br {
+  bottom: 8px;
+  right: 8px;
+  border-left: none;
+  border-top: none;
+  border-radius: 0 0 8px 0;
+}
+.scan-line {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 8px;
+  height: 2px;
+  background: var(--func);
+  box-shadow: 0 0 8px var(--func);
+  animation: sweep 2.2s ease-in-out infinite;
+}
+@keyframes sweep {
+  0%,
+  100% {
+    top: 8px;
+    opacity: 0.9;
+  }
+  50% {
+    top: calc(100% - 10px);
+    opacity: 0.9;
+  }
+}
+/* 結果カードやリンクボタンがdisplay:flex指定と衝突して常時表示されてしまう事故を防ぐ */
+
+.status {
+  font-size: 14px;
+  min-height: 18px;
+}
+.result-card {
+  width: 100%;
+  background: var(--panel);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.result-label {
+  font-size: 12px;
+  color: var(--sub);
+}
+.result-text {
+  font-size: 15px;
+  color: var(--text);
+  word-break: break-all;
+  max-height: 80px;
+  overflow-y: auto;
+  line-height: 1.5;
+}
+.result-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pill {
+  padding: 10px 16px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 13px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.pill:active {
+  transform: scale(0.96);
+}

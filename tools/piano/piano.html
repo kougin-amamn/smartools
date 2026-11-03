@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ピアノ | 音色・録音・曲の練習ができるブラウザピアノ</title>
+    <meta
+      name="description"
+      content="ブラウザで弾けるピアノ。ピアノ・エレピ・オルガンなど5音色、サステインとリバーブ、コード表示、曲の練習、録音とMIDI保存に対応。PCキーボードでも演奏できます。"
+    />
+    <meta property="og:title" content="ピアノ | 音色・録音・曲の練習ができるブラウザピアノ" />
+    <meta
+      property="og:description"
+      content="ブラウザで弾けるピアノ。ピアノ・エレピ・オルガンなど5音色、サステインとリバーブ、コード表示、曲の練習、録音とMIDI保存に対応。PCキーボードでも演奏できます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-piano.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./piano.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "ピアノ",
+        "alternateName": ["Piano", "キーボード", "鍵盤"],
+        "description": "ブラウザで弾けるピアノ。ピアノ・エレピ・オルガンなど5音色、サステインとリバーブ、コード表示、曲の練習、録音とMIDI保存に対応。PCキーボードでも演奏できます。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-piano.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">ピアノ</h1>
+      <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+          />
+        </svg>
+      </button>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="stage">
+          <div class="info" id="info">鍵盤をタップして演奏。PCではA・S・D…キーでも弾けます。</div>
+          <div class="keyboard" id="keyboard"></div>
+          <div class="ctrl-row">
+            <button class="round" id="octDown" aria-label="1オクターブ下げる">−</button>
+            <div class="oct-label" id="octLabel"></div>
+            <button class="round" id="octUp" aria-label="1オクターブ上げる">+</button>
+            <button class="pill" id="pedal" data-log="off" type="button">
+              サステイン<br /><small>押している間</small>
+            </button>
+          </div>
+        </div>
+
+        <details class="sec">
+          <summary>コード・スケール</summary>
+          <div class="sec-body">
+            <label class="f"
+              >ルート
+              <select id="chRoot"></select
+            ></label>
+            <label class="f"
+              >種類
+              <select id="chKind"></select
+            ></label>
+            <div class="btns">
+              <button class="pill small" id="chShow" type="button">鍵盤に表示</button>
+              <button class="pill small primary" id="chPlay" type="button">鳴らす</button>
+            </div>
+            <div class="note" id="chInfo"></div>
+          </div>
+        </details>
+
+        <details class="sec">
+          <summary>曲の練習</summary>
+          <div class="sec-body">
+            <label class="f"
+              >曲
+              <select id="song"></select
+            ></label>
+            <label class="f"
+              >お手本の速さ
+              <select id="bpm">
+                <option value="70">ゆっくり</option>
+                <option value="100" selected>ふつう</option>
+                <option value="130">はやい</option>
+              </select></label
+            >
+            <div class="btns">
+              <button class="pill small primary" id="prStart" type="button">練習する</button>
+              <button class="pill small" id="prDemo" type="button">お手本を聴く</button>
+              <button class="pill small" id="prStop" type="button">やめる</button>
+            </div>
+            <div class="note" id="prInfo">光った鍵盤を順に押すと進みます。</div>
+          </div>
+        </details>
+
+        <details class="sec">
+          <summary>録音・再生</summary>
+          <div class="sec-body">
+            <div class="btns">
+              <button class="pill small primary" id="recBtn" type="button">● 録音</button>
+              <button class="pill small" id="playBtn" type="button" disabled>▶ 再生</button>
+            </div>
+            <label class="f"
+              >再生速度
+              <select id="speed">
+                <option value="0.5">0.5倍</option>
+                <option value="1" selected>1倍</option>
+                <option value="1.5">1.5倍</option>
+                <option value="2">2倍</option>
+              </select></label
+            >
+            <div class="btns">
+              <button class="pill small" id="midiBtn" type="button" disabled>MIDIで保存</button>
+              <button class="pill small" id="shareBtn" type="button" disabled hidden>共有</button>
+            </div>
+            <div class="note" id="recInfo">録音すると、再生・MIDI保存ができます。</div>
+          </div>
+        </details>
+      </div>
+    </main>
+    <div class="sheet" id="settings" hidden>
+      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="sheet-head">
+          <span id="settingsTitle">設定</span
+          ><button class="sheet-close" id="settingsClose" aria-label="設定を閉じる">×</button>
+        </div>
+        <details class="sec" open>
+          <summary>音色・音量</summary>
+          <div class="sec-body">
+            <label class="f"
+              >音色
+              <select id="inst">
+                <option value="piano">ピアノ</option>
+                <option value="epiano">エレピ</option>
+                <option value="organ">オルガン</option>
+                <option value="synth">シンセ</option>
+                <option value="bell">ベル</option>
+              </select></label
+            >
+            <label class="f"
+              >音量
+              <input type="range" id="vol" data-log="音量" data-log-unit="%" min="0" max="100" value="70"
+            /></label>
+            <label class="chk"><input type="checkbox" id="rev" checked /> リバーブ(響き)</label>
+          </div>
+        </details>
+
+        <details class="sec" open>
+          <summary>鍵盤の表示</summary>
+          <div class="sec-body">
+            <label class="f"
+              >オクターブ数
+              <select id="octs">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select></label
+            >
+            <label class="f"
+              >鍵盤の表示
+              <select id="lbl">
+                <option value="none">なし</option>
+                <option value="en">C D E</option>
+                <option value="jp">ド レ ミ</option>
+              </select></label
+            >
+          </div>
+        </details>
+      </div>
+    </div>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./piano-core.js"></script>
+    <script src="./piano.js"></script>
+  </body>
+</html>

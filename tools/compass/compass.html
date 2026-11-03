@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>方位磁石 | スマホのセンサーで方角を表示</title>
+    <meta
+      name="description"
+      content="スマホの向きセンサーで、今向いている方角と角度を計器のような文字盤で表示する方位磁石です。1°刻みの目盛りの文字盤がなめらかに回り、水平の気泡、目標の方位を固定してずれを表示する機能もあります。磁石の影響や端末によって誤差が出ることがあります。"
+    />
+    <meta property="og:title" content="方位磁石 | スマホのセンサーで方角を表示" />
+    <meta
+      property="og:description"
+      content="スマホの向きセンサーで、今向いている方角と角度を計器のような文字盤で表示する方位磁石です。1°刻みの目盛りの文字盤がなめらかに回り、水平の気泡、目標の方位を固定してずれを表示する機能もあります。磁石の影響や端末によって誤差が出ることがあります。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-compass.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./compass.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "方位磁石",
+        "alternateName": ["Compass", "コンパス", "方位"],
+        "description": "スマホの向きセンサーで、今向いている方角と角度を計器のような文字盤で表示する方位磁石です。1°刻みの目盛りの文字盤がなめらかに回り、水平の気泡、目標の方位を固定してずれを表示する機能もあります。磁石の影響や端末によって誤差が出ることがあります。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-compass.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">方位磁石</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app" data-land="split">
+        <div class="readout">
+          <div class="heading"><span id="headingText">--</span><small>°</small></div>
+          <div class="dir-label" id="dirLabel">開始すると方位を表示します</div>
+          <div class="target-text" id="targetText" hidden></div>
+        </div>
+        <svg
+          class="compass"
+          data-land-main="fill"
+          id="compass"
+          viewBox="-160 -160 320 320"
+          role="img"
+          aria-label="方位の文字盤"
+        >
+          <g id="dial"></g>
+          <g class="fixed">
+            <path class="lubber" d="M0 -158 L9 -144 L-9 -144 Z" />
+            <line class="lubber-line" x1="0" y1="-142" x2="0" y2="-96" />
+            <line class="cross" x1="-24" y1="0" x2="24" y2="0" />
+            <line class="cross" x1="0" y1="-24" x2="0" y2="24" />
+            <circle class="level-ring" r="34" />
+            <circle class="level-ring inner" r="7" />
+            <circle class="bubble" id="bubble" r="8" />
+          </g>
+        </svg>
+        <div class="status" id="statusText">開始ボタンを押して、端末を水平に持ってください</div>
+        <div class="buttons">
+          <button class="pill primary" id="startBtn">コンパスを開始</button>
+          <button class="pill" id="targetBtn" hidden>この方位を目標にする</button>
+        </div>
+        <p class="note">
+          磁気センサーの値なので、近くの磁石・金属・電化製品や端末によって誤差が出ます。表示は磁北(地図の北から日本ではおよそ7〜9°西)です。
+        </p>
+      </div>
+    </main>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./compass-core.js"></script>
+    <script src="./compass.js"></script>
+  </body>
+</html>

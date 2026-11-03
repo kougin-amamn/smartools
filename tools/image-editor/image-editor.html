@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>画像編集 | 写真を絵画風・ドット絵・線画・印刷風・モザイクなどに加工</title>
+    <meta
+      name="description"
+      content="写真や画像を開いて、アニメ調・油絵風・水彩風・点描・クレヨン、ドット絵・線画・減色・2色ディザ、ハーフトーン・電光掲示板、モザイク・ステンドグラス・浮き彫り・ネオン輪郭に加工し、セピアなど11の色も重ねられる画像編集ツールです。元の画像と見比べて PNG や JPEG で保存できます。画像は端末の中だけで処理します。"
+    />
+    <meta property="og:title" content="画像編集 | 写真を絵画風・ドット絵・線画・印刷風・モザイクなどに加工" />
+    <meta
+      property="og:description"
+      content="写真や画像を開いて、アニメ調・油絵風・水彩風・点描・クレヨン、ドット絵・線画・減色・2色ディザ、ハーフトーン・電光掲示板、モザイク・ステンドグラス・浮き彫り・ネオン輪郭に加工し、セピアなど11の色も重ねられる画像編集ツールです。元の画像と見比べて PNG や JPEG で保存できます。画像は端末の中だけで処理します。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-image-editor.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./image-editor.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "画像編集",
+        "alternateName": [
+          "Image Editor",
+          "写真加工",
+          "画像加工",
+          "アニメ風加工",
+          "油絵風加工",
+          "水彩画風",
+          "点描画",
+          "クレヨン風"
+        ],
+        "description": "写真や画像を開いて、アニメ調・油絵風・水彩風・点描・クレヨン、ドット絵・線画・減色・2色ディザ、ハーフトーン・電光掲示板、モザイク・ステンドグラス・浮き彫り・ネオン輪郭に加工し、セピアなど11の色も重ねられる画像編集ツールです。元の画像と見比べて PNG や JPEG で保存できます。画像は端末の中だけで処理します。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-image-editor.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">画像編集</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app" data-land="split">
+        <div class="stage" data-land-main="fill" id="stage">
+          <canvas id="view" aria-label="加工した画像" hidden></canvas>
+          <label class="drop" id="drop" for="fileInput">
+            <svg
+              viewBox="0 0 24 24"
+              width="40"
+              height="40"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <circle cx="9" cy="10" r="2" />
+              <path d="M21 16l-5-5-9 9" />
+            </svg>
+            <span id="dropText">画像を選ぶか、ここへドロップ・貼り付け</span>
+          </label>
+          <span class="badge" id="compareBadge" hidden>元の画像</span>
+        </div>
+        <div class="tools-row">
+          <label class="pill" for="fileInput">画像を開く</label>
+          <input type="file" id="fileInput" accept="image/*" data-log="画像を開く" hidden />
+          <button class="pill" id="compareBtn" aria-label="元の画像を見る" disabled>
+            押している間 元の画像
+          </button>
+        </div>
+        <div class="group-row" id="groupRow" data-log-group="効果の種類"></div>
+        <div class="mode-row" id="effectRow" data-log-group="効果"></div>
+        <div class="mode-row filter-row" id="filterRow" data-log-group="色"></div>
+        <div class="sliders">
+          <div id="params"></div>
+          <div class="slider-row" id="amountRow">
+            <span>効果の強さ</span>
+            <input
+              type="range"
+              id="amount"
+              aria-label="効果の強さ"
+              data-log-value="#amountVal"
+              min="0"
+              max="100"
+              value="100"
+            />
+            <b id="amountVal">100%</b>
+          </div>
+          <div class="slider-row" id="filtRow" hidden>
+            <span>色の強さ</span>
+            <input
+              type="range"
+              id="filtAmt"
+              aria-label="色の強さ"
+              data-log-value="#filtVal"
+              min="0"
+              max="100"
+              value="100"
+            />
+            <b id="filtVal">100%</b>
+          </div>
+        </div>
+        <div class="save-row">
+          <button class="pill primary" id="savePng" disabled>PNG で保存</button>
+          <button class="pill" id="saveJpg" disabled>JPEG で保存</button>
+        </div>
+        <p class="note">
+          画像は端末の中だけで処理し、どこにも送りません。保存する時は長い辺 4096
+          画素まで(端末の上限が小さい時はその上限まで)に縮めます。点や筆の大きさは、長い辺 1000
+          画素の画像での大きさです。
+        </p>
+      </div>
+    </main>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./image-editor-core.js"></script>
+    <script src="./image-editor-shaders.js"></script>
+    <script src="./image-editor.js"></script>
+  </body>
+</html>

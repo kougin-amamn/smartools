@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ナイトカメラ | 暗い場所を明るく映す暗視風カメラ</title>
+    <meta
+      name="description"
+      content="暗い場所でもカメラの映像を明るく・くっきり表示するナイトカメラです。明るさとコントラストの調整、緑色の暗視モード、ライトの点灯、撮影と保存ができます。"
+    />
+    <meta property="og:title" content="ナイトカメラ | 暗い場所を明るく映す暗視風カメラ" />
+    <meta
+      property="og:description"
+      content="暗い場所でもカメラの映像を明るく・くっきり表示するナイトカメラです。明るさとコントラストの調整、緑色の暗視モード、ライトの点灯、撮影と保存ができます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-night-camera.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./night-camera.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "ナイトカメラ",
+        "alternateName": ["Night Camera", "暗視カメラ", "ナイトビジョン"],
+        "description": "暗い場所でもカメラの映像を明るく・くっきり表示するナイトカメラです。明るさとコントラストの調整、緑色の暗視モード、ライトの点灯、撮影と保存ができます。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-night-camera.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">ナイトカメラ</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app" data-land="split">
+        <div class="cam-wrap" data-land-main="fill">
+          <video id="video" playsinline muted></video>
+          <div class="empty-state" id="emptyState">
+            <svg viewBox="0 0 24 24" width="36" height="36">
+              <path d="M16 5a7 7 0 1 0 5 12 5.5 5.5 0 0 1-5-12z" fill="currentColor" />
+            </svg>
+            <span id="statusText">カメラを起動しています…</span>
+          </div>
+        </div>
+
+        <div class="controls-row">
+          <button class="round" id="switchCamBtn" aria-label="カメラ切替">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path
+                d="M4 7h4l2-2h4l2 2h4v12H4z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <circle cx="12" cy="13" r="3.4" fill="none" stroke="currentColor" stroke-width="2" />
+              <path
+                d="M19 5l2 2-2 2M5 19l-2-2 2-2"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <button class="round big" id="captureBtn" aria-label="撮影"></button>
+          <button class="round" id="torchBtn" aria-label="ライト">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path d="M9 3h6v5l-2 3v9a1 1 0 0 1-1 1 1 1 0 0 1-1-1v-9L9 8z" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="sliders">
+          <div class="slider-row">
+            <span>明るさ</span>
+            <input
+              type="range"
+              id="brightnessSlider"
+              data-log="明るさ"
+              data-log-unit="%"
+              min="100"
+              max="400"
+              value="220"
+            />
+          </div>
+          <div class="slider-row">
+            <span>コントラスト</span>
+            <input
+              type="range"
+              id="contrastSlider"
+              data-log="コントラスト"
+              data-log-unit="%"
+              min="80"
+              max="200"
+              value="120"
+            />
+          </div>
+        </div>
+        <label class="toggle-row"
+          ><input type="checkbox" id="nightModeChk" data-log="暗視モード" />暗視風(グリーンモノクロ)</label
+        >
+
+        <div class="captured-list" id="capturedList" data-log="off"></div>
+        <canvas id="captureCanvas" hidden></canvas>
+      </div>
+    </main>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./night-camera.js"></script>
+  </body>
+</html>

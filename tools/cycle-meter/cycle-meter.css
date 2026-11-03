@@ -1,0 +1,63 @@
+.content {
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  gap: 14px;
+}
+.app {
+  max-width: 340px;
+  align-items: center;
+  gap: 12px;
+}
+.speed-num {
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--func);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.speed-unit {
+  font-size: 13px;
+  color: var(--sub);
+  margin-top: -8px;
+}
+.grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+.stat {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--sub);
+}
+.stat-val {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  margin-top: 4px;
+}
+.status {
+  font-size: 13px;
+  min-height: 16px;
+}
+.controls {
+  display: flex;
+  gap: 12px;
+}
+.pill {
+  padding: 12px 22px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 14px;
+  -webkit-tap-highlight-color: transparent;
+}

@@ -1,0 +1,299 @@
+/* ランチャーの「ミュージアム」表示のスタイル(配色は site.css のトークンのみ。ページの枠は launcher.css) */
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+#gl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+  outline: none;
+}
+#gl.hover {
+  cursor: pointer;
+}
+#gl.drag {
+  cursor: grabbing;
+}
+
+.pill {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+.pill.primary {
+  background: var(--func);
+  color: var(--func-fg);
+}
+.pill.small {
+  padding: 8px 14px;
+  font-size: 14px;
+}
+.pill:active {
+  transform: scale(0.97);
+}
+
+.hint {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(22, 20, 18, 0.62);
+  color: #f3ead2;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.4s;
+}
+/* 狭い画面: 案内は部屋名の下に。折り返して中央揃え */
+@media (max-width: 760px) {
+  .hint {
+    top: 50px;
+    white-space: normal;
+    text-align: center;
+    width: max-content;
+    border-radius: 14px;
+  }
+}
+.hint.off {
+  opacity: 0;
+}
+.hint span {
+  white-space: nowrap;
+} /* 区切りの所でだけ折り返す */
+
+.bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 12px calc(env(safe-area-inset-bottom, 0px) + 10px);
+  pointer-events: none;
+}
+.bar .pill {
+  pointer-events: auto;
+}
+
+.card {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 64px);
+  width: calc(100% - 24px);
+  max-width: 420px;
+  padding: 12px 16px 14px;
+  border-radius: 16px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+}
+/* 横長の広い画面: カードは右側に縦中央で出し、作品は左に見せる */
+.stage.wide .card {
+  left: auto;
+  right: 20px;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  width: 340px;
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 -6px 2px;
+}
+.card-head .card-no {
+  flex: 1;
+  text-align: center;
+}
+.nav-btn {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  cursor: pointer;
+  padding: 0;
+}
+.nav-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.nav-btn:active {
+  transform: scale(0.94);
+}
+.card-no {
+  font-size: 12px;
+  color: var(--sub);
+  letter-spacing: 0.06em;
+}
+.card-title {
+  font-size: 19px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.card-desc {
+  font-size: 14px;
+  color: var(--sub);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.card-tags span,
+.tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+}
+.card-actions {
+  display: flex;
+  margin-top: 12px;
+}
+.card-actions .pill {
+  flex: 1;
+}
+
+.list-panel {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 5;
+}
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+}
+.list-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+.list-note {
+  margin: 0 16px 8px;
+  font-size: 13px;
+  color: var(--sub);
+  line-height: 1.5;
+}
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0 16px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.list a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--text);
+  text-decoration: none;
+}
+.list .mk {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+.list .tx {
+  min-width: 0;
+}
+.list .nm {
+  font-size: 15px;
+  font-weight: 600;
+}
+.list .ds {
+  font-size: 12px;
+  color: var(--sub);
+  margin-top: 2px;
+}
+
+.room-name {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  background: rgba(22, 20, 18, 0.62);
+  color: #f3ead2;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+.fade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+.fade.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.list .mk img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  display: block;
+}

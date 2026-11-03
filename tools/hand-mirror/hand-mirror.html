@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>手鏡 | 前面カメラで身だしなみをすぐ確認</title>
+    <meta
+      name="description"
+      content="前面カメラの映像を左右反転で映す手鏡です。拡大・明るさの調整、背面カメラへの切り替え、対応端末ではライトの点灯もできます。映像は端末の中だけで表示し、保存や送信はしません。"
+    />
+    <meta property="og:title" content="手鏡 | 前面カメラで身だしなみをすぐ確認" />
+    <meta
+      property="og:description"
+      content="前面カメラの映像を左右反転で映す手鏡です。拡大・明るさの調整、背面カメラへの切り替え、対応端末ではライトの点灯もできます。映像は端末の中だけで表示し、保存や送信はしません。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-hand-mirror.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./hand-mirror.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "手鏡",
+        "alternateName": ["Hand Mirror", "ミラー", "鏡"],
+        "description": "前面カメラの映像を左右反転で映す手鏡です。拡大・明るさの調整、背面カメラへの切り替え、対応端末ではライトの点灯もできます。映像は端末の中だけで表示し、保存や送信はしません。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-hand-mirror.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">手鏡</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app" data-land="split">
+        <div class="mirror-wrap" data-land-main="fill">
+          <video id="video" playsinline muted></video>
+          <div class="empty-state" id="emptyState">
+            <svg viewBox="0 0 24 24" width="34" height="34">
+              <circle cx="12" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.6" />
+              <rect x="10.5" y="15" width="3" height="7" rx="1.5" fill="currentColor" />
+            </svg>
+            <span id="statusText">カメラを起動しています…</span>
+          </div>
+        </div>
+
+        <div class="controls-row">
+          <button class="round" id="switchCamBtn" aria-label="カメラ切替">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path
+                d="M4 7h4l2-2h4l2 2h4v12H4z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <circle cx="12" cy="13" r="3.4" fill="none" stroke="currentColor" stroke-width="2" />
+              <path
+                d="M19 5l2 2-2 2M5 19l-2-2 2-2"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <button class="round" id="torchBtn" aria-label="ライト">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path d="M9 3h6v5l-2 3v9a1 1 0 0 1-1 1 1 1 0 0 1-1-1v-9L9 8z" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="sliders">
+          <div class="slider-row">
+            <span>拡大</span>
+            <input
+              type="range"
+              id="zoomSlider"
+              data-log="拡大"
+              data-log-unit="%"
+              min="100"
+              max="300"
+              value="100"
+            />
+          </div>
+          <div class="slider-row">
+            <span>明るさ</span>
+            <input
+              type="range"
+              id="brightnessSlider"
+              data-log="明るさ"
+              data-log-unit="%"
+              min="80"
+              max="200"
+              value="100"
+            />
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./hand-mirror.js"></script>
+  </body>
+</html>

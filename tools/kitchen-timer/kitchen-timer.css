@@ -1,0 +1,166 @@
+:root {
+  --track: #e6e7ec;
+  --progress: #5cc4b6;
+  --alert: #8fdcd1;
+}
+:root[data-theme='dark'] {
+  --track: #2b2d38;
+  --progress: #7fe0d2;
+  --alert: #2d7a72;
+}
+body {
+  transition: background-color 0.3s ease;
+}
+.content {
+  justify-content: center;
+  padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+body.ringing {
+  animation: flash 1.4s ease-in-out infinite;
+}
+@keyframes flash {
+  0%,
+  100% {
+    background: var(--bg);
+  }
+  50% {
+    background: var(--alert);
+  }
+}
+.app {
+  max-width: 360px;
+  align-items: center;
+  gap: 28px;
+}
+.ring-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 1/1;
+}
+.ring {
+  width: 100%;
+  height: 100%;
+}
+.track {
+  fill: none;
+  stroke: var(--track);
+  stroke-width: 12;
+}
+.progress {
+  fill: none;
+  stroke: var(--progress);
+  stroke-width: 12;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.25s linear;
+}
+.time-display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.time {
+  font-size: 44px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+.state {
+  font-size: 14px;
+  color: var(--sub);
+}
+.adjust-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+.adjust-row button {
+  border: none;
+  cursor: pointer;
+  padding: 12px 4px;
+  border-radius: 14px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 14px;
+  -webkit-tap-highlight-color: transparent;
+}
+.adjust-row button:active {
+  transform: scale(0.95);
+}
+.adjust-row button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+.icon-btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.08s ease,
+    opacity 0.2s ease;
+}
+.icon-btn:active {
+  transform: scale(0.92);
+}
+.icon-btn:focus-visible,
+.adjust-row button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.icon-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.icon-btn:disabled:active {
+  transform: none;
+}
+.icon-btn.primary {
+  width: 76px;
+  height: 76px;
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.icon-btn.primary .glyph {
+  font-size: 26px;
+  color: var(--accent-fg);
+  line-height: 1;
+}
+#playIcon {
+  margin-left: 3px;
+}
+.icon-btn.secondary .glyph {
+  font-size: 18px;
+  color: var(--fn-fg);
+  line-height: 1;
+}
+.icon-btn.secondary {
+  width: 52px;
+  height: 52px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+}
+.icon-btn .ico {
+  width: 22px;
+  height: 22px;
+  color: var(--fn-fg);
+}
+.icon-btn.primary .ico {
+  width: 34px;
+  height: 34px;
+  color: var(--accent-fg);
+}

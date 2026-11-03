@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>電卓 | 四則演算・パーセント・キーボード入力に対応</title>
+    <meta
+      name="description"
+      content="ブラウザで使えるシンプルな電卓。足し算・引き算・掛け算・割り算、符号反転、パーセント計算に対応し、パソコンのキーボードでも入力できます。インストール不要で、オフラインでも使えます。"
+    />
+    <meta property="og:title" content="電卓 | 四則演算・パーセント・キーボード入力に対応" />
+    <meta
+      property="og:description"
+      content="ブラウザで使えるシンプルな電卓。足し算・引き算・掛け算・割り算、符号反転、パーセント計算に対応し、パソコンのキーボードでも入力できます。インストール不要で、オフラインでも使えます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-calculator.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./calculator.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "電卓",
+        "alternateName": ["Calculator", "計算機", "でんたく"],
+        "description": "ブラウザで使えるシンプルな電卓。足し算・引き算・掛け算・割り算、符号反転、パーセント計算に対応し、パソコンのキーボードでも入力できます。インストール不要で、オフラインでも使えます。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-calculator.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">電卓</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="calc" role="group" aria-label="電卓">
+        <div class="display">
+          <div class="expr" id="expr">&nbsp;</div>
+          <div class="result" id="result">0</div>
+        </div>
+        <div class="pad" id="pad">
+          <button class="fn" data-act="clear">C</button>
+          <button class="fn" data-act="sign">±</button>
+          <button class="fn" data-act="percent">%</button>
+          <button class="op" data-act="op" data-val="÷">÷</button>
+
+          <button data-act="num" data-val="7">7</button>
+          <button data-act="num" data-val="8">8</button>
+          <button data-act="num" data-val="9">9</button>
+          <button class="op" data-act="op" data-val="×">×</button>
+
+          <button data-act="num" data-val="4">4</button>
+          <button data-act="num" data-val="5">5</button>
+          <button data-act="num" data-val="6">6</button>
+          <button class="op" data-act="op" data-val="−">−</button>
+
+          <button data-act="num" data-val="1">1</button>
+          <button data-act="num" data-val="2">2</button>
+          <button data-act="num" data-val="3">3</button>
+          <button class="op" data-act="op" data-val="+">+</button>
+
+          <button data-act="num" data-val="0">0</button>
+          <button data-act="num" data-val="00">00</button>
+          <button data-act="dot">.</button>
+          <button class="op" data-act="equals">=</button>
+        </div>
+      </div>
+    </main>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./calculator-core.js"></script>
+    <script
+      src="./calculator.js"
+      onerror="
+        log.error('calculator.js を読み込めませんでした(同じフォルダに置かれているか確認してください)')
+      "
+    ></script>
+  </body>
+</html>

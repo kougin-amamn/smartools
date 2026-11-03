@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>音楽プレイヤー | 端末の曲をプレイリストで再生</title>
+    <meta
+      name="description"
+      content="端末の音楽ファイル(MP3・AAC・FLACなど)をプレイリストで再生できる音楽プレイヤーです。曲名やジャケット画像を読み取り、シャッフル・リピート・並べ替えに対応。プレイリストは端末に保存されます。"
+    />
+    <meta property="og:title" content="音楽プレイヤー | 端末の曲をプレイリストで再生" />
+    <meta
+      property="og:description"
+      content="端末の音楽ファイル(MP3・AAC・FLACなど)をプレイリストで再生できる音楽プレイヤーです。曲名やジャケット画像を読み取り、シャッフル・リピート・並べ替えに対応。プレイリストは端末に保存されます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-music-player.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./music-player.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "音楽プレイヤー",
+        "alternateName": ["Music Player", "MP3プレイヤー", "音楽再生"],
+        "description": "端末の音楽ファイル(MP3・AAC・FLACなど)をプレイリストで再生できる音楽プレイヤーです。曲名やジャケット画像を読み取り、シャッフル・リピート・並べ替えに対応。プレイリストは端末に保存されます。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-music-player.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">音楽プレイヤー</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="add-row">
+          <label class="pill small file-label"
+            >曲を追加<input type="file" id="fileInput" data-log="曲" accept="audio/*" multiple hidden
+          /></label>
+          <label class="pill small file-label"
+            >フォルダを取り込み<input
+              type="file"
+              id="folderInput"
+              data-log="フォルダ"
+              webkitdirectory
+              multiple
+              hidden
+          /></label>
+        </div>
+
+        <div class="now-playing">
+          <div class="art-wrap">
+            <img class="art" id="albumArt" hidden />
+            <div class="art-placeholder" id="artPlaceholder">
+              <svg viewBox="0 0 24 24" width="56" height="56">
+                <path
+                  d="M9 18V5l12-2v13"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <circle cx="6" cy="18" r="3" fill="currentColor" />
+                <circle cx="18" cy="16" r="3" fill="currentColor" />
+              </svg>
+            </div>
+          </div>
+          <div class="track-title" id="trackTitle">曲を選択してください</div>
+          <div class="track-artist" id="trackArtist"></div>
+
+          <div class="seek-row">
+            <span class="time" id="curTime">0:00</span>
+            <input type="range" id="seekSlider" min="0" max="100" value="0" />
+            <span class="time" id="durTime">0:00</span>
+          </div>
+
+          <div class="controls">
+            <button class="round" id="shuffleBtn" aria-label="シャッフル">
+              <svg viewBox="0 0 24 24" width="18" height="18">
+                <path
+                  d="M4 7h4l3 4 3-4h6m-3-3l3 3-3 3"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M4 17h4l3-4M14 17h6m-3-3l3 3-3 3"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+            <button class="round" id="prevBtn" data-log="前の曲" aria-label="前へ">
+              <svg viewBox="0 0 24 24" width="18" height="18">
+                <rect x="6" y="6" width="2" height="12" fill="currentColor" />
+                <path d="M18 6L9 12l9 6V6z" fill="currentColor" />
+              </svg>
+            </button>
+            <button class="round big" id="playBtn" aria-label="再生">
+              <svg id="playIcon" viewBox="0 0 24 24" width="22" height="22">
+                <path d="M8 5v14l11-7z" fill="currentColor" />
+              </svg>
+              <svg id="pauseIcon" viewBox="0 0 24 24" width="22" height="22" style="display: none">
+                <path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" />
+              </svg>
+            </button>
+            <button class="round" id="nextBtn" data-log="次の曲" aria-label="次へ">
+              <svg viewBox="0 0 24 24" width="18" height="18">
+                <path d="M7 6l9 6-9 6V6z" fill="currentColor" />
+                <rect x="17" y="6" width="2" height="12" fill="currentColor" />
+              </svg>
+            </button>
+            <button class="round" id="repeatBtn" aria-label="リピート">
+              <svg id="repeatIcon" viewBox="0 0 24 24" width="18" height="18">
+                <path
+                  d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <svg id="repeatOneIcon" viewBox="0 0 24 24" width="18" height="18" style="display: none">
+                <path
+                  d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <text x="12" y="15" font-size="8" text-anchor="middle" fill="currentColor">1</text>
+              </svg>
+            </button>
+          </div>
+
+          <div class="volume-row">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor" />
+              <path
+                d="M16.5 8.5a5 5 0 0 1 0 7"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+              />
+            </svg>
+            <input
+              type="range"
+              id="volumeSlider"
+              data-log="音量"
+              data-log-scale="100"
+              data-log-unit="%"
+              min="0"
+              max="1"
+              step="0.01"
+              value="1"
+            />
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="playlist-table" id="playlistTable">
+            <thead>
+              <tr>
+                <th></th>
+                <th></th>
+                <th>曲名</th>
+                <th>アーティスト</th>
+                <th>アルバム</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="playlistBody" data-log="off"></tbody>
+          </table>
+        </div>
+        <div class="status" id="statusText">
+          上のボタンから音声ファイル(MP3/WAV/AAC/OGGなど)を追加してください
+        </div>
+      </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./music-player-db.js"></script>
+    <script src="./music-player.js"></script>
+  </body>
+</html>

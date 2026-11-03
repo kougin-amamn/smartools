@@ -1,0 +1,142 @@
+.content {
+  flex-direction: column;
+  padding: 18px 18px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  gap: 12px;
+  overflow-y: auto;
+}
+.app {
+  max-width: 380px;
+  align-items: center;
+  gap: 12px;
+}
+.search-row {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+}
+.search-row input {
+  flex: 1;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 14px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+}
+.pill {
+  padding: 10px 16px;
+  background: var(--func);
+  color: var(--func-fg);
+  font-size: 13px;
+  -webkit-tap-highlight-color: transparent;
+}
+.pill.small {
+  padding: 10px 16px;
+}
+.pill.ghost {
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  width: 100%;
+}
+.search-results {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.search-results .item {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(20, 20, 30, 0.06);
+}
+.current-card {
+  width: 100%;
+  background: var(--panel);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.1);
+}
+.place-name {
+  font-size: 15px;
+  color: var(--sub);
+}
+.current-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.current-icon {
+  font-size: 52px;
+  line-height: 1;
+}
+.current-temp {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.current-desc {
+  font-size: 14px;
+  color: var(--text);
+}
+.current-sub {
+  font-size: 12px;
+  color: var(--sub);
+}
+.daily-list {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.day-card {
+  flex: 0 0 auto;
+  width: 78px;
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+}
+.day-card .dow {
+  font-size: 12px;
+  color: var(--sub);
+}
+.day-card .icon {
+  font-size: 24px;
+}
+.day-card .hi {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 600;
+}
+.day-card .lo {
+  font-size: 12px;
+  color: var(--sub);
+}
+.day-card .pop {
+  font-size: 11px;
+  color: var(--func);
+}
+.status {
+  font-size: 12px;
+  min-height: 16px;
+}
+
+#searchBtn {
+  white-space: nowrap;
+  flex: none;
+}

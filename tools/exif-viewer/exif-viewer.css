@@ -1,0 +1,101 @@
+.content {
+  flex-direction: column;
+  padding: 16px 18px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  gap: 12px;
+  overflow-y: auto;
+}
+.app {
+  max-width: 460px;
+  align-items: center;
+  gap: 12px;
+}
+.pill {
+  padding: 11px 20px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 13px;
+  width: 100%;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.file-label {
+  display: block;
+}
+.status {
+  font-size: 12px;
+}
+.table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  background: var(--panel);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+}
+table {
+  border-collapse: collapse;
+  font-size: 12px;
+}
+th,
+td {
+  padding: 8px 10px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--fn-bg);
+}
+thead th {
+  vertical-align: bottom;
+  padding-top: 10px;
+}
+.field-col {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--panel);
+  color: var(--sub);
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 1px 0 0 var(--fn-bg);
+}
+.photo-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.photo-head img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--fn-bg);
+}
+.photo-head .fname {
+  font-size: 10px;
+  color: var(--text);
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+  white-space: nowrap;
+}
+td {
+  color: var(--text);
+  text-align: center;
+}
+td a {
+  color: var(--func);
+  text-decoration: none;
+}
+td.empty-cell {
+  color: var(--sub);
+}
+.empty {
+  font-size: 11px;
+  color: var(--sub);
+  padding: 10px 12px;
+}
+
+.note {
+  color: var(--text);
+} /* このツールの注意書きは本文と同じ色 */

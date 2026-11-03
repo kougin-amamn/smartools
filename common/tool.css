@@ -1,0 +1,213 @@
+/* ツールのページ共通の土台と部品(tools/ の全ページで共用。ランチャーでは読まない)
+   全ツールで同じだった宣言だけをここに置く。ツールごとの違いは各ツールの css で上書きする */
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  height: 100%;
+  margin: 0;
+}
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.content {
+  align-items: center;
+  display: flex;
+  flex: 1;
+}
+.app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.status {
+  color: var(--sub);
+  text-align: center;
+}
+.pill {
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.pill.primary {
+  background: var(--func);
+  color: var(--func-fg);
+}
+.pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.round {
+  background: var(--fn-bg);
+  border: none;
+  border-radius: 50%;
+  color: var(--fn-fg);
+  cursor: pointer;
+}
+.round:active {
+  transform: scale(0.92);
+}
+.round:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pill:disabled {
+  cursor: default;
+}
+.note {
+  color: var(--sub);
+}
+.time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 設定シート(ヘッダの設定ボタンで下から出す。広い画面では中央) */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.18);
+}
+.sheet-panel {
+  width: 100%;
+  max-width: 520px;
+  max-height: min(70vh, 640px);
+  overflow-y: auto;
+  padding: 0 16px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  border-radius: 18px 18px 0 0;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.18);
+  animation: sheet-up 0.2s ease-out;
+}
+.sheet-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 10px;
+  background: var(--panel);
+  font-weight: 600;
+}
+.sheet-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 18px;
+  cursor: pointer;
+}
+.sheet-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+@media (min-width: 720px) {
+  .sheet {
+    align-items: center;
+  }
+  .sheet-panel {
+    border-radius: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet-panel {
+    animation: none;
+  }
+}
+/* 埋め込み表示ではヘッダが無いので、設定ボタンを右上に浮かべる */
+.set-float {
+  position: fixed;
+  top: 6px;
+  right: 6px;
+  z-index: 800;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+/* ランチャーへ戻るボタン(ランチャーから開いた時だけ出る) */
+.back-btn {
+  margin-left: -10px;
+  margin-right: -2px;
+}
+/* 横向き(スマホを横にして高さが足りない時)
+   上下の余白とヘッダを詰める。さらに data-land="split" を付けた入れ物は、data-land-main を付けた主役
+   (カメラの映像・文字盤など)を左に、残り(数字・ボタン・設定)を右に並べる。
+   主役は画面の高さに収まる大きさにし、右側が長い時は右だけが流れて主役はその場に留まる。
+   data-land-main="fill" は高さいっぱいに広げる(幅は --land-ratio = 幅÷高さ で決まる。既定 1)。
+   値を付けない data-land-main は大きさを変えず置き場所だけ左にする。
+   各ツールの css は後から読むので、ここは body を付けて優先度を上げる(ツール側の .app や .content の指定に負けないように)。
+   理由: 縦向き前提の縦積みのままだと、横向きでは主役が画面の外へはみ出し、操作のたびにスクロールが要るため */
+@media (orientation: landscape) and (max-height: 600px) {
+  :root {
+    --land-h: calc(100dvh - 60px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  }
+  .site-bar {
+    min-height: 42px;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 1px);
+    padding-bottom: 1px;
+  }
+  body > .content {
+    padding-top: 8px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+    padding-left: calc(env(safe-area-inset-left, 0px) + 16px);
+    padding-right: calc(env(safe-area-inset-right, 0px) + 16px);
+  }
+  body [data-land='split'] {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 20px;
+    row-gap: 0;
+    grid-auto-rows: min-content;
+    align-items: start;
+    align-content: start;
+    justify-items: center;
+    width: 100%;
+    max-width: 920px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  /* 右側: 行の間は余白で空ける(主役が複数の行にまたがるので、行の間隔 row-gap は使えない)。
+     行の高さを min-content にするのは、右側が主役より短い時に、空の行へ余分な高さが配られて全体が伸びるのを防ぐため */
+  body [data-land='split'] > :not([data-land-main]) {
+    grid-column: 2;
+    min-width: 0;
+    max-width: 100%;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  body [data-land='split'] > [data-land-main] {
+    grid-column: 1;
+    grid-row: 1 / span 30;
+    position: sticky;
+    top: 0;
+    margin: 0;
+  }
+  body [data-land='split'] > [data-land-main='fill'] {
+    width: min(var(--land-max-w, 52vw), calc(var(--land-h) * var(--land-ratio, 1)));
+    max-width: none;
+    max-height: var(--land-h);
+    height: min(var(--land-h), calc(var(--land-max-w, 52vw) / var(--land-ratio, 1)));
+    aspect-ratio: var(--land-ratio, 1);
+  }
+}

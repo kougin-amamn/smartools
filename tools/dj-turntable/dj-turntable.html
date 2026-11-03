@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>DJターンテーブル | レコード盤で鳴らす音楽プレーヤー</title>
+    <meta
+      name="description"
+      content="ターンテーブル風の音楽プレーヤー。端末の音楽ファイルをレコード盤にのせて再生し、指で盤を回してスクラッチ、33/45回転やピッチの調整もできます。曲は端末内で処理され送信されません。"
+    />
+    <meta property="og:title" content="DJターンテーブル | レコード盤で鳴らす音楽プレーヤー" />
+    <meta
+      property="og:description"
+      content="ターンテーブル風の音楽プレーヤー。端末の音楽ファイルをレコード盤にのせて再生し、指で盤を回してスクラッチ、33/45回転やピッチの調整もできます。曲は端末内で処理され送信されません。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-dj-turntable.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./dj-turntable.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "DJターンテーブル",
+        "alternateName": ["DJ Turntable", "ターンテーブル", "レコードプレーヤー", "スクラッチ"],
+        "description": "ターンテーブル風の音楽プレーヤー。端末の音楽ファイルをレコード盤にのせて再生し、指で盤を回してスクラッチ、33/45回転やピッチの調整もできます。曲は端末内で処理され送信されません。",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-dj-turntable.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">DJターンテーブル</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="deck-wrap">
+          <svg
+            id="deck"
+            viewBox="0 0 400 320"
+            role="img"
+            aria-label="ターンテーブル。盤を指で回すとスクラッチできます"
+          >
+            <rect x="4" y="4" width="392" height="312" rx="22" style="fill: var(--deck)" />
+            <circle cx="165" cy="165" r="152" style="fill: var(--platter)" />
+            <g id="rot">
+              <g style="fill: var(--dot)">
+                <circle cx="311.0" cy="165.0" r="1.6" />
+                <circle cx="310.2" cy="180.3" r="1.6" />
+                <circle cx="307.8" cy="195.4" r="1.6" />
+                <circle cx="303.9" cy="210.1" r="1.6" />
+                <circle cx="298.4" cy="224.4" r="1.6" />
+                <circle cx="291.4" cy="238.0" r="1.6" />
+                <circle cx="283.1" cy="250.8" r="1.6" />
+                <circle cx="273.5" cy="262.7" r="1.6" />
+                <circle cx="262.7" cy="273.5" r="1.6" />
+                <circle cx="250.8" cy="283.1" r="1.6" />
+                <circle cx="238.0" cy="291.4" r="1.6" />
+                <circle cx="224.4" cy="298.4" r="1.6" />
+                <circle cx="210.1" cy="303.9" r="1.6" />
+                <circle cx="195.4" cy="307.8" r="1.6" />
+                <circle cx="180.3" cy="310.2" r="1.6" />
+                <circle cx="165.0" cy="311.0" r="1.6" />
+                <circle cx="149.7" cy="310.2" r="1.6" />
+                <circle cx="134.6" cy="307.8" r="1.6" />
+                <circle cx="119.9" cy="303.9" r="1.6" />
+                <circle cx="105.6" cy="298.4" r="1.6" />
+                <circle cx="92.0" cy="291.4" r="1.6" />
+                <circle cx="79.2" cy="283.1" r="1.6" />
+                <circle cx="67.3" cy="273.5" r="1.6" />
+                <circle cx="56.5" cy="262.7" r="1.6" />
+                <circle cx="46.9" cy="250.8" r="1.6" />
+                <circle cx="38.6" cy="238.0" r="1.6" />
+                <circle cx="31.6" cy="224.4" r="1.6" />
+                <circle cx="26.1" cy="210.1" r="1.6" />
+                <circle cx="22.2" cy="195.4" r="1.6" />
+                <circle cx="19.8" cy="180.3" r="1.6" />
+                <circle cx="19.0" cy="165.0" r="1.6" />
+                <circle cx="19.8" cy="149.7" r="1.6" />
+                <circle cx="22.2" cy="134.6" r="1.6" />
+                <circle cx="26.1" cy="119.9" r="1.6" />
+                <circle cx="31.6" cy="105.6" r="1.6" />
+                <circle cx="38.6" cy="92.0" r="1.6" />
+                <circle cx="46.9" cy="79.2" r="1.6" />
+                <circle cx="56.5" cy="67.3" r="1.6" />
+                <circle cx="67.3" cy="56.5" r="1.6" />
+                <circle cx="79.2" cy="46.9" r="1.6" />
+                <circle cx="92.0" cy="38.6" r="1.6" />
+                <circle cx="105.6" cy="31.6" r="1.6" />
+                <circle cx="119.9" cy="26.1" r="1.6" />
+                <circle cx="134.6" cy="22.2" r="1.6" />
+                <circle cx="149.7" cy="19.8" r="1.6" />
+                <circle cx="165.0" cy="19.0" r="1.6" />
+                <circle cx="180.3" cy="19.8" r="1.6" />
+                <circle cx="195.4" cy="22.2" r="1.6" />
+                <circle cx="210.1" cy="26.1" r="1.6" />
+                <circle cx="224.4" cy="31.6" r="1.6" />
+                <circle cx="238.0" cy="38.6" r="1.6" />
+                <circle cx="250.8" cy="46.9" r="1.6" />
+                <circle cx="262.7" cy="56.5" r="1.6" />
+                <circle cx="273.5" cy="67.3" r="1.6" />
+                <circle cx="283.1" cy="79.2" r="1.6" />
+                <circle cx="291.4" cy="92.0" r="1.6" />
+                <circle cx="298.4" cy="105.6" r="1.6" />
+                <circle cx="303.9" cy="119.9" r="1.6" />
+                <circle cx="307.8" cy="134.6" r="1.6" />
+                <circle cx="310.2" cy="149.7" r="1.6" />
+              </g>
+              <circle cx="165" cy="165" r="138" fill="#15161c" />
+              <g fill="none" stroke="#ffffff" stroke-opacity="0.07" stroke-width="0.7">
+                <circle cx="165" cy="165" r="54" />
+                <circle cx="165" cy="165" r="59" />
+                <circle cx="165" cy="165" r="64" />
+                <circle cx="165" cy="165" r="69" />
+                <circle cx="165" cy="165" r="74" />
+                <circle cx="165" cy="165" r="79" />
+                <circle cx="165" cy="165" r="84" />
+                <circle cx="165" cy="165" r="89" />
+                <circle cx="165" cy="165" r="94" />
+                <circle cx="165" cy="165" r="99" />
+                <circle cx="165" cy="165" r="104" />
+                <circle cx="165" cy="165" r="109" />
+                <circle cx="165" cy="165" r="114" />
+                <circle cx="165" cy="165" r="119" />
+                <circle cx="165" cy="165" r="124" />
+                <circle cx="165" cy="165" r="129" />
+                <circle cx="165" cy="165" r="134" />
+              </g>
+              <circle cx="165" cy="165" r="46" style="fill: var(--func)" />
+              <g
+                id="labelText"
+                fill="#0b2b27"
+                font-size="9.5"
+                font-weight="700"
+                text-anchor="middle"
+                font-family="sans-serif"
+              ></g>
+              <circle cx="165" cy="204" r="3" fill="#0b2b27" fill-opacity="0.55" />
+              <circle cx="165" cy="165" r="3" fill="#e9ecf5" />
+            </g>
+            <g fill="#ffffff" fill-opacity="0.06" pointer-events="none">
+              <path d="M165 165 L255.5 60.9 A138 138 0 0 1 293.8 115.5 Z" />
+              <path d="M165 165 L74.5 269.1 A138 138 0 0 1 36.2 214.5 Z" />
+            </g>
+            <circle id="hit" cx="165" cy="165" r="138" fill="transparent" />
+            <g id="arm" transform="translate(345 52) rotate(90)" pointer-events="none">
+              <line
+                x1="-34"
+                y1="0"
+                x2="193"
+                y2="0"
+                stroke-width="5"
+                stroke-linecap="round"
+                style="stroke: var(--arm)"
+              />
+              <rect x="-46" y="-7" width="16" height="14" rx="3" style="fill: var(--arm-dark)" />
+              <rect x="190" y="-7" width="25" height="14" rx="3" style="fill: var(--arm-dark)" />
+              <circle cx="215" cy="0" r="2.6" fill="#ff6b6b" />
+              <circle cx="0" cy="0" r="17" style="fill: var(--platter)" />
+              <circle cx="0" cy="0" r="8" style="fill: var(--arm-dark)" />
+            </g>
+          </svg>
+        </div>
+
+        <div class="now">
+          <span class="title" id="trackTitle">曲を選んでください</span
+          ><span class="time" id="timeText">00:00 / 00:00</span>
+        </div>
+        <div class="wave" id="waveBox" aria-label="再生位置(押すとそこから再生)">
+          <canvas id="wave"></canvas>
+          <div class="played" id="played"></div>
+          <div class="head" id="head"></div>
+        </div>
+        <div class="status" id="status" role="status"></div>
+
+        <div class="transport">
+          <button class="round" id="prevBtn" aria-label="前の曲" disabled>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z" /></svg>
+          </button>
+          <button class="round" id="cueBtn" aria-label="頭出し"><span class="cue-txt">CUE</span></button>
+          <button class="round big" id="playBtn" aria-label="再生" aria-pressed="false">
+            <svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 5h4v14H7zM13 5h4v14h-4z" />
+            </svg>
+          </button>
+          <button class="round" id="nextBtn" aria-label="次の曲" disabled>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z" /></svg>
+          </button>
+        </div>
+
+        <div class="panel">
+          <div class="opt">
+            <div class="lbl">回転数</div>
+            <div class="seg" role="group" aria-label="回転数" data-log-group="回転数">
+              <button type="button" class="seg-btn on" data-rpm="33.3333" data-log="33回転">33⅓ 回転</button>
+              <button type="button" class="seg-btn" data-rpm="45" data-log="45回転">45 回転</button>
+            </div>
+          </div>
+          <div class="opt">
+            <label for="pitch">ピッチ(速さの微調整)</label>
+            <div class="row">
+              <input
+                type="range"
+                id="pitch"
+                min="-8"
+                max="8"
+                step="0.1"
+                value="0"
+                data-log="ピッチ"
+                data-log-value="#pitchVal"
+              /><output id="pitchVal">0.0%</output
+              ><button type="button" class="mini" id="pitchReset" aria-label="ピッチを0に戻す">0</button>
+            </div>
+          </div>
+          <div class="opt">
+            <label for="volume">音量</label>
+            <div class="row">
+              <input
+                type="range"
+                id="volume"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.8"
+                data-log="音量"
+                data-log-scale="100"
+                data-log-unit="%"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="list-head">
+          <h2>曲リスト</h2>
+          <label class="pill"
+            >曲を追加<input
+              type="file"
+              id="fileInput"
+              accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.opus"
+              multiple
+              hidden
+              data-log="曲を追加"
+          /></label>
+        </div>
+        <ul class="tracks" id="tracks"></ul>
+
+        <div class="note">
+          曲は端末の中だけで処理し、送信しません。盤を指で回すとスクラッチ(逆に回せば逆再生)、回転数やピッチで速さと音の高さが変わります。長い曲は読み込みに時間がかかり、メモリも使います。
+        </div>
+      </div>
+    </main>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./dj-turntable-core.js"></script>
+    <script src="./dj-turntable.js"></script>
+  </body>
+</html>

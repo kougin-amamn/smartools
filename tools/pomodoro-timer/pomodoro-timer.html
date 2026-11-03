@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ポモドーロタイマー | 25分作業と休憩を自動で切り替え</title>
+    <meta
+      name="description"
+      content="作業25分と休憩を繰り返して集中を保つポモドーロタイマー。作業・短い休憩・長い休憩の時間を変更でき、完了数も表示します。オフラインでも使えます。"
+    />
+    <meta property="og:title" content="ポモドーロタイマー | 25分作業と休憩を自動で切り替え" />
+    <meta
+      property="og:description"
+      content="作業25分と休憩を繰り返して集中を保つポモドーロタイマー。作業・短い休憩・長い休憩の時間を変更でき、完了数も表示します。オフラインでも使えます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-pomodoro-timer.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./pomodoro-timer.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "ポモドーロタイマー",
+        "alternateName": ["Pomodoro Timer", "ポモドーロ・テクニック"],
+        "description": "作業25分と休憩を繰り返して集中を保つポモドーロタイマー。作業・短い休憩・長い休憩の時間を変更でき、完了数も表示します。オフラインでも使えます。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-pomodoro-timer.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">ポモドーロタイマー</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app" data-land="split">
+        <div class="mode-label" id="modeLabel">作業</div>
+
+        <div class="ring-wrap" data-land-main="fill">
+          <svg viewBox="0 0 220 220" class="ring">
+            <circle class="track" cx="110" cy="110" r="96"></circle>
+            <circle
+              class="progress"
+              id="progressCircle"
+              cx="110"
+              cy="110"
+              r="96"
+              transform="rotate(-90 110 110)"
+            ></circle>
+          </svg>
+          <div class="time-display">
+            <div class="time" id="timeText">25:00</div>
+            <div class="cycle-dots" id="cycleDots"></div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button class="icon-btn secondary" id="resetBtn" aria-label="リセット">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path
+                d="M3 12a9 9 0 1 0 3-6.7"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M3 4v5h5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <button class="icon-btn primary" id="startPauseBtn" aria-label="開始">
+            <svg id="playIcon" viewBox="0 0 24 24" width="26" height="26">
+              <path d="M8 5v14l11-7z" fill="currentColor" />
+            </svg>
+            <svg id="pauseIcon" viewBox="0 0 24 24" width="26" height="26" style="display: none">
+              <path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" />
+            </svg>
+          </button>
+          <button class="icon-btn secondary" id="skipBtn" aria-label="次へ">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path d="M7 6l9 6-9 6V6z" fill="currentColor" />
+              <rect x="17" y="6" width="2" height="12" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="stats" id="statsText">本日の完了:0 ポモドーロ</div>
+
+        <div class="settings">
+          <div class="setting-row">
+            <span>作業</span>
+            <button class="stepper" data-key="work" data-delta="-1" data-log="作業の時間 −1分">−</button>
+            <span class="setting-val" id="workVal">25</span>分
+            <button class="stepper" data-key="work" data-delta="1" data-log="作業の時間 ＋1分">+</button>
+          </div>
+          <div class="setting-row">
+            <span>短い休憩</span>
+            <button class="stepper" data-key="short" data-delta="-1" data-log="短い休憩の時間 −1分">−</button>
+            <span class="setting-val" id="shortVal">5</span>分
+            <button class="stepper" data-key="short" data-delta="1" data-log="短い休憩の時間 ＋1分">+</button>
+          </div>
+          <div class="setting-row">
+            <span>長い休憩</span>
+            <button class="stepper" data-key="long" data-delta="-1" data-log="長い休憩の時間 −1分">−</button>
+            <span class="setting-val" id="longVal">15</span>分
+            <button class="stepper" data-key="long" data-delta="1" data-log="長い休憩の時間 ＋1分">+</button>
+          </div>
+          <label class="auto-row"
+            ><input type="checkbox" id="autoStartChk" data-log="自動開始" />
+            次のセッションを自動的に開始する</label
+          >
+        </div>
+      </div>
+    </main>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./pomodoro-timer-core.js"></script>
+    <script src="./pomodoro-timer.js"></script>
+  </body>
+</html>

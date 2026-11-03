@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>カラーピッカー | 色を選ぶ・カメラで判定・色名を検索</title>
+    <meta
+      name="description"
+      content="色を選ぶか、カメラに映した範囲の色をリアルタイムに判定して、HEX・RGB・HSLと近い色名(英名・日本の伝統色名)を表示するカラーピッカーです。色名から色を探すこともできます。カメラの映像は端末の中だけで処理します。"
+    />
+    <meta property="og:title" content="カラーピッカー | 色を選ぶ・カメラで判定・色名を検索" />
+    <meta
+      property="og:description"
+      content="色を選ぶか、カメラに映した範囲の色をリアルタイムに判定して、HEX・RGB・HSLと近い色名(英名・日本の伝統色名)を表示するカラーピッカーです。色名から色を探すこともできます。カメラの映像は端末の中だけで処理します。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-color-picker.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./color-picker.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "カラーピッカー",
+        "alternateName": ["Color Picker", "カメラカラーピッカー", "色判定", "伝統色"],
+        "description": "色を選ぶか、カメラに映した範囲の色をリアルタイムに判定して、HEX・RGB・HSLと近い色名(英名・日本の伝統色名)を表示するカラーピッカーです。色名から色を探すこともできます。カメラの映像は端末の中だけで処理します。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-color-picker.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">カラーピッカー</h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="tabs" role="tablist">
+          <button class="tab active" id="tabCam" role="tab" data-mode="cam" aria-selected="true">
+            カメラで判定
+          </button>
+          <button class="tab" id="tabPick" role="tab" data-mode="pick" aria-selected="false">色を選ぶ</button>
+        </div>
+
+        <div class="mode-panel" id="pickPanel">
+          <div class="swatch-wrap">
+            <input type="color" id="colorInput" data-log="off" value="#7c3aed" aria-label="色を選ぶ" />
+          </div>
+        </div>
+
+        <div class="mode-panel" id="camPanel" hidden>
+          <div class="cam-wrap" id="camWrap">
+            <video id="video" playsinline muted></video>
+            <div class="sample-box" id="sampleBox"></div>
+            <div class="empty-state" id="emptyState"><span id="camStatus">カメラを起動しています…</span></div>
+          </div>
+          <div class="row">
+            <span>範囲の大きさ</span>
+            <input
+              type="range"
+              id="sizeSlider"
+              data-log="判定する範囲"
+              data-log-unit="%"
+              min="5"
+              max="40"
+              value="16"
+              aria-label="範囲の大きさ"
+            />
+          </div>
+          <button class="pill" id="freezeBtn" disabled>一時停止</button>
+          <canvas id="workCanvas" hidden></canvas>
+        </div>
+
+        <div class="result-card">
+          <div class="swatch" id="swatch"></div>
+          <div class="values">
+            <input type="text" id="hexInput" value="#7C3AED" aria-label="HEX" spellcheck="false" />
+            <div class="sub" id="rgbText">RGB(124, 58, 237)</div>
+            <div class="sub" id="hslText">HSL(263, 83%, 58%)</div>
+          </div>
+          <button class="pill small" id="copyHexBtn">コピー</button>
+        </div>
+
+        <div class="nearest-card" id="nearestCard">
+          <div class="nearest-label">近い色名</div>
+          <div class="nearest-row">
+            <div class="nearest-swatch" id="nearestSwatch"></div>
+            <div>
+              <div class="nearest-en" id="nearestEn">-</div>
+              <div class="nearest-ja" id="nearestJa">-</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-row">
+          <input type="text" id="searchInput" placeholder="色名で検索(英名・和名どちらも可)" />
+        </div>
+        <div class="results" id="results"></div>
+        <div class="status" id="statusText">辞書を読み込み中…</div>
+      </div>
+    </main>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"
+      onerror="window.__chromaFailed = true"
+    ></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./color-picker-core.js"></script>
+    <script src="./color-picker.js"></script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+.content {
+  flex-direction: column;
+  padding: 20px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  gap: 14px;
+  overflow-y: auto;
+}
+.app {
+  max-width: 360px;
+  align-items: center;
+  gap: 12px;
+}
+.rec-btn {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: var(--fn-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.rec-btn:active {
+  transform: scale(0.95);
+}
+.rec-btn .dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--func);
+  transition:
+    border-radius 0.2s ease,
+    width 0.2s ease,
+    height 0.2s ease;
+}
+.rec-btn.recording .dot {
+  border-radius: 8px;
+  width: 26px;
+  height: 26px;
+}
+.rec-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.timer {
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.status {
+  font-size: 13px;
+}
+.list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.item {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
+}
+.item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--sub);
+}
+.item audio {
+  width: 100%;
+}
+.item-actions {
+  display: flex;
+  gap: 8px;
+}
+.item-actions a,
+.item-actions button {
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+}

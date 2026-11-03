@@ -1,0 +1,191 @@
+/* 方位磁石の画面(計器風の文字盤) */
+:root {
+  --dial: #ffffff;
+  --dial-edge: #e3e5f3;
+  --tick: #7a7d8a;
+  --mark: #4a4e7a;
+}
+:root[data-theme='dark'] {
+  --dial: #1e2029;
+  --dial-edge: #2c3040;
+  --tick: #8b8ea0;
+  --mark: #8086c9;
+}
+.content {
+  justify-content: center;
+  padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+.app {
+  max-width: 380px;
+  align-items: center;
+  gap: 12px;
+}
+.readout {
+  text-align: center;
+  min-height: 92px;
+}
+.heading {
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.heading small {
+  font-size: 0.5em;
+  vertical-align: top;
+  margin-left: 2px;
+  color: var(--sub);
+}
+.dir-label {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.target-text {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.target-text.on {
+  color: var(--func);
+}
+/* 文字盤: 回るのは #dial、上の指標と中央の水準器は固定 */
+.compass {
+  width: min(86vw, 340px);
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.compass .face {
+  fill: var(--dial);
+  stroke: var(--dial-edge);
+  stroke-width: 2;
+}
+.compass .face-glow {
+  fill: none;
+  stroke: var(--dial-edge);
+  stroke-width: 10;
+  opacity: 0.6;
+}
+.compass .t1 {
+  stroke: var(--tick);
+  stroke-width: 1;
+  opacity: 0.45;
+}
+.compass .t5 {
+  stroke: var(--tick);
+  stroke-width: 1.4;
+  opacity: 0.8;
+}
+.compass .t10 {
+  stroke: var(--text);
+  stroke-width: 2;
+}
+.compass .t10.north {
+  stroke: var(--func);
+  stroke-width: 3;
+}
+.compass .num {
+  fill: var(--sub);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.compass .card {
+  fill: var(--text);
+  font-size: 24px;
+  font-weight: 700;
+}
+.compass .card.north {
+  fill: var(--func);
+}
+.compass .inter {
+  fill: var(--tick);
+  font-size: 12px;
+  font-weight: 600;
+}
+.compass .target {
+  fill: var(--accent);
+}
+.compass .lubber {
+  fill: var(--func);
+}
+.compass .lubber-line {
+  stroke: var(--func);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.compass .cross {
+  stroke: var(--tick);
+  stroke-width: 1;
+  opacity: 0.5;
+}
+.compass .level-ring {
+  fill: none;
+  stroke: var(--tick);
+  stroke-width: 1.2;
+  opacity: 0.6;
+}
+.compass .level-ring.inner {
+  opacity: 0.4;
+}
+.compass .bubble {
+  fill: var(--func);
+  opacity: 0.85;
+}
+.compass .bubble.off {
+  fill: var(--sub);
+  opacity: 0.5;
+}
+.status {
+  font-size: 13px;
+  min-height: 18px;
+  text-align: center;
+  line-height: 1.5;
+}
+.status.warn {
+  color: var(--danger);
+}
+.buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pill {
+  padding: 10px 20px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 14px;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.pill[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.note {
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+}
+/* 横向き: 文字盤を左、数字とボタンを右に並べるのは共通の tool.css(data-land)。ここは文字盤の上限と文字の大きさだけ */
+@media (orientation: landscape) and (max-height: 600px) {
+  .compass {
+    --land-max-w: 46vw;
+  }
+  .app {
+    max-width: 760px;
+  }
+  .readout {
+    min-height: 0;
+  }
+  .heading {
+    font-size: 48px;
+  }
+}

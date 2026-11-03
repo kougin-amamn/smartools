@@ -1,0 +1,47 @@
+.content {
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 18px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  gap: 16px;
+}
+.app {
+  max-width: 360px;
+  align-items: center;
+  gap: 16px;
+}
+.power {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: var(--panel);
+  color: var(--sub);
+  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.power.on {
+  background: var(--func);
+  color: var(--func-fg);
+  box-shadow: 0 10px 40px rgba(92, 196, 182, 0.55);
+}
+.power:active {
+  transform: scale(0.96);
+}
+.status {
+  font-size: 14px;
+  min-height: 18px;
+}
+.note {
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+}

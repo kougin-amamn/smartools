@@ -1,0 +1,5 @@
+[
+  { "id": "launcher-desktop", "title": "デスクトップ", "href": "launchers/launcher-desktop.html" },
+  { "id": "launcher-3d-bookshelf", "title": "3D本棚", "href": "launchers/launcher-3d-bookshelf.html" },
+  { "id": "launcher-3d-museum", "title": "3D美術館", "href": "launchers/launcher-3d-museum.html" }
+]

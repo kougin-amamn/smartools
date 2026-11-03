@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>多機能カメラ | フィルター・グリッド・水平ガイド・連写</title>
+    <meta
+      name="description"
+      content="ナイト・モノクロ・セピアなどのフィルター、明るさ・コントラスト・彩度・ズームの調整、グリッドと水平ガイド、セルフタイマーと5枚連写ができる多機能カメラです。撮った写真はPNGで保存できます。"
+    />
+    <meta property="og:title" content="多機能カメラ | フィルター・グリッド・水平ガイド・連写" />
+    <meta
+      property="og:description"
+      content="ナイト・モノクロ・セピアなどのフィルター、明るさ・コントラスト・彩度・ズームの調整、グリッドと水平ガイド、セルフタイマーと5枚連写ができる多機能カメラです。撮った写真はPNGで保存できます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-multi-camera.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./multi-camera.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "多機能カメラ",
+        "alternateName": ["Multi Camera", "カメラ", "フィルターカメラ"],
+        "description": "ナイト・モノクロ・セピアなどのフィルター、明るさ・コントラスト・彩度・ズームの調整、グリッドと水平ガイド、セルフタイマーと5枚連写ができる多機能カメラです。撮った写真はPNGで保存できます。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-multi-camera.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">多機能カメラ</h1>
+      <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+          />
+        </svg>
+      </button>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="cam-wrap" id="camWrap">
+          <video id="video" playsinline muted hidden></video>
+          <canvas id="previewCanvas"></canvas>
+          <div class="grid-overlay" id="gridOverlay" hidden></div>
+          <div class="level-line" id="levelLine" hidden></div>
+          <div class="countdown" id="countdownText" hidden></div>
+          <div class="empty-state" id="emptyState">
+            <span id="statusText">カメラを起動しています…</span>
+          </div>
+        </div>
+
+        <div class="mode-row" id="modeRow">
+          <button class="chip active" data-mode="normal">通常</button>
+          <button class="chip" data-mode="night">ナイト</button>
+          <button class="chip" data-mode="mono">白黒</button>
+          <button class="chip" data-mode="sepia">セピア</button>
+          <button class="chip" data-mode="invert">ネガ</button>
+        </div>
+
+        <div class="controls-row">
+          <button class="round" id="switchCamBtn" aria-label="カメラ切替">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path
+                d="M4 7h4l2-2h4l2 2h4v12H4z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <circle cx="12" cy="13" r="3.4" fill="none" stroke="currentColor" stroke-width="2" />
+              <path
+                d="M19 5l2 2-2 2M5 19l-2-2 2-2"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <button class="round" id="torchBtn" aria-label="ライト">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path d="M9 3h6v5l-2 3v9a1 1 0 0 1-1 1 1 1 0 0 1-1-1v-9L9 8z" fill="currentColor" />
+            </svg>
+          </button>
+          <select id="timerSelect" data-log="セルフタイマー">
+            <option value="0">タイマーなし</option>
+            <option value="3">3秒</option>
+            <option value="10">10秒</option>
+          </select>
+          <button class="round" id="burstBtn" aria-label="連写">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <rect
+                x="3"
+                y="7"
+                width="14"
+                height="12"
+                rx="2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M9 3h9l3 4"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <button class="round big" id="captureBtn" aria-label="撮影"></button>
+        </div>
+
+        <div class="captured-list" id="capturedList" data-log="off"></div>
+      </div>
+    </main>
+    <div class="sheet" id="settings" hidden>
+      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="sheet-head">
+          <span id="settingsTitle">設定</span
+          ><button class="sheet-close" id="settingsClose" aria-label="設定を閉じる">×</button>
+        </div>
+        <div class="sliders">
+          <div class="slider-row">
+            <span>明るさ</span
+            ><input
+              type="range"
+              id="brightnessSlider"
+              data-log="明るさ"
+              data-log-unit="%"
+              min="60"
+              max="200"
+              value="100"
+            />
+          </div>
+          <div class="slider-row">
+            <span>コントラスト</span
+            ><input
+              type="range"
+              id="contrastSlider"
+              data-log="コントラスト"
+              data-log-unit="%"
+              min="60"
+              max="200"
+              value="100"
+            />
+          </div>
+          <div class="slider-row">
+            <span>彩度</span
+            ><input
+              type="range"
+              id="saturateSlider"
+              data-log="彩度"
+              data-log-unit="%"
+              min="0"
+              max="200"
+              value="100"
+            />
+          </div>
+          <div class="slider-row">
+            <span>ズーム</span
+            ><input
+              type="range"
+              id="zoomSlider"
+              data-log="ズーム"
+              data-log-unit="%"
+              min="100"
+              max="300"
+              value="100"
+            />
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <label><input type="checkbox" id="gridChk" /> グリッド線</label>
+          <label><input type="checkbox" id="levelChk" /> 水平ガイド</label>
+          <label><input type="checkbox" id="mirrorChk" /> ミラー効果</label>
+        </div>
+      </div>
+    </div>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./multi-camera.js"></script>
+  </body>
+</html>

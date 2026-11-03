@@ -1,0 +1,95 @@
+html,
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+.content {
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  padding: 16px 14px calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+.content {
+  gap: 16px;
+}
+.device {
+  width: min(340px, 92vw);
+  padding: 18px;
+  border-radius: 20px;
+  background: var(--panel);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.window {
+  padding: 12px 10px;
+  border-radius: 12px;
+  background: #0c0d10;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.digit {
+  width: 22%;
+  aspect-ratio: 3/4;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font:
+    700 clamp(36px, 13vw, 54px)/1 'Courier New',
+    ui-monospace,
+    monospace;
+  color: #f4f4ef;
+  background: #1b1c21;
+}
+#plus {
+  height: 120px;
+  border: 0;
+  border-radius: 16px;
+  font-size: 26px;
+  font-weight: 700;
+  font-family: inherit;
+  background: var(--accent);
+  color: var(--accent-fg);
+  touch-action: manipulation;
+}
+#plus:active {
+  filter: brightness(0.85);
+}
+#reset {
+  height: 48px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  background: #e2e3e9;
+  color: #c93a3a;
+  touch-action: manipulation;
+}
+#reset:active {
+  filter: brightness(0.85);
+}
+.opt {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+  color: var(--sub);
+}
+.opt.na {
+  opacity: 0.6;
+}
+/* 横向き: 本体を左、設定を右に並べるのは共通の tool.css(data-land)。ここは本体を画面の高さに収める */
+@media (orientation: landscape) and (max-height: 600px) {
+  .device {
+    width: min(340px, 46vw);
+    max-height: var(--land-h);
+    padding: 12px;
+    gap: 10px;
+  }
+  #plus {
+    height: min(120px, calc(var(--land-h) - 190px));
+  }
+}
