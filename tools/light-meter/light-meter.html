@@ -6,12 +6,12 @@
     <title>照度計 | 周りの明るさを測る</title>
     <meta
       name="description"
-      content="周りの明るさを測る照度計です。照度センサーがある端末ではlx(ルクス)で、無い端末ではカメラ映像の明るさから相対的な目安を表示します。"
+      content="周りの明るさを測る照度計です。照度センサーがある端末ではlx(ルクス)で、無い端末ではカメラの映像と露出からlxの目安を表示します(露出情報が取れない端末では相対値)。"
     />
     <meta property="og:title" content="照度計 | 周りの明るさを測る" />
     <meta
       property="og:description"
-      content="周りの明るさを測る照度計です。照度センサーがある端末ではlx(ルクス)で、無い端末ではカメラ映像の明るさから相対的な目安を表示します。"
+      content="周りの明るさを測る照度計です。照度センサーがある端末ではlx(ルクス)で、無い端末ではカメラの映像と露出からlxの目安を表示します(露出情報が取れない端末では相対値)。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ja_JP" />
@@ -27,7 +27,7 @@
         "@type": "SoftwareApplication",
         "name": "照度計",
         "alternateName": ["Light Meter", "ルクス計", "明るさ測定"],
-        "description": "周りの明るさを測る照度計です。照度センサーがある端末ではlx(ルクス)で、無い端末ではカメラ映像の明るさから相対的な目安を表示します。",
+        "description": "周りの明るさを測る照度計です。照度センサーがある端末ではlx(ルクス)で、無い端末ではカメラの映像と露出からlxの目安を表示します(露出情報が取れない端末では相対値)。",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any (Webブラウザ)",
         "offers": {
@@ -75,6 +75,17 @@
         <div class="status" id="statusText">開始ボタンをタップしてください</div>
         <button class="pill primary" id="startStopBtn">開始</button>
         <p class="note" id="noteText"></p>
+        <div class="calib" id="calib" hidden>
+          <label for="refLux">基準の明るさ(lx)</label>
+          <div class="calib-row">
+            <input type="number" id="refLux" inputmode="decimal" min="1" step="1" value="500" />
+            <button class="mini" id="calBtn">いまの明るさで補正</button>
+            <button class="mini" id="calResetBtn">初期値に戻す</button>
+          </div>
+          <p class="note">
+            照度計(別の機器)で測った値を入れて、同じ場所で「補正」を押すと、この端末のカメラに合わせられます。
+          </p>
+        </div>
       </div>
     </main>
     <script src="../../common/site.js"></script>
@@ -134,6 +145,7 @@
           });
         })();
     </script>
+    <script src="./light-meter-core.js"></script>
     <script src="./light-meter.js"></script>
   </body>
 </html>

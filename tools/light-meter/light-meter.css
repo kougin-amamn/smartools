@@ -54,3 +54,39 @@
   line-height: 1.6;
   margin: 0;
 }
+.calib {
+  width: 100%;
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+.calib label {
+  font-size: 13px;
+  color: var(--sub);
+  font-weight: 600;
+}
+.calib-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+.calib input {
+  width: 6em;
+  padding: 8px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--fn-bg);
+  background: var(--panel);
+  color: var(--text);
+}
+.mini {
+  border: none;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
