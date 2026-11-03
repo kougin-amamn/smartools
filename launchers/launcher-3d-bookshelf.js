@@ -261,6 +261,9 @@
           } else if (kind === 'desklamp') {
             log('机のアームライトをタップしました');
             log('机のアームライトを' + (world.toggleDeskLamp() ? '点けました' : '消しました'));
+          } else if (kind === 'floorlamp') {
+            log('フロアランプをタップしました');
+            log('フロアランプを' + (world.toggleFloorLamp() ? '点けました' : '消しました'));
           } else if (kind === 'door') {
             log('扉をタップしました');
             leave();

@@ -156,6 +156,8 @@
     var lampBulbMat = new THREE.MeshBasicMaterial({
       color: 0x5a554c,
     }); /* アームライトの電球(ペンダントとは別に点ける) */
+    var floorBulbMat = new THREE.MeshBasicMaterial({ color: 0x5a554c }); /* フロアランプの電球 */
+    var floorOn = null; /* フロアランプ。null の間はテーマに合わせる(夜は点ける) */
     var deskOn = null; /* アームライト。null の間はテーマに合わせる(夜は点ける) */
     var sofaCv = T.paint({ kind: 'cloth', color: '#5b6f5f', contrast: 0.3, grain: 0.9, seed: 37 }, 256),
       sofaTex = T.tex(sofaCv, true);
@@ -885,9 +887,36 @@
         add(new THREE.Mesh(new THREE.IcosahedronGeometry(l[3], 1), leafMat), PX + l[0], l[1], PZ + l[2]);
       });
       add(new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.025, 0.6, 8), woodMatPlain), PX, 0.6, PZ);
-      add(new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 0.03, 24), brassMat), LX, 0.015, LZ);
-      add(new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 1.45, 10), brassMat), LX, 0.74, LZ);
-      add(new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.24, 0.32, 28, 1, true), shadeMat), LX, 1.56, LZ);
+      var fBase = add(
+          new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 0.03, 24), brassMat),
+          LX,
+          0.015,
+          LZ
+        ),
+        fPole = add(
+          new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 1.45, 10), brassMat),
+          LX,
+          0.74,
+          LZ
+        ),
+        fShade = add(
+          new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.24, 0.32, 28, 1, true), shadeMat),
+          LX,
+          1.56,
+          LZ
+        ),
+        fBulb = add(new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 8), floorBulbMat), LX, 1.52, LZ),
+        fHit = add(
+          new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 1.5, 8), floorBulbMat),
+          LX,
+          0.75,
+          LZ
+        ); /* 細いポールでも押せるよう、見えない太めの当たり判定を重ねる */
+      fHit.visible = false;
+      [fBase, fPole, fShade, fBulb, fHit].forEach(function (m) {
+        m.userData.kind = 'floorlamp';
+        extraPicks.push(m);
+      });
       lights.lamp = add(new THREE.PointLight(0xffd29a, 0.4, 7, 2), LX, 1.5, LZ + 0.25);
       plane(
         g,
@@ -984,6 +1013,13 @@
       if (pendMat.emissive) pendMat.emissive.setHex(on ? 0x2a2418 : 0x000000);
       api.needsRender = true;
     }
+    function setFloorLamp(on) {
+      var th = dark ? THEME.dark : THEME.light;
+      lights.lamp.intensity = on ? th.lamp : 0;
+      floorBulbMat.color.setHex(on ? 0xfff3d6 : 0x5a554c);
+      shadeMat.emissive.setHex(on ? th.shade : 0x000000);
+      api.needsRender = true;
+    }
     function setDeskLamp(on) {
       if (!lights.desk) return;
       lights.desk.intensity = on ? (dark ? 3.2 : 1.6) : 0;
@@ -1001,14 +1037,13 @@
       lights.spots.forEach(function (l) {
         l.intensity = th.spot;
       });
-      lights.lamp.intensity = th.lamp;
       dark = th === THEME.dark;
       setPendant(pendOn === null ? dark : pendOn);
       api.needsRender = true;
       glassMat.color.setHex(th.glass);
-      shadeMat.emissive.setHex(th.shade);
       bankMat.emissive.setHex(th.bank);
       setDeskLamp(deskOn === null ? dark : deskOn);
+      setFloorLamp(floorOn === null ? dark : floorOn);
     }
     function dispose(g) {
       (function walk(x) {
@@ -1074,6 +1109,14 @@
         deskOn = !(lights.desk && lights.desk.intensity > 0);
         setDeskLamp(deskOn);
         return deskOn;
+      },
+      toggleFloorLamp: function () {
+        floorOn = !(lights.lamp && lights.lamp.intensity > 0);
+        setFloorLamp(floorOn);
+        return floorOn;
+      },
+      floorLampOn: function () {
+        return !!(lights.lamp && lights.lamp.intensity > 0);
       },
       deskLampOn: function () {
         return !!(lights.desk && lights.desk.intensity > 0);
