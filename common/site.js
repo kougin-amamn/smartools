@@ -517,24 +517,4 @@
         : /Safari/.test(u)
           ? 'Safari'
           : '不明ブラウザ';
-  log(
-    '環境を確認しました(' +
-      os +
-      ' ' +
-      br +
-      ' / ' +
-      innerWidth +
-      '×' +
-      innerHeight +
-      ' / https ' +
-      (window.isSecureContext ? 'あり' : 'なし') +
-      ' / 振動 ' +
-      ('vibrate' in navigator ? 'あり' : 'なし') +
-      ' / テーマ ' +
-      N[root.getAttribute('data-theme')] +
-      (embed ? '(埋め込み表示)' : '(時間帯で自動)') +
-      ' / カラー ' +
-      (color && color.name ? color.name : '標準') +
-      ')'
-  );
 })();
