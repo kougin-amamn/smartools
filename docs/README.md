@@ -5,6 +5,7 @@
 | 文書 | いつ読むか |
 | --- | --- |
 | [site.md](./site.md) | フォルダ・読み込み順・一覧(index-data.json)・ランチャー・公開の仕組みを知りたい時 |
+| [common.md](./common.md) | 共通部品(ToolKit・site.js がすること)を使う・直す時 |
 | [ui.md](./ui.md) | 配色・ヘッダ・設定シート・ボタン・アイコンを作る時 |
 | [logging.md](./logging.md) | ログを書く時 |
 | [naming.md](./naming.md) | 名前を付ける時 |
