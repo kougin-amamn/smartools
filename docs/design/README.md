@@ -12,6 +12,7 @@
 | 設計書 | 対象 |
 | --- | --- |
 | [log.md](./log.md) | ログの仕組み(`common/log.js`) |
+| [env.md](./env.md) | 環境の判定(`common/env.js`)※実装前 |
 | [file-transfer.md](./file-transfer.md) | ファイル転送(`tools/file-transfer`) |
 
 ## 型
