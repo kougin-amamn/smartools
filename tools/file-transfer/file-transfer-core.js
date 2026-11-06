@@ -99,16 +99,11 @@
      圧縮していない画像・音声(BMP・WAV)だけ */
   var PLAIN_EXT =
     /\.(txt|csv|tsv|json|xml|html?|css|js|mjs|ts|md|log|svg|yaml|yml|ini|conf|sql|py|rb|java|c|cpp|h|go|rs|php|sh|bat|bmp|wav)$/i;
-  var COMPRESS_MAX = 100 * 1024 * 1024; /* 圧縮はメモリ上で行うため上限を設ける */
   function shouldCompress(name, type, size) {
-    if (size < 1024 || size > COMPRESS_MAX) return false;
+    if (size < 1024) return false;
     return (
       /^text\//.test(type || '') || /(json|xml|javascript|svg)/.test(type || '') || PLAIN_EXT.test(name || '')
     );
-  }
-  /* 縮み方が小さい時は、相手の展開の手間を省くため元のまま送る */
-  function worthIt(raw, packed) {
-    return packed < raw * 0.9;
   }
 
   /* 再開のための目印。同じファイルを送り直した時に、途中まで受け取った分を使えるようにする */
@@ -163,7 +158,6 @@
     this.key = meta.key;
     this.name = meta.name;
     this.size = meta.size;
-    this.raw = meta.raw;
     this.enc = meta.enc || '';
     this.type = meta.type || '';
     this.got = 0;
@@ -192,6 +186,7 @@
     end: 1,
     done: 1,
     bad: 1,
+    blk: 1,
     cancel: 1,
     ping: 1,
     bye: 1,
@@ -207,6 +202,7 @@
       )
         return null;
       /* from が -1 なら受け取り済み */
+      if (m.t === 'blk' && !(m.n > 0 && m.z >= 0)) return null;
       if (m.t === 'ready' && !(typeof m.id === 'string' && m.from >= -1)) return null;
       return m;
     } catch (e) {
@@ -241,7 +237,6 @@
     sasDigits: sasDigits,
     crc32: crc32,
     shouldCompress: shouldCompress,
-    worthIt: worthIt,
     fileKey: fileKey,
     bytes: bytes,
     seconds: seconds,

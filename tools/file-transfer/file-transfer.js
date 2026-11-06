@@ -6,7 +6,7 @@
 
   /* 送り方 */
   var CHUNK = 64 * 1024; /* 1回に送る大きさ。Safari の上限(256KB)より小さく、往復の回数が増えすぎない値 */
-  var READ = 1024 * 1024; /* ファイルから一度に読み出す大きさ */
+  var READ = 1024 * 1024; /* ファイルから一度に読み出す大きさ。圧縮する時はこの区切りごとに圧縮する */
   var HIGH = 2 * 1024 * 1024; /* 送り待ちがこれを超えたら止める(PeerJS 自身がためこみ始める 8MB より下) */
   var LOW = 512 * 1024; /* ここまで減ったら再開 */
   /* 時間切れ(ms)
@@ -630,15 +630,14 @@
     it.speed.add(now, it.done);
     if (!force && now - it.ui < UI_INTERVAL) return;
     it.ui = now;
-    var r = it.speed.rate(),
-      total = it.wire || it.size;
-    it.el.querySelector('.bar span').style.width = (total ? (it.done / total) * 100 : 100) + '%';
+    var r = it.speed.rate();
+    it.el.querySelector('.bar span').style.width = (it.size ? (it.done / it.size) * 100 : 100) + '%';
     setState(
       it,
       C.bytes(it.done) +
         ' / ' +
-        C.bytes(total) +
-        (r > 0 ? ' ・ ' + C.bytes(r) + '/秒 ・ 残り ' + C.seconds(C.eta(total - it.done, r)) : '')
+        C.bytes(it.size) +
+        (r > 0 ? ' ・ ' + C.bytes(r) + '/秒 ・ 残り ' + C.seconds(C.eta(it.size - it.done, r)) : '')
     );
   }
   function buttons(it, list) {
@@ -657,6 +656,7 @@
       box.appendChild(el);
     });
   }
+  /* 速度は元のファイルの大きさで数える。圧縮した時は実際に流れた量も添える */
   function summary(it) {
     var sec = (performance.now() - it.t0) / 1000;
     return (
@@ -664,9 +664,9 @@
       ' / ' +
       sec.toFixed(1) +
       '秒 / ' +
-      C.bytes(sec > 0 ? (it.wire || it.size) / sec : 0) +
+      C.bytes(sec > 0 ? it.size / sec : 0) +
       '/秒' +
-      (it.enc ? ' / 圧縮 ' + C.bytes(it.wire) : '') +
+      (it.enc && it.wire ? ' / 通信量 ' + C.bytes(it.wire) : '') +
       (it.resumed ? ' / 途中から再開' : '')
     );
   }
@@ -711,10 +711,7 @@
     var list = [];
     /* 送れなかった物は、つなぎ直してから送り直せるようにファイルを持っておく */
     if (cls === 'failed' && it.file) list.push({ label: '再送', primary: true, on: resend.bind(null, it) });
-    else {
-      it.file = null;
-      it.payload = null;
-    }
+    else it.file = null;
     buttons(it, list);
   }
   function resend(it) {
@@ -723,35 +720,11 @@
     log('送り直しを予約しました(' + C.bytes(it.size) + ')');
     pump();
   }
-  /* 圧縮は文字の多いファイルだけ、相手が展開できる時だけ。縮まなければ元のまま送る */
-  function payloadOf(it) {
-    if (it.payload) return Promise.resolve();
-    var f = it.file;
-    if (!(canGzip && session && session.gzip && C.shouldCompress(f.name, f.type, f.size))) {
-      it.payload = f;
-      it.enc = '';
-      return Promise.resolve();
-    }
-    setState(it, '圧縮しています');
-    return log
-      .step(
-        'ファイルの圧縮',
-        function () {
-          return new Response(f.stream().pipeThrough(new CompressionStream('gzip'))).blob();
-        },
-        function (b) {
-          return C.bytes(f.size) + ' → ' + C.bytes(b.size);
-        }
-      )
-      .then(function (r) {
-        if (r.ok && C.worthIt(f.size, r.value.size)) {
-          it.payload = r.value;
-          it.enc = 'gzip';
-        } else {
-          it.payload = f;
-          it.enc = '';
-        }
-      });
+  function gzip(buf) {
+    return new Response(new Blob([buf]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();
+  }
+  function gunzip(blob) {
+    return new Response(blob.stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
   }
   function waitDrain(g) {
     var dc = conn && conn.dataChannel;
@@ -771,6 +744,9 @@
   }
   var DROP = new Error('接続が切れました'),
     ALREADY = new Error('受け取り済み');
+  /* 1件を送る。ファイルを READ ずつ読み、圧縮する時はその区切りごとに gzip のストリームに通して、
+     区切りの前に blk(元の大きさ・流す大きさ)を付けて流す。区切りが独立しているので、
+     圧縮しても進み具合と再開の位置は元のファイルのバイト数で数えられ、全体をメモリにためずに済む */
   function pump() {
     if (sending || !linked || !queue.length) {
       if (!sending && !receiving) releaseWake();
@@ -778,6 +754,7 @@
     }
     holdWake();
     var it = (sending = queue.shift()),
+      f = it.file,
       g = gen,
       off = 0,
       crc = 0;
@@ -785,31 +762,18 @@
       if (g !== gen) throw DROP;
     };
     if (!it.t0) it.t0 = performance.now();
-    payloadOf(it)
-      .then(function () {
-        alive();
-        var pl = it.payload;
-        it.wire = pl.size;
-        it.key = C.fileKey(it.name, it.file.size, it.file.lastModified, it.enc);
-        setState(it, '相手の準備を待っています');
-        return new Promise(function (ok, ng) {
-          it.ready = { ok: ok, ng: ng };
-          send({
-            t: 'file',
-            id: it.id,
-            key: it.key,
-            name: it.name,
-            size: pl.size,
-            raw: it.file.size,
-            enc: it.enc,
-            type: it.file.type,
-          });
-        });
-      })
+    it.enc = canGzip && session && session.gzip && C.shouldCompress(f.name, f.type, f.size) ? 'gzip' : '';
+    it.wire = it.wire || 0; /* 通信量は再開をまたいで数える */
+    it.key = C.fileKey(it.name, f.size, f.lastModified, it.enc);
+    setState(it, '相手の準備を待っています');
+    new Promise(function (ok, ng) {
+      it.ready = { ok: ok, ng: ng };
+      send({ t: 'file', id: it.id, key: it.key, name: it.name, size: f.size, enc: it.enc, type: f.type });
+    })
       .then(function (from) {
         alive();
         if (from < 0) throw ALREADY;
-        from = Math.min(from, it.payload.size);
+        from = Math.min(from, f.size);
         if (from > 0) {
           it.resumed = true;
           log('続きから送ります(' + C.bytes(from) + ' まで届いています)');
@@ -817,7 +781,7 @@
         /* 再開した時も、届いている分を読み直して全体の CRC を計算する */
         var pre = function (p) {
           if (p >= from) return Promise.resolve();
-          return it.payload
+          return f
             .slice(p, Math.min(from, p + READ))
             .arrayBuffer()
             .then(function (b) {
@@ -832,14 +796,29 @@
       .then(function next() {
         alive();
         if (it.cancelled) return false;
-        if (off >= it.payload.size) return true;
-        return it.payload
+        if (off >= f.size) return true;
+        return f
           .slice(off, off + READ)
           .arrayBuffer()
           .then(function (buf) {
             crc = C.crc32(crc, new Uint8Array(buf));
-            var p = Promise.resolve();
-            for (let i = 0; i < buf.byteLength; i += CHUNK) {
+            if (!it.enc) return { data: buf, raw: buf.byteLength, gz: false };
+            /* 縮まない区切り(途中に写真が埋まった文書など)は元のまま流す */
+            return gzip(buf).then(function (z) {
+              return {
+                data: z.byteLength < buf.byteLength ? z : buf,
+                raw: buf.byteLength,
+                gz: z.byteLength < buf.byteLength,
+              };
+            });
+          })
+          .then(function (b) {
+            alive();
+            var raw = b.raw,
+              len = b.data.byteLength,
+              p = Promise.resolve();
+            if (it.enc) send({ t: 'blk', n: raw, z: len, gz: b.gz });
+            for (let i = 0; i < len; i += CHUNK) {
               p = p
                 .then(function () {
                   return waitDrain(g);
@@ -847,17 +826,17 @@
                 .then(function () {
                   alive();
                   if (it.cancelled) return;
-                  conn.send(buf.slice(i, i + CHUNK));
-                  var dc = conn.dataChannel;
-                  it.done = Math.max(
-                    0,
-                    off + Math.min(i + CHUNK, buf.byteLength) - (dc ? dc.bufferedAmount : 0)
-                  );
+                  conn.send(b.data.slice(i, i + CHUNK));
+                  it.wire += Math.min(CHUNK, len - i);
+                  /* 送り待ちの分を引いて、相手に届いた量に近づける(圧縮した時は元の大きさに換算) */
+                  var dc = conn.dataChannel,
+                    sent = Math.min(i + CHUNK, len) - (dc ? dc.bufferedAmount : 0);
+                  it.done = Math.max(0, off + Math.round((sent / len) * raw));
                   progress(it);
                 });
             }
             return p.then(function () {
-              off += buf.byteLength;
+              off += raw;
               return next();
             });
           });
@@ -867,7 +846,7 @@
           sending = null;
           send({ t: 'end', id: it.id, ok: ok, crc: crc });
           if (ok) {
-            it.done = it.wire;
+            it.done = it.size;
             progress(it, true);
             it.waitDone = true;
             setState(it, '相手の受け取りを待っています');
@@ -893,10 +872,7 @@
   /* 受信 */
   function onData(d) {
     if (d instanceof ArrayBuffer) {
-      if (receiving && receiving.r.add(d)) {
-        receiving.it.done = receiving.r.got;
-        progress(receiving.it);
-      }
+      if (receiving) takeBytes(receiving, d);
       return;
     }
     var m = C.parseMsg(d);
@@ -906,7 +882,9 @@
     }
     if (m.t === 'ping') return;
     if (m.t === 'file') onFile(m);
-    else if (m.t === 'ready') {
+    else if (m.t === 'blk') {
+      if (receiving && receiving.r.enc) receiving.blk = { n: m.n, z: m.z, gz: !!m.gz, bufs: [], have: 0 };
+    } else if (m.t === 'ready') {
       var s = items[m.id];
       if (s && s.ready) s.ready.ok(m.from);
     } else if (m.t === 'end') onEnd(m);
@@ -919,7 +897,6 @@
     } else if (m.t === 'bad') {
       var b = items[m.id];
       if (b && b.dir === 'out') {
-        b.payload = null;
         finishOut(b, '相手の受け取りで壊れていました(「再送」で送り直せます)', 'failed');
         log.warn('相手の受け取りでファイルが壊れていました');
       }
@@ -939,6 +916,40 @@
       say('相手が切断しました');
     }
   }
+  /* 届いたバイト列。圧縮なしはそのままためる。圧縮ありは区切り1つ分そろったら展開してためる。
+     展開は非同期なので、区切りの順番が入れ替わらないよう chain に1本でつなぐ */
+  function takeBytes(rc, d) {
+    if (rc.r.cancelled) return;
+    if (!rc.r.enc) {
+      if (rc.r.add(d)) {
+        rc.it.wire = rc.r.got;
+        rc.it.done = rc.r.got;
+        progress(rc.it);
+      }
+      return;
+    }
+    var b = rc.blk;
+    if (!b) return;
+    b.bufs.push(d);
+    b.have += d.byteLength;
+    rc.it.wire += d.byteLength;
+    if (b.have < b.z) return;
+    rc.blk = null;
+    var data = new Blob(b.bufs);
+    rc.chain = rc.chain
+      .then(function () {
+        if (rc.r.cancelled || rc.bad) return;
+        return (b.gz ? gunzip(data) : data.arrayBuffer()).then(function (raw) {
+          if (raw.byteLength !== b.n || !rc.r.add(raw)) throw new Error('区切りの大きさが合いません');
+          rc.it.done = rc.r.got;
+          progress(rc.it);
+        });
+      })
+      .catch(function (e) {
+        rc.bad = true;
+        log.error('届いた区切りの展開でエラーが発生しました', e);
+      });
+  }
   function onFile(m) {
     if (finished[m.id + '|' + m.key]) {
       send({ t: 'ready', id: m.id, from: -1 });
@@ -946,88 +957,74 @@
     }
     holdWake();
     var p = partials[m.key];
-    if (p && p.r.size === m.size && !p.r.cancelled) {
-      /* 前に途中まで受け取った同じファイル。届いている分の続きから受け取る */
+    if (p && p.r.size === m.size && !p.r.cancelled && !p.bad) {
+      /* 前に途中まで受け取った同じファイル。展開し終えた分の続きから受け取る
+         (切れた時に途中だった区切りは捨てて、その区切りの頭から送り直してもらう) */
       p.it.remote = m.id;
       p.it.resumed = true;
+      p.blk = null;
       setState(p.it, '続きから受け取っています');
       buttons(p.it, [{ label: '取り消し', on: cancelIn.bind(null, p.it) }]);
-      log('続きから受け取ります(' + C.bytes(p.r.got) + ' / ' + C.bytes(m.size) + ')');
     } else {
-      var it = addItem('in', C.safeName(m.name), m.raw >= 0 ? m.raw : m.size);
+      var it = addItem('in', C.safeName(m.name), m.size);
       it.t0 = performance.now();
       it.remote = m.id;
-      it.wire = m.size;
+      it.wire = 0;
       it.enc = m.enc === 'gzip' ? 'gzip' : '';
-      p = partials[m.key] = { r: new C.Receiving(m), it: it };
+      p = partials[m.key] = {
+        r: new C.Receiving(m),
+        it: it,
+        chain: Promise.resolve(),
+        blk: null,
+        bad: false,
+      };
       buttons(it, [{ label: '取り消し', on: cancelIn.bind(null, it) }]);
       setState(it, '受け取っています');
       log('ファイルを受け取り始めました(' + C.bytes(m.size) + (it.enc ? ' / 圧縮あり' : '') + ')');
     }
     p.it.speed.reset();
     receiving = p;
-    send({ t: 'ready', id: m.id, from: p.r.got });
+    var g = gen;
+    p.chain.then(function () {
+      if (g !== gen) return;
+      if (p.it.resumed && p.r.got)
+        log('続きから受け取ります(' + C.bytes(p.r.got) + ' / ' + C.bytes(m.size) + ')');
+      send({ t: 'ready', id: m.id, from: p.r.got });
+    });
   }
   function onEnd(m) {
     var rc = receiving;
     receiving = null;
     if (!rc || rc.it.remote !== m.id) return;
-    if (!m.ok) {
-      delete partials[rc.r.key];
-      if (!rc.it.ended) {
+    rc.chain.then(function () {
+      if (!m.ok) {
+        delete partials[rc.r.key];
+        if (!rc.it.ended) {
+          rc.it.ended = true;
+          setState(rc.it, '相手が取り消しました', 'stopped');
+          buttons(rc.it, []);
+          log('相手が送信を取り消しました');
+        }
+      } else if (rc.r.cancelled) {
+        delete partials[rc.r.key];
+      } else if (!rc.bad && rc.r.complete(m.crc >>> 0)) {
+        delete partials[rc.r.key];
+        var blob = new Blob(rc.r.parts, { type: rc.r.type });
+        rc.r.parts = null;
+        finished[m.id + '|' + rc.r.key] = true;
+        send({ t: 'done', id: m.id });
+        received(rc.it, blob);
+      } else {
+        delete partials[rc.r.key];
+        rc.r.parts = null;
         rc.it.ended = true;
-        setState(rc.it, '相手が取り消しました', 'stopped');
+        setState(rc.it, '壊れていたため受け取れませんでした(相手に送り直しを頼めます)', 'failed');
         buttons(rc.it, []);
-        log('相手が送信を取り消しました');
+        send({ t: 'bad', id: m.id });
+        log.warn('届いたファイルが壊れていました(大きさか CRC が合いません)');
       }
-    } else if (rc.r.cancelled) {
-      delete partials[rc.r.key];
-    } else if (rc.r.complete(m.crc >>> 0)) {
-      delete partials[rc.r.key];
-      var blob = new Blob(rc.r.parts, { type: rc.r.type });
-      rc.r.parts = null;
-      finishIn(rc, blob, m.id);
-    } else {
-      delete partials[rc.r.key];
-      rc.r.parts = null;
-      rc.it.ended = true;
-      setState(rc.it, '壊れていたため受け取れませんでした(相手に送り直しを頼めます)', 'failed');
-      buttons(rc.it, []);
-      send({ t: 'bad', id: m.id });
-      log.warn('届いたファイルが壊れていました(大きさか CRC が合いません)');
-    }
-    if (!sending) releaseWake();
-  }
-  function finishIn(rc, blob, id) {
-    var it = rc.it;
-    if (!rc.r.enc) {
-      finished[id + '|' + rc.r.key] = true;
-      send({ t: 'done', id: id });
-      received(it, blob);
-      return;
-    }
-    setState(it, '展開しています');
-    log
-      .step(
-        'ファイルの展開',
-        function () {
-          return new Response(blob.stream().pipeThrough(new DecompressionStream('gzip'))).blob();
-        },
-        function (b) {
-          return C.bytes(blob.size) + ' → ' + C.bytes(b.size);
-        }
-      )
-      .then(function (r) {
-        if (r.ok && r.value.size === rc.r.raw) {
-          finished[id + '|' + rc.r.key] = true;
-          send({ t: 'done', id: id });
-          received(it, new Blob([r.value], { type: rc.r.type }));
-        } else {
-          it.ended = true;
-          setState(it, '展開できませんでした', 'failed');
-          send({ t: 'bad', id: id });
-        }
-      });
+      if (!sending && !receiving) releaseWake();
+    });
   }
   function cancelIn(it) {
     var key = Object.keys(partials).filter(function (k) {
@@ -1048,7 +1045,7 @@
     it.ended = true;
     it.blob = blob;
     it.url = URL.createObjectURL(blob);
-    it.done = it.wire;
+    it.done = it.size;
     progress(it, true);
     setState(it, '受け取りました(' + summary(it) + ')', 'ok');
     log('ファイルを受け取りました(' + summary(it) + ')');
