@@ -1,0 +1,68 @@
+/* どのページにも共通する確認(起動・テーマ・幅・環境情報・ログ)。
+   使い方: node tests/smoke.js tools/calculator tools/paint   (all でツールとランチャー全部、--logs で各ページのログも出す) */
+const fs = require('fs');
+const path = require('path');
+const { launch, report, splitErrors, ROOT } = require('./lib/harness');
+
+function pagesFrom(args) {
+  const list = args.filter((a) => !a.startsWith('--'));
+  if (list.includes('all')) {
+    const tools = fs.readdirSync(path.join(ROOT, 'tools')).map((s) => 'tools/' + s + '/' + s + '.html');
+    const launchers = fs
+      .readdirSync(path.join(ROOT, 'launchers'))
+      .filter((f) => f.endsWith('.html'))
+      .map((f) => 'launchers/' + f);
+    return ['index.html'].concat(launchers, tools);
+  }
+  return list.map((p) => (p.endsWith('.html') ? p : p.replace(/\/$/, '') + '/' + path.basename(p) + '.html'));
+}
+
+(async () => {
+  const args = process.argv.slice(2);
+  const pages = pagesFrom(args);
+  if (!pages.length) {
+    console.log('使い方: node tests/smoke.js tools/<slug> … | all [--logs]');
+    return;
+  }
+  const site = await launch();
+  const notes = [];
+  let ng = 0;
+  for (const p of pages) {
+    const problems = [];
+    /* 昼はライト、夜はダーク */
+    for (const [hour, want] of [
+      [12, 'light'],
+      [20, 'dark'],
+    ]) {
+      const { page, logs, context } = await site.open(p, { hour });
+      const theme = await page.getAttribute('html', 'data-theme');
+      if (theme !== want) problems.push(hour + '時のテーマが ' + theme + '(期待 ' + want + ')');
+      if (hour === 12) {
+        const w = await page.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
+        if (w[0] > w[1]) problems.push('横にはみ出しています(' + w[0] + 'px)');
+        if (await page.$('#themeBtn')) {
+          await page.click('#themeBtn');
+          if ((await page.getAttribute('html', 'data-theme')) !== 'dark')
+            problems.push('テーマボタンで切り替わりません');
+        }
+        if (await page.$('#infoBtn')) {
+          await page.click('#infoBtn');
+          const rows = await page.$$eval('.info-list dt', (e) => e.length);
+          if (rows !== 12) problems.push('環境情報が ' + rows + ' 行です(期待 12)');
+        }
+        const errors = splitErrors(logs);
+        errors.real.forEach((l) => problems.push('エラー: ' + l.split('\n')[0]));
+        if (errors.cdn.length) notes.push(p + ': CDN のライブラリは開発環境では読めないため未確認');
+        if (!errors.cdn.length && !logs.some((l) => /起動しました|読み込みました|準備ができました/.test(l)))
+          problems.push('起動のログがありません');
+        if (args.includes('--logs')) console.log('  ' + p + '\n    ' + logs.join('\n    '));
+      }
+      await context.close();
+    }
+    if (!report(p, problems)) ng++;
+  }
+  await site.close();
+  if (notes.length) console.log('注意:\n  ' + notes.join('\n  '));
+  console.log(pages.length + '件中 ' + (pages.length - ng) + '件 OK');
+  process.exitCode = ng ? 1 : 0;
+})();
