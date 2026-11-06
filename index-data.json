@@ -27,6 +27,7 @@
   {"cat": "センサー・カメラ活用", "slug": "image-classifier", "title": "画像分類", "en": "Image Classifier", "desc": "カメラや写真に写った物が何かをAIが1000種類から判定", "tags": ["要 外部通信"]},
   {"cat": "QR・共有", "slug": "qr-reader", "title": "QRコードリーダー", "en": "QR Code Reader", "desc": "カメラでQRコードを読み取り", "tags": ["要 カメラ", "要 https", "要 外部通信"]},
   {"cat": "QR・共有", "slug": "qr-generator", "title": "QRコード生成", "en": "QR Code Generator", "desc": "文字やURLからQRコードを作成", "tags": ["要 外部通信"]},
+  {"cat": "QR・共有", "slug": "file-transfer", "title": "ファイル転送", "en": "File Transfer", "desc": "番号かQRでつないで、スマホどうしでファイルを直接送る", "tags": ["要 https", "要 外部通信"]},
   {"cat": "メディア", "slug": "exif-viewer", "title": "写真情報(Exif)ビューア", "en": "Exif Viewer", "desc": "写真のExif情報を一覧表示", "tags": ["要 外部通信"]},
   {"cat": "メディア", "slug": "image-converter", "title": "画像変換", "en": "Image Converter", "desc": "画像の形式を一括変換", "tags": ["要 外部通信"]},
   {"cat": "メディア", "slug": "image-editor", "title": "画像編集", "en": "Image Editor", "desc": "写真を絵画風・ドット絵・印刷風・モザイクなどに"},

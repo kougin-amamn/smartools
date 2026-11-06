@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ファイル転送 | スマホどうしで番号かQRでつないで直接送る</title>
+    <meta
+      name="description"
+      content="スマホどうしで写真・動画・書類などのファイルを直接送り合えます。片方に出る6桁の番号かQRコードでつなぐだけ。ファイルはサーバーを通らず、端末どうしの暗号化された通信(WebRTC)で届きます。複数ファイル、進み具合と速度の表示に対応。"
+    />
+    <meta property="og:title" content="ファイル転送 | スマホどうしで番号かQRでつないで直接送る" />
+    <meta
+      property="og:description"
+      content="スマホどうしで写真・動画・書類などのファイルを直接送り合えます。片方に出る6桁の番号かQRコードでつなぐだけ。ファイルはサーバーを通らず、端末どうしの暗号化された通信(WebRTC)で届きます。複数ファイル、進み具合と速度の表示に対応。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-file-transfer.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./file-transfer.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "ファイル転送",
+        "alternateName": ["File Transfer", "ファイル共有", "写真を送る", "P2P転送", "WebRTC"],
+        "description": "スマホどうしで写真・動画・書類などのファイルを直接送り合えます。片方に出る6桁の番号かQRコードでつなぐだけ。ファイルはサーバーを通らず、端末どうしの暗号化された通信(WebRTC)で届きます。複数ファイル、進み具合と速度の表示に対応。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-file-transfer.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">ファイル転送<span class="en">File Transfer</span></h1>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <section class="card" id="start">
+          <p class="lead">2台のスマホで、片方が「番号を出す」、もう片方が「番号で参加」を押してください。</p>
+          <div class="row">
+            <button class="pill primary big" type="button" id="hostBtn">番号を出す</button>
+            <button class="pill big" type="button" id="joinBtn">番号で参加</button>
+          </div>
+        </section>
+        <section class="card" id="host" hidden>
+          <p class="label">接続の番号</p>
+          <p class="code" id="code">------</p>
+          <div class="qr" id="qr" aria-label="接続用のQRコード"></div>
+          <p class="sub">相手のカメラでQRコードを読むか、番号を入れてもらってください。</p>
+          <p class="wait" id="hostWait"></p>
+          <div class="ask" id="ask" hidden>
+            <p>「<b id="askName"></b>」から接続の申し込みがあります。</p>
+            <div class="row">
+              <button class="pill primary" type="button" id="allowBtn">許可する</button>
+              <button class="pill" type="button" id="denyBtn">断る</button>
+            </div>
+          </div>
+          <button class="pill small" type="button" id="hostCancel">やめる</button>
+        </section>
+        <section class="card" id="join" hidden>
+          <label class="label" for="codeIn">相手の画面に出ている6桁の番号</label>
+          <div class="row">
+            <input
+              id="codeIn"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              maxlength="9"
+              placeholder="123 456"
+            />
+            <button class="pill primary" type="button" id="connectBtn">つなぐ</button>
+          </div>
+          <p class="wait" id="joinWait"></p>
+          <button class="pill small" type="button" id="joinCancel">やめる</button>
+        </section>
+        <section class="card" id="linked" hidden>
+          <p class="peer">「<b id="peerName"></b>」とつながっています</p>
+          <div class="row">
+            <button class="pill primary big" type="button" id="sendBtn">ファイルを選んで送る</button>
+            <input type="file" id="file" multiple aria-label="送るファイル" hidden />
+          </div>
+          <button class="pill small" type="button" id="byeBtn">切断</button>
+        </section>
+        <p class="status" id="status"></p>
+        <ul class="list" id="list"></ul>
+        <p class="empty" id="empty">送ったファイル・受け取ったファイルがここに並びます</p>
+        <p class="note">
+          ファイルはサーバーを通らず、端末どうしの暗号化された通信で直接届きます(つなぐ相手を見つける時だけ、PeerJS
+          の公開サーバーを使います)。2台を同じWi-Fiにつなぐと確実です。携帯回線どうしではつながらないことがあります。受け取ったファイルはいったん端末のメモリに置くため、スマホでは1ファイル数百MB〜1GB程度までが目安です。転送中は画面を開いたままにしてください。
+        </p>
+      </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./file-transfer-core.js"></script>
+    <script src="./file-transfer.js"></script>
+  </body>
+</html>
