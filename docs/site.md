@@ -8,7 +8,6 @@
 ├── index-data.json       ツールの一覧(これだけが一覧の元)
 ├── og-image.png          共通の OGP 画像(1200×630)
 ├── wrangler.jsonc / .assetsignore   Cloudflare の公開設定(公開しない)
-├── .prettierrc.json      整形の設定
 ├── common/               共通部品(ここにだけ置き、ツールにコピーしない)
 │   ├── log.js            全ページ・最初に読む: ログ・log.step・自動の操作ログ
 │   ├── env.js            全ページ: 端末・ブラウザ・接続の判定(window.Env)
@@ -35,7 +34,7 @@
 
 ランチャーと一覧ページは `log.js` → `env.js` → `site.js`(tool-kit.js は読まない)。
 
-読み込み確認(ひな形にある `(window.log && window.ToolKit) || …`)は、共通ファイルが読めない時(スマホでファイルを直接開いた時など)に、どれが読めないかを画面に出し、`log` と `ToolKit` を何もしない物で代わりにする。
+読み込み確認(ひな形にある `window.ToolKit || …`、ランチャーと一覧は `window.log || …`)は、共通ファイルが読めない時(スマホでファイルを直接開いた時など)に画面の先頭へ案内を出すだけ([design/page-base.md](./design/page-base.md))。ヘッダのテーマ・デバッグ・カラーテーマ・環境情報のボタンは `site.js` が足すので HTML に書かない。
 
 ## 一覧(index-data.json)
 

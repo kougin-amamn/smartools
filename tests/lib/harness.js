@@ -92,6 +92,7 @@ async function launch(args) {
         else r.abort();
       }
     );
+    if (opts.block) await context.route(opts.block, (r) => r.abort());
     if (opts.insecure)
       await context.addInitScript(() =>
         Object.defineProperty(window, 'isSecureContext', { get: () => false })

@@ -1,4 +1,4 @@
-/* どのページにも共通する確認(起動・テーマ・幅・環境情報・ログ)。
+/* どのページにも共通する確認(起動・テーマ・幅・ヘッダのボタン・環境情報・ログ・共通ファイルが無い時の案内)。
    使い方: node tests/smoke.js tools/calculator tools/paint   (all でツールとランチャー全部、--logs で各ページのログも出す) */
 const fs = require('fs');
 const path = require('path');
@@ -40,11 +40,11 @@ function pagesFrom(args) {
       if (hour === 12) {
         const w = await page.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
         if (w[0] > w[1]) problems.push('横にはみ出しています(' + w[0] + 'px)');
-        if (await page.$('#themeBtn')) {
-          await page.click('#themeBtn');
-          if ((await page.getAttribute('html', 'data-theme')) !== 'dark')
-            problems.push('テーマボタンで切り替わりません');
-        }
+        const ids = await page.$$eval('.site-bar > button', (b) => b.map((e) => e.id).join(' '));
+        if (!/infoBtn colorBtn themeBtn dbgBtn$/.test(ids)) problems.push('ヘッダのボタンの並びが ' + ids);
+        await page.click('#themeBtn');
+        if ((await page.getAttribute('html', 'data-theme')) !== 'dark')
+          problems.push('テーマボタンで切り替わりません');
         if (await page.$('#infoBtn')) {
           await page.click('#infoBtn');
           const rows = await page.$$eval('.info-list dt', (e) => e.length);
@@ -59,6 +59,11 @@ function pagesFrom(args) {
       }
       await context.close();
     }
+    /* 共通ファイルが読めない時は、画面の先頭に案内を出す */
+    const missing = await site.open(p, { block: /\/common\// });
+    if (!(await missing.page.textContent('body')).includes('共通ファイル(common/)を読み込めませんでした'))
+      problems.push('共通ファイルが無い時の案内が出ません');
+    await missing.context.close();
     if (!report(p, problems)) ng++;
   }
   await site.close();

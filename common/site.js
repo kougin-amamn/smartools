@@ -9,10 +9,40 @@
     log.info = log.warn = log.error = log.debug = log;
   }
 
+  /* ヘッダのボタン
+     テーマ・カラーテーマ・環境情報・デバッグの4つは HTML に書かず、ここで足す(並びは 環境情報・カラー・テーマ・デバッグ)。
+     押下は log.js の自動ログに任せ、名前を data-log に固定する(テーマの文字は状態で変わるため) */
+  var bar = document.querySelector('.site-bar');
+  function addHeaderButton(id, name, icon, before, hasPopup) {
+    if (!bar) return null;
+    var b = document.createElement('button');
+    b.className = 'dbg-btn';
+    b.id = id;
+    b.type = 'button';
+    b.dataset.log = name;
+    b.title = name;
+    b.setAttribute('aria-label', name);
+    if (hasPopup) {
+      b.setAttribute('aria-haspopup', 'dialog');
+      b.setAttribute('aria-expanded', 'false');
+    }
+    b.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      icon +
+      '</svg>';
+    bar.insertBefore(b, before || null);
+    return b;
+  }
+
   /* テーマ
      起動した時だけ時間帯で決める(18時〜6時はダーク)。ヘッダのボタンでライト⇄ダークを切り替える(保存はしない) */
   var root = document.documentElement,
-    tbtn = document.getElementById('themeBtn');
+    tbtn = addHeaderButton('themeBtn', 'テーマ', ''),
+    dbtn = addHeaderButton(
+      'dbgBtn',
+      'デバッグ',
+      '<path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2"/>'
+    );
   var I = {
     light:
       '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
@@ -52,8 +82,6 @@
     return night() ? 'dark' : 'light';
   }
   apply(startTheme());
-  /* 押下のログは log.js の自動ログに任せる(文字が状態で変わるので名前を固定する) */
-  if (tbtn) tbtn.setAttribute('data-log', 'テーマ');
   if (tbtn)
     tbtn.onclick = function () {
       var t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -148,8 +176,7 @@
     applyColor(color);
   });
 
-  var bar = tbtn && tbtn.closest('.site-bar'),
-    cbtn = null,
+  var cbtn = null,
     menu = null;
   function loadThemes() {
     if (themes) return Promise.resolve(themes);
@@ -242,18 +269,13 @@
   /* ヘッダのテーマボタンの前にカラーボタンを足す(ヘッダのあるページだけ)。
      ボタンの押下は log.js の自動ログ、色の一覧は並びが特殊なので自動ログを止めてここで書く */
   if (bar) {
-    cbtn = document.createElement('button');
-    cbtn.className = 'dbg-btn';
-    cbtn.id = 'colorBtn';
-    cbtn.type = 'button';
-    cbtn.dataset.log = 'カラーテーマ';
-    cbtn.title = 'カラーテーマ';
-    cbtn.setAttribute('aria-label', 'カラーテーマ');
-    cbtn.setAttribute('aria-haspopup', 'dialog');
-    cbtn.setAttribute('aria-expanded', 'false');
-    cbtn.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2a1.7 1.7 0 0 1 1.3-2.9H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11.5" r=".6"/><circle cx="10" cy="7.5" r=".6"/><circle cx="15" cy="7.5" r=".6"/></svg>';
-    bar.insertBefore(cbtn, tbtn);
+    cbtn = addHeaderButton(
+      'colorBtn',
+      'カラーテーマ',
+      '<path d="M12 3a9 9 0 1 0 0 18c1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2a1.7 1.7 0 0 1 1.3-2.9H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11.5" r=".6"/><circle cx="10" cy="7.5" r=".6"/><circle cx="15" cy="7.5" r=".6"/>',
+      tbtn,
+      true
+    );
 
     menu = document.createElement('div');
     menu.className = 'color-menu';
@@ -323,18 +345,13 @@
   /* カラーボタンの前に足す(ヘッダのあるページだけ。env.js が読めない時は出さない)。
      ボタンの押下は log.js の自動ログ、中の表は自動ログを止める */
   if (bar && Env) {
-    ibtn = document.createElement('button');
-    ibtn.className = 'dbg-btn';
-    ibtn.id = 'infoBtn';
-    ibtn.type = 'button';
-    ibtn.dataset.log = '環境情報';
-    ibtn.title = '環境情報';
-    ibtn.setAttribute('aria-label', '環境情報');
-    ibtn.setAttribute('aria-haspopup', 'dialog');
-    ibtn.setAttribute('aria-expanded', 'false');
-    ibtn.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.6" r=".7"/></svg>';
-    bar.insertBefore(ibtn, cbtn || tbtn);
+    ibtn = addHeaderButton(
+      'infoBtn',
+      '環境情報',
+      '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.6" r=".7"/>',
+      cbtn || tbtn,
+      true
+    );
 
     imenu = document.createElement('div');
     imenu.className = 'color-menu info-menu';
@@ -367,10 +384,8 @@
   }
 
   /* デバッグ画面(eruda) */
-  var dbtn = document.getElementById('dbgBtn'),
-    loaded = false,
+  var loaded = false,
     shown = false;
-  if (dbtn) dbtn.setAttribute('data-log', 'デバッグ');
   if (dbtn)
     dbtn.onclick = function () {
       function toggle() {

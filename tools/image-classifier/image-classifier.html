@@ -57,28 +57,6 @@
           />
         </svg>
       </button>
-      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></svg>
-      </button>
-      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
-        </svg>
-      </button>
     </header>
     <main class="content">
       <div class="app">
@@ -176,59 +154,11 @@
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>
     <script>
-      (window.log && window.ToolKit) ||
-        (function () {
-          var miss = [window.log ? '' : 'common/log.js', window.ToolKit ? '' : 'common/tool-kit.js']
-            .filter(Boolean)
-            .join('、');
-          var m =
-            '共通ファイル(' +
-            miss +
-            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
-          var f = function () {};
-          f.info = f.debug = f.warn = f.error = f;
-          var no = function () {
-            return Promise.resolve(false);
-          };
-          if (!window.log) window.log = f;
-          if (!window.log.step)
-            window.log.step = function (n, fn) {
-              return Promise.resolve()
-                .then(fn)
-                .then(
-                  function (v) {
-                    return { ok: true, value: v };
-                  },
-                  function (e) {
-                    return { ok: false, error: e };
-                  }
-                );
-            };
-          if (!window.ToolKit)
-            window.ToolKit = {
-              vibrate: f,
-              esc: String,
-              copyText: no,
-              media: {
-                open: function () {
-                  return Promise.resolve({ stream: null, message: m });
-                },
-                stop: f,
-                size: f,
-                torch: function () {
-                  return Promise.resolve({ ok: false, message: m });
-                },
-              },
-              sensor: { permit: no, watchData: f },
-            };
-          document.addEventListener('DOMContentLoaded', function () {
-            var d = document.createElement('p');
-            d.textContent = m;
-            d.style.cssText =
-              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
-            document.body.insertBefore(d, document.body.firstChild);
-          });
-        })();
+      window.ToolKit ||
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+        );
     </script>
     <script src="./image-classifier-core.js"></script>
     <script src="./image-classifier.js"></script>

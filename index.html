@@ -35,28 +35,6 @@
     <header class="site-bar">
       <img src="./icons/app-icon-home.svg" alt="" />
       <h1 style="margin: 0; font: inherit; flex: 1">smartools</h1>
-      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></svg>
-      </button>
-      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
-        </svg>
-      </button>
     </header>
     <main class="content">
       <p class="lead">ブラウザだけで使える小さなツール集です。インストールは不要です。</p>
@@ -72,19 +50,10 @@
     <script src="./common/site.js"></script>
     <script>
       window.log ||
-        (function () {
-          var f = function () {};
-          f.info = f.debug = f.warn = f.error = f;
-          window.log = f;
-          document.addEventListener('DOMContentLoaded', function () {
-            var d = document.createElement('p');
-            d.textContent =
-              '共通ファイル(common/log.js)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
-            d.style.cssText =
-              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
-            document.body.insertBefore(d, document.body.firstChild);
-          });
-        })();
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+        );
     </script>
     <script src="./index.js"></script>
   </body>
