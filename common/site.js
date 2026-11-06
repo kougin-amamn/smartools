@@ -37,7 +37,7 @@
   } catch (e) {
     /* 保存領域が使えない時は消す必要もない */
   } /* 以前の3種類の切り替えで保存した値を消す */
-  /* 埋め込み表示(?embed=1。ダッシュボードの中など): ヘッダを隠し、テーマは親の画面に合わせる */
+  /* 埋め込み表示(?embed=1。他のページに埋め込んだ時): ヘッダを隠し、テーマは親の画面に合わせる */
   var embed = /[?&]embed=1(&|$)/.test(location.search);
   if (embed) root.classList.add('embed');
   function startTheme() {
@@ -141,7 +141,7 @@
   }
   var color = savedColor();
   applyColor(color);
-  /* 別のタブやダッシュボードに埋め込んだページも、選び直した色にそろえる */
+  /* 別のタブや埋め込んだページも、選び直した色にそろえる */
   window.addEventListener('storage', function (e) {
     if (e.key !== COLOR_KEY) return;
     color = savedColor();
