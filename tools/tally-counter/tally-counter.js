@@ -7,7 +7,7 @@
     vib = document.getElementById('vib'),
     snd = document.getElementById('snd'),
     D = 4,
-    canVib = typeof navigator.vibrate === 'function',
+    canVib = Env.canVibrate(),
     ac = null;
   try {
     var s = JSON.parse(localStorage.getItem(KEY) || '{}');
@@ -67,7 +67,7 @@
     }
   }
   function buzz() {
-    if (vib.checked && canVib) navigator.vibrate(40);
+    if (vib.checked && canVib) ToolKit.vibrate(40);
     if (snd.checked) click();
   }
   document.getElementById('plus').onclick = function () {
@@ -90,7 +90,7 @@
   };
   vib.onchange = function () {
     save();
-    if (vib.checked && canVib) navigator.vibrate(40);
+    if (vib.checked && canVib) ToolKit.vibrate(40);
   };
   snd.onchange = function () {
     save();

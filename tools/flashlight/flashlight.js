@@ -129,9 +129,9 @@
       return;
     }
 
-    if (!window.isSecureContext) {
-      statusText.textContent = 'https接続でないとライトは使えません。';
-      log.warn('https 接続でないため、ライトを使えませんでした');
+    var needHttps = Env.requireSecure('ライト');
+    if (needHttps) {
+      statusText.textContent = needHttps;
       return;
     }
 
@@ -160,5 +160,5 @@
       log('ページを離れるためライトを消灯しました');
     }
   });
-  log('起動しました(https ' + (window.isSecureContext ? 'あり' : 'なし') + ')');
+  log('起動しました');
 })();

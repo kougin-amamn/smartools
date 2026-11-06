@@ -1,5 +1,5 @@
 /* 全ページ共通のテーマ(起動時は時間帯で決め、ボタンでライト⇄ダーク)・カラーテーマ(themes.json から選び全ページで共有)・
-   環境情報・埋め込み表示(?embed=1)・デバッグ画面(eruda)。ログは log.js(先に読む)。ページ側で編集しない */
+   環境情報の画面・埋め込み表示(?embed=1)・デバッグ画面(eruda)。ログは log.js、環境の判定は env.js(どちらも先に読む)。ページ側で編集しない */
 (function () {
   'use strict';
   /* ログは log.js が用意する。読めなかった時も画面が動くよう、何もしないログで代わりにする */
@@ -284,46 +284,12 @@
   /* 環境情報
      ヘッダの「i」ボタンで、この端末・ブラウザの情報を表示する(端末の外には送らない)。開くたびに最新の値を読み直す */
   var ibtn = null,
-    imenu = null;
-  function yesNo(v) {
-    return v ? 'あり' : 'なし';
-  }
-  function canStore() {
-    try {
-      localStorage.setItem('site-probe', '1');
-      localStorage.removeItem('site-probe');
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-  function envRows() {
-    var tz = '';
-    try {
-      tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    } catch (e) {
-      tz = '不明';
-    }
-    var net = navigator.connection && navigator.connection.effectiveType;
-    return [
-      ['OS', os + (osVer ? ' ' + osVer : '')],
-      ['ブラウザ', br],
-      ['画面(縦×横)', screen.height + '×' + screen.width + 'px'],
-      ['画面の倍率', String(window.devicePixelRatio || 1)],
-      ['表示領域(縦×横)', innerHeight + '×' + innerWidth + 'px'],
-      ['向き', innerWidth > innerHeight ? '横向き' : '縦向き'],
-      ['https', yesNo(window.isSecureContext)],
-      ['通信', (navigator.onLine ? 'オンライン' : 'オフライン') + (net ? '(' + net + ')' : '')],
-      ['言語', navigator.language || '不明'],
-      ['タイムゾーン', tz || '不明'],
-      ['振動', yesNo('vibrate' in navigator)],
-      ['保存領域', canStore() ? '使える' : '使えない'],
-    ];
-  }
+    imenu = null,
+    Env = window.Env;
   function fillInfo() {
     var dl = imenu.querySelector('.info-list');
     dl.textContent = '';
-    envRows().forEach(function (r) {
+    Env.rows().forEach(function (r) {
       var dt = document.createElement('dt'),
         dd = document.createElement('dd');
       dt.textContent = r[0];
@@ -342,10 +308,21 @@
     imenu.style.top = bar.getBoundingClientRect().bottom + 6 + 'px';
     imenu.hidden = false;
     ibtn.setAttribute('aria-expanded', 'true');
-    log('環境情報を開きました(' + os + ' ' + br + ' / ' + innerHeight + '×' + innerWidth + 'px)');
+    log(
+      '環境情報を開きました(' +
+        Env.os() +
+        ' ' +
+        Env.browser() +
+        ' / ' +
+        innerHeight +
+        '×' +
+        innerWidth +
+        'px)'
+    );
   }
-  /* カラーボタンの前に足す(ヘッダのあるページだけ)。ボタンの押下は log.js の自動ログ、中の表は自動ログを止める */
-  if (bar) {
+  /* カラーボタンの前に足す(ヘッダのあるページだけ。env.js が読めない時は出さない)。
+     ボタンの押下は log.js の自動ログ、中の表は自動ログを止める */
+  if (bar && Env) {
     ibtn = document.createElement('button');
     ibtn.className = 'dbg-btn';
     ibtn.id = 'infoBtn';
@@ -383,6 +360,10 @@
         ibtn.focus();
       }
     });
+    /* OS の版番号は後から分かるため、開いている時は表示し直す */
+    Env.ready.then(function () {
+      if (!imenu.hidden) fillInfo();
+    });
   }
 
   /* デバッグ画面(eruda) */
@@ -415,44 +396,4 @@
       };
       document.head.appendChild(sc);
     };
-
-  /* 環境 */
-  var u = navigator.userAgent;
-  var os = /iPhone|iPad|iPod/.test(u)
-    ? 'iOS'
-    : /Android/.test(u)
-      ? 'Android'
-      : /Windows/.test(u)
-        ? 'Windows'
-        : /Mac/.test(u)
-          ? 'macOS'
-          : /Linux/.test(u)
-            ? 'Linux'
-            : '不明OS';
-  var br = /Edg\//.test(u)
-    ? 'Edge'
-    : /Firefox|FxiOS/.test(u)
-      ? 'Firefox'
-      : /Chrome|CriOS/.test(u)
-        ? 'Chrome'
-        : /Safari/.test(u)
-          ? 'Safari'
-          : '不明ブラウザ';
-  /* 「PC版サイト」表示にすると Android でも UA が Linux になるため、対応ブラウザでは userAgentData の platform を優先する */
-  var osVer = '';
-  var uad = navigator.userAgentData;
-  if (uad) {
-    if (uad.platform === 'Android') os = 'Android';
-    else if (uad.platform === 'Chrome OS') os = 'ChromeOS';
-    if (uad.getHighEntropyValues)
-      uad.getHighEntropyValues(['platformVersion']).then(
-        function (v) {
-          if (os === 'Android' && v.platformVersion) osVer = v.platformVersion.split('.')[0];
-          if (imenu && !imenu.hidden) fillInfo();
-        },
-        function () {
-          /* 取得できない時はバージョンなしで表示する */
-        }
-      );
-  }
 })();

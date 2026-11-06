@@ -83,10 +83,12 @@
   });
   function open(constraints, label) {
     label = label || (constraints && constraints.video ? 'カメラ' : 'マイク');
-    if (!window.isSecureContext) {
-      log.warn('https 接続でないため、' + label + 'を使えませんでした');
-      return Promise.resolve({ stream: null, message: label + 'の利用にはhttps接続が必要です。' });
-    }
+    var needHttps = root.Env
+      ? root.Env.requireSecure(label)
+      : window.isSecureContext
+        ? ''
+        : label + 'の利用には https 接続が必要です';
+    if (needHttps) return Promise.resolve({ stream: null, message: needHttps });
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       log.warn('このブラウザは' + label + 'に対応していません');
       return Promise.resolve({ stream: null, message: 'このブラウザは' + label + 'に対応していません。' });

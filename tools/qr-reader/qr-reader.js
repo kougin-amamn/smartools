@@ -50,10 +50,9 @@
     scanLine.style.display = '';
     statusText.textContent = 'カメラを起動しています…';
 
-    if (!window.isSecureContext) {
-      statusText.textContent =
-        'カメラの利用には安全な接続(https)が必要です。file://で開いている場合は動作しません。';
-      log.warn('https 接続でないため、カメラを使えませんでした');
+    var needHttps = Env.requireSecure('カメラ');
+    if (needHttps) {
+      statusText.textContent = needHttps;
       return;
     }
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {

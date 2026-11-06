@@ -1,6 +1,6 @@
 # 環境の判定 設計書
 
-2026-11-07 作成(実装前)
+2026-11-07 作成・実装
 
 ## 概要
 
@@ -104,6 +104,6 @@ flowchart LR
 
 ## 確認
 
-- UA の判定は Node でテストする(Android Chrome、PC版サイト表示の Android、iPhone Safari、iPhone Chrome、iPadOS Safari、Windows Edge、Mac Safari、Samsung Internet、Firefox)。
-- ブラウザで、環境情報の画面が今と同じ12行を出すこと、置き換えた各ツールが https でない時に統一した文を出すこと、ログが1行ずつ出ることを確かめる。
-- 実機では、Android の「PC版サイト」表示と iPad の Safari での判定を確かめる。
+- UA の判定を Node でテストした(Android Chrome、PC版サイト表示の Android、iPhone の Safari と Chrome、iPadOS の Safari、タッチの無い Mac の Safari、Windows Edge、Samsung Internet、Android Firefox、ChromeOS、UA が空の時)。
+- ブラウザ(Playwright)で、環境情報の画面が12行を出すこと(ツールと一覧ページ)、https でない時に ライト・天気・サイクルメーター・QR読み取り・ファイル転送・`ToolKit.media.open` が統一した文を出し、警告が1行出ることを確かめた。カウンターの振動が `ToolKit.vibrate` を通ることも確かめた。
+- 実機で確かめること: Android の「PC版サイト」表示と iPad の Safari での OS の判定、Android の Chrome で OS の版番号が出ること。

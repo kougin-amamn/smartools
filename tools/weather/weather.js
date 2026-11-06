@@ -157,9 +157,9 @@
   let locateSeq = 0;
   function locate(auto) {
     const seq = ++locateSeq;
-    if (!window.isSecureContext) {
-      statusText.textContent = '現在地の取得には https 接続が必要です。地名で検索してください。';
-      log.warn('https 接続でないため、現在地を取得できませんでした');
+    var needHttps = Env.requireSecure('現在地');
+    if (needHttps) {
+      statusText.textContent = needHttps + '。地名で検索してください。';
       return;
     }
     if (!navigator.geolocation) {

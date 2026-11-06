@@ -90,5 +90,5 @@
   resetBtn.addEventListener('click', () => {
     reset();
   });
-  log('起動しました(https ' + (window.isSecureContext ? 'あり' : 'なし') + ')');
+  log('起動しました');
 })();

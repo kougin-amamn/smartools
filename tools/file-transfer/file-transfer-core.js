@@ -1,4 +1,4 @@
-/* ファイル転送の計算(DOM を使わない)。接続の番号、端末名、確認番号、CRC32、圧縮の判断、
+/* ファイル転送の計算(DOM を使わない)。接続の番号、確認番号、CRC32、圧縮の判断、
    大きさ・速度・残り時間の表示、受け取りの記録 */
 (function () {
   'use strict';
@@ -27,38 +27,6 @@
   /* 123456 → 123 456(読み上げやすくする) */
   function showCode(code) {
     return code.slice(0, 3) + ' ' + code.slice(3);
-  }
-
-  /* 相手に見せる端末名。個人を特定しない程度の大まかな名前 */
-  function deviceName(ua) {
-    ua = ua || '';
-    var os = /iPhone/.test(ua)
-      ? 'iPhone'
-      : /iPad/.test(ua) || (/Macintosh/.test(ua) && /Mobile/.test(ua))
-        ? 'iPad'
-        : /Android/.test(ua)
-          ? 'Android'
-          : /Windows/.test(ua)
-            ? 'Windows'
-            : /Mac OS X/.test(ua)
-              ? 'Mac'
-              : /CrOS/.test(ua)
-                ? 'ChromeOS'
-                : /Linux/.test(ua)
-                  ? 'Linux'
-                  : '端末';
-    var br = /EdgA?\//.test(ua)
-      ? 'Edge'
-      : /SamsungBrowser/.test(ua)
-        ? 'Samsung Internet'
-        : /Firefox|FxiOS/.test(ua)
-          ? 'Firefox'
-          : /CriOS|Chrome\//.test(ua)
-            ? 'Chrome'
-            : /Safari\//.test(ua)
-              ? 'Safari'
-              : '';
-    return br ? os + ' ' + br : os;
   }
 
   /* 確認番号
@@ -231,7 +199,6 @@
     parseCode: parseCode,
     peerId: peerId,
     showCode: showCode,
-    deviceName: deviceName,
     fingerprint: fingerprint,
     sasInput: sasInput,
     sasDigits: sasDigits,

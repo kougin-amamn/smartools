@@ -43,7 +43,7 @@
     listEl = $('list'),
     emptyEl = $('empty');
 
-  var myName = C.deviceName(navigator.userAgent),
+  var myName = Env.deviceName(),
     canGzip = typeof CompressionStream === 'function' && typeof DecompressionStream === 'function',
     peer = null,
     conn = null,
@@ -71,10 +71,8 @@
     statusEl.textContent = '接続用のライブラリを読み込めませんでした。通信状態を確認して開き直してください';
     log.error('接続用のライブラリ(PeerJS)を読み込めませんでした');
   }
-  if (!window.isSecureContext) {
-    statusEl.textContent = 'https で開いたページでのみ使えます';
-    log.warn('https 接続でないため、ファイル転送を使えませんでした');
-  }
+  var needHttps = Env.requireSecure('ファイル転送');
+  if (needHttps) statusEl.textContent = needHttps;
 
   function show(name) {
     Object.keys(screens).forEach(function (k) {
@@ -1141,7 +1139,7 @@
   show('start');
   log('起動しました(' + myName + (canGzip ? '' : ' / 圧縮なし') + ')');
   var fromUrl = C.parseCode(location.hash);
-  if (fromUrl && window.Peer && window.isSecureContext) {
+  if (fromUrl && window.Peer && !needHttps) {
     log('QRコードのリンクから開いたため、つなぎます');
     startJoin(fromUrl);
   }

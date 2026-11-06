@@ -63,9 +63,9 @@
   }
 
   function start() {
-    if (!window.isSecureContext) {
-      statusText.textContent = '位置情報の利用にはhttps接続が必要です。';
-      log.warn('https 接続でないため、位置情報を使えませんでした');
+    var needHttps = Env.requireSecure('位置情報');
+    if (needHttps) {
+      statusText.textContent = needHttps;
       return;
     }
     if (!navigator.geolocation) {
@@ -128,5 +128,5 @@
   });
 
   render(0);
-  log('起動しました(https ' + (window.isSecureContext ? 'あり' : 'なし') + ')');
+  log('起動しました');
 })();

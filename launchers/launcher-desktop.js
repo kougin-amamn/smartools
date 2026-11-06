@@ -529,7 +529,7 @@
       ptr.ids.forEach(function (id) {
         els[id].classList.add('drag');
       });
-      if (navigator.vibrate && ptr.touch) {
+      if (window.Env && Env.canVibrate() && ptr.touch) {
         try {
           navigator.vibrate(10);
         } catch (x) {
