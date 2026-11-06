@@ -4,7 +4,7 @@
 (function () {
   'use strict';
   /* メッセージの一覧
-     このファイルが出す文言はすべてここにある。{…} の所に fmt() で値を入れる。
+     このファイルが出す文言はすべてここにある。{…} の所に format() で値を入れる。
      {グループ} には data-log-group がある時だけ「録音 3」の が入り、無い時は空になる */
   var MSG = Object.freeze({
     detail: ' [詳細] {詳細}',
@@ -27,7 +27,7 @@
     fileCancel: '{グループ}「{名前}」でファイルの選択をやめました',
   });
   /* 文言の {キー} を値で埋める。値の無いキーは空にする */
-  function fmt(text, vals) {
+  function format(text, vals) {
     return text.replace(/\{([^{}]+)\}/g, function (m, k) {
       return vals && vals[k] != null ? String(vals[k]) : '';
     });
@@ -37,7 +37,7 @@
   var MAX = 500,
     buf = [],
     replayed = false;
-  function p(n, w) {
+  function pad(n, w) {
     return String(n).padStart(w || 2, '0');
   }
   function stamp() {
@@ -45,17 +45,17 @@
     return (
       d.getFullYear() +
       '-' +
-      p(d.getMonth() + 1) +
+      pad(d.getMonth() + 1) +
       '-' +
-      p(d.getDate()) +
+      pad(d.getDate()) +
       ' ' +
-      p(d.getHours()) +
+      pad(d.getHours()) +
       ':' +
-      p(d.getMinutes()) +
+      pad(d.getMinutes()) +
       ':' +
-      p(d.getSeconds()) +
+      pad(d.getSeconds()) +
       '.' +
-      p(d.getMilliseconds(), 3)
+      pad(d.getMilliseconds(), 3)
     );
   }
   function detailOf(e) {
@@ -70,7 +70,7 @@
     return String(e);
   }
   function emit(level, msg, err) {
-    var line = stamp() + ' ' + msg + (err !== undefined ? fmt(MSG.detail, { 詳細: detailOf(err) }) : '');
+    var line = stamp() + ' ' + msg + (err !== undefined ? format(MSG.detail, { 詳細: detailOf(err) }) : '');
     var extra = err instanceof Error ? err : undefined;
     if (!replayed) {
       buf.push([level, line, extra]);
@@ -94,7 +94,7 @@
     emit('error', m, e);
   };
   log.MSG = MSG;
-  log.fmt = fmt;
+  log.format = format;
   window.log = log;
   /* デバッグ画面(eruda)は初期化後のログしか拾わないため、開く前の履歴は開いた時にまとめて表示する */
   window.__logReplay = function () {
@@ -130,11 +130,11 @@
         function (v) {
           var d = detail ? detail(v) : '',
             ms = Math.round(performance.now() - t0);
-          log(fmt(d ? MSG.stepDoneWith : MSG.stepDone, { 名前: name, 詳細: d, 時間: ms }));
+          log(format(d ? MSG.stepDoneWith : MSG.stepDone, { 名前: name, 詳細: d, 時間: ms }));
           return { ok: true, value: v };
         },
         function (e) {
-          log.error(fmt(MSG.stepError, { 名前: name }), e);
+          log.error(format(MSG.stepError, { 名前: name }), e);
           return { ok: false, error: e };
         }
       );
@@ -186,7 +186,7 @@
   }
   function groupOf(el) {
     var g = el.parentElement && el.parentElement.closest('[data-log-group]');
-    return g ? fmt(MSG.group, { グループ名: clean(g.getAttribute('data-log-group')) }) : '';
+    return g ? format(MSG.group, { グループ名: clean(g.getAttribute('data-log-group')) }) : '';
   }
   function off(el) {
     return !!el.closest('[data-log="off"]');
@@ -205,7 +205,7 @@
         : el.matches('a[href]')
           ? MSG.pressLink
           : MSG.press;
-      log(fmt(t, { グループ: groupOf(el), 名前: n }));
+      log(format(t, { グループ: groupOf(el), 名前: n }));
     },
     true
   );
@@ -220,16 +220,16 @@
       if (!n) return; /* 名前の無い部品(再生位置のスライダーなど)は出さない */
       if (el.matches('select')) {
         var o = el.options[el.selectedIndex];
-        log(fmt(MSG.select, { グループ: g, 名前: n, 値: clean(o ? o.text : el.value) }));
+        log(format(MSG.select, { グループ: g, 名前: n, 値: clean(o ? o.text : el.value) }));
         return;
       }
       if (TEXT.test(type)) return; /* 文字入力は対象外 */
       if (type === 'checkbox') {
-        log(fmt(MSG.check, { グループ: g, 名前: n, 値: el.checked ? 'ON' : 'OFF' }));
+        log(format(MSG.check, { グループ: g, 名前: n, 値: el.checked ? 'ON' : 'OFF' }));
         return;
       }
       if (type === 'radio') {
-        if (el.checked) log(fmt(MSG.radio, { グループ: g, 名前: n }));
+        if (el.checked) log(format(MSG.radio, { グループ: g, 名前: n }));
         return;
       }
       if (type === 'range') {
@@ -238,7 +238,7 @@
         var sc = parseFloat(el.getAttribute('data-log-scale')),
           v = sc ? Math.round(el.value * sc) : el.value; /* data-log-scale="100": 0〜1 の値を % で出す */
         log(
-          fmt(MSG.range, {
+          format(MSG.range, {
             グループ: g,
             名前: n,
             値: ve ? clean(ve.textContent) : v + (el.getAttribute('data-log-unit') || ''),
@@ -249,7 +249,7 @@
       if (type === 'file') {
         var f = [].slice.call(el.files || []);
         if (!f.length) {
-          log(fmt(MSG.fileCancel, { グループ: g, 名前: n }));
+          log(format(MSG.fileCancel, { グループ: g, 名前: n }));
           return;
         }
         var kb =
@@ -257,7 +257,7 @@
             return s + x.size;
           }, 0) / 1024;
         log(
-          fmt(MSG.file, {
+          format(MSG.file, {
             グループ: g,
             名前: n,
             件数: f.length,
@@ -267,7 +267,7 @@
         return;
       }
       if (type === 'color') {
-        log(fmt(MSG.color, { グループ: g, 名前: n, 値: el.value }));
+        log(format(MSG.color, { グループ: g, 名前: n, 値: el.value }));
         return;
       }
     },
