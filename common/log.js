@@ -3,6 +3,36 @@
    log.step(時間のかかる処理の結果と所要時間)・操作の自動ログ(部品の名前から「…を押下しました」などを書く) */
 (function () {
   'use strict';
+  /* メッセージの一覧
+     このファイルが出す文言はすべてここにある。{…} の所に fmt() で値を入れる。
+     {グループ} には data-log-group がある時だけ「録音 3」の が入り、無い時は空になる */
+  var MSG = Object.freeze({
+    detail: ' [詳細] {詳細}',
+    replay: '--- ここまでの履歴 ---',
+    uncaught: '予期しないエラーが発生しました',
+    unhandled: '未処理の非同期エラーが発生しました',
+    stepDone: '{名前}が終わりました({時間}ms)',
+    stepDoneWith: '{名前}が終わりました({詳細} / {時間}ms)',
+    stepError: '{名前}でエラーが発生しました',
+    group: '「{グループ名}」の',
+    pressButton: '{グループ}「{名前}」ボタンを押下しました',
+    pressLink: '{グループ}「{名前}」のリンクを押下しました',
+    press: '{グループ}「{名前}」を押下しました',
+    select: '{グループ}「{名前}」を「{値}」にしました',
+    check: '{グループ}「{名前}」を {値} にしました',
+    radio: '{グループ}「{名前}」を選択しました',
+    range: '{グループ}「{名前}」を {値} にしました',
+    color: '{グループ}「{名前}」を {値} にしました',
+    file: '{グループ}「{名前}」でファイルを選択しました({件数}件 / {大きさ})',
+    fileCancel: '{グループ}「{名前}」でファイルの選択をやめました',
+  });
+  /* 文言の {キー} を値で埋める。値の無いキーは空にする */
+  function fmt(text, vals) {
+    return text.replace(/\{([^{}]+)\}/g, function (m, k) {
+      return vals && vals[k] != null ? String(vals[k]) : '';
+    });
+  }
+
   /* ログの本体 */
   var MAX = 500,
     buf = [],
@@ -40,7 +70,7 @@
     return String(e);
   }
   function emit(level, msg, err) {
-    var line = stamp() + ' ' + msg + (err !== undefined ? ' [詳細] ' + detailOf(err) : '');
+    var line = stamp() + ' ' + msg + (err !== undefined ? fmt(MSG.detail, { 詳細: detailOf(err) }) : '');
     var extra = err instanceof Error ? err : undefined;
     if (!replayed) {
       buf.push([level, line, extra]);
@@ -63,11 +93,13 @@
   log.error = function (m, e) {
     emit('error', m, e);
   };
+  log.MSG = MSG;
+  log.fmt = fmt;
   window.log = log;
   /* デバッグ画面(eruda)は初期化後のログしか拾わないため、開く前の履歴は開いた時にまとめて表示する */
   window.__logReplay = function () {
     replayed = true;
-    console.info('--- ここまでの履歴 ---');
+    console.info(MSG.replay);
     buf.forEach(function (r) {
       var f = console[r[0]] || console.log;
       if (r[2]) f.call(console, r[1], r[2]);
@@ -77,13 +109,13 @@
   };
   window.addEventListener('error', function (e) {
     log.error(
-      '予期しないエラーが発生しました',
+      MSG.uncaught,
       e.error ||
         (e.message || '') + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '')
     );
   });
   window.addEventListener('unhandledrejection', function (e) {
-    log.error('未処理の非同期エラーが発生しました', e.reason);
+    log.error(MSG.unhandled, e.reason);
   });
 
   /* 時間のかかる処理(成功・失敗・かかった時間を1行で)
@@ -96,12 +128,13 @@
       .then(fn)
       .then(
         function (v) {
-          var d = detail ? detail(v) : '';
-          log(name + 'が終わりました(' + (d ? d + ' / ' : '') + Math.round(performance.now() - t0) + 'ms)');
+          var d = detail ? detail(v) : '',
+            ms = Math.round(performance.now() - t0);
+          log(fmt(d ? MSG.stepDoneWith : MSG.stepDone, { 名前: name, 詳細: d, 時間: ms }));
           return { ok: true, value: v };
         },
         function (e) {
-          log.error(name + 'でエラーが発生しました', e);
+          log.error(fmt(MSG.stepError, { 名前: name }), e);
           return { ok: false, error: e };
         }
       );
@@ -153,7 +186,7 @@
   }
   function groupOf(el) {
     var g = el.parentElement && el.parentElement.closest('[data-log-group]');
-    return g ? '「' + clean(g.getAttribute('data-log-group')) + '」の' : '';
+    return g ? fmt(MSG.group, { グループ名: clean(g.getAttribute('data-log-group')) }) : '';
   }
   function off(el) {
     return !!el.closest('[data-log="off"]');
@@ -167,8 +200,12 @@
       if (!el || el.matches('input,select,textarea,option,label') || off(el) || el.disabled) return;
       var n = nameOf(el);
       if (!n) return;
-      var kind = el.matches('button,[role="button"]') ? 'ボタン' : el.matches('a[href]') ? 'のリンク' : '';
-      log(groupOf(el) + '「' + n + '」' + kind + 'を押下しました');
+      var t = el.matches('button,[role="button"]')
+        ? MSG.pressButton
+        : el.matches('a[href]')
+          ? MSG.pressLink
+          : MSG.press;
+      log(fmt(t, { グループ: groupOf(el), 名前: n }));
     },
     true
   );
@@ -183,16 +220,16 @@
       if (!n) return; /* 名前の無い部品(再生位置のスライダーなど)は出さない */
       if (el.matches('select')) {
         var o = el.options[el.selectedIndex];
-        log(g + '「' + n + '」を「' + clean(o ? o.text : el.value) + '」にしました');
+        log(fmt(MSG.select, { グループ: g, 名前: n, 値: clean(o ? o.text : el.value) }));
         return;
       }
       if (TEXT.test(type)) return; /* 文字入力は対象外 */
       if (type === 'checkbox') {
-        log(g + '「' + n + '」を ' + (el.checked ? 'ON' : 'OFF') + ' にしました');
+        log(fmt(MSG.check, { グループ: g, 名前: n, 値: el.checked ? 'ON' : 'OFF' }));
         return;
       }
       if (type === 'radio') {
-        if (el.checked) log(g + '「' + n + '」を選択しました');
+        if (el.checked) log(fmt(MSG.radio, { グループ: g, 名前: n }));
         return;
       }
       if (type === 'range') {
@@ -201,19 +238,18 @@
         var sc = parseFloat(el.getAttribute('data-log-scale')),
           v = sc ? Math.round(el.value * sc) : el.value; /* data-log-scale="100": 0〜1 の値を % で出す */
         log(
-          g +
-            '「' +
-            n +
-            '」を ' +
-            (ve ? clean(ve.textContent) : v + (el.getAttribute('data-log-unit') || '')) +
-            ' にしました'
+          fmt(MSG.range, {
+            グループ: g,
+            名前: n,
+            値: ve ? clean(ve.textContent) : v + (el.getAttribute('data-log-unit') || ''),
+          })
         );
         return;
       }
       if (type === 'file') {
         var f = [].slice.call(el.files || []);
         if (!f.length) {
-          log(g + '「' + n + '」でファイルの選択をやめました');
+          log(fmt(MSG.fileCancel, { グループ: g, 名前: n }));
           return;
         }
         var kb =
@@ -221,19 +257,17 @@
             return s + x.size;
           }, 0) / 1024;
         log(
-          g +
-            '「' +
-            n +
-            '」でファイルを選択しました(' +
-            f.length +
-            '件 / ' +
-            (kb >= 1024 ? (kb / 1024).toFixed(1) + 'MB' : Math.round(kb) + 'KB') +
-            ')'
+          fmt(MSG.file, {
+            グループ: g,
+            名前: n,
+            件数: f.length,
+            大きさ: kb >= 1024 ? (kb / 1024).toFixed(1) + 'MB' : Math.round(kb) + 'KB',
+          })
         );
         return;
       }
       if (type === 'color') {
-        log(g + '「' + n + '」を ' + el.value + ' にしました');
+        log(fmt(MSG.color, { グループ: g, 名前: n, 値: el.value }));
         return;
       }
     },
