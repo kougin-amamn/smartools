@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>物体検出 | カメラや写真に写った物をAIで見つける</title>
+    <meta
+      name="description"
+      content="カメラの映像や写真に写った人・車・犬・猫・コップなど80種類の物をAI(TensorFlow.js の COCO-SSD)で見つけ、枠と日本語の名前で表示します。画像は端末の外に送らず、ブラウザの中で判定します。"
+    />
+    <meta property="og:title" content="物体検出 | カメラや写真に写った物をAIで見つける" />
+    <meta
+      property="og:description"
+      content="カメラの映像や写真に写った人・車・犬・猫・コップなど80種類の物をAI(TensorFlow.js の COCO-SSD)で見つけ、枠と日本語の名前で表示します。画像は端末の外に送らず、ブラウザの中で判定します。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-object-detector.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./object-detector.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "物体検出",
+        "alternateName": ["Object Detector", "物体認識", "画像認識", "AIカメラ", "COCO-SSD"],
+        "description": "カメラの映像や写真に写った人・車・犬・猫・コップなど80種類の物をAI(TensorFlow.js の COCO-SSD)で見つけ、枠と日本語の名前で表示します。画像は端末の外に送らず、ブラウザの中で判定します。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-object-detector.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">物体検出<span class="en">Object Detector</span></h1>
+      <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+          />
+        </svg>
+      </button>
+      <button class="dbg-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></svg>
+      </button>
+      <button class="dbg-btn" id="dbgBtn" aria-label="デバッグ表示の切り替え" title="デバッグ">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2" />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="view" id="view">
+          <canvas id="cv" aria-label="検出結果の表示" hidden></canvas>
+          <p class="placeholder" id="placeholder">「カメラ開始」か「写真を開く」を押してください</p>
+          <div class="loader" id="loader" role="status" aria-live="polite">
+            <p class="loader-title">AIの準備をしています <span id="elapsed">0.0秒</span></p>
+            <ol class="steps" id="steps"></ol>
+            <p class="loader-note">
+              初回はモデルのダウンロードに時間がかかります。2回目からは端末に保存したものを使います。
+            </p>
+            <button class="pill primary" type="button" id="retry" hidden>もう一度読み込む</button>
+          </div>
+          <video id="video" playsinline muted></video>
+        </div>
+        <div class="row">
+          <button class="pill primary" type="button" id="camBtn">カメラ開始</button>
+          <button class="pill" type="button" id="flipBtn" hidden>カメラ切替</button>
+          <button class="pill" type="button" id="pauseBtn" hidden>一時停止</button>
+          <button class="pill" type="button" id="openBtn">写真を開く</button>
+          <input type="file" id="file" accept="image/*" aria-label="写真を開く" hidden />
+        </div>
+        <p class="status" id="status"></p>
+        <ul class="found" id="found" aria-live="polite"></ul>
+        <details class="classes">
+          <summary data-log="検出できる物の一覧">検出できる物(80種類)</summary>
+          <p id="classList"></p>
+        </details>
+        <p class="note">
+          写真や映像は端末の外に送りません。通信するのはライブラリとモデルの読み込みだけです。一覧にない物は見つけられず、似た物の名前になることもあります。
+        </p>
+      </div>
+    </main>
+    <div class="sheet" id="settings" hidden>
+      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="sheet-head">
+          <span id="settingsTitle">設定</span
+          ><button class="sheet-close" id="settingsClose" aria-label="設定を閉じる">×</button>
+        </div>
+        <div class="opt">
+          <label for="base">モデル</label>
+          <select id="base" data-log="モデル">
+            <option value="lite_mobilenet_v2">軽量(速い)</option>
+            <option value="mobilenet_v1">標準</option>
+            <option value="mobilenet_v2">高精度(重い)</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label for="minScore">表示する確からしさ</label>
+          <div class="slide">
+            <input type="range" id="minScore" min="10" max="90" step="5" value="50" data-log-unit="%" /><span
+              id="minScoreVal"
+              >50%</span
+            >
+          </div>
+        </div>
+        <div class="opt">
+          <label for="maxBoxes">最大件数</label>
+          <div class="slide">
+            <input type="range" id="maxBoxes" min="1" max="50" step="1" value="20" data-log-unit="件" /><span
+              id="maxBoxesVal"
+              >20件</span
+            >
+          </div>
+        </div>
+        <p class="note">確からしさを下げると見つかる数が増えますが、間違いも増えます。</p>
+      </div>
+    </div>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.log && window.ToolKit) ||
+        (function () {
+          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+            .filter(Boolean)
+            .join('、');
+          var m =
+            '共通ファイル(' +
+            miss +
+            ')を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+          var f = function () {};
+          f.info = f.debug = f.warn = f.error = f;
+          var no = function () {
+            return Promise.resolve(false);
+          };
+          if (!window.log) window.log = f;
+          if (!window.log.step)
+            window.log.step = function (n, fn) {
+              return Promise.resolve()
+                .then(fn)
+                .then(
+                  function (v) {
+                    return { ok: true, value: v };
+                  },
+                  function (e) {
+                    return { ok: false, error: e };
+                  }
+                );
+            };
+          if (!window.ToolKit)
+            window.ToolKit = {
+              vibrate: f,
+              esc: String,
+              copyText: no,
+              media: {
+                open: function () {
+                  return Promise.resolve({ stream: null, message: m });
+                },
+                stop: f,
+                size: f,
+                torch: function () {
+                  return Promise.resolve({ ok: false, message: m });
+                },
+              },
+              sensor: { permit: no, watchData: f },
+            };
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('p');
+            d.textContent = m;
+            d.style.cssText =
+              'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
+            document.body.insertBefore(d, document.body.firstChild);
+          });
+        })();
+    </script>
+    <script src="./object-detector-core.js"></script>
+    <script src="./object-detector.js"></script>
+  </body>
+</html>

@@ -23,6 +23,7 @@
   {"cat": "センサー・カメラ活用", "slug": "noise-meter", "title": "騒音計", "en": "Noise Meter", "desc": "音の大きさの目安を測る", "tags": ["要 マイク", "要 https"]},
   {"cat": "センサー・カメラ活用", "slug": "heart-rate", "title": "心拍数計", "en": "Heart Rate Monitor", "desc": "カメラに指を当てて脈拍を測る", "tags": ["要 カメラ", "要 https"]},
   {"cat": "センサー・カメラ活用", "slug": "step-counter", "title": "万歩計", "en": "Step Counter", "desc": "歩数を数える万歩計", "tags": ["要 センサー", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "object-detector", "title": "物体検出", "en": "Object Detector", "desc": "カメラや写真に写った物をAIで見つけて日本語で表示", "tags": ["要 外部通信"]},
   {"cat": "QR・共有", "slug": "qr-reader", "title": "QRコードリーダー", "en": "QR Code Reader", "desc": "カメラでQRコードを読み取り", "tags": ["要 カメラ", "要 https", "要 外部通信"]},
   {"cat": "QR・共有", "slug": "qr-generator", "title": "QRコード生成", "en": "QR Code Generator", "desc": "文字やURLからQRコードを作成", "tags": ["要 外部通信"]},
   {"cat": "メディア", "slug": "exif-viewer", "title": "写真情報(Exif)ビューア", "en": "Exif Viewer", "desc": "写真のExif情報を一覧表示", "tags": ["要 外部通信"]},
