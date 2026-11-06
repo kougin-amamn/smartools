@@ -120,7 +120,7 @@
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>
     <script>
-      window.ToolKit ||
+      (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
           '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'

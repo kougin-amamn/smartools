@@ -13,6 +13,7 @@
 | --- | --- |
 | [log.md](./log.md) | ログの仕組み(`common/log.js`) |
 | [env.md](./env.md) | 環境の判定(`common/env.js`) |
+| [device.md](./device.md) | 端末の機能(`common/device.js`。`tool-kit.js` が読む) |
 | [page-base.md](./page-base.md) | ページの土台: ヘッダのボタンと読み込み確認(`common/site.js`・各ページの HTML) |
 | [file-transfer.md](./file-transfer.md) | ファイル転送(`tools/file-transfer`) |
 

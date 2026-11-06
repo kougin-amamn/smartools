@@ -25,7 +25,7 @@
 
 - ヘッダの並び: (戻る)・アイコン・h1・(設定)・環境情報・カラーテーマ・テーマ・デバッグ。戻るは `tool-kit.js`、設定は HTML、残りは `site.js`。
 - ボタンの名前(`data-log`・`title`・`aria-label`): テーマ・カラーテーマ・環境情報・デバッグ。テーマの `title` と `aria-label` は状態で書き換える(`data-log` は固定)。
-- 読み込み確認: ツールは `window.ToolKit`、ランチャーと一覧は `window.log` が無い時、`<body>` の先頭に「共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。」を出す。色は `site.css` が無くても読めるよう直接書く。
+- 読み込み確認: ツールは `window.ToolKit && window.ToolKit.media`(`device.js` まで読めたか。[device.md](./device.md))、ランチャーと一覧は `window.log` が無い時、`<body>` の先頭に「共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。」を出す。色は `site.css` が無くても読めるよう直接書く。
 
 ## 処理の流れ
 

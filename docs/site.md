@@ -13,7 +13,8 @@
 │   ├── autolog.js        全ページ・log.js の次: 押下の自動ログ
 │   ├── env.js            全ページ: 端末・ブラウザ・接続の判定(window.Env)
 │   ├── site.css / site.js / themes.json   全ページ: 配色・ヘッダ・テーマ・カラーテーマ・環境情報・デバッグ画面
-│   └── tool.css / tool-kit.js             ツールだけ: 土台・ToolKit・設定シート・戻るボタン
+│   ├── tool.css / tool-kit.js             ツールだけ: 土台・ToolKit・設定シート・戻るボタン
+│   └── device.js         ツールだけ: 端末の機能(tool-kit.js が読む。HTML に書かない)
 ├── tools/<slug>/         ツールごと(slug は英小文字とハイフン)
 │   ├── <slug>.html / .css / .js / app-icon-<slug>.svg
 │   ├── <slug>-core.js    DOM を使わない計算(Node で試す。ある時だけ)
@@ -31,11 +32,11 @@
 
 `<head>`: `site.css` → `tool.css` → `<slug>.css`
 
-`<body>` の最後: CDN のライブラリ → `log.js` → `autolog.js` → `env.js` → `site.js` → `tool-kit.js` → 読み込み確認 → core・データ → `<slug>.js`
+`<body>` の最後: CDN のライブラリ → `log.js` → `autolog.js` → `env.js` → `site.js` → `tool-kit.js`(→ `device.js` を自分で読む)→ 読み込み確認 → core・データ → `<slug>.js`
 
 ランチャーと一覧ページは `log.js` → `autolog.js` → `env.js` → `site.js`(tool-kit.js は読まない)。
 
-読み込み確認(ひな形にある `window.ToolKit || …`、ランチャーと一覧は `window.log || …`)は、共通ファイルが読めない時(スマホでファイルを直接開いた時など)に画面の先頭へ案内を出すだけ([design/page-base.md](./design/page-base.md))。ヘッダのテーマ・デバッグ・カラーテーマ・環境情報のボタンは `site.js` が足すので HTML に書かない。
+読み込み確認(ひな形にある `(window.ToolKit && window.ToolKit.media) || …`、ランチャーと一覧は `window.log || …`)は、共通ファイルが読めない時(スマホでファイルを直接開いた時など)に画面の先頭へ案内を出すだけ([design/page-base.md](./design/page-base.md))。ヘッダのテーマ・デバッグ・カラーテーマ・環境情報のボタンは `site.js` が足すので HTML に書かない。
 
 ## 一覧(index-data.json)
 

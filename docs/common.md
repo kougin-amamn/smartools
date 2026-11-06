@@ -8,9 +8,12 @@
 | `autolog.js` | 全ページ(log.js の次) | ボタン・リンクの押下の自動ログ |
 | `env.js` | 全ページ | `window.Env`: OS・ブラウザ・端末名・`requireSecure`・`canVibrate`・環境情報の行 |
 | `site.css` / `site.js` / `themes.json` | 全ページ | 配色のトークン、ヘッダ、テーマ、カラーテーマ、環境情報、デバッグ画面、埋め込み表示 |
-| `tool.css` / `tool-kit.js` | ツールだけ | ページの土台、`window.ToolKit`、設定シート、ランチャーへ戻るボタン |
+| `tool.css` / `tool-kit.js` | ツールだけ | ページの土台、`window.ToolKit`(`esc`)、設定シート、ランチャーへ戻るボタン |
+| `device.js` | ツールだけ(`tool-kit.js` が読む。HTML に書かない) | 端末の機能を `ToolKit` に足す: 振動・コピー・カメラとマイク・ライト・センサー([design/device.md](./design/device.md)) |
 
 ## ToolKit(ツールだけ)
+
+`esc` は `tool-kit.js`、ほかは `device.js` にあります。呼び方はどちらも `ToolKit.〜` です。
 
 自分でログを書き、画面に出す文を返すので、ツールは状態の文を出すだけで済みます。ツールに同じ物を書き写さない(振動・エスケープ・コピー・カメラとマイク・ライト・センサーの許可)。
 

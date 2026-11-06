@@ -50,6 +50,11 @@ function pagesFrom(args) {
           const rows = await page.$$eval('.info-list dt', (e) => e.length);
           if (rows !== 12) problems.push('環境情報が ' + rows + ' 行です(期待 12)');
         }
+        if (
+          p.startsWith('tools/') &&
+          !(await page.evaluate(() => !!(window.ToolKit.media && ToolKit.sensor)))
+        )
+          problems.push('device.js が読み込まれていません');
         const errors = splitErrors(logs);
         errors.real.forEach((l) => problems.push('エラー: ' + l.split('\n')[0]));
         if (errors.cdn.length) notes.push(p + ': CDN のライブラリは開発環境では読めないため未確認');
@@ -59,11 +64,14 @@ function pagesFrom(args) {
       }
       await context.close();
     }
-    /* 共通ファイルが読めない時は、画面の先頭に案内を出す */
-    const missing = await site.open(p, { block: /\/common\// });
-    if (!(await missing.page.textContent('body')).includes('共通ファイル(common/)を読み込めませんでした'))
-      problems.push('共通ファイルが無い時の案内が出ません');
-    await missing.context.close();
+    /* 共通ファイルが読めない時は、画面の先頭に案内を出す(ツールは device.js だけが無い時も) */
+    const blocks = [/\/common\//].concat(p.startsWith('tools/') ? [/\/common\/device\.js/] : []);
+    for (const block of blocks) {
+      const missing = await site.open(p, { block });
+      if (!(await missing.page.textContent('body')).includes('共通ファイル(common/)を読み込めませんでした'))
+        problems.push('共通ファイルが無い時の案内が出ません(' + block + ')');
+      await missing.context.close();
+    }
     if (!report(p, problems)) ng++;
   }
   await site.close();
