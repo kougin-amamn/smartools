@@ -89,28 +89,12 @@
           <div id="params"></div>
           <div class="slider-row" id="amountRow">
             <span>効果の強さ</span>
-            <input
-              type="range"
-              id="amount"
-              aria-label="効果の強さ"
-              data-log-value="#amountVal"
-              min="0"
-              max="100"
-              value="100"
-            />
+            <input type="range" id="amount" aria-label="効果の強さ" min="0" max="100" value="100" />
             <b id="amountVal">100%</b>
           </div>
           <div class="slider-row" id="filtRow" hidden>
             <span>色の強さ</span>
-            <input
-              type="range"
-              id="filtAmt"
-              aria-label="色の強さ"
-              data-log-value="#filtVal"
-              min="0"
-              max="100"
-              value="100"
-            />
+            <input type="range" id="filtAmt" aria-label="色の強さ" min="0" max="100" value="100" />
             <b id="filtVal">100%</b>
           </div>
         </div>
@@ -126,6 +110,7 @@
       </div>
     </main>
     <script src="../../common/log.js"></script>
+    <script src="../../common/autolog.js"></script>
     <script src="../../common/env.js"></script>
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>

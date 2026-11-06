@@ -1,11 +1,10 @@
 /* ログの仕組み(全ページ共通。site.js より先に読む)。書き方の決まりは docs/logging.md。
    log / log.warn / log.error / log.debug(時刻付きでコンソールへ。直近の履歴はデバッグ画面を開いた時にまとめて出す)・
-   log.step(時間のかかる処理の結果と所要時間)・操作の自動ログ(部品の名前から「…を押下しました」などを書く) */
+   log.step(時間のかかる処理の結果と所要時間)。押下の自動ログは autolog.js(この後に読む) */
 (function () {
   'use strict';
   /* メッセージの一覧
-     このファイルが出す文言はすべてここにある。{…} の所に format() で値を入れる。
-     {グループ} には data-log-group がある時だけ「録音 3」の が入り、無い時は空になる */
+     このファイルが出す文言はすべてここにある。{…} の所に format() で値を入れる */
   var MSG = Object.freeze({
     detail: ' [詳細] {詳細}',
     replay: '--- ここまでの履歴 ---',
@@ -14,17 +13,6 @@
     stepDone: '{名前}が終わりました({時間}ms)',
     stepDoneWith: '{名前}が終わりました({詳細} / {時間}ms)',
     stepError: '{名前}でエラーが発生しました',
-    group: '「{グループ名}」の',
-    pressButton: '{グループ}「{名前}」ボタンを押下しました',
-    pressLink: '{グループ}「{名前}」のリンクを押下しました',
-    press: '{グループ}「{名前}」を押下しました',
-    select: '{グループ}「{名前}」を「{値}」にしました',
-    check: '{グループ}「{名前}」を {値} にしました',
-    radio: '{グループ}「{名前}」を選択しました',
-    range: '{グループ}「{名前}」を {値} にしました',
-    color: '{グループ}「{名前}」を {値} にしました',
-    file: '{グループ}「{名前}」でファイルを選択しました({件数}件 / {大きさ})',
-    fileCancel: '{グループ}「{名前}」でファイルの選択をやめました',
   });
   /* 文言の {キー} を値で埋める。値の無いキーは空にする */
   function format(text, vals) {
@@ -139,138 +127,4 @@
         }
       );
   };
-
-  /* 操作ログ(自動)
-     ボタン・リンク・チェック・選択肢・スライダー・ファイル選択・色の操作を、部品の名前から自動でログに出す。
-     名前: data-log → aria-label → <label> → title → 部品の文字。data-log="off" で出さない(子の部品も)。
-     data-log-group="録音 3" を親に付けると「録音 3」の「削除」ボタン…のように前に付く。
-     スライダーの値: data-log-value="#表示する要素"(その文字を使う) または data-log-unit="%"(単位) / data-log-scale="100"(倍率)。名前の無い部品は出さない。
-     文字入力(テキスト・数値・テキストエリア)は対象外。プログラムから呼んだ click() は出さない(ファイル選択を開く時など) */
-  function clean(t) {
-    t = String(t || '')
-      .replace(/\s+/g, ' ')
-      .trim();
-    var u = t.replace(
-      /^[●■▶⏸⏹⏺]\s*(?=\S)/,
-      ''
-    ); /* 先頭の飾りの記号は、文字が残る時だけ外す(「● 録音開始」→「録音開始」) */
-    if (u) t = u;
-    return t.length > 24 ? t.slice(0, 24) + '…' : t;
-  }
-  function labelText(el) {
-    if (el.id) {
-      var l = document.querySelector('label[for="' + el.id + '"]');
-      if (l) return l.textContent;
-    }
-    var p = el.closest('label');
-    if (p) {
-      var c = p.cloneNode(true);
-      c.querySelectorAll('input,select,textarea').forEach(function (x) {
-        x.remove();
-      });
-      return c.textContent;
-    }
-    return '';
-  }
-  function nameOf(el) {
-    var n = el.getAttribute('data-log');
-    if (n) return clean(n);
-    n =
-      el.getAttribute('aria-label') ||
-      (el.matches('input,select') ? labelText(el) : '') ||
-      el.getAttribute('title') ||
-      (el.matches('input,select') ? '' : el.textContent) ||
-      el.getAttribute('name') ||
-      '';
-    return clean(n);
-  }
-  function groupOf(el) {
-    var g = el.parentElement && el.parentElement.closest('[data-log-group]');
-    return g ? format(MSG.group, { グループ名: clean(g.getAttribute('data-log-group')) }) : '';
-  }
-  function off(el) {
-    return !!el.closest('[data-log="off"]');
-  }
-  var TEXT = /^(text|search|email|url|tel|password|number|date|time|datetime-local|month|week|hidden)$/;
-  document.addEventListener(
-    'click',
-    function (e) {
-      if (!e.isTrusted) return;
-      var el = e.target.closest && e.target.closest('button,[role="button"],a[href],[data-log]');
-      if (!el || el.matches('input,select,textarea,option,label') || off(el) || el.disabled) return;
-      var n = nameOf(el);
-      if (!n) return;
-      var t = el.matches('button,[role="button"]')
-        ? MSG.pressButton
-        : el.matches('a[href]')
-          ? MSG.pressLink
-          : MSG.press;
-      log(format(t, { グループ: groupOf(el), 名前: n }));
-    },
-    true
-  );
-  document.addEventListener(
-    'change',
-    function (e) {
-      var el = e.target;
-      if (!el.matches || !el.matches('input,select') || off(el)) return;
-      var type = (el.type || '').toLowerCase(),
-        n = nameOf(el),
-        g = groupOf(el);
-      if (!n) return; /* 名前の無い部品(再生位置のスライダーなど)は出さない */
-      if (el.matches('select')) {
-        var o = el.options[el.selectedIndex];
-        log(format(MSG.select, { グループ: g, 名前: n, 値: clean(o ? o.text : el.value) }));
-        return;
-      }
-      if (TEXT.test(type)) return; /* 文字入力は対象外 */
-      if (type === 'checkbox') {
-        log(format(MSG.check, { グループ: g, 名前: n, 値: el.checked ? 'ON' : 'OFF' }));
-        return;
-      }
-      if (type === 'radio') {
-        if (el.checked) log(format(MSG.radio, { グループ: g, 名前: n }));
-        return;
-      }
-      if (type === 'range') {
-        var vs = el.getAttribute('data-log-value'),
-          ve = vs && document.querySelector(vs);
-        var sc = parseFloat(el.getAttribute('data-log-scale')),
-          v = sc ? Math.round(el.value * sc) : el.value; /* data-log-scale="100": 0〜1 の値を % で出す */
-        log(
-          format(MSG.range, {
-            グループ: g,
-            名前: n,
-            値: ve ? clean(ve.textContent) : v + (el.getAttribute('data-log-unit') || ''),
-          })
-        );
-        return;
-      }
-      if (type === 'file') {
-        var f = [].slice.call(el.files || []);
-        if (!f.length) {
-          log(format(MSG.fileCancel, { グループ: g, 名前: n }));
-          return;
-        }
-        var kb =
-          f.reduce(function (s, x) {
-            return s + x.size;
-          }, 0) / 1024;
-        log(
-          format(MSG.file, {
-            グループ: g,
-            名前: n,
-            件数: f.length,
-            大きさ: kb >= 1024 ? (kb / 1024).toFixed(1) + 'MB' : Math.round(kb) + 'KB',
-          })
-        );
-        return;
-      }
-      if (type === 'color') {
-        log(format(MSG.color, { グループ: g, 名前: n, 値: el.value }));
-        return;
-      }
-    },
-    true
-  );
 })();

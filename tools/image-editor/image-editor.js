@@ -483,8 +483,6 @@
             p.key +
             '" aria-label="' +
             p.label +
-            '" data-log-value="#pv-' +
-            p.key +
             '" min="' +
             p.min +
             '" max="' +

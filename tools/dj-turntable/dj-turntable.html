@@ -215,33 +215,16 @@
           <div class="opt">
             <label for="pitch">ピッチ(速さの微調整)</label>
             <div class="row">
-              <input
-                type="range"
-                id="pitch"
-                min="-8"
-                max="8"
-                step="0.1"
-                value="0"
-                data-log="ピッチ"
-                data-log-value="#pitchVal"
-              /><output id="pitchVal">0.0%</output
+              <input type="range" id="pitch" min="-8" max="8" step="0.1" value="0" data-log="ピッチ" /><output
+                id="pitchVal"
+                >0.0%</output
               ><button type="button" class="mini" id="pitchReset" aria-label="ピッチを0に戻す">0</button>
             </div>
           </div>
           <div class="opt">
             <label for="volume">音量</label>
             <div class="row">
-              <input
-                type="range"
-                id="volume"
-                min="0"
-                max="1"
-                step="0.01"
-                value="0.8"
-                data-log="音量"
-                data-log-scale="100"
-                data-log-unit="%"
-              />
+              <input type="range" id="volume" min="0" max="1" step="0.01" value="0.8" data-log="音量" />
             </div>
           </div>
         </div>
@@ -266,6 +249,7 @@
       </div>
     </main>
     <script src="../../common/log.js"></script>
+    <script src="../../common/autolog.js"></script>
     <script src="../../common/env.js"></script>
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>

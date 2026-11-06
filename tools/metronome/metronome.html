@@ -56,15 +56,7 @@
           <button class="round" id="bpmUp" data-log="テンポ ＋1">+</button>
         </div>
 
-        <input
-          type="range"
-          id="bpmSlider"
-          data-log="テンポ"
-          data-log-unit=" BPM"
-          min="30"
-          max="240"
-          value="120"
-        />
+        <input type="range" id="bpmSlider" data-log="テンポ" min="30" max="240" value="120" />
 
         <div class="row-controls">
           <button class="pill" id="tapBtn">タップでテンポ</button>
@@ -80,6 +72,7 @@
       </div>
     </main>
     <script src="../../common/log.js"></script>
+    <script src="../../common/autolog.js"></script>
     <script src="../../common/env.js"></script>
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>

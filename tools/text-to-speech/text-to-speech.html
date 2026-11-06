@@ -56,30 +56,12 @@
         </div>
         <div class="row">
           <span>速さ</span>
-          <input
-            type="range"
-            id="rateSlider"
-            data-log="速さ"
-            data-log-value="#rateLabel"
-            min="0.5"
-            max="2"
-            step="0.1"
-            value="1"
-          />
+          <input type="range" id="rateSlider" data-log="速さ" min="0.5" max="2" step="0.1" value="1" />
           <span id="rateLabel">1.0x</span>
         </div>
         <div class="row">
           <span>声の高さ</span>
-          <input
-            type="range"
-            id="pitchSlider"
-            data-log="高さ"
-            data-log-value="#pitchLabel"
-            min="0.5"
-            max="2"
-            step="0.1"
-            value="1"
-          />
+          <input type="range" id="pitchSlider" data-log="高さ" min="0.5" max="2" step="0.1" value="1" />
           <span id="pitchLabel">1.0</span>
         </div>
 
@@ -91,6 +73,7 @@
       </div>
     </main>
     <script src="../../common/log.js"></script>
+    <script src="../../common/autolog.js"></script>
     <script src="../../common/env.js"></script>
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>
