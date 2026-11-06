@@ -104,6 +104,23 @@
 .peer {
   font-size: 15px;
 }
+.sas {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+.sas:empty,
+.link-state:empty {
+  display: none;
+}
+.link-state {
+  font-size: 13px;
+  color: var(--func);
+}
+.link-state.lost {
+  color: var(--danger);
+}
 .status {
   margin: 0;
   font-size: 14px;

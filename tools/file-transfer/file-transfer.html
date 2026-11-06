@@ -6,12 +6,12 @@
     <title>ファイル転送 | スマホどうしで番号かQRでつないで直接送る</title>
     <meta
       name="description"
-      content="スマホどうしで写真・動画・書類などのファイルを直接送り合えます。片方に出る6桁の番号かQRコードでつなぐだけ。ファイルはサーバーを通らず、端末どうしの暗号化された通信(WebRTC)で届きます。複数ファイル、進み具合と速度の表示に対応。"
+      content="スマホどうしで写真・動画・書類などのファイルを直接送り合えます。片方に出る6桁の番号かQRコードでつなぐだけ。ファイルはサーバーを通らず、端末どうしの暗号化された通信(WebRTC)で届きます。複数ファイル、進み具合と速度の表示、確認番号、途中で切れた時の続きからの再開に対応。"
     />
     <meta property="og:title" content="ファイル転送 | スマホどうしで番号かQRでつないで直接送る" />
     <meta
       property="og:description"
-      content="スマホどうしで写真・動画・書類などのファイルを直接送り合えます。片方に出る6桁の番号かQRコードでつなぐだけ。ファイルはサーバーを通らず、端末どうしの暗号化された通信(WebRTC)で届きます。複数ファイル、進み具合と速度の表示に対応。"
+      content="スマホどうしで写真・動画・書類などのファイルを直接送り合えます。片方に出る6桁の番号かQRコードでつなぐだけ。ファイルはサーバーを通らず、端末どうしの暗号化された通信(WebRTC)で届きます。複数ファイル、進み具合と速度の表示、確認番号、途中で切れた時の続きからの再開に対応。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ja_JP" />
@@ -27,7 +27,7 @@
         "@type": "SoftwareApplication",
         "name": "ファイル転送",
         "alternateName": ["File Transfer", "ファイル共有", "写真を送る", "P2P転送", "WebRTC"],
-        "description": "スマホどうしで写真・動画・書類などのファイルを直接送り合えます。片方に出る6桁の番号かQRコードでつなぐだけ。ファイルはサーバーを通らず、端末どうしの暗号化された通信(WebRTC)で届きます。複数ファイル、進み具合と速度の表示に対応。",
+        "description": "スマホどうしで写真・動画・書類などのファイルを直接送り合えます。片方に出る6桁の番号かQRコードでつなぐだけ。ファイルはサーバーを通らず、端末どうしの暗号化された通信(WebRTC)で届きます。複数ファイル、進み具合と速度の表示、確認番号、途中で切れた時の続きからの再開に対応。",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any (Webブラウザ)",
         "offers": {
@@ -80,8 +80,11 @@
           <div class="qr" id="qr" aria-label="接続用のQRコード"></div>
           <p class="sub">相手のカメラでQRコードを読むか、番号を入れてもらってください。</p>
           <p class="wait" id="hostWait"></p>
+          <button class="pill primary" type="button" id="reissueBtn" hidden>番号を出し直す</button>
           <div class="ask" id="ask" hidden>
             <p>「<b id="askName"></b>」から接続の申し込みがあります。</p>
+            <p class="sas" id="askSas"></p>
+            <p class="sub">相手の画面の確認番号と同じなら許可してください。違う時は断ってください。</p>
             <div class="row">
               <button class="pill primary" type="button" id="allowBtn">許可する</button>
               <button class="pill" type="button" id="denyBtn">断る</button>
@@ -103,10 +106,13 @@
             <button class="pill primary" type="button" id="connectBtn">つなぐ</button>
           </div>
           <p class="wait" id="joinWait"></p>
+          <p class="sas" id="joinSas"></p>
           <button class="pill small" type="button" id="joinCancel">やめる</button>
         </section>
         <section class="card" id="linked" hidden>
-          <p class="peer">「<b id="peerName"></b>」とつながっています</p>
+          <p class="peer">「<b id="peerName"></b>」</p>
+          <p class="link-state" id="linkState"></p>
+          <p class="sas" id="sas"></p>
           <div class="row">
             <button class="pill primary big" type="button" id="sendBtn">ファイルを選んで送る</button>
             <input type="file" id="file" multiple aria-label="送るファイル" hidden />
@@ -117,8 +123,9 @@
         <ul class="list" id="list"></ul>
         <p class="empty" id="empty">送ったファイル・受け取ったファイルがここに並びます</p>
         <p class="note">
-          ファイルはサーバーを通らず、端末どうしの暗号化された通信で直接届きます(つなぐ相手を見つける時だけ、PeerJS
-          の公開サーバーを使います)。2台を同じWi-Fiにつなぐと確実です。携帯回線どうしではつながらないことがあります。受け取ったファイルはいったん端末のメモリに置くため、スマホでは1ファイル数百MB〜1GB程度までが目安です。転送中は画面を開いたままにしてください。
+          ファイルは端末どうしの暗号化された通信(WebRTC)で直接届きます。つなぐ相手を見つける時だけ PeerJS
+          の公開サーバーを使い、直接つながらない時は PeerJS
+          の中継サーバーを通りますが、どちらも中身は読めません。両方の画面の確認番号が同じなら、間に誰も入っていません。つなぐ時、お互いのIPアドレスが相手と待ち合わせ用のサーバーに伝わります。文字の多いファイルは自動で圧縮して送ります。途中で切れた時は60秒まで自動でつなぎ直して続きから送り、それでもだめな時は、もう一度つないで「再送」を押すと続きから送れます(どちらかのページを閉じると最初からになります)。受け取ったファイルはいったん端末のメモリに置くため、スマホでは1ファイル数百MB〜1GB程度までが目安です。転送中は画面を開いたままにしてください。
         </p>
       </div>
     </main>
