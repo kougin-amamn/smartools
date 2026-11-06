@@ -474,7 +474,7 @@
       var li = e.target.closest('li[data-act]');
       if (!li || li.classList.contains('off')) return;
       if (Date.now() < menuGuard) return;
-      log('メニューの「' + li.textContent.replace(/^●/, '') + '」を押下しました');
+      log('「メニュー」の「' + li.textContent.replace(/^●/, '') + '」を押下しました');
       runAct(li.dataset.act);
     });
     menu.addEventListener('keydown', function (e) {
@@ -490,7 +490,6 @@
       }
     });
     $('startBtn').onclick = function () {
-      log('メニューボタンを押下しました');
       if (menuOpen) {
         closeMenu();
         return;
@@ -877,10 +876,8 @@
         var b = e.target.closest('.win-btn');
         if (!b) return;
         if (b.dataset.w === 'close') {
-          log('フォルダの「閉じる」ボタンを押下しました');
           closeFolder();
         } else if (b.dataset.w === 'out' && win.pick) {
-          log('「デスクトップへ出す」ボタンを押下しました');
           takeOutOf([win.pick]);
         }
       });

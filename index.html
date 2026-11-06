@@ -67,6 +67,7 @@
       <p class="status" id="status" role="status">ツールの一覧を読み込んでいます…</p>
       <div id="list"></div>
     </main>
+    <script src="./common/log.js"></script>
     <script src="./common/site.js"></script>
     <script>
       window.log ||
@@ -77,7 +78,7 @@
           document.addEventListener('DOMContentLoaded', function () {
             var d = document.createElement('p');
             d.textContent =
-              '共通ファイル(common/site.js)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+              '共通ファイル(common/log.js)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
             d.style.cssText =
               'margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif';
             document.body.insertBefore(d, document.body.firstChild);

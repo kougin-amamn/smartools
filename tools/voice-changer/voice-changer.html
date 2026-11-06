@@ -106,16 +106,17 @@
             <button class="pill" id="recBtn">● 録音開始</button>
             <span class="rec-time" id="recTime"></span>
           </div>
-          <div class="recordings" id="recordings" data-log="off"></div>
+          <div class="recordings" id="recordings"></div>
         </div>
       </div>
     </main>
+    <script src="../../common/log.js"></script>
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>
     <script>
       (window.log && window.ToolKit) ||
         (function () {
-          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+          var miss = [window.log ? '' : 'common/log.js', window.ToolKit ? '' : 'common/tool-kit.js']
             .filter(Boolean)
             .join('、');
           var m =

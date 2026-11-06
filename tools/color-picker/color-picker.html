@@ -135,12 +135,13 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"
       onerror="window.__chromaFailed = true"
     ></script>
+    <script src="../../common/log.js"></script>
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>
     <script>
       (window.log && window.ToolKit) ||
         (function () {
-          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+          var miss = [window.log ? '' : 'common/log.js', window.ToolKit ? '' : 'common/tool-kit.js']
             .filter(Boolean)
             .join('、');
           var m =

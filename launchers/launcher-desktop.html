@@ -107,12 +107,13 @@
         </div>
       </div>
     </main>
+    <script src="../common/log.js"></script>
     <script src="../common/site.js"></script>
     <script>
       window.log ||
         (function () {
           var m =
-            '共通ファイル(common/site.js)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+            '共通ファイル(common/log.js)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
           var f = function () {};
           f.info = f.debug = f.warn = f.error = f;
           window.log = f;

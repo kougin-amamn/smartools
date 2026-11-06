@@ -212,7 +212,7 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody id="playlistBody" data-log="off"></tbody>
+            <tbody id="playlistBody"></tbody>
           </table>
         </div>
         <div class="status" id="statusText">
@@ -221,12 +221,13 @@
       </div>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+    <script src="../../common/log.js"></script>
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>
     <script>
       (window.log && window.ToolKit) ||
         (function () {
-          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+          var miss = [window.log ? '' : 'common/log.js', window.ToolKit ? '' : 'common/tool-kit.js']
             .filter(Boolean)
             .join('、');
           var m =

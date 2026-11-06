@@ -79,24 +79,25 @@
 
   function renderPlaylist() {
     playlistEl.innerHTML = '';
-    videos.forEach((v) => {
+    videos.forEach((v, i) => {
       const row = document.createElement('div');
       row.className = 'video-row' + (v.id === currentId ? ' playing' : '');
+      /* 操作ログはファイル名を出さず、番号で「動画 3」を押下しました…と書く */
+      row.setAttribute('data-log', `動画 ${i + 1}`);
+      row.setAttribute('data-log-group', `動画 ${i + 1}`);
       row.innerHTML = `
         ${v.thumb ? `<img class="thumb" src="${v.thumb}">` : '<div class="thumb"></div>'}
         <span class="name">${esc(v.name)}</span>
-        <button class="remove" type="button">
+        <button class="remove" type="button" aria-label="削除">
           <svg viewBox="0 0 24 24" width="14" height="14"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
       `;
       row.addEventListener('click', (e) => {
         if (e.target.closest('.remove')) return;
-        log(`プレイリストの動画を押下しました(${posOf(v.id)})`);
         playVideo(v.id);
       });
       row.querySelector('.remove').addEventListener('click', (e) => {
         e.stopPropagation();
-        log(`削除ボタンを押下しました(${posOf(v.id)})`);
         removeVideo(v.id);
       });
       playlistEl.appendChild(row);

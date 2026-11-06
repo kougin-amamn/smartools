@@ -84,18 +84,14 @@
         a.appendChild(tx);
         li.appendChild(a);
         ul.appendChild(li);
-        a.addEventListener('click', function () {
-          log('一覧の「' + nameOf(t) + '」を押下しました');
-        });
+        a.setAttribute('data-log', nameOf(t));
       });
     })();
     $('listBtn').onclick = function () {
-      log('「一覧」ボタンを押下しました');
       listPanel.hidden = false;
       log('一覧を表示しました(' + N + '件)');
     };
     $('listClose').onclick = function () {
-      log('一覧の「閉じる」ボタンを押下しました');
       listPanel.hidden = true;
       log('一覧を閉じました');
     };
@@ -354,23 +350,18 @@
         L.openTool(t);
       }
       openBtn.onclick = function () {
-        log('「このツールを開く」ボタンを押下しました');
         if (view.focus() >= 0) openTool(books[view.focus()].tool);
       };
       homeBtn.onclick = function () {
-        log('「本棚に戻す」ボタンを押下しました');
         goHome();
       };
       prevBtn.onclick = function () {
-        log('「前の本」ボタンを押下しました');
         step(-1);
       };
       nextBtn.onclick = function () {
-        log('「次の本」ボタンを押下しました');
         step(1);
       };
       zoomBtn.onclick = function () {
-        log('「等倍に戻す」ボタンを押下しました');
         view.resetZoom(function (z0) {
           log('拡大率を等倍に戻しました(' + view.zoomLabel(z0) + ' → 1.0倍)');
         });

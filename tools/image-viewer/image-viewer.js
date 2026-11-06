@@ -57,16 +57,15 @@
     images.forEach((img, i) => {
       const el = document.createElement('div');
       el.className = 'thumb' + (i === currentIndex ? ' active' : '');
-      el.innerHTML = `<img src="${img.url}"><button class="remove" type="button">✕</button>`;
+      el.setAttribute('data-log-group', `画像 ${i + 1}`);
+      el.innerHTML = `<img src="${img.url}" data-log="サムネイル"><button class="remove" type="button" aria-label="削除">✕</button>`;
       el.querySelector('img').addEventListener('click', () => {
-        log(`${i + 1}枚目のサムネイルを押下しました`);
         currentIndex = i;
         render();
         log(`${i + 1}枚目を表示しました(${i + 1} / ${images.length})`);
       });
       el.querySelector('.remove').addEventListener('click', (e) => {
         e.stopPropagation();
-        log(`${i + 1}枚目の削除ボタンを押下しました`);
         removeImage(i);
       });
       thumbStrip.appendChild(el);

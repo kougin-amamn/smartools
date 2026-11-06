@@ -1,89 +1,13 @@
-/* 全ページ共通のログ・テーマ(起動時は時間帯で決め、ボタンでライト⇄ダーク)・カラーテーマ(themes.json から選び全ページで共有)・
-   埋め込み表示(?embed=1)・デバッグ画面(eruda)。ページ側で編集しない */
+/* 全ページ共通のテーマ(起動時は時間帯で決め、ボタンでライト⇄ダーク)・カラーテーマ(themes.json から選び全ページで共有)・
+   環境情報・埋め込み表示(?embed=1)・デバッグ画面(eruda)。ログは log.js(先に読む)。ページ側で編集しない */
 (function () {
   'use strict';
-  /* ログ */
-  var MAX = 500,
-    buf = [],
-    replayed = false;
-  function p(n, w) {
-    return String(n).padStart(w || 2, '0');
+  /* ログは log.js が用意する。読めなかった時も画面が動くよう、何もしないログで代わりにする */
+  var log = window.log;
+  if (!log) {
+    log = function () {};
+    log.info = log.warn = log.error = log.debug = log;
   }
-  function stamp() {
-    var d = new Date();
-    return (
-      d.getFullYear() +
-      '-' +
-      p(d.getMonth() + 1) +
-      '-' +
-      p(d.getDate()) +
-      ' ' +
-      p(d.getHours()) +
-      ':' +
-      p(d.getMinutes()) +
-      ':' +
-      p(d.getSeconds()) +
-      '.' +
-      p(d.getMilliseconds(), 3)
-    );
-  }
-  function detailOf(e) {
-    if (e instanceof Error) return (e.name && e.name !== 'Error' ? e.name + ': ' : '') + e.message;
-    if (e && typeof e === 'object') {
-      try {
-        return JSON.stringify(e);
-      } catch (x) {
-        return String(e);
-      }
-    }
-    return String(e);
-  }
-  function emit(level, msg, err) {
-    var line = stamp() + ' ' + msg + (err !== undefined ? ' [詳細] ' + detailOf(err) : '');
-    var extra = err instanceof Error ? err : undefined;
-    if (!replayed) {
-      buf.push([level, line, extra]);
-      if (buf.length > MAX) buf.shift();
-    }
-    var f = console[level] || console.log;
-    if (extra) f.call(console, line, extra);
-    else f.call(console, line);
-  }
-  function log(msg) {
-    emit('info', msg);
-  }
-  log.info = log;
-  log.debug = function (m) {
-    emit('debug', m);
-  };
-  log.warn = function (m, e) {
-    emit('warn', m, e);
-  };
-  log.error = function (m, e) {
-    emit('error', m, e);
-  };
-  window.log = log;
-  /* デバッグ画面(eruda)は初期化後のログしか拾わないため、開く前の履歴は開いた時にまとめて表示する */
-  window.__logReplay = function () {
-    replayed = true;
-    console.info('--- ここまでの履歴 ---');
-    buf.forEach(function (r) {
-      var f = console[r[0]] || console.log;
-      if (r[2]) f.call(console, r[1], r[2]);
-      else f.call(console, r[1]);
-    });
-    buf = [];
-  };
-  window.addEventListener('error', function (e) {
-    log.error(
-      '予期しないエラーが発生しました',
-      e.error ||
-        (e.message || '') + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '')
-    );
-  });
-  window.addEventListener('unhandledrejection', function (e) {
-    log.error('未処理の非同期エラーが発生しました', e.reason);
-  });
 
   /* テーマ
      起動した時だけ時間帯で決める(18時〜6時はダーク)。ヘッダのボタンでライト⇄ダークを切り替える(保存はしない) */
@@ -128,9 +52,10 @@
     return night() ? 'dark' : 'light';
   }
   apply(startTheme());
+  /* 押下のログは log.js の自動ログに任せる(文字が状態で変わるので名前を固定する) */
+  if (tbtn) tbtn.setAttribute('data-log', 'テーマ');
   if (tbtn)
     tbtn.onclick = function () {
-      log('テーマボタンを押下しました');
       var t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       apply(t);
       log('テーマを「' + N[t] + '」に切り替えました');
@@ -247,7 +172,7 @@
       });
   }
   function choose(t) {
-    log('「' + t.name + '」ボタンを押下しました');
+    log('「カラーテーマ」の「' + t.name + '」ボタンを押下しました');
     color = { id: t.id, name: t.name, main: t.main, sub: t.sub };
     applyColor(color);
     try {
@@ -315,13 +240,13 @@
     );
   }
   /* ヘッダのテーマボタンの前にカラーボタンを足す(ヘッダのあるページだけ)。
-     操作ログは tool-kit.js の自動ログと重ならないよう data-log="off" にしてここで書く */
+     ボタンの押下は log.js の自動ログ、色の一覧は並びが特殊なので自動ログを止めてここで書く */
   if (bar) {
     cbtn = document.createElement('button');
     cbtn.className = 'dbg-btn';
     cbtn.id = 'colorBtn';
     cbtn.type = 'button';
-    cbtn.dataset.log = 'off';
+    cbtn.dataset.log = 'カラーテーマ';
     cbtn.title = 'カラーテーマ';
     cbtn.setAttribute('aria-label', 'カラーテーマ');
     cbtn.setAttribute('aria-haspopup', 'dialog');
@@ -342,7 +267,6 @@
     cbtn.setAttribute('aria-controls', menu.id);
 
     cbtn.onclick = function () {
-      log('カラーボタンを押下しました');
       if (menu.hidden) openMenu();
       else closeMenu();
     };
@@ -420,13 +344,13 @@
     ibtn.setAttribute('aria-expanded', 'true');
     log('環境情報を開きました(' + os + ' ' + br + ' / ' + innerHeight + '×' + innerWidth + 'px)');
   }
-  /* カラーボタンの前に足す(ヘッダのあるページだけ)。操作ログは tool-kit.js の自動ログと重ならないよう data-log="off" にしてここで書く */
+  /* カラーボタンの前に足す(ヘッダのあるページだけ)。ボタンの押下は log.js の自動ログ、中の表は自動ログを止める */
   if (bar) {
     ibtn = document.createElement('button');
     ibtn.className = 'dbg-btn';
     ibtn.id = 'infoBtn';
     ibtn.type = 'button';
-    ibtn.dataset.log = 'off';
+    ibtn.dataset.log = '環境情報';
     ibtn.title = '環境情報';
     ibtn.setAttribute('aria-label', '環境情報');
     ibtn.setAttribute('aria-haspopup', 'dialog');
@@ -447,7 +371,6 @@
     ibtn.setAttribute('aria-controls', imenu.id);
 
     ibtn.onclick = function () {
-      log('環境情報ボタンを押下しました');
       if (imenu.hidden) openInfo();
       else closeInfo();
     };
@@ -466,9 +389,9 @@
   var dbtn = document.getElementById('dbgBtn'),
     loaded = false,
     shown = false;
+  if (dbtn) dbtn.setAttribute('data-log', 'デバッグ');
   if (dbtn)
     dbtn.onclick = function () {
-      log('デバッグボタンを押下しました');
       function toggle() {
         if (!window.eruda) return;
         shown = !shown;

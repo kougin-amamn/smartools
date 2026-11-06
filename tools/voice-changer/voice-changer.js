@@ -287,11 +287,9 @@
     const ext = mimeType.includes('mp4') ? 'm4a' : 'webm';
     const item = document.createElement('div');
     item.className = 'rec-item';
+    item.setAttribute('data-log-group', `録音 ${recCount}`);
     item.innerHTML = `<audio controls src="${url}"></audio><a href="${url}" download="voice-changer-${recCount}.${ext}">保存</a>`;
     recordings.prepend(item);
-    item
-      .querySelector('a')
-      .addEventListener('click', () => log(`録音の保存ボタンを押下しました(${recCount}件目)`));
   }
 
   log('起動しました');

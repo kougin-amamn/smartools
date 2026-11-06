@@ -257,20 +257,18 @@
         a.appendChild(tx);
         li.appendChild(a);
         ul.appendChild(li);
+        a.setAttribute('data-log', nameOf(t));
         a.addEventListener('click', function () {
-          log('一覧の「' + nameOf(t) + '」を押下しました');
           countUse(t);
         });
       });
     }
     buildList();
     $('listBtn').onclick = function () {
-      log('「一覧」ボタンを押下しました');
       listPanel.hidden = false;
       log('一覧を表示しました(' + N + '件)');
     };
     $('listClose').onclick = function () {
-      log('一覧の「閉じる」ボタンを押下しました');
       listPanel.hidden = true;
       log('一覧を閉じました');
     };
@@ -821,27 +819,21 @@
     }
 
     openBtn.onclick = function () {
-      log('「' + openBtn.textContent + '」ボタンを押下しました');
       if (focus >= 0 && !switching) activate(focus);
     };
     homeBtn.onclick = function () {
-      log('「全体に戻る」ボタンを押下しました');
       goHome();
     };
     prevBtn.onclick = function () {
-      log('「前へ」ボタンを押下しました');
       step(-1);
     };
     nextBtn.onclick = function () {
-      log('「次へ」ボタンを押下しました');
       step(1);
     };
     hallBtn.onclick = function () {
-      log('「ホールへ」ボタンを押下しました');
       leaveRoom();
     };
     zoomBtn.onclick = function () {
-      log('「等倍に戻す」ボタンを押下しました');
       var z0 = cur.zoom;
       moveTo(
         { x: cur.x, y: cur.y, z: cur.z, yaw: cur.yaw, pitch: cur.pitch, zoom: 1 },

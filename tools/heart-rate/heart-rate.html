@@ -94,12 +94,13 @@
         <canvas id="sample" width="32" height="32" hidden></canvas>
       </div>
     </main>
+    <script src="../../common/log.js"></script>
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>
     <script>
       (window.log && window.ToolKit) ||
         (function () {
-          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+          var miss = [window.log ? '' : 'common/log.js', window.ToolKit ? '' : 'common/tool-kit.js']
             .filter(Boolean)
             .join('、');
           var m =

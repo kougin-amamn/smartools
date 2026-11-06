@@ -64,9 +64,7 @@
       body.appendChild(tags);
     }
     a.append(iconEl(t), body);
-    a.addEventListener('click', function () {
-      log('「' + t.title + '」のリンクを押下しました');
-    });
+    a.setAttribute('data-log', t.title);
     var li = document.createElement('li');
     li.appendChild(a);
     return li;
@@ -127,9 +125,6 @@
         a.className = 'view';
         a.href = fromRoot(l.href);
         a.textContent = l.title;
-        a.addEventListener('click', function () {
-          log('「' + l.title + '」のリンクを押下しました');
-        });
         nav.appendChild(a);
       });
       nav.hidden = list.length === 0;

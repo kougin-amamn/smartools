@@ -90,13 +90,14 @@
     const row = document.createElement('div');
     row.className = 'item';
     row.dataset.id = id;
+    row.setAttribute('data-log-group', `画像 ${id}`);
     row.innerHTML = `
       <img alt="">
       <div class="meta">
         <div class="name">${esc(file.name)}</div>
         <div class="sizes"><span class="orig">${formatBytes(file.size)}</span> → <span class="new">読み込み中…</span></div>
       </div>
-      <a class="dl" href="#" aria-disabled="true">待機中</a>
+      <a class="dl" href="#" aria-disabled="true" data-log="off">待機中</a>
     `;
     list.appendChild(row);
 
@@ -245,6 +246,7 @@
         dl.textContent = '保存';
         dl.classList.add('ready');
         dl.removeAttribute('aria-disabled');
+        dl.removeAttribute('data-log'); /* 保存できるようになってから自動ログに出す */
       }
     }
     convertBtn.disabled = false;
@@ -283,10 +285,6 @@
     a.href = URL.createObjectURL(blob);
     a.download = 'converted-images.zip';
     a.click();
-  });
-  list.addEventListener('click', (e) => {
-    const dl = e.target.closest('.dl.ready');
-    if (dl) log(`保存ボタンを押下しました(${dl.download.split('.').pop().toUpperCase()})`);
   });
   log(
     '起動しました(HEIC変換 ' +

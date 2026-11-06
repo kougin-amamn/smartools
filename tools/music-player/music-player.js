@@ -94,29 +94,29 @@
 
   function renderPlaylist() {
     playlistBody.innerHTML = '';
-    tracks.forEach((t) => {
+    tracks.forEach((t, i) => {
       const row = document.createElement('tr');
       row.className = t.id === currentTrackId ? 'playing' : '';
       row.dataset.id = t.id;
+      /* 操作ログは曲名を出さず、番号で「曲 3」の「曲名」を押下しました…と書く */
+      row.setAttribute('data-log-group', `曲 ${i + 1}`);
       row.innerHTML = `
         <td class="handle-cell">
           <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
         </td>
         <td class="thumb-cell">${t.pictureDataUrl ? `<img src="${t.pictureDataUrl}">` : ''}</td>
-        <td class="name-cell">${esc(t.name)}</td>
-        <td class="artist-cell">${esc(t.artist || '')}</td>
+        <td class="name-cell" data-log="曲名">${esc(t.name)}</td>
+        <td class="artist-cell" data-log="アーティスト">${esc(t.artist || '')}</td>
         <td class="album-cell">${esc(t.album || '')}</td>
-        <td class="remove-cell"><button type="button"><svg viewBox="0 0 24 24" width="14" height="14"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+        <td class="remove-cell"><button type="button" aria-label="削除"><svg viewBox="0 0 24 24" width="14" height="14"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
       `;
       const pick = () => {
-        log(`プレイリストの曲を押下しました(${posOf(t.id)})`);
         playTrack(t.id);
       };
       row.querySelector('.name-cell').addEventListener('click', pick);
       row.querySelector('.artist-cell').addEventListener('click', pick);
       row.querySelector('.remove-cell button').addEventListener('click', (e) => {
         e.stopPropagation();
-        log(`削除ボタンを押下しました(${posOf(t.id)})`);
         removeTrack(t.id).catch((er) => log.error('曲の削除でエラーが発生しました', er));
       });
       attachDragHandlers(row.querySelector('.handle-cell'), row);

@@ -113,7 +113,7 @@
           <button class="pill primary" id="convertBtn">すべて変換</button>
         </div>
 
-        <div class="list" id="list" data-log="off"></div>
+        <div class="list" id="list"></div>
 
         <div class="batch-row" id="batchRow" hidden>
           <button class="pill" id="zipBtn">まとめてZIPでダウンロード</button>
@@ -129,12 +129,13 @@
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script src="../../common/log.js"></script>
     <script src="../../common/site.js"></script>
     <script src="../../common/tool-kit.js"></script>
     <script>
       (window.log && window.ToolKit) ||
         (function () {
-          var miss = [window.log ? '' : 'common/site.js', window.ToolKit ? '' : 'common/tool-kit.js']
+          var miss = [window.log ? '' : 'common/log.js', window.ToolKit ? '' : 'common/tool-kit.js']
             .filter(Boolean)
             .join('、');
           var m =
