@@ -62,10 +62,85 @@
 | P5 | 名前が規約(`docs/naming.md`: 省略しない)に合っていない | `rr` `rng` `tex` `lin` `pr` `cr` `th` `hv` `T` `M` `LOW` `ZMIN` `FOV` `DPR` `favRecs` `rbShared` | 分ける時に、あわせて名前を直す(`roundRect` `randomOf` `textureOf` `pixelRatio` `isLowQuality` …) |
 | P6 | 部品の間の結びつきが強い | `MuseumScene.create({…})` に本体の一覧(`roomWalls` `roomSpots` `badgesBySlug`)をそのまま渡して書き換えさせる。`create` の引数が10以上の大きなオブジェクト | 部屋は「組み立てた結果を返す」だけにし、本体の状態を書き換えない(下の「部屋の約束」) |
 | P7 | 読み込めなかったファイルの扱いが、サイトの決まりと別 | HTML ごとに `__missing` と `__missingCheck` を手で書く。`launcher-common.js` にも `missingParts` `showMissing` がある | 1つの仕組みにする(`launcher-common.js` の `missingParts` に寄せ、HTML の手書きをやめる) |
-| P8 | three.js r128(2021年)に固定 | r160 で非モジュール版(`three.min.js`)が無くなった。上げるには ES モジュール(import map)への移行が要る。色の扱い(r152)と光の強さ(r155)が変わり、見た目も変わる | three.js に触る所を「土台」と「カメラ」に集めてから、上げるかを決める(「決めてほしいこと」1) |
+| P8 | three.js r128(2021年)に固定。非モジュール版の読み込みに頼る | r160 で非モジュール版が無くなり、r186 で縮めた版も無くなった。色の扱い(r152)と光の強さ(r155)が変わり、見た目も変わる | ES モジュールにし、版は import map で固定する(下の「ES モジュールにする検討」) |
 | P9 | 試験が無い | core は Node で試せる作りなのに、`tests/core` に3Dランチャーと `launcher-common` の試験が1つも無い | core と共通の計算に試験を足す。配置の上限(E9)もここで試す |
 | P10 | `launchers/` に3つのランチャーの 25 ファイルが平らに並ぶ | どのファイルがどのランチャーの物か、名前を読まないと分からない | ランチャーごとのフォルダに分ける(「決めてほしいこと」3。リンクが変わる) |
 | P11 | 想定内の失敗を `log.error` で出している | three.js が読めない時の `fallback()` | 規約どおり `log.warn` にする |
+
+## ES モジュールにする検討
+
+### 今の作り
+
+- three.js r128 の非モジュール版(`three.min.js`)を `<script defer>` で読み、`window.THREE` を使っています。
+- 自分のファイルは `(function (root) { … })(this)` で `window.BookshelfScene` などに載せ、HTML の `<script>` の並び順で依存をつないでいます(本棚は8本)。
+- 読めなかったファイルは、HTML ごとの `onerror` と `__missing` で拾っています。
+
+### three.js の今(2026-11-07 に確認)
+
+- 最新は r187(`three@0.187.0`、2026-10-30)。
+- 非モジュール版(`build/three.js` / `three.min.js`)は r160 で無くなりました。r186 では縮めた版(`*.min.js`)も無くなりました。
+- r171 から、ES モジュールは `build/three.module.js`(r186 で約650KB)が `build/three.core.js`(約1.46MB)を読む2ファイルの形です。
+- 圧縮していない大きさは、合わせて約2.1MB です(r128 の `three.min.js` は約600KB)。配信の時の圧縮後の大きさは、実装の時に測ります。縮めた版が要るなら、jsDelivr の `+esm` を試します。
+- r128 にも `build/three.module.js`(約1.14MB)があります。モジュールにする作業と、版を上げる作業は分けられます。
+- 使っているのは本体の基本だけです(`Mesh` `MeshPhongMaterial` `CanvasTexture` `SpotLight` `ExtrudeGeometry` `Raycaster` など)。addons(`examples/`)は使っていないので、移す手間は小さめです。
+
+### 案の比べ
+
+| 案 | 内容 | 良い所 | 悪い所 |
+| --- | --- | --- | --- |
+| A | r128 の非モジュール版のまま | 手間が無い | 古いまま。直しも新しい機能も入らない |
+| B | three.js だけモジュールで読み、`window.THREE` に置いて、自分のファイルは今のまま | 変更が小さい | 「three.js が読めた」合図を別に作る必要があり、読み込み順の管理が二重になる。中途半端 |
+| **C(推奨)** | import map で `three` を固定した版に向け、自分のファイルも `export` / `import` にする。HTML は入口の1本だけ | 依存が各ファイルの先頭に書かれ、`<script>` の並び順と `window` の名前が要らなくなる(P2・P6・P7 が楽になる)。読めない時をまとめて捕まえられる | 3D のファイルを全部書き換える。Node の試験の読み方を確かめる必要がある |
+
+### C の形
+
+```html
+<script src="../common/log.js"></script>            <!-- common は今のまま(全ページ共通の普通のスクリプト) -->
+<script src="../common/autolog.js"></script>
+<script src="../common/env.js"></script>
+<script src="../common/site.js"></script>
+<script src="./launcher-common.js"></script>        <!-- デスクトップのランチャーも使うので普通のスクリプトのまま -->
+<script type="importmap">
+  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js" } }
+</script>
+<script type="module">
+  /* 入口: three.js か自分のファイルが1つでも読めなければ、2D の一覧にする */
+  import('./launcher-3d-bookshelf.js').catch(function (err) {
+    log.warn('3D の表示に必要なファイルを読み込めませんでした', err);
+    Launcher.showListInstead();
+  });
+</script>
+```
+
+```js
+/* launcher-3d-bookshelf-case.js の頭の例 */
+import * as THREE from 'three';
+import { roundRect, textureOf } from '../launcher-3d/launcher-3d-paint.js';
+import { packShelves } from './launcher-3d-bookshelf-core.js';
+export function buildCase(plan, theme) { … }
+```
+
+- **版の固定:** import map の1行で決めます。上げる時は、その1行と色・明かりの合わせ直しだけです。
+- **common との関係:** `log` `Env` `Launcher` は普通のスクリプトのまま先に読み、モジュールの中からは `window` 越しに使います。common をモジュールにすると全ページに響くので、今回はしません。
+- **読み込みの失敗:** 動的な `import()` が、three.js と自分のファイルのどれが読めなくても失敗するので、`__missing` の仕組み(P7)は要らなくなります。
+- **Node の試験:** core のファイルは DOM も three.js も使いません。Node 22.12 以降は、`require` で ES モジュールを読めます(開発環境は 22.22)。実装の時に、今の `tests/core.js` のままで読めるか確かめ、だめなら試験を `import()` にします。
+- **ブラウザ:** import map は Safari 16.4(2023年3月)・Chrome 89 以降です。それより古い端末では、入口の失敗として 2D の一覧になります。
+- **WebGPU は使いません:** `WebGLRenderer` のままにします。今の場面は軽く、WebGPU で速くなるとは限らないためです。端末ごとの対応の差もあります。
+
+### 版を上げる時に見た目が変わる所(r128 → r186 以降)
+
+実装の時に、three.js の移行ガイド(Migration Guide)で1つずつ確かめます。今わかっている大きな物は次のとおりです。
+
+- **色の扱い(r152):**
+  - `renderer.outputEncoding` と `texture.encoding`(今 `sRGBEncoding` を3か所で使用)が、`outputColorSpace` と `texture.colorSpace = SRGBColorSpace` に変わります。
+  - 色の管理が既定で有効になり、`0xe9e4da` のような色の値の受け取り方が変わります。昼夜の `THEME` の色を合わせ直します。
+- **光の強さ(r155):** 物理的な強さが既定になります。スポット・点・面の光の `intensity` と `decay` を合わせ直します。
+- **WebGL1 の終了(r163):** WebGL2 が要ります(Safari 15 以降)。
+
+### 進め方への入れ方
+
+- C にする場合は、段 1(共通化)と同時に、r128 のモジュール版で移します。ファイルを割り直す時に import にすれば、二度手間になりません。見た目は変わりません。
+- 版を上げるのは段 4 のまま、import map の1行と、色・明かりの合わせ直しで行います。
 
 ## 構成(見直し後の案)
 
@@ -166,10 +241,10 @@ flowchart LR
 
 | 段 | 内容 | 見た目 |
 | --- | --- | --- |
-| 1 | 3D 共通の部品(core・stage・camera・paint)を作り、2つを乗せ替える。core の試験を足す。読み込みの仕組み(P7)とログ(P11)を直す | 変えない |
+| 1 | 3D 共通の部品(core・stage・camera・paint)を作り、2つを乗せ替える。同時に ES モジュールにする(three.js は r128 のモジュール版)。core の試験を足す。読み込みの仕組み(P7)とログ(P11)を直す | 変えない |
 | 2 | 美術館の `main()` を画面・部屋・移動に割る。本棚の `buildRoom` を部屋と本棚に割る。データを json へ出し、名前を直す | 変えない |
 | 3 | 外部設計の課題: 探す(E1)、描画ループを止める(E3)、コンテキスト喪失(E4)、画質の段(E5)、一覧ボタン(E7)、テーマ(E8) | 変わる |
-| 4 | three.js を上げる(決めた場合) | 色と明るさを合わせ直す |
+| 4 | three.js を上げる(import map の1行。決めた場合) | 色と明るさを合わせ直す |
 
 1 と 2 は見た目を変えない作り変えです。画面で確かめられないので、1段ずつ小さく push し、その都度、実機で見てもらいます。
 
@@ -186,10 +261,9 @@ flowchart LR
 
 ## 決めてほしいこと
 
-1. **three.js を上げるか。**
-   - 上げる: ES モジュールに移り、最新の機能と直し(色の扱い・性能)が入ります。代わりに、全部のファイルの読み込み方と見た目の調整が要ります。
-   - 上げない: r128 のまま固定します。今は動いていますが、古いまま残ります。
-   - 推奨: 段 1・2 で three.js に触る所を集めてから決める。
+1. **ES モジュールにするか、three.js を上げるか。**
+   - 推奨は、段 1 で ES モジュール(案 C)にし、three.js は r128 のモジュール版のまま見た目を変えずに移すことです。
+   - 上げるかどうかは、段 4 で決めます。上げる作業は、import map の1行と色・明かりの合わせ直しになります。
 2. **探す機能(E1)を足すか。** 3D で「眺める楽しさ」を優先し、探すのは 2D の一覧に任せる、という考え方もあります。
 3. **ランチャーごとのフォルダに分けるか(P10)。** 分けるとアドレスが変わるので、`launchers.json` を直します。ブックマークしたアドレスは古くなります。
 4. **本棚と美術館の両方を続けるか。** 片方に絞ると、手入れの量が半分になります。
