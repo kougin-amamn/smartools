@@ -1,17 +1,4 @@
-/* ランチャーの「本棚」表示のスタイル(配色は site.css のトークン。部屋の上のボタンだけ下で決める。ページの枠は launcher.css) */
-
-/* 部屋の上のボタンには、サイトの紺紫・ミントを使わない(利用者の希望、設計書 Q2・Q7)。主なボタンは墨色、ほかは灰色。
-   カラーテーマ(site.js の #site-color)より強くするため html を付ける */
-html:root {
-  --func: #2e2f36;
-  --func-fg: #ffffff;
-  --fn-bg: #ebebee;
-}
-html:root[data-theme='dark'] {
-  --func: #e8e6e1;
-  --func-fg: #18191d;
-  --fn-bg: #2e2f34;
-}
+/* ランチャーの「本棚」表示のスタイル(配色は site.css のトークンのみ。ページの枠は launcher.css) */
 
 .stage {
   position: relative;
