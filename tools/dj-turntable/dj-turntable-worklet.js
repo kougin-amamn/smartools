@@ -1,241 +1,127 @@
-/* 2台の盤から音を読む部分。AudioWorklet から読み込まれ(出力2つ)、Node でも試せる。
-   モーター(一定の加速度)・指(位置を追うばね)・スリップマット・4点補間・針を落とした時のつなぎを受け持つ */
-(function () {
+/* ターンテーブルの音を作る部分。AudioWorklet から読み込まれ、Node でもテストできる。
+   曲のデータを持ち、盤の回転速度(逆回転も含む)に合わせて読み出す */
+(function (root) {
   'use strict';
 
-  var STILL = 0.001;
-  /* 指の位置へ追いつくばね。固有角周波数 約60Hz・臨界減衰で、行き過ぎずに素早く追う */
-  var SPRING = 2 * Math.PI * 60;
-  /* 指の知らせは 60〜120回/秒。最後の2点の速さで最大 30ms 先まで延ばし、間を埋める */
-  var LOOKAHEAD = 0.03;
-  /* スリップマットが盤を下の盤の速さへ引き戻す加速度(標準の速さ/秒) */
-  var FRICTION = 10;
-  var FADE_SECONDS = 0.005;
-  var INT16_SCALE = 1 / 32768;
+  /* 速度が目標に追いつくまでの時間(秒)。モーターは立ち上がりが速く、止める時はゆっくり回転が落ちる。
+     指で押さえている間はほぼ即座に追従させる */
+  var TAU_UP = 0.25,
+    TAU_DOWN = 0.5,
+    TAU_HAND = 0.012;
+  var STILL = 1e-3;
 
-  function hermite(data, length, x) {
-    var i = Math.floor(x),
-      f = x - i;
-    var y0 = data[i > 0 ? i - 1 : 0],
-      y1 = data[i],
-      y2 = data[i + 1 < length ? i + 1 : i],
-      y3 = data[i + 2 < length ? i + 2 : i];
-    var c1 = 0.5 * (y2 - y0),
-      c2 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3,
-      c3 = 0.5 * (y3 - y0) + 1.5 * (y1 - y2);
-    return (((c3 * f + c2) * f + c1) * f + y1) * INT16_SCALE;
+  function Deck(sampleRate) {
+    this.sr = sampleRate;
+    this.ch = [];
+    this.len = 0;
+    this.srcRate = sampleRate;
+    this.pos = 0;
+    this.cur = 0;
+    this.motor = false;
+    this.factor = 1;
+    this.hand = false;
+    this.handVel = 0;
   }
 
-  function Deck(outputRate) {
-    this.outputRate = outputRate;
-    this.left = null;
-    this.right = null;
-    this.length = 0;
-    this.sourceRate = outputRate;
+  Deck.prototype.load = function (channels, srcRate) {
+    this.ch = channels;
+    this.len = channels.length ? channels[0].length : 0;
+    this.srcRate = srcRate;
     this.pos = 0;
-    this.speed = 0;
-    this.platter = 0;
-    this.motorOn = false;
-    this.rpmRatio = 1;
-    this.pitch = 0;
-    this.nudge = 0;
-    this.startSeconds = 0.7;
-    this.brakeSeconds = 0.6;
-    this.slipmat = true;
-    this.handDown = false;
-    this.handOffset = 0;
-    this.handPoint = 0;
-    this.handVelocity = 0;
-    this.handStamp = 0;
-    this.handArrival = 0;
-    this.velocity = 0;
-    this.fadeLeft = 0;
-    this.fadePos = 0;
-  }
-
-  Deck.prototype.load = function (left, right, sourceRate) {
-    this.left = left;
-    this.right = right || left;
-    this.length = left.length;
-    this.sourceRate = sourceRate;
-    this.pos = 0;
-    this.fadeLeft = 0;
-    this.handDown = false;
+    this.cur = 0;
+    this.motor = false;
+    this.hand = false;
   };
-
-  Deck.prototype.motorTarget = function () {
-    return this.motorOn ? this.rpmRatio * (1 + this.pitch) : 0;
+  Deck.prototype.setMotor = function (on, factor) {
+    this.motor = on;
+    this.factor = factor;
   };
-
+  Deck.prototype.setHand = function (on, vel) {
+    this.hand = on;
+    this.handVel = vel;
+  };
+  Deck.prototype.seek = function (sec) {
+    this.pos = Math.max(0, Math.min(this.len - 1, sec * this.srcRate));
+  };
   Deck.prototype.seconds = function () {
-    return this.pos / this.sourceRate;
+    return this.srcRate ? this.pos / this.srcRate : 0;
   };
 
-  /* mode: keep=今の回り方のまま / stop=止めて置く / start=すぐ標準の速さで鳴らす */
-  Deck.prototype.seek = function (seconds, mode) {
-    if (this.length) {
-      this.fadePos = this.pos;
-      this.fadeLeft = Math.round(FADE_SECONDS * this.outputRate);
-    }
-    this.pos = Math.max(0, Math.min(this.length ? this.length - 1 : Infinity, seconds * this.sourceRate));
-    if (mode === 'stop') {
-      this.motorOn = false;
-      this.platter = this.speed = 0;
-    } else if (mode === 'start') {
-      this.motorOn = true;
-      this.platter = this.speed = this.motorTarget();
-    }
-    this.velocity = this.speed * this.sourceRate;
-  };
-
-  /* 指の角度(何周目も数えた度)を、曲の位置(サンプル)に直して追わせる。stamp は画面の時刻(秒) */
-  Deck.prototype.touch = function (down, angle, stamp, now) {
-    var point = (angle / 200) * this.sourceRate;
-    if (!down) {
-      this.handDown = false;
-      return;
-    }
-    if (!this.handDown) {
-      this.handDown = true;
-      this.handOffset = this.pos - point;
-      this.handPoint = this.pos;
-      this.handVelocity = 0;
-      this.velocity = this.speed * this.sourceRate;
-    } else {
-      var p = point + this.handOffset,
-        dt = stamp - this.handStamp;
-      if (dt > 0.002) this.handVelocity = (p - this.handPoint) / dt;
-      this.handPoint = p;
-    }
-    this.handStamp = stamp;
-    this.handArrival = now;
-  };
-
-  /* n フレーム分の音を書く。曲の最後に着いた時だけ true */
-  Deck.prototype.process = function (outL, outR, n, now) {
-    var dt = 1 / this.outputRate,
-      ended = false;
-    var target = this.motorTarget(),
-      growing = Math.abs(target) > Math.abs(this.platter);
-    var step = (n * dt) / (growing ? this.startSeconds : this.brakeSeconds);
-    var diff = target - this.platter;
-    this.platter += Math.abs(diff) <= step ? diff : diff > 0 ? step : -step;
-
-    var frictionStep = FRICTION * dt,
-      w2 = SPRING * SPRING,
-      damp = 2 * SPRING;
+  /* n フレーム分の音を outL / outR に書き、最後まで進んだ時だけ true を返す */
+  Deck.prototype.process = function (outL, outR, n) {
+    var target = this.hand ? this.handVel : this.motor ? this.factor : 0;
+    var tau = this.hand ? TAU_HAND : Math.abs(target) > Math.abs(this.cur) ? TAU_UP : TAU_DOWN;
+    var a = 1 - Math.exp(-1 / (tau * this.sr));
+    var step = this.srcRate / this.sr;
+    var L = this.ch[0],
+      Rr = this.ch[1] || this.ch[0];
+    var ended = false;
     for (var i = 0; i < n; i++) {
-      if (this.handDown) {
-        var ahead = Math.min(now + i * dt - this.handArrival, LOOKAHEAD);
-        var goal = this.handPoint + this.handVelocity * Math.max(0, ahead);
-        this.velocity += (w2 * (goal - this.pos) - damp * this.velocity) * dt;
-        this.speed = this.velocity / this.sourceRate;
-      } else {
-        var desired = this.platter * (1 + this.nudge);
-        if (this.slipmat) {
-          var d = desired - this.speed;
-          this.speed += Math.abs(d) <= frictionStep ? d : d > 0 ? frictionStep : -frictionStep;
-        } else this.speed = desired;
-        this.velocity = this.speed * this.sourceRate;
-      }
-      this.pos += this.velocity * dt;
-      if (this.length) {
-        if (this.pos < 0) {
-          this.pos = 0;
-          if (this.velocity < 0) this.velocity = this.speed = 0;
-        } else if (this.pos > this.length - 1) {
-          this.pos = this.length - 1;
-          if (this.velocity > 0) this.velocity = this.speed = 0;
-          if (this.motorOn && !this.handDown) {
-            this.motorOn = false;
-            ended = true;
-          }
-        }
-      }
-      if (!this.length) {
-        outL[i] = outR[i] = 0;
+      this.cur += (target - this.cur) * a;
+      if (!this.len || (target === 0 && Math.abs(this.cur) < STILL)) {
+        if (target === 0) this.cur = 0;
+        outL[i] = 0;
+        outR[i] = 0;
         continue;
       }
-      /* ほぼ止まった時に一定の値(直流)が出ないよう、遅い所は音を小さくする */
-      var level = Math.min(1, Math.abs(this.speed) * 100);
-      var l = hermite(this.left, this.length, this.pos) * level,
-        r = hermite(this.right, this.length, this.pos) * level;
-      if (this.fadeLeft > 0) {
-        this.fadePos = Math.max(0, Math.min(this.length - 1, this.fadePos + this.velocity * dt));
-        var k = this.fadeLeft / (FADE_SECONDS * this.outputRate);
-        l = l * (1 - k) + hermite(this.left, this.length, this.fadePos) * level * k;
-        r = r * (1 - k) + hermite(this.right, this.length, this.fadePos) * level * k;
-        this.fadeLeft--;
+      this.pos += this.cur * step;
+      if (this.pos < 0) {
+        this.pos = 0;
+        if (this.cur < 0) this.cur = 0;
+      } else if (this.pos > this.len - 1) {
+        this.pos = this.len - 1;
+        if (this.cur > 0) this.cur = 0;
+        if (!this.hand && this.motor) {
+          this.motor = false;
+          ended = true;
+        }
       }
-      outL[i] = l;
-      outR[i] = r;
+      var i0 = Math.floor(this.pos),
+        f = this.pos - i0,
+        i1 = i0 + 1 < this.len ? i0 + 1 : i0;
+      outL[i] = L[i0] + (L[i1] - L[i0]) * f;
+      outR[i] = Rr[i0] + (Rr[i1] - Rr[i0]) * f;
     }
-    /* 直結では、押さえた盤と一緒に下の盤も止まる */
-    if (this.handDown && !this.slipmat) this.platter = this.speed;
     return ended;
-  };
-
-  Deck.prototype.isMoving = function () {
-    return Math.abs(this.speed) > STILL || this.motorOn || this.handDown;
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = { Deck: Deck };
 
   if (typeof registerProcessor === 'function') {
-    class TurntableDecks extends AudioWorkletProcessor {
+    class TurntableDeck extends AudioWorkletProcessor {
       constructor() {
         super();
-        this.decks = [new Deck(sampleRate), new Deck(sampleRate)];
-        this.moving = [false, false];
+        this.deck = new Deck(sampleRate);
         this.since = 0;
-        this.port.onmessage = (e) => this.receive(e.data);
+        this.moved = false;
+        this.port.onmessage = (e) => {
+          var m = e.data;
+          if (m.t === 'load') this.deck.load(m.ch, m.rate);
+          else if (m.t === 'motor') this.deck.setMotor(m.on, m.factor);
+          else if (m.t === 'hand') this.deck.setHand(m.on, m.vel);
+          else if (m.t === 'seek') this.deck.seek(m.sec);
+          this.report();
+        };
       }
-      receive(m) {
-        var d = this.decks[m.deck];
-        if (m.type === 'settings') {
-          this.decks.forEach(function (x) {
-            x.startSeconds = m.startSeconds;
-            x.brakeSeconds = m.brakeSeconds;
-            x.slipmat = m.slipmat;
-          });
-          return;
-        }
-        if (!d) return;
-        if (m.type === 'load') d.load(m.left, m.right, m.sampleRate);
-        else if (m.type === 'motor') d.motorOn = m.on;
-        else if (m.type === 'speed') {
-          d.rpmRatio = m.rpmRatio;
-          d.pitch = m.pitch;
-        } else if (m.type === 'nudge') d.nudge = m.amount;
-        else if (m.type === 'seek') d.seek(m.pos, m.mode);
-        else if (m.type === 'touch') d.touch(m.down, m.angle, m.stamp, currentTime);
-        if (m.type !== 'touch') this.report(m.deck);
-      }
-      report(i) {
-        var d = this.decks[i];
-        this.port.postMessage({ type: 'state', deck: i, pos: d.seconds(), speed: d.speed, motor: d.motorOn });
+      report() {
+        this.port.postMessage({ t: 'pos', pos: this.deck.seconds(), cur: this.deck.cur });
       }
       process(inputs, outputs) {
-        for (var i = 0; i < 2; i++) {
-          var out = outputs[i];
-          if (!out || !out[0]) continue;
-          if (this.decks[i].process(out[0], out[1] || out[0], out[0].length, currentTime)) {
-            this.port.postMessage({ type: 'ended', deck: i });
-          }
-        }
-        /* 約30回/秒で位置を知らせる。止まった直後にも1回送る */
-        this.since += outputs[0][0].length;
+        var out = outputs[0];
+        var n = out[0].length;
+        var ended = this.deck.process(out[0], out[1] || out[0], n);
+        if (ended) this.port.postMessage({ t: 'ended' });
+        /* 約 30 回/秒で位置を知らせる。止まった直後に 1 回だけ最後の位置を送る */
+        this.since += n;
         if (this.since >= sampleRate / 30) {
           this.since = 0;
-          for (var j = 0; j < 2; j++) {
-            var moving = this.decks[j].isMoving();
-            if (moving || this.moving[j]) this.report(j);
-            this.moving[j] = moving;
-          }
+          var moving = Math.abs(this.deck.cur) > STILL;
+          if (moving || this.moved) this.report();
+          this.moved = moving;
         }
         return true;
       }
     }
-    registerProcessor('dj-turntable-decks', TurntableDecks);
+    registerProcessor('turntable-deck', TurntableDeck);
   }
-})();
+})(this);

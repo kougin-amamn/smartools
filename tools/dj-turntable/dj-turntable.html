@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>DJターンテーブル | 2台のレコードとミキサーで DJ</title>
+    <title>DJターンテーブル | レコード盤で鳴らす音楽プレーヤー</title>
     <meta
       name="description"
-      content="2台のターンテーブルとミキサーで DJ ができる音楽プレーヤー。端末の曲をレコードにのせ、指でスクラッチ、ピッチ、3バンドのアイソレーター、フィルター、クロスフェーダー、波形と BPM、キューとホットキューが使えます。曲は端末内で処理され送信されません。"
+      content="ターンテーブル風の音楽プレーヤー。端末の音楽ファイルをレコード盤にのせて再生し、指で盤を回してスクラッチ、33/45回転やピッチの調整もできます。曲は端末内で処理され送信されません。"
     />
-    <meta property="og:title" content="DJターンテーブル | 2台のレコードとミキサーで DJ" />
+    <meta property="og:title" content="DJターンテーブル | レコード盤で鳴らす音楽プレーヤー" />
     <meta
       property="og:description"
-      content="2台のターンテーブルとミキサーで DJ ができる音楽プレーヤー。端末の曲をレコードにのせ、指でスクラッチ、ピッチ、3バンドのアイソレーター、フィルター、クロスフェーダー、波形と BPM、キューとホットキューが使えます。曲は端末内で処理され送信されません。"
+      content="ターンテーブル風の音楽プレーヤー。端末の音楽ファイルをレコード盤にのせて再生し、指で盤を回してスクラッチ、33/45回転やピッチの調整もできます。曲は端末内で処理され送信されません。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ja_JP" />
@@ -26,8 +26,8 @@
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "DJターンテーブル",
-        "alternateName": ["DJ Turntable", "ターンテーブル", "DJミキサー", "スクラッチ", "レコードプレーヤー"],
-        "description": "2台のターンテーブルとミキサーで DJ ができる音楽プレーヤー。端末の曲をレコードにのせ、指でスクラッチ、ピッチ、3バンドのアイソレーター、フィルター、クロスフェーダー、波形と BPM、キューとホットキューが使えます。曲は端末内で処理され送信されません。",
+        "alternateName": ["DJ Turntable", "ターンテーブル", "レコードプレーヤー", "スクラッチ"],
+        "description": "ターンテーブル風の音楽プレーヤー。端末の音楽ファイルをレコード盤にのせて再生し、指で盤を回してスクラッチ、33/45回転やピッチの調整もできます。曲は端末内で処理され送信されません。",
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "Any (Webブラウザ)",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" }
@@ -38,414 +38,216 @@
     <header class="site-bar">
       <img src="./app-icon-dj-turntable.svg" alt="" />
       <h1 style="margin: 0; font: inherit; flex: 1">DJターンテーブル<span class="en">DJ Turntable</span></h1>
-      <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="3" />
-          <path
-            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
-          />
-        </svg>
-      </button>
     </header>
     <main class="content">
       <div class="app">
-        <canvas id="waves" class="waves" aria-label="2台の波形(押すとそこへ針を落とす)"></canvas>
-        <p class="status" id="status" role="status"></p>
-        <div class="deck-slot" id="deckA"></div>
-        <section class="mixer" id="mixer" aria-label="ミキサー">
-          <div class="strip strip-a" data-log-group="チャンネル A">
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="ゲイン(A)"
-                data-param="gain"
-                data-deck="0"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">GAIN</span>
-            </div>
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="高音(A)"
-                data-param="high"
-                data-deck="0"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">HI</span>
-            </div>
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="中音(A)"
-                data-param="mid"
-                data-deck="0"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">MID</span>
-            </div>
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="低音(A)"
-                data-param="low"
-                data-deck="0"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">LOW</span>
-            </div>
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="フィルター(A)"
-                data-param="filter"
-                data-deck="0"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">FILTER</span>
-            </div>
-          </div>
-          <div class="mixer-center">
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="マスター音量"
-                data-param="master"
-                data-deck="0"
-                aria-valuemin="0"
-                aria-valuemax="1"
-                data-center="0.8"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">MASTER</span>
-            </div>
-            <div class="meters">
-              <div class="meter" data-meter="0">
-                <i class="meter-off"></i><i class="meter-peak" hidden></i>
-              </div>
-              <div class="meter" data-meter="master">
-                <i class="meter-off"></i><i class="meter-peak" hidden></i>
-              </div>
-              <div class="meter" data-meter="1">
-                <i class="meter-off"></i><i class="meter-peak" hidden></i>
-              </div>
-            </div>
-          </div>
-          <div class="strip strip-b" data-log-group="チャンネル B">
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="ゲイン(B)"
-                data-param="gain"
-                data-deck="1"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">GAIN</span>
-            </div>
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="高音(B)"
-                data-param="high"
-                data-deck="1"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">HI</span>
-            </div>
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="中音(B)"
-                data-param="mid"
-                data-deck="1"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">MID</span>
-            </div>
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="低音(B)"
-                data-param="low"
-                data-deck="1"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">LOW</span>
-            </div>
-            <div class="knob-box">
-              <div
-                class="knob"
-                role="slider"
-                tabindex="0"
-                aria-label="フィルター(B)"
-                data-param="filter"
-                data-deck="1"
-                aria-valuemin="-1"
-                aria-valuemax="1"
-              >
-                <i class="knob-cap"></i>
-              </div>
-              <span class="knob-name">FILTER</span>
-            </div>
-          </div>
-          <div class="faders">
-            <div class="vfader">
-              <input
-                type="range"
-                class="channel-fader"
-                data-deck="0"
-                min="0"
-                max="1"
-                step="0.01"
-                value="0.8"
-                aria-label="チャンネル A の音量"
-              />
-            </div>
-            <div class="xfader">
-              <input
-                type="range"
-                id="crossfader"
-                min="0"
-                max="1"
-                step="0.005"
-                value="0.5"
-                aria-label="クロスフェーダー"
-              /><span class="xfader-marks"><b>A</b><b>B</b></span>
-            </div>
-            <div class="vfader">
-              <input
-                type="range"
-                class="channel-fader"
-                data-deck="1"
-                min="0"
-                max="1"
-                step="0.01"
-                value="0.8"
-                aria-label="チャンネル B の音量"
-              />
-            </div>
-          </div>
-        </section>
-        <div class="deck-slot" id="deckB"></div>
-      </div>
-    </main>
-    <template id="deckTemplate">
-      <section class="deck">
-        <div class="deck-head">
-          <span class="deck-letter"></span>
-          <button type="button" class="deck-track" data-log="曲を選ぶ">
-            <span class="deck-title">曲を選んでください</span>
-          </button>
-          <span class="deck-read"
-            ><span class="deck-bpm">---.-</span><span class="deck-pitch">0.0%</span></span
-          >
-          <span class="deck-time">0:00 / -0:00</span>
-        </div>
-        <div class="plinth">
-          <div
-            class="platter"
+        <div class="deck-wrap">
+          <svg
+            id="deck"
+            viewBox="0 0 400 320"
             role="img"
-            aria-label="盤(押さえて回すとスクラッチ、縁をこすると速さを少し変える)"
+            aria-label="ターンテーブル。盤を指で回すとスクラッチできます"
           >
-            <canvas class="platter-rim"></canvas><canvas class="platter-strobe"></canvas
-            ><canvas class="platter-record"></canvas><canvas class="platter-glare"></canvas>
-          </div>
-          <svg class="arm" viewBox="0 0 130 110" aria-hidden="true">
-            <circle cx="105" cy="23" r="12" class="arm-base" />
-            <circle cx="105" cy="23" r="7.5" class="arm-ring" />
-            <circle cx="104" cy="66" r="2.6" class="arm-rest" />
-            <g class="arm-move" transform="translate(105 23) rotate(92)">
-              <rect x="-19" y="-5" width="11" height="10" rx="2.5" class="arm-weight" />
-              <line x1="-8" y1="0" x2="54" y2="0" class="arm-tube" />
-              <circle cx="0" cy="0" r="4" class="arm-pivot" />
-              <path d="M52 -2.8 L66.5 -3.6 L67.5 3.6 L52 2.8 Z" class="arm-shell" />
-              <rect x="62.5" y="-1.4" width="4" height="2.8" class="arm-cart" />
-              <line x1="-20" y1="0" x2="68" y2="0" class="arm-hit" />
+            <rect x="4" y="4" width="392" height="312" rx="22" style="fill: var(--deck)" />
+            <circle cx="165" cy="165" r="152" style="fill: var(--platter)" />
+            <g id="rot">
+              <g style="fill: var(--dot)">
+                <circle cx="311.0" cy="165.0" r="1.6" />
+                <circle cx="310.2" cy="180.3" r="1.6" />
+                <circle cx="307.8" cy="195.4" r="1.6" />
+                <circle cx="303.9" cy="210.1" r="1.6" />
+                <circle cx="298.4" cy="224.4" r="1.6" />
+                <circle cx="291.4" cy="238.0" r="1.6" />
+                <circle cx="283.1" cy="250.8" r="1.6" />
+                <circle cx="273.5" cy="262.7" r="1.6" />
+                <circle cx="262.7" cy="273.5" r="1.6" />
+                <circle cx="250.8" cy="283.1" r="1.6" />
+                <circle cx="238.0" cy="291.4" r="1.6" />
+                <circle cx="224.4" cy="298.4" r="1.6" />
+                <circle cx="210.1" cy="303.9" r="1.6" />
+                <circle cx="195.4" cy="307.8" r="1.6" />
+                <circle cx="180.3" cy="310.2" r="1.6" />
+                <circle cx="165.0" cy="311.0" r="1.6" />
+                <circle cx="149.7" cy="310.2" r="1.6" />
+                <circle cx="134.6" cy="307.8" r="1.6" />
+                <circle cx="119.9" cy="303.9" r="1.6" />
+                <circle cx="105.6" cy="298.4" r="1.6" />
+                <circle cx="92.0" cy="291.4" r="1.6" />
+                <circle cx="79.2" cy="283.1" r="1.6" />
+                <circle cx="67.3" cy="273.5" r="1.6" />
+                <circle cx="56.5" cy="262.7" r="1.6" />
+                <circle cx="46.9" cy="250.8" r="1.6" />
+                <circle cx="38.6" cy="238.0" r="1.6" />
+                <circle cx="31.6" cy="224.4" r="1.6" />
+                <circle cx="26.1" cy="210.1" r="1.6" />
+                <circle cx="22.2" cy="195.4" r="1.6" />
+                <circle cx="19.8" cy="180.3" r="1.6" />
+                <circle cx="19.0" cy="165.0" r="1.6" />
+                <circle cx="19.8" cy="149.7" r="1.6" />
+                <circle cx="22.2" cy="134.6" r="1.6" />
+                <circle cx="26.1" cy="119.9" r="1.6" />
+                <circle cx="31.6" cy="105.6" r="1.6" />
+                <circle cx="38.6" cy="92.0" r="1.6" />
+                <circle cx="46.9" cy="79.2" r="1.6" />
+                <circle cx="56.5" cy="67.3" r="1.6" />
+                <circle cx="67.3" cy="56.5" r="1.6" />
+                <circle cx="79.2" cy="46.9" r="1.6" />
+                <circle cx="92.0" cy="38.6" r="1.6" />
+                <circle cx="105.6" cy="31.6" r="1.6" />
+                <circle cx="119.9" cy="26.1" r="1.6" />
+                <circle cx="134.6" cy="22.2" r="1.6" />
+                <circle cx="149.7" cy="19.8" r="1.6" />
+                <circle cx="165.0" cy="19.0" r="1.6" />
+                <circle cx="180.3" cy="19.8" r="1.6" />
+                <circle cx="195.4" cy="22.2" r="1.6" />
+                <circle cx="210.1" cy="26.1" r="1.6" />
+                <circle cx="224.4" cy="31.6" r="1.6" />
+                <circle cx="238.0" cy="38.6" r="1.6" />
+                <circle cx="250.8" cy="46.9" r="1.6" />
+                <circle cx="262.7" cy="56.5" r="1.6" />
+                <circle cx="273.5" cy="67.3" r="1.6" />
+                <circle cx="283.1" cy="79.2" r="1.6" />
+                <circle cx="291.4" cy="92.0" r="1.6" />
+                <circle cx="298.4" cy="105.6" r="1.6" />
+                <circle cx="303.9" cy="119.9" r="1.6" />
+                <circle cx="307.8" cy="134.6" r="1.6" />
+                <circle cx="310.2" cy="149.7" r="1.6" />
+              </g>
+              <circle cx="165" cy="165" r="138" fill="#15161c" />
+              <g fill="none" stroke="#ffffff" stroke-opacity="0.07" stroke-width="0.7">
+                <circle cx="165" cy="165" r="54" />
+                <circle cx="165" cy="165" r="59" />
+                <circle cx="165" cy="165" r="64" />
+                <circle cx="165" cy="165" r="69" />
+                <circle cx="165" cy="165" r="74" />
+                <circle cx="165" cy="165" r="79" />
+                <circle cx="165" cy="165" r="84" />
+                <circle cx="165" cy="165" r="89" />
+                <circle cx="165" cy="165" r="94" />
+                <circle cx="165" cy="165" r="99" />
+                <circle cx="165" cy="165" r="104" />
+                <circle cx="165" cy="165" r="109" />
+                <circle cx="165" cy="165" r="114" />
+                <circle cx="165" cy="165" r="119" />
+                <circle cx="165" cy="165" r="124" />
+                <circle cx="165" cy="165" r="129" />
+                <circle cx="165" cy="165" r="134" />
+              </g>
+              <circle cx="165" cy="165" r="46" style="fill: var(--func)" />
+              <g
+                id="labelText"
+                fill="#0b2b27"
+                font-size="9.5"
+                font-weight="700"
+                text-anchor="middle"
+                font-family="sans-serif"
+              ></g>
+              <circle cx="165" cy="204" r="3" fill="#0b2b27" fill-opacity="0.55" />
+              <circle cx="165" cy="165" r="3" fill="#e9ecf5" />
+            </g>
+            <g fill="#ffffff" fill-opacity="0.06" pointer-events="none">
+              <path d="M165 165 L255.5 60.9 A138 138 0 0 1 293.8 115.5 Z" />
+              <path d="M165 165 L74.5 269.1 A138 138 0 0 1 36.2 214.5 Z" />
+            </g>
+            <circle id="hit" cx="165" cy="165" r="138" fill="transparent" />
+            <g id="arm" transform="translate(345 52) rotate(90)" pointer-events="none">
+              <line
+                x1="-34"
+                y1="0"
+                x2="193"
+                y2="0"
+                stroke-width="5"
+                stroke-linecap="round"
+                style="stroke: var(--arm)"
+              />
+              <rect x="-46" y="-7" width="16" height="14" rx="3" style="fill: var(--arm-dark)" />
+              <rect x="190" y="-7" width="25" height="14" rx="3" style="fill: var(--arm-dark)" />
+              <circle cx="215" cy="0" r="2.6" fill="#ff6b6b" />
+              <circle cx="0" cy="0" r="17" style="fill: var(--platter)" />
+              <circle cx="0" cy="0" r="8" style="fill: var(--arm-dark)" />
             </g>
           </svg>
-          <span class="strobe-lamp"></span>
-          <button type="button" class="start" data-log="START/STOP" aria-pressed="false">
-            START<br />STOP
+        </div>
+
+        <div class="now">
+          <span class="title" id="trackTitle">曲を選んでください</span
+          ><span class="time" id="timeText">00:00 / 00:00</span>
+        </div>
+        <div class="wave" id="waveBox" aria-label="再生位置(押すとそこから再生)">
+          <canvas id="wave"></canvas>
+          <div class="played" id="played"></div>
+          <div class="head" id="head"></div>
+        </div>
+        <div class="status" id="status" role="status"></div>
+
+        <div class="transport">
+          <button class="round" id="prevBtn" aria-label="前の曲" disabled>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 5h2v14H6zM20 5v14L9 12z" />
+            </svg>
           </button>
-          <div class="speeds">
-            <button type="button" class="speed" data-rpm="33" data-log="33回転" aria-pressed="true">33</button
-            ><button type="button" class="speed" data-rpm="45" data-log="45回転" aria-pressed="false">
-              45</button
-            ><button type="button" class="speed" data-rpm="78" data-log="78回転" aria-pressed="false" hidden>
-              78
-            </button>
-          </div>
-          <div class="pitch">
-            <span class="pitch-scale">±8</span>
-            <div class="pitch-slot">
-              <input
-                type="range"
-                class="pitch-fader"
-                min="-1"
-                max="1"
-                step="0.001"
-                value="0"
-                aria-label="ピッチ"
-              />
+          <button class="round" id="cueBtn" aria-label="頭出し">
+            <span class="cue-txt">CUE</span>
+          </button>
+          <button class="round big" id="playBtn" aria-label="再生" aria-pressed="false">
+            <svg class="i-play" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 5h4v14H7zM13 5h4v14h-4z" />
+            </svg>
+          </button>
+          <button class="round" id="nextBtn" aria-label="次の曲" disabled>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 5h2v14h-2zM4 5v14l11-7z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="panel">
+          <div class="opt">
+            <div class="lbl">回転数</div>
+            <div class="seg" role="group" aria-label="回転数" data-log-group="回転数">
+              <button type="button" class="seg-btn on" data-rpm="33.3333" data-log="33回転">33⅓ 回転</button>
+              <button type="button" class="seg-btn" data-rpm="45" data-log="45回転">45 回転</button>
             </div>
-            <span class="pitch-led" title="ピッチ 0%"></span>
-            <button type="button" class="pitch-reset" data-log="ピッチを0に戻す" aria-label="ピッチを0に戻す">
-              0
-            </button>
+          </div>
+          <div class="opt">
+            <label for="pitch">ピッチ(速さの微調整)</label>
+            <div class="row">
+              <input type="range" id="pitch" min="-8" max="8" step="0.1" value="0" data-log="ピッチ" /><output
+                id="pitchVal"
+                >0.0%</output
+              ><button type="button" class="mini" id="pitchReset" aria-label="ピッチを0に戻す">0</button>
+            </div>
+          </div>
+          <div class="opt">
+            <label for="volume">音量</label>
+            <div class="row">
+              <input type="range" id="volume" min="0" max="1" step="0.01" value="0.8" data-log="音量" />
+            </div>
           </div>
         </div>
-        <div class="cues">
-          <button type="button" class="cue" data-log="CUE">CUE</button>
-          <button type="button" class="hot" data-hot="0" data-log="ホットキュー 1">1</button
-          ><button type="button" class="hot" data-hot="1" data-log="ホットキュー 2">2</button
-          ><button type="button" class="hot" data-hot="2" data-log="ホットキュー 3">3</button
-          ><button type="button" class="hot" data-hot="3" data-log="ホットキュー 4">4</button>
-          <span class="deck-status" role="status"></span>
+
+        <div class="list-head">
+          <h2>曲リスト</h2>
+          <label class="pill"
+            >曲を追加<input
+              type="file"
+              id="fileInput"
+              accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.opus"
+              multiple
+              hidden
+              data-log="曲を追加"
+          /></label>
         </div>
-      </section>
-    </template>
-    <div class="sheet" id="library" hidden>
-      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="libraryTitle">
-        <div class="sheet-head">
-          <span id="libraryTitle">曲の一覧</span
-          ><button class="sheet-close" id="libraryClose" aria-label="曲の一覧を閉じる">×</button>
-        </div>
-        <label class="pill primary add"
-          >曲を追加<input
-            type="file"
-            id="fileInput"
-            accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.opus"
-            multiple
-            hidden
-            data-log="曲を追加"
-        /></label>
-        <p class="note" id="libraryEmpty">端末の音楽ファイルを選んでください(複数可)。</p>
         <ul class="tracks" id="tracks"></ul>
-        <p class="note">
-          曲は端末の中だけで処理し、送信しません。15分までの曲を読めます。曲ごとのキューとホットキューは、この端末に保存します(ホットキューは長押しで消せます)。
-        </p>
+
+        <div class="note">
+          曲は端末の中だけで処理し、送信しません。盤を指で回すとスクラッチ(逆に回せば逆再生)、回転数やピッチで速さと音の高さが変わります。長い曲は読み込みに時間がかかり、メモリも使います。
+        </div>
       </div>
-    </div>
-    <div class="sheet" id="settings" hidden>
-      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-        <div class="sheet-head">
-          <span id="settingsTitle">設定</span
-          ><button class="sheet-close" id="settingsClose" aria-label="設定を閉じる">×</button>
-        </div>
-        <div class="opt">
-          <label for="set-pitchRange">ピッチの範囲</label
-          ><select id="set-pitchRange">
-            <option value="8">±8%</option>
-            <option value="16">±16%</option>
-          </select>
-        </div>
-        <div class="opt">
-          <label for="set-startSeconds">起動の強さ</label
-          ><select id="set-startSeconds">
-            <option value="0.35">強い(0.35秒)</option>
-            <option value="0.7">標準(0.7秒)</option>
-            <option value="1.2">弱い(1.2秒)</option>
-            <option value="2">とても弱い(2.0秒)</option>
-          </select>
-        </div>
-        <div class="opt">
-          <label for="set-brakeSeconds">ブレーキの強さ</label
-          ><select id="set-brakeSeconds">
-            <option value="0.2">強い(0.2秒)</option>
-            <option value="0.6">標準(0.6秒)</option>
-            <option value="1.5">弱い(1.5秒)</option>
-            <option value="3">とても弱い(3.0秒)</option>
-          </select>
-        </div>
-        <div class="opt">
-          <label for="set-slipmat">盤の乗り方</label
-          ><select id="set-slipmat">
-            <option value="true">スリップマット(押さえても下の盤は回る)</option>
-            <option value="false">直結(盤と一緒に止まる)</option>
-          </select>
-        </div>
-        <div class="opt">
-          <label for="set-curve">クロスフェーダーのカーブ</label
-          ><select id="set-curve">
-            <option value="smooth">なめらか</option>
-            <option value="scratch">スクラッチ(端で一気に入る)</option>
-          </select>
-        </div>
-        <div class="opt">
-          <label for="set-use78">78回転</label
-          ><select id="set-use78">
-            <option value="false">使わない</option>
-            <option value="true">使う</option>
-          </select>
-        </div>
-        <div class="opt">
-          <label for="set-waves">波形</label
-          ><select id="set-waves">
-            <option value="true">出す</option>
-            <option value="false">隠す(盤を大きく)</option>
-          </select>
-        </div>
-        <p class="note">
-          キーボード: START/STOP Q・P、CUE A・L、ホットキュー 1〜4・7〜0、速さの微調整 Z X・,
-          .、クロスフェーダー ← →
-        </p>
-      </div>
-    </div>
+    </main>
     <script src="../../common/log.js"></script>
     <script src="../../common/autolog.js"></script>
     <script src="../../common/env.js"></script>
@@ -459,11 +261,6 @@
         );
     </script>
     <script src="./dj-turntable-core.js"></script>
-    <script src="./dj-turntable-textures.js"></script>
-    <script src="./dj-turntable-engine.js"></script>
-    <script src="./dj-turntable-deck-view.js"></script>
-    <script src="./dj-turntable-mixer-view.js"></script>
-    <script src="./dj-turntable-wave-view.js"></script>
     <script src="./dj-turntable.js"></script>
   </body>
 </html>

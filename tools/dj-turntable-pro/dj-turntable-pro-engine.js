@@ -1,4 +1,4 @@
-/* 音の部品をつなぐ(AudioContext・2台分の worklet・ミキサー・リミッター・メーター)。dj-turntable-core.js を使う。
+/* 音の部品をつなぐ(AudioContext・2台分の worklet・ミキサー・リミッター・メーター)。dj-turntable-pro-core.js を使う。
    画面からは send() と set…() だけを呼ぶ */
 (function (root) {
   'use strict';
@@ -28,7 +28,7 @@
     var ctx = (this.context = new AC({ latencyHint: 'interactive' }));
     ctx.resume();
     var self = this;
-    this.ready = ctx.audioWorklet.addModule('./dj-turntable-worklet.js').then(function () {
+    this.ready = ctx.audioWorklet.addModule('./dj-turntable-pro-worklet.js').then(function () {
       self.build();
       return self;
     });
@@ -38,7 +38,7 @@
   DJEngine.prototype.build = function () {
     var ctx = this.context,
       self = this;
-    this.node = new AudioWorkletNode(ctx, 'dj-turntable-decks', {
+    this.node = new AudioWorkletNode(ctx, 'dj-turntable-pro-decks', {
       numberOfInputs: 0,
       numberOfOutputs: 2,
       outputChannelCount: [2, 2],

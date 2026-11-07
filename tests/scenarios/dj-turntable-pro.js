@@ -1,6 +1,6 @@
-/* DJターンテーブルの通し試験。作った曲(120 BPM の打音と 440Hz)を2台に読み込み、BPM・START・メーター・
+/* DJターンテーブル Pro の通し試験。作った曲(120 BPM の打音と 440Hz)を2台に読み込み、BPM・START・メーター・
    クロスフェーダー・スクラッチ・ホットキュー・ログを確かめる。横向き(844×390)で開く。
-   使い方: node tests/scenarios/dj-turntable.js [--shot 画像の保存先] */
+   使い方: node tests/scenarios/dj-turntable-pro.js [--shot 画像の保存先] */
 const { launch, report, splitErrors } = require('../lib/harness');
 
 /* 10秒・44.1kHz・ステレオの WAV。120 BPM の低い打音に 440Hz を重ねる */
@@ -36,7 +36,10 @@ function wav(seconds) {
   const h = await launch(['--autoplay-policy=no-user-gesture-required']);
   const problems = [];
   try {
-    const { page, logs } = await h.open('tools/dj-turntable/dj-turntable.html', { width: 844, wait: 500 });
+    const { page, logs } = await h.open('tools/dj-turntable-pro/dj-turntable-pro.html', {
+      width: 844,
+      wait: 500,
+    });
     await page.setViewportSize({ width: 844, height: 390 });
     await page.waitForTimeout(300);
     const file = { name: '試験の曲.wav', mimeType: 'audio/wav', buffer: wav(10) };
@@ -125,5 +128,5 @@ function wav(seconds) {
   } finally {
     await h.close();
   }
-  process.exitCode = report('dj-turntable シナリオ', problems) ? 0 : 1;
+  process.exitCode = report('dj-turntable-pro シナリオ', problems) ? 0 : 1;
 })();

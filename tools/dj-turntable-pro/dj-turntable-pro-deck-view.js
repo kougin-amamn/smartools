@@ -1,5 +1,5 @@
 /* デッキ1台分の画面(盤・アーム・START/STOP・回転数・ピッチ・キュー)と指の扱い。
-   dj-turntable-core.js と dj-turntable-textures.js を使う。音への命令は host.send で送る */
+   dj-turntable-pro-core.js と dj-turntable-pro-textures.js を使う。音への命令は host.send で送る */
 (function (root) {
   'use strict';
   var K = root.DJCore,

@@ -11,7 +11,7 @@
 | `node tests/smoke.js tools/<slug> --logs` | 上に加えて、各ページのログを出す | — |
 | `node tests/scenarios/file-transfer.js` | ファイル転送の通し試験(2つのタブ・確認番号・圧縮・切断からの再開) | 10秒 |
 | `node tests/scenarios/novel-reader.js` | 小説読み上げの通し試験(偽のカクヨムでブックマークレット・別タブへ受け渡し・1文ずつの読み上げ) | 5秒 |
-| `node tests/scenarios/dj-turntable.js` | DJターンテーブルの通し試験(作った曲を2台に読み込み、BPM・START・メーター・クロスフェーダー・スクラッチ・ホットキュー) | 10秒 |
+| `node tests/scenarios/dj-turntable-pro.js` | DJターンテーブル Pro の通し試験(作った曲を2台に読み込み、BPM・START・メーター・クロスフェーダー・スクラッチ・ホットキュー) | 10秒 |
 
 出力は合格なら `OK <名前>` の1行、不合格なら理由を並べます。
 

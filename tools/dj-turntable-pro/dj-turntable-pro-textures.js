@@ -1,4 +1,4 @@
-/* 先に1回だけ描いておく絵(盤の縁・ストロボの点・レコードとラベル・動かない光)。dj-turntable-core.js を使う。
+/* 先に1回だけ描いておく絵(盤の縁・ストロボの点・レコードとラベル・動かない光)。dj-turntable-pro-core.js を使う。
    毎フレームは CSS の rotate で回すだけにして、描き直さない */
 (function (root) {
   'use strict';

@@ -1,413 +1,444 @@
-/* DJターンテーブルの起動と各部のつなぎ(設定・曲の一覧・読み込み・描画の繰り返し・キーボード・保存)。
-   dj-turntable-core / textures / engine / deck-view / mixer-view / wave-view と common の log・ToolKit・Env を使う */
+/* ターンテーブル風プレーヤーの画面処理。音の読み出しは dj-turntable-worklet.js、計算は dj-turntable-core.js */
 (function () {
   'use strict';
-  var K = window.DJCore;
-  var MAX_SECONDS = 15 * 60;
-  var SETTINGS_KEY = 'dj-turntable-settings',
-    TRACKS_KEY = 'dj-turntable-tracks';
-  var DEFAULTS = {
-    pitchRange: 8,
-    startSeconds: 0.7,
-    brakeSeconds: 0.6,
-    slipmat: true,
-    curve: 'smooth',
-    use78: false,
-    waves: true,
-  };
-  var MSG = {
-    unsupported: 'このブラウザは音の処理(AudioWorklet)に対応していないため、鳴らせません',
-    tooLong: '曲が長すぎるため読み込めません(15分まで)',
-  };
-
+  var K = window.DJCore,
+    G = K.GEO;
   var $ = function (id) {
     return document.getElementById(id);
   };
-  var settings = Object.assign({}, DEFAULTS, readJson(SETTINGS_KEY, {}));
-  var tracks = readJson(TRACKS_KEY, {});
-  var engine = new DJEngine();
-  var library = [];
-  var libraryDeck = 0;
 
-  function readJson(key, fallback) {
-    try {
-      return JSON.parse(localStorage.getItem(key)) || fallback;
-    } catch (e) {
-      return fallback;
+  var tracks = [],
+    current = -1,
+    loadToken = 0;
+  var ctx = null,
+    node = null,
+    gain = null,
+    ready = null;
+  var duration = 0,
+    peaks = null;
+  var view = { pos: 0, cur: 0, at: 0 };
+  var motorOn = false,
+    armDown = false,
+    armDeg = G.restDeg,
+    rpm = 33,
+    pitch = 0,
+    volume = 0.8;
+  var raf = 0,
+    lastFrame = 0,
+    lastMsg = 0,
+    lastShown = '';
+  var drag = null;
+
+  /* 音の準備(最初の操作の時に 1 回だけ。ブラウザは操作の前に音を出す準備をさせない) */
+  function ensureAudio() {
+    if (ready) return ready;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC || !('audioWorklet' in AC.prototype) || typeof AudioWorkletNode === 'undefined') {
+      log.warn('このブラウザは音の処理(AudioWorklet)に対応していません');
+      return (ready = Promise.reject(new Error('AudioWorklet 非対応')));
+    }
+    ctx = new AC();
+    ready = ctx.audioWorklet.addModule('./dj-turntable-worklet.js').then(function () {
+      node = new AudioWorkletNode(ctx, 'turntable-deck', { numberOfInputs: 0, outputChannelCount: [2] });
+      node.port.onmessage = onMessage;
+      gain = ctx.createGain();
+      gain.gain.value = volume;
+      node.connect(gain);
+      gain.connect(ctx.destination);
+      log('音の準備をしました(' + ctx.sampleRate + 'Hz)');
+    });
+    return ready;
+  }
+
+  function send(msg, transfer) {
+    if (node) node.port.postMessage(msg, transfer || []);
+  }
+
+  function onMessage(e) {
+    var m = e.data;
+    if (m.t === 'pos') {
+      view = { pos: m.pos, cur: m.cur, at: performance.now() };
+      lastMsg = view.at;
+      kick();
+    } else if (m.t === 'ended') {
+      onEnded();
     }
   }
-  function writeJson(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (e) {
-      log.warn('設定を保存できませんでした', e);
+
+  function curPos(now) {
+    var p = view.pos + (view.cur * (now - view.at)) / 1000;
+    return Math.max(0, Math.min(duration || 0, p));
+  }
+
+  /* 画面の更新 */
+  function kick() {
+    if (!raf) {
+      lastFrame = performance.now();
+      raf = requestAnimationFrame(frame);
     }
   }
 
-  /* 音の部品は最初の操作の中で作る */
-  var warned = false;
-  function ensure() {
-    if (engine.ready) return true;
-    var secure = Env.requireSecure('音の処理');
-    if (secure || !DJEngine.isSupported()) {
-      if (!warned) {
-        warned = true;
-        if (!secure) log.warn(MSG.unsupported);
-        $('status').textContent = secure || MSG.unsupported;
-      }
-      return false;
-    }
-    engine.start().then(
-      function (e) {
-        mixer.applyTo(e);
-        sendSettings();
-        decks.forEach(function (d) {
-          d.sendSpeed();
-        });
-        log(
-          '音の準備をしました(' +
-            e.context.sampleRate +
-            'Hz / 遅れ ' +
-            Math.round((e.context.baseLatency || 0) * 1000) +
-            'ms)'
-        );
-      },
-      function (err) {
-        log.error('音の部品の準備でエラーが発生しました', err);
-        $('status').textContent = '音の準備ができませんでした';
-      }
+  function frame(now) {
+    raf = 0;
+    var pos = curPos(now),
+      dt = Math.min(0.1, (now - lastFrame) / 1000);
+    lastFrame = now;
+    $('rot').setAttribute(
+      'transform',
+      'rotate(' + K.platterAngle(pos).toFixed(2) + ' ' + G.cx + ' ' + G.cy + ')'
     );
-    return true;
-  }
 
-  engine.onMessage = function (m) {
-    var d = decks[m.deck];
-    if (!d) return;
-    if (m.type === 'state') d.applyState(m, performance.now());
-    else if (m.type === 'ended') {
-      d.motorOn = false;
-      d.ui.start.setAttribute('aria-pressed', 'false');
-      log('デッキ ' + d.letter + ' の曲が終わりました');
+    var target = armDown ? K.armAngle(duration ? pos / duration : 0) : G.restDeg;
+    armDeg += (target - armDeg) * (1 - Math.exp(-dt / 0.22));
+    $('arm').setAttribute(
+      'transform',
+      'translate(' + G.px + ' ' + G.py + ') rotate(' + armDeg.toFixed(2) + ')'
+    );
+
+    var txt = K.fmtTime(pos) + ' / ' + K.fmtTime(duration);
+    if (txt !== lastShown) {
+      lastShown = txt;
+      $('timeText').textContent = txt;
     }
-    request();
-  };
+    var pct = duration ? (pos / duration) * 100 : 0;
+    $('played').style.width = pct + '%';
+    $('head').style.left = 'calc(' + pct + '% - 1px)';
 
-  function sendSettings() {
-    engine.send({
-      type: 'settings',
-      startSeconds: settings.startSeconds,
-      brakeSeconds: settings.brakeSeconds,
-      slipmat: settings.slipmat,
+    var moving = Math.abs(view.cur) > 1e-3 || drag || Math.abs(target - armDeg) > 0.05 || now - lastMsg < 300;
+    if (moving) raf = requestAnimationFrame(frame);
+  }
+
+  /* 波形 */
+  function drawWave() {
+    var c = $('wave'),
+      box = c.parentNode,
+      dpr = window.devicePixelRatio || 1;
+    var w = Math.max(1, Math.round(box.clientWidth * dpr)),
+      h = Math.max(1, Math.round(box.clientHeight * dpr));
+    c.width = w;
+    c.height = h;
+    var g = c.getContext('2d');
+    g.clearRect(0, 0, w, h);
+    if (!peaks) return;
+    g.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4a4e7a';
+    var n = peaks.length,
+      bw = w / n;
+    for (var i = 0; i < n; i++) {
+      var bh = Math.max(2 * dpr, peaks[i] * (h - 8 * dpr));
+      g.fillRect(i * bw, (h - bh) / 2, Math.max(1, bw - 0.6), bh);
+    }
+  }
+
+  /* ラベル(題名は盤と一緒に回る) */
+  function setLabel(title) {
+    var lines = K.labelLines(title);
+    var t = $('labelText');
+    t.innerHTML = '';
+    lines.forEach(function (s, i) {
+      var el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      el.setAttribute('x', G.cx);
+      el.setAttribute('y', G.cy - 4 + i * 11 - (lines.length === 1 ? -4 : 0));
+      el.textContent = s;
+      t.appendChild(el);
     });
   }
 
-  /* デッキ・ミキサー・波形 */
-  var host = {
-    settings: settings,
-    send: function (m) {
-      engine.send(m);
-    },
-    ensure: ensure,
-    openLibrary: openLibrary,
-    save: saveTrack,
-    request: request,
-  };
-  var template = $('deckTemplate');
-  var decks = ['deckA', 'deckB'].map(function (id, i) {
-    var slot = $(id);
-    slot.appendChild(template.content.cloneNode(true));
-    return new DJDeckView(slot.querySelector('.deck'), i, host);
-  });
-  var mixer = new DJMixerView($('mixer'), host);
-  var waves = new DJWaveView($('waves'), function (deck, t) {
-    if (!decks[deck].track) return;
-    decks[deck].seek(t, 'keep');
-    log('デッキ ' + decks[deck].letter + ' の針を落としました(' + K.formatTime(t) + ')');
-    request();
-  });
-
-  /* 曲の保存(キュー・ホットキュー・BPM。曲の中身は保存しない) */
-  function saveTrack(deck) {
-    var t = deck.track;
-    tracks[t.key] = { bpm: t.bpm, firstBeat: t.firstBeat, cue: t.cue, hotCues: t.hotCues, used: Date.now() };
-    tracks = K.pruneTracks(tracks, 200);
-    writeJson(TRACKS_KEY, tracks);
-    request();
+  function setStatus(s) {
+    $('status').textContent = s;
   }
 
-  /* 曲の一覧(シート) */
-  var sheet = $('library');
-  function openLibrary(deck) {
-    libraryDeck = deck;
-    $('libraryTitle').textContent = '曲の一覧(デッキ ' + (deck ? 'B' : 'A') + ' へ)';
-    sheet.hidden = false;
-    $('libraryClose').focus();
-    log('曲の一覧を開きました');
-  }
-  function closeLibrary() {
-    if (sheet.hidden) return;
-    sheet.hidden = true;
-    log('曲の一覧を閉じました');
-  }
-  $('libraryClose').addEventListener('click', closeLibrary);
-  sheet.addEventListener('click', function (e) {
-    if (e.target === sheet) closeLibrary();
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeLibrary();
-  });
-
-  $('fileInput').addEventListener('change', function () {
-    var files = Array.from(this.files || []).filter(function (f) {
-      return /^audio\//.test(f.type) || /\.(mp3|wav|m4a|aac|ogg|flac|opus)$/i.test(f.name);
-    });
-    this.value = '';
-    if (!files.length) return log.warn('音楽ファイルが選ばれませんでした');
-    files.forEach(function (f) {
-      library.push({ file: f, title: K.titleOf(f.name) });
-    });
-    showLibrary();
-    log('曲を一覧に足しました(' + files.length + '曲 / 合計 ' + library.length + '曲)');
-  });
-
-  function showLibrary() {
-    var list = $('tracks');
-    list.innerHTML = library
+  /* 曲の読み込み */
+  function renderList() {
+    var ul = $('tracks');
+    ul.innerHTML = tracks
       .map(function (t, i) {
         return (
-          '<li data-log-group="曲 ' +
+          '<li><button type="button" data-i="' +
+          i +
+          '" data-log="曲 ' +
           (i + 1) +
-          '"><span class="track-name">' +
-          ToolKit.esc(t.title) +
-          '</span><button type="button" class="pill small" data-load="' +
-          i +
-          '" data-deck="0">A に読む</button><button type="button" class="pill small" data-load="' +
-          i +
-          '" data-deck="1">B に読む</button></li>'
+          '" class="' +
+          (i === current ? 'on' : '') +
+          (t.bad ? ' bad' : '') +
+          '"><span class="no">' +
+          (i + 1) +
+          '</span><span class="nm">' +
+          ToolKit.esc(K.trackTitle(t.file.name)) +
+          '</span></button></li>'
         );
       })
       .join('');
-    $('libraryEmpty').hidden = library.length > 0;
+    $('prevBtn').disabled = $('nextBtn').disabled = tracks.length < 2;
   }
-  $('tracks').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-load]');
-    if (b) loadTrack(Number(b.dataset.deck), library[Number(b.dataset.load)]);
-  });
 
-  /* 解析は Web Worker で(画面を止めない) */
-  var worker = null,
-    jobs = {},
-    nextJob = 1;
-  function analyzeOf(input) {
-    if (!worker) {
-      worker = new Worker('./dj-turntable-analysis.js');
-      worker.onmessage = function (e) {
-        var job = jobs[e.data.id];
-        delete jobs[e.data.id];
-        if (job) job.ok(e.data);
-      };
-      worker.onerror = function (e) {
-        Object.keys(jobs).forEach(function (id) {
-          jobs[id].ng(new Error(e.message || '解析が止まりました'));
-          delete jobs[id];
-        });
-      };
+  function setPlayUi() {
+    $('playBtn').classList.toggle('on', motorOn);
+    $('playBtn').setAttribute('aria-pressed', motorOn ? 'true' : 'false');
+    $('playBtn').setAttribute('aria-label', motorOn ? '一時停止' : '再生');
+    $('playBtn').title = motorOn ? '一時停止' : '再生';
+  }
+
+  function factor() {
+    return K.speedFactor(rpm, pitch);
+  }
+  function setMotor(on) {
+    motorOn = on;
+    send({ t: 'motor', on: on, factor: factor() });
+    if (on) armDown = true;
+    setPlayUi();
+    kick();
+  }
+
+  async function loadTrack(i, autoplay) {
+    var token = ++loadToken,
+      t = tracks[i];
+    current = i;
+    renderList();
+    setMotor(false);
+    armDown = false;
+    duration = 0;
+    peaks = null;
+    drawWave();
+    $('trackTitle').textContent = K.trackTitle(t.file.name);
+    setLabel(K.trackTitle(t.file.name));
+    setStatus('読み込み中…');
+    kick();
+    try {
+      await ensureAudio();
+    } catch (e) {
+      setStatus('このブラウザでは再生できません(AudioWorklet 非対応)');
+      return;
     }
-    return new Promise(function (ok, ng) {
-      var id = nextJob++;
-      jobs[id] = { ok: ok, ng: ng };
-      worker.postMessage({ id: id, mono: input.mono, rate: input.rate }, [input.mono.buffer]);
-    });
-  }
-
-  async function loadTrack(index, entry) {
-    closeLibrary();
-    if (!entry || !ensure()) return;
-    var deck = decks[index];
-    deck.say('曲を展開しています…');
+    if (ctx.state === 'suspended') ctx.resume();
     var r = await log.step(
-      'デッキ ' + deck.letter + ' への曲の読み込み',
+      '曲の読み込み',
       async function () {
-        await engine.ready;
-        var audio = await engine.decode(entry.file);
-        if (audio.duration > MAX_SECONDS) return { tooLong: true, duration: audio.duration };
-        deck.say('波形と BPM を解析しています…');
-        var a = await analyzeOf(engine.load(index, audio));
-        var key = K.trackKeyOf(entry.file.name, entry.file.size, audio.duration);
-        var saved = tracks[key] || {};
+        var buf = await ctx.decodeAudioData(await t.file.arrayBuffer());
+        var chs = [];
+        for (var c = 0; c < Math.min(2, buf.numberOfChannels); c++) chs.push(buf.getChannelData(c).slice());
         return {
-          key: key,
-          title: entry.title,
-          duration: audio.duration,
-          bpm: a.bpm,
-          firstBeat: a.firstBeat,
-          silences: a.silences,
-          points: a.points,
-          cue: saved.cue || 0,
-          hotCues: saved.hotCues || [null, null, null, null],
+          chs: chs,
+          rate: buf.sampleRate,
+          sec: buf.duration,
+          peaks: K.peaks(chs[0], chs[1], 600),
         };
       },
       function (v) {
-        return v.tooLong
-          ? '長すぎる曲'
-          : K.formatTime(v.duration) + ' / ' + (v.bpm ? v.bpm.toFixed(1) + ' BPM' : 'BPM 不明');
+        return K.fmtTime(v.sec) + ' / ' + Math.round((v.chs.length * v.chs[0].length * 4) / 1048576) + 'MB';
       }
     );
-    if (!r.ok) return deck.say('曲を読み込めませんでした(形式を確かめてください)');
-    if (r.value.tooLong) {
-      log.warn(MSG.tooLong + '(' + K.formatTime(r.value.duration) + ')');
-      return deck.say(MSG.tooLong);
+    if (token !== loadToken) return;
+    if (!r.ok) {
+      t.bad = true;
+      renderList();
+      setStatus('この曲は読み込めませんでした(対応していない形式かもしれません)');
+      return;
     }
-    deck.say('');
-    deck.setTrack(r.value);
-    waves.setTrack(index, r.value);
-    saveTrack(deck);
+    var v = r.value;
+    duration = v.sec;
+    peaks = v.peaks;
+    view = { pos: 0, cur: 0, at: performance.now() };
+    send(
+      { t: 'load', ch: v.chs, rate: v.rate },
+      v.chs.map(function (a) {
+        return a.buffer;
+      })
+    );
+    drawWave();
+    setStatus('');
+    if (autoplay) setMotor(true);
+    else kick();
   }
 
-  /* 画面の大きさ: 盤が入りきる一番大きな本体の幅を決める */
-  function fit() {
-    var content = document.querySelector('.content');
-    var landscape = window.innerWidth > window.innerHeight;
-    var wavesH = settings.waves ? $('waves').offsetHeight + 8 : 0;
-    var deckEl = decks[0].el,
-      extra = deckEl.offsetHeight - decks[0].ui.plinth.offsetHeight;
-    var width = content.clientWidth - 16,
-      height = content.clientHeight - 16 - wavesH,
-      w;
-    if (landscape) {
-      var column = (width - $('mixer').offsetWidth - 16) / 2;
-      w = Math.min(column, ((height - extra) * K.PLINTH.width) / K.PLINTH.height);
-    } else {
-      var each = (height - $('mixer').offsetHeight - 16) / 2;
-      w = Math.min(width, ((each - extra) * K.PLINTH.width) / K.PLINTH.height);
-    }
-    w = Math.round(K.clamp(w, 200, 500));
-    document.documentElement.style.setProperty('--plinth', w + 'px');
-    decks.forEach(function (d) {
-      d.setSize(w);
-    });
-    waves.resize();
-    request();
+  function onEnded() {
+    motorOn = false;
+    armDown = false;
+    setPlayUi();
+    log('曲の最後まで再生しました');
+    if (current + 1 < tracks.length) loadTrack(current + 1, true);
+    else kick();
   }
-  var fitTimer = 0;
-  window.addEventListener('resize', function () {
-    clearTimeout(fitTimer);
-    fitTimer = setTimeout(fit, 120);
+
+  function step(d) {
+    if (tracks.length < 2) return;
+    var n = (current + d + tracks.length) % tracks.length;
+    loadTrack(n, motorOn);
+  }
+
+  /* 操作 */
+  $('fileInput').addEventListener('change', function (e) {
+    var files = Array.prototype.filter.call(e.target.files, function (f) {
+      return /^audio\//.test(f.type) || /\.(mp3|wav|m4a|aac|ogg|oga|flac|opus|webm)$/i.test(f.name);
+    });
+    e.target.value = '';
+    if (!files.length) {
+      log.warn('音楽ファイルが選ばれませんでした');
+      return;
+    }
+    var first = tracks.length;
+    files.forEach(function (f) {
+      tracks.push({ file: f, bad: false });
+    });
+    log('曲を追加しました(' + files.length + '曲 / 合計 ' + tracks.length + '曲)');
+    renderList();
+    if (current < 0) loadTrack(first, false);
   });
 
-  /* 描画の繰り返し。動く物が無ければ止める */
-  var frameId = 0,
-    lastFrame = 0;
-  function request() {
-    if (!frameId && !document.hidden) frameId = requestAnimationFrame(frame);
-  }
-  function frame(now) {
-    frameId = 0;
-    var dt = lastFrame ? Math.min(0.1, (now - lastFrame) / 1000) : 0;
-    lastFrame = now;
-    var active = false;
-    decks.forEach(function (d) {
-      if (d.render(now, dt)) active = true;
-    });
-    if (settings.waves) waves.render([decks[0].positionAt(now), decks[1].positionAt(now)]);
-    if (mixer.render(now)) active = true;
-    if (active) request();
-    else lastFrame = 0;
-  }
-  document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) request();
+  $('tracks').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-i]');
+    if (b) loadTrack(Number(b.dataset.i), motorOn);
   });
 
-  /* 設定 */
-  var fields = {
-    pitchRange: Number,
-    startSeconds: Number,
-    brakeSeconds: Number,
-    slipmat: function (v) {
-      return v === 'true';
-    },
-    curve: String,
-    use78: function (v) {
-      return v === 'true';
-    },
-    waves: function (v) {
-      return v === 'true';
-    },
+  $('playBtn').onclick = async function () {
+    if (current < 0) {
+      setStatus('先に曲を選んでください');
+      return;
+    }
+    try {
+      await ensureAudio();
+    } catch (e) {
+      return;
+    }
+    if (ctx.state === 'suspended') await ctx.resume();
+    if (!duration) return;
+    setMotor(!motorOn);
+    log(
+      motorOn
+        ? '再生を始めました(' + K.fmtTime(curPos(performance.now())) + ')'
+        : '一時停止しました(' + K.fmtTime(curPos(performance.now())) + ')'
+    );
   };
-  Object.keys(fields).forEach(function (name) {
-    var el = $('set-' + name);
-    el.value = String(settings[name]);
-    el.addEventListener('change', function () {
-      settings[name] = fields[name](el.value);
-      writeJson(SETTINGS_KEY, settings);
-      applySettings();
-    });
-  });
-  function applySettings() {
-    decks.forEach(function (d) {
-      d.applyPitchRange();
-      d.el.querySelector('[data-rpm="78"]').hidden = !settings.use78;
-      if (!settings.use78 && d.rpm === 78) d.setRpm(33);
-      d.el.querySelector('.pitch-scale').textContent = '±' + settings.pitchRange;
-    });
-    sendSettings();
-    mixer.setCrossfader(mixer.values.crossfader);
-    $('waves').hidden = !settings.waves;
-    fit();
-  }
-
-  /* キーボード(パソコン) */
-  var KEYS = {
-    q: [0, 'start'],
-    p: [1, 'start'],
-    a: [0, 'cue'],
-    l: [1, 'cue'],
-    1: [0, 'hot', 0],
-    2: [0, 'hot', 1],
-    3: [0, 'hot', 2],
-    4: [0, 'hot', 3],
-    7: [1, 'hot', 0],
-    8: [1, 'hot', 1],
-    9: [1, 'hot', 2],
-    0: [1, 'hot', 3],
-    z: [0, 'nudge', -0.02],
-    x: [0, 'nudge', 0.02],
-    ',': [1, 'nudge', -0.02],
-    '.': [1, 'nudge', 0.02],
+  $('cueBtn').onclick = function () {
+    if (!duration) return;
+    setMotor(false);
+    send({ t: 'seek', sec: 0 });
+    armDown = true;
+    log('曲の頭に戻りました');
+    kick();
   };
-  document.addEventListener('keydown', function (e) {
-    if (e.ctrlKey || e.metaKey || e.altKey || /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      mixer.setCrossfader(mixer.values.crossfader + (e.key === 'ArrowLeft' ? -0.05 : 0.05));
-      return e.preventDefault();
-    }
-    var k = KEYS[e.key.toLowerCase()];
-    if (!k || e.repeat) return;
-    var d = decks[k[0]];
-    if (k[1] === 'start') d.toggleMotor();
-    else if (k[1] === 'cue') d.pressCue();
-    else if (k[1] === 'hot') d.pressHotCue(k[2]);
-    else if (ensure()) d.send({ type: 'nudge', amount: k[2] });
-    request();
-  });
-  document.addEventListener('keyup', function (e) {
-    var k = KEYS[e.key.toLowerCase()];
-    if (k && k[1] === 'nudge') decks[k[0]].send({ type: 'nudge', amount: 0 });
+  $('prevBtn').onclick = function () {
+    step(-1);
+  };
+  $('nextBtn').onclick = function () {
+    step(1);
+  };
+
+  document.querySelectorAll('.seg-btn').forEach(function (b) {
+    b.onclick = function () {
+      rpm = Number(b.dataset.rpm);
+      document.querySelectorAll('.seg-btn').forEach(function (x) {
+        x.classList.toggle('on', x === b);
+      });
+      send({ t: 'motor', on: motorOn, factor: factor() });
+      log('回転数を ' + rpm + ' 回転にしました(速さ ' + factor().toFixed(2) + ' 倍)');
+    };
   });
 
-  applySettings();
-  decks.forEach(function (d) {
-    d.setRpm(33);
+  function showPitch() {
+    $('pitchVal').textContent = (pitch > 0 ? '+' : '') + pitch.toFixed(1) + '%';
+  }
+  $('pitch').oninput = function () {
+    pitch = Number($('pitch').value);
+    showPitch();
+    send({ t: 'motor', on: motorOn, factor: factor() });
+  };
+  $('pitchReset').onclick = function () {
+    pitch = 0;
+    $('pitch').value = 0;
+    showPitch();
+    send({ t: 'motor', on: motorOn, factor: factor() });
+    log('ピッチを 0% に戻しました');
+  };
+  $('volume').oninput = function () {
+    volume = Number($('volume').value);
+    if (gain) gain.gain.value = volume;
+  };
+
+  /* 盤を指で回す(スクラッチ)。指の角速度を再生速度にして、止めていれば音も止まり、逆に回せば逆再生になる */
+  var hit = $('hit');
+  function pointerAngle(e) {
+    var r = $('deck').getBoundingClientRect(),
+      s = r.width / 400;
+    var cx = r.left + G.cx * s,
+      cy = r.top + G.cy * s;
+    return (Math.atan2(e.clientY - cy, e.clientX - cx) * 180) / Math.PI;
+  }
+  hit.addEventListener('pointerdown', function (e) {
+    if (!duration) return;
+    hit.setPointerCapture(e.pointerId);
+    hit.classList.add('grab');
+    drag = { angle: pointerAngle(e), t: performance.now(), rate: 0, timer: 0 };
+    send({ t: 'hand', on: true, vel: 0 });
+    log('盤に指を置きました');
+    kick();
   });
-  log(
-    '起動しました(ピッチ ±' +
-      settings.pitchRange +
-      '% / 起動 ' +
-      settings.startSeconds +
-      '秒 / ブレーキ ' +
-      settings.brakeSeconds +
-      '秒 / ' +
-      (settings.slipmat ? 'スリップマット' : '直結') +
-      ')'
-  );
+  hit.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var now = performance.now(),
+      a = pointerAngle(e);
+    var rate = K.scratchRate(K.unwrap(a - drag.angle), (now - drag.t) / 1000);
+    drag.rate = drag.rate * 0.4 + rate * 0.6;
+    drag.angle = a;
+    drag.t = now;
+    send({ t: 'hand', on: true, vel: drag.rate });
+    clearTimeout(drag.timer);
+    drag.timer = setTimeout(function () {
+      if (drag) {
+        drag.rate = 0;
+        send({ t: 'hand', on: true, vel: 0 });
+      }
+    }, 60);
+  });
+  function release() {
+    if (!drag) return;
+    clearTimeout(drag.timer);
+    drag = null;
+    hit.classList.remove('grab');
+    send({ t: 'hand', on: false, vel: 0 });
+    log('盤から指を離しました');
+    kick();
+  }
+  hit.addEventListener('pointerup', release);
+  hit.addEventListener('pointercancel', release);
+
+  /* 波形を押して再生位置を動かす */
+  var seeking = false;
+  function seekTo(e) {
+    var r = $('waveBox').getBoundingClientRect();
+    var sec = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * duration;
+    send({ t: 'seek', sec: sec });
+    armDown = true;
+    view = { pos: sec, cur: view.cur, at: performance.now() };
+    kick();
+  }
+  $('waveBox').addEventListener('pointerdown', function (e) {
+    if (!duration) return;
+    seeking = true;
+    $('waveBox').setPointerCapture(e.pointerId);
+    seekTo(e);
+  });
+  $('waveBox').addEventListener('pointermove', function (e) {
+    if (seeking) seekTo(e);
+  });
+  function seekEnd() {
+    if (seeking) {
+      seeking = false;
+      log('再生位置を動かしました(' + K.fmtTime(curPos(performance.now())) + ')');
+    }
+  }
+  $('waveBox').addEventListener('pointerup', seekEnd);
+  $('waveBox').addEventListener('pointercancel', seekEnd);
+
+  window.addEventListener('resize', drawWave);
+  new MutationObserver(drawWave).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+
+  setPlayUi();
+  showPitch();
+  renderList();
+  setLabel('');
+  kick();
+  log('起動しました(33回転 / ピッチ 0% / 音量 80%)');
 })();

@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>DJターンテーブル Pro | 2台のレコードとミキサーで DJ</title>
+    <meta
+      name="description"
+      content="2台のターンテーブルとミキサーで DJ ができる音楽プレーヤー。端末の曲をレコードにのせ、指でスクラッチ、ピッチ、3バンドのアイソレーター、フィルター、クロスフェーダー、波形と BPM、キューとホットキューが使えます。曲は端末内で処理され送信されません。"
+    />
+    <meta property="og:title" content="DJターンテーブル Pro | 2台のレコードとミキサーで DJ" />
+    <meta
+      property="og:description"
+      content="2台のターンテーブルとミキサーで DJ ができる音楽プレーヤー。端末の曲をレコードにのせ、指でスクラッチ、ピッチ、3バンドのアイソレーター、フィルター、クロスフェーダー、波形と BPM、キューとホットキューが使えます。曲は端末内で処理され送信されません。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-dj-turntable-pro.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./dj-turntable-pro.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "DJターンテーブル Pro",
+        "alternateName": [
+          "DJ Turntable Pro",
+          "DJターンテーブル",
+          "ターンテーブル",
+          "DJミキサー",
+          "スクラッチ",
+          "レコードプレーヤー"
+        ],
+        "description": "2台のターンテーブルとミキサーで DJ ができる音楽プレーヤー。端末の曲をレコードにのせ、指でスクラッチ、ピッチ、3バンドのアイソレーター、フィルター、クロスフェーダー、波形と BPM、キューとホットキューが使えます。曲は端末内で処理され送信されません。",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-dj-turntable-pro.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        DJターンテーブル Pro<span class="en">DJ Turntable Pro</span>
+      </h1>
+      <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+          />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <canvas id="waves" class="waves" aria-label="2台の波形(押すとそこへ針を落とす)"></canvas>
+        <p class="status" id="status" role="status"></p>
+        <div class="deck-slot" id="deckA"></div>
+        <section class="mixer" id="mixer" aria-label="ミキサー">
+          <div class="strip strip-a" data-log-group="チャンネル A">
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="ゲイン(A)"
+                data-param="gain"
+                data-deck="0"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">GAIN</span>
+            </div>
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="高音(A)"
+                data-param="high"
+                data-deck="0"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">HI</span>
+            </div>
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="中音(A)"
+                data-param="mid"
+                data-deck="0"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">MID</span>
+            </div>
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="低音(A)"
+                data-param="low"
+                data-deck="0"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">LOW</span>
+            </div>
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="フィルター(A)"
+                data-param="filter"
+                data-deck="0"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">FILTER</span>
+            </div>
+          </div>
+          <div class="mixer-center">
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="マスター音量"
+                data-param="master"
+                data-deck="0"
+                aria-valuemin="0"
+                aria-valuemax="1"
+                data-center="0.8"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">MASTER</span>
+            </div>
+            <div class="meters">
+              <div class="meter" data-meter="0">
+                <i class="meter-off"></i><i class="meter-peak" hidden></i>
+              </div>
+              <div class="meter" data-meter="master">
+                <i class="meter-off"></i><i class="meter-peak" hidden></i>
+              </div>
+              <div class="meter" data-meter="1">
+                <i class="meter-off"></i><i class="meter-peak" hidden></i>
+              </div>
+            </div>
+          </div>
+          <div class="strip strip-b" data-log-group="チャンネル B">
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="ゲイン(B)"
+                data-param="gain"
+                data-deck="1"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">GAIN</span>
+            </div>
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="高音(B)"
+                data-param="high"
+                data-deck="1"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">HI</span>
+            </div>
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="中音(B)"
+                data-param="mid"
+                data-deck="1"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">MID</span>
+            </div>
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="低音(B)"
+                data-param="low"
+                data-deck="1"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">LOW</span>
+            </div>
+            <div class="knob-box">
+              <div
+                class="knob"
+                role="slider"
+                tabindex="0"
+                aria-label="フィルター(B)"
+                data-param="filter"
+                data-deck="1"
+                aria-valuemin="-1"
+                aria-valuemax="1"
+              >
+                <i class="knob-cap"></i>
+              </div>
+              <span class="knob-name">FILTER</span>
+            </div>
+          </div>
+          <div class="faders">
+            <div class="vfader">
+              <input
+                type="range"
+                class="channel-fader"
+                data-deck="0"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.8"
+                aria-label="チャンネル A の音量"
+              />
+            </div>
+            <div class="xfader">
+              <input
+                type="range"
+                id="crossfader"
+                min="0"
+                max="1"
+                step="0.005"
+                value="0.5"
+                aria-label="クロスフェーダー"
+              /><span class="xfader-marks"><b>A</b><b>B</b></span>
+            </div>
+            <div class="vfader">
+              <input
+                type="range"
+                class="channel-fader"
+                data-deck="1"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.8"
+                aria-label="チャンネル B の音量"
+              />
+            </div>
+          </div>
+        </section>
+        <div class="deck-slot" id="deckB"></div>
+      </div>
+    </main>
+    <template id="deckTemplate">
+      <section class="deck">
+        <div class="deck-head">
+          <span class="deck-letter"></span>
+          <button type="button" class="deck-track" data-log="曲を選ぶ">
+            <span class="deck-title">曲を選んでください</span>
+          </button>
+          <span class="deck-read"
+            ><span class="deck-bpm">---.-</span><span class="deck-pitch">0.0%</span></span
+          >
+          <span class="deck-time">0:00 / -0:00</span>
+        </div>
+        <div class="plinth">
+          <div
+            class="platter"
+            role="img"
+            aria-label="盤(押さえて回すとスクラッチ、縁をこすると速さを少し変える)"
+          >
+            <canvas class="platter-rim"></canvas><canvas class="platter-strobe"></canvas
+            ><canvas class="platter-record"></canvas><canvas class="platter-glare"></canvas>
+          </div>
+          <svg class="arm" viewBox="0 0 130 110" aria-hidden="true">
+            <circle cx="105" cy="23" r="12" class="arm-base" />
+            <circle cx="105" cy="23" r="7.5" class="arm-ring" />
+            <circle cx="104" cy="66" r="2.6" class="arm-rest" />
+            <g class="arm-move" transform="translate(105 23) rotate(92)">
+              <rect x="-19" y="-5" width="11" height="10" rx="2.5" class="arm-weight" />
+              <line x1="-8" y1="0" x2="54" y2="0" class="arm-tube" />
+              <circle cx="0" cy="0" r="4" class="arm-pivot" />
+              <path d="M52 -2.8 L66.5 -3.6 L67.5 3.6 L52 2.8 Z" class="arm-shell" />
+              <rect x="62.5" y="-1.4" width="4" height="2.8" class="arm-cart" />
+              <line x1="-20" y1="0" x2="68" y2="0" class="arm-hit" />
+            </g>
+          </svg>
+          <span class="strobe-lamp"></span>
+          <button type="button" class="start" data-log="START/STOP" aria-pressed="false">
+            START<br />STOP
+          </button>
+          <div class="speeds">
+            <button type="button" class="speed" data-rpm="33" data-log="33回転" aria-pressed="true">33</button
+            ><button type="button" class="speed" data-rpm="45" data-log="45回転" aria-pressed="false">
+              45</button
+            ><button type="button" class="speed" data-rpm="78" data-log="78回転" aria-pressed="false" hidden>
+              78
+            </button>
+          </div>
+          <div class="pitch">
+            <span class="pitch-scale">±8</span>
+            <div class="pitch-slot">
+              <input
+                type="range"
+                class="pitch-fader"
+                min="-1"
+                max="1"
+                step="0.001"
+                value="0"
+                aria-label="ピッチ"
+              />
+            </div>
+            <span class="pitch-led" title="ピッチ 0%"></span>
+            <button type="button" class="pitch-reset" data-log="ピッチを0に戻す" aria-label="ピッチを0に戻す">
+              0
+            </button>
+          </div>
+        </div>
+        <div class="cues">
+          <button type="button" class="cue" data-log="CUE">CUE</button>
+          <button type="button" class="hot" data-hot="0" data-log="ホットキュー 1">1</button
+          ><button type="button" class="hot" data-hot="1" data-log="ホットキュー 2">2</button
+          ><button type="button" class="hot" data-hot="2" data-log="ホットキュー 3">3</button
+          ><button type="button" class="hot" data-hot="3" data-log="ホットキュー 4">4</button>
+          <span class="deck-status" role="status"></span>
+        </div>
+      </section>
+    </template>
+    <div class="sheet" id="library" hidden>
+      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="libraryTitle">
+        <div class="sheet-head">
+          <span id="libraryTitle">曲の一覧</span
+          ><button class="sheet-close" id="libraryClose" aria-label="曲の一覧を閉じる">×</button>
+        </div>
+        <label class="pill primary add"
+          >曲を追加<input
+            type="file"
+            id="fileInput"
+            accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac,.opus"
+            multiple
+            hidden
+            data-log="曲を追加"
+        /></label>
+        <p class="note" id="libraryEmpty">端末の音楽ファイルを選んでください(複数可)。</p>
+        <ul class="tracks" id="tracks"></ul>
+        <p class="note">
+          曲は端末の中だけで処理し、送信しません。15分までの曲を読めます。曲ごとのキューとホットキューは、この端末に保存します(ホットキューは長押しで消せます)。
+        </p>
+      </div>
+    </div>
+    <div class="sheet" id="settings" hidden>
+      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="sheet-head">
+          <span id="settingsTitle">設定</span
+          ><button class="sheet-close" id="settingsClose" aria-label="設定を閉じる">×</button>
+        </div>
+        <div class="opt">
+          <label for="set-pitchRange">ピッチの範囲</label
+          ><select id="set-pitchRange">
+            <option value="8">±8%</option>
+            <option value="16">±16%</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label for="set-startSeconds">起動の強さ</label
+          ><select id="set-startSeconds">
+            <option value="0.35">強い(0.35秒)</option>
+            <option value="0.7">標準(0.7秒)</option>
+            <option value="1.2">弱い(1.2秒)</option>
+            <option value="2">とても弱い(2.0秒)</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label for="set-brakeSeconds">ブレーキの強さ</label
+          ><select id="set-brakeSeconds">
+            <option value="0.2">強い(0.2秒)</option>
+            <option value="0.6">標準(0.6秒)</option>
+            <option value="1.5">弱い(1.5秒)</option>
+            <option value="3">とても弱い(3.0秒)</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label for="set-slipmat">盤の乗り方</label
+          ><select id="set-slipmat">
+            <option value="true">スリップマット(押さえても下の盤は回る)</option>
+            <option value="false">直結(盤と一緒に止まる)</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label for="set-curve">クロスフェーダーのカーブ</label
+          ><select id="set-curve">
+            <option value="smooth">なめらか</option>
+            <option value="scratch">スクラッチ(端で一気に入る)</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label for="set-use78">78回転</label
+          ><select id="set-use78">
+            <option value="false">使わない</option>
+            <option value="true">使う</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label for="set-waves">波形</label
+          ><select id="set-waves">
+            <option value="true">出す</option>
+            <option value="false">隠す(盤を大きく)</option>
+          </select>
+        </div>
+        <p class="note">
+          キーボード: START/STOP Q・P、CUE A・L、ホットキュー 1〜4・7〜0、速さの微調整 Z X・,
+          .、クロスフェーダー ← →
+        </p>
+      </div>
+    </div>
+    <script src="../../common/log.js"></script>
+    <script src="../../common/autolog.js"></script>
+    <script src="../../common/env.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.ToolKit && window.ToolKit.media) ||
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+        );
+    </script>
+    <script src="./dj-turntable-pro-core.js"></script>
+    <script src="./dj-turntable-pro-textures.js"></script>
+    <script src="./dj-turntable-pro-engine.js"></script>
+    <script src="./dj-turntable-pro-deck-view.js"></script>
+    <script src="./dj-turntable-pro-mixer-view.js"></script>
+    <script src="./dj-turntable-pro-wave-view.js"></script>
+    <script src="./dj-turntable-pro.js"></script>
+  </body>
+</html>

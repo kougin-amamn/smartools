@@ -1,6 +1,6 @@
-# DJターンテーブル(2台+ミキサー) 設計書
+# DJターンテーブル Pro(2台+ミキサー) 設計書
 
-2026-11-07 作成(外部設計・プログラム設計。今の1台のツールを作り直す)。同日に1期を実装
+2026-11-07 作成(外部設計・プログラム設計)。同日に1期を実装。1台の通常版(`tools/dj-turntable`)はそのまま残し、高機能版を別のツールにする
 
 ## 1. 概要
 
@@ -10,7 +10,7 @@
 - 手本にするアプリ: Serato DJ / rekordbox / djay。ここからは波形・キュー・BPM のような「画面ならではの便利さ」を取り入れます。
 - 見た目と手触りは実機に寄せ、ソフトでしかできないこと(波形・BPM・ホットキュー)は控えめに添えます。
 
-今の `tools/dj-turntable` は1台で、音の部分は AudioWorklet で作ってあります(逆回転やスクラッチの知見は [lessons.md](../lessons.md) の「音」)。今回は同じ slug のまま、全体を作り直します。
+通常版の `tools/dj-turntable`(1台・軽い)はそのまま残し、このツールは `tools/dj-turntable-pro-pro` として別に作ります(逆回転やスクラッチの知見は [lessons.md](../lessons.md) の「音」)。
 
 ## 2. 調べたこと
 
@@ -170,16 +170,16 @@ djay の評判で良かった点は、すっきりして平らな見た目、な
 
 | ファイル | 役割 | 試験 |
 | --- | --- | --- |
-| `dj-turntable.html` / `.css` | 画面の骨組みと見た目(横・縦・パソコンの並び) | smoke |
-| `dj-turntable.js` | 起動・各部のつなぎ・設定・キーボード・保存 | scenario |
-| `dj-turntable-core.js` | DOM を使わない計算: 本体の寸法(130×110 単位)、アームの角度と針の位置、ピッチ、クロスフェーダー・アイソレーター・フィルターの曲線、ストロボの見かけの流れ、拍の位置、時刻の表示、曲の鍵 | core |
-| `dj-turntable-engine.js` | 音の部品をつなぐ(AudioContext・worklet・ミキサー・メーター)。画面から呼ぶ命令をまとめる | scenario |
-| `dj-turntable-worklet.js` | 盤から音を読む(2台分)。モーター・手・ばね・補間・キュー | Node で core と同じように試す |
-| `dj-turntable-analysis.js` | Web Worker: 波形の山と色、BPM と拍の位置 | Node で試す |
-| `dj-turntable-textures.js` | 先に描いておく絵: 盤・レコード・ラベル・ストロボ・反射・つまみ | — |
-| `dj-turntable-deck-view.js` | デッキ1台分の画面: 盤・アーム・ピッチ・ボタン・指の扱い | scenario |
-| `dj-turntable-mixer-view.js` | ミキサーの画面: つまみ・フェーダー・クロスフェーダー・メーター | scenario |
-| `dj-turntable-wave-view.js` | 波形の画面: タイルを写し、拍の線と再生位置を描く | — |
+| `dj-turntable-pro.html` / `.css` | 画面の骨組みと見た目(横・縦・パソコンの並び) | smoke |
+| `dj-turntable-pro.js` | 起動・各部のつなぎ・設定・キーボード・保存 | scenario |
+| `dj-turntable-pro-core.js` | DOM を使わない計算: 本体の寸法(130×110 単位)、アームの角度と針の位置、ピッチ、クロスフェーダー・アイソレーター・フィルターの曲線、ストロボの見かけの流れ、拍の位置、時刻の表示、曲の鍵 | core |
+| `dj-turntable-pro-engine.js` | 音の部品をつなぐ(AudioContext・worklet・ミキサー・メーター)。画面から呼ぶ命令をまとめる | scenario |
+| `dj-turntable-pro-worklet.js` | 盤から音を読む(2台分)。モーター・手・ばね・補間・キュー | Node で core と同じように試す |
+| `dj-turntable-pro-analysis.js` | Web Worker: 波形の山と色、BPM と拍の位置 | Node で試す |
+| `dj-turntable-pro-textures.js` | 先に描いておく絵: 盤・レコード・ラベル・ストロボ・反射・つまみ | — |
+| `dj-turntable-pro-deck-view.js` | デッキ1台分の画面: 盤・アーム・ピッチ・ボタン・指の扱い | scenario |
+| `dj-turntable-pro-mixer-view.js` | ミキサーの画面: つまみ・フェーダー・クロスフェーダー・メーター | scenario |
+| `dj-turntable-pro-wave-view.js` | 波形の画面: タイルを写し、拍の線と再生位置を描く | — |
 
 デッキ1台分の画面は `DeckView` を2つ作り、同じコードでA・Bの両方を動かします。
 
@@ -287,8 +287,8 @@ flowchart LR
 
 | 鍵 | 中身 |
 | --- | --- |
-| `dj-turntable-settings` | 4.6 の設定 |
-| `dj-turntable-tracks` | 曲ごと(鍵: ファイル名・大きさ・長さ)の BPM、拍の位置、キュー、ホットキュー。最大 200曲(古い物から消す) |
+| `dj-turntable-pro-settings` | 4.6 の設定 |
+| `dj-turntable-pro-tracks` | 曲ごと(鍵: ファイル名・大きさ・長さ)の BPM、拍の位置、キュー、ホットキュー。最大 200曲(古い物から消す) |
 
 ## 6. 段階
 
@@ -308,9 +308,9 @@ flowchart LR
 
 ## 8. 確認
 
-- `tests/core/dj-turntable.test.js`: アームの角度、ピッチ、クロスフェーダーのカーブ、拍の位置、曲の鍵。
+- `tests/core/dj-turntable-pro.test.js`: アームの角度、ピッチ、クロスフェーダーのカーブ、拍の位置、曲の鍵。
 - worklet と解析を Node で: モーターの起動時間(0.7秒で 99% に届く)、手を離した後の戻り、補間、BPM(作った拍の音で 120.0 を当てる)。
-- `tests/scenarios/dj-turntable.js`: 2台に作った音を読み込み、START・スクラッチ・クロスフェーダーで、出口の音の大きさ(AnalyserNode の RMS)が期待どおりに変わるか。
+- `tests/scenarios/dj-turntable-pro.js`: 2台に作った音を読み込み、START・スクラッチ・クロスフェーダーで、出口の音の大きさ(AnalyserNode の RMS)が期待どおりに変わるか。
 - 実機(スマホの横向き・縦向き、パソコン): なめらかさ(fps)、スクラッチの遅れ、記憶領域。
 
 ## 参考
