@@ -1,163 +1,87 @@
-# 3Dランチャー(本棚・美術館) 見直しの設計書
+# 3Dランチャー(本棚・美術館) 設計書
 
-2026-11-07 作成。今の2つの3Dランチャーを読み直して課題を洗い出し、プログラム設計(ソース管理)を組み直す案をまとめる。同日、方針(ES モジュールの案 C、段階で進める)が決まり、段 1 の前半(1a)を実装した(下の「実装の記録」)。
+2026-11-07 作成、同日に修正版へ書き直し。見直しで決めた方針(ES モジュールの案 C、段階で進める)をもとに、見直し後の形を設計として書く。段 1a は実装済み(下の「実装の記録」)。洗い出した課題は「課題と方針」に残す。
 
 ## 概要
 
-3Dランチャーは、サイトのツールを3Dの部屋に並べ、タップで選んで開く入口の画面。
+3Dランチャーは、サイトのツールを3Dの部屋に並べ、タップで選んで開く入口の画面です。
 
-- 本棚(`launcher-3d-bookshelf`): 書斎の本棚に、ツールを本として並べる。
-- 美術館(`launcher-3d-museum`): 入口ホールからカテゴリごとの展示室に入り、ツールを絵として見る。
+- 本棚(`launcher-3d-bookshelf`): 書斎の本棚に、ツールを本として並べます。
+- 美術館(`launcher-3d-museum`): 入口ホールからカテゴリごとの展示室に入り、ツールを絵として見ます。
+
+ランチャーの役目は、ツールを早く見つけて開くことです。3Dは、それを楽しくするための手段です。この順番を崩さないことを、設計の軸にします。
 
 前提:
 
-- three.js r128 の非モジュール版を cdnjs から読みます。
-- 一覧は `index-data.json`、開いた回数は `launcher-common.js` を使います。
-- three.js を読めない時は、2D の一覧に切り替えます。
+- three.js を ES モジュールで読みます。版は import map で固定します(今は r128。上げるかは段 4 で決める)。
+- 一覧は `index-data.json` から読みます。開いた回数とリンクは `launcher-common.js` を使います(デスクトップのランチャーと共用)。
+- three.js が読めない時や WebGL が使えない時は、2D の一覧に切り替えます。
+- import map は Safari 16.4・Chrome 89 以降で使えます。それより古い端末も、2D の一覧になります。
 
-ランチャーの役目は、ツールを早く見つけて開くこと。3Dは、それを楽しくするための手段です。この順番を崩さないことを、見直しの軸にします。
+## 課題と方針
 
-## 現状
+見直しで洗い出した課題です。「段」は、下の「進め方」のどこで直すかを表します。実機で確かめていない物は「要確認」と書きます。
 
-| ファイル | 行 | 役割 |
+### 使う人から見た課題
+
+| # | 課題 | 方針 | 段 |
+| --- | --- | --- | --- |
+| E1 | 探す手段が「部屋の中を見て回る」だけ。ツールが増えるほど目当てが遠くなる | 3D の上に「探す」(名前の検索 + カテゴリの近道)を置き、選ぶとカメラがそこへ飛ぶ。2D の一覧も同じ検索を使う(足すかは「決めてほしいこと」2) | 3 |
+| E2 | 初回の表示が重い。three.js を読み、数十〜数百枚の絵を Canvas で描く(要確認) | 起動の各段階を `log.step` で測る。見えている部屋の絵だけを先に描き、残りは後で描く | 3 |
+| E3 | 何も動いていない時も、描画ループが毎フレーム起きる | 止まっている間はループを止め、操作・アニメ・テーマの変化で起こす | 3 |
+| E4 | WebGL のコンテキストが失われた時(タブの切り替え後など)の扱いが無い(要確認) | `webglcontextlost` / `restored` を受けて組み直す。だめなら 2D の一覧へ | 3 |
+| E5 | 画質の決め方が2つで違う(美術館は自前の `isPhone()` と `?q=low`、本棚は画素数の上限だけ) | 画質の段を1か所で決め、両方が使う。判定は `Env` と描画の速さの実測 | 3 |
+| E6 | 操作と画面の部品が2つで少しずつ違う。美術館の入口ホールで、操作のヒントと「エントランスホール」の札が重なる | 操作表を1つにする(「操作の約束」)。重なりを直す | 3 |
+| E7 | 3D は読み上げソフトで使えない。2D の一覧は three.js が読めない時にしか出ない | 2D の一覧を、いつでも開けるボタンにする | 3 |
+| E8 | 昼夜(部屋の明かり)とサイトのテーマボタンの関係が2つで違う(要確認) | サイトの `data-theme` の変化を合図に、同じ流れで部屋を切り替える | 3 |
+| E9 | 本・絵の数が上限を超えた時の並び方が決まっていない | 上限と、超えた時の並べ方(棚・部屋を増やす)を core に書き、Node で試す | 2 |
+| E10 | 画面を開発環境で動かせなかった | 解決済み: three.js r128 を git で取り、開発環境のブラウザで動かして、画面を撮って比べる(`docs/lessons.md`) | 1a |
+
+### プログラム設計(ソース管理)の課題
+
+| # | 課題 | 方針 | 段 |
+| --- | --- | --- | --- |
+| P1 | 2つの分け方が違う。美術館は `launcher-3d-museum.js` 1,151 行に、カメラ・状態・移動・描画ループまで入る | 同じ分け方にそろえる(「構成」) | 1b・2 |
+| P2 | 同じ処理が2か所にある(カメラ、描画ループとリサイズ、Canvas の補助、昼夜の色、three.js が読めない時の扱い) | 3D 共通の部品にして1か所にする | 1b |
+| P3 | 関数とファイルが大きすぎる(本棚の `buildRoom` 約420行、美術館の `main()` 約1,100行) | 1ファイル 400 行・1関数 80 行を目安に割る。状態はオブジェクトにし、関数は引数で受け取る | 2 |
+| P4 | データが JS の中にある(美術館の `THEME` `FRAME_STYLE` `BANNER_COLORS` `ART`、本棚の `THEME` `CAT_HEX` `KINDS`) | 色・寸法・質感の割り当てを `.json` に出し、起動時に読む | 2 |
+| P5 | 名前が省略されている(`rr` `rng` `tex` `pr` `T` `LOW` `ZMIN` `FOV` `DPR` …) | 割る時にあわせて直す(`roundRect` `randomOf` `textureOf` `pixelRatio` …) | 1b・2 |
+| P6 | 部品の間の結びつきが強い。部屋を作る部品が、本体の一覧を受け取って書き換える | 部屋は「組み立てた結果を返す」だけにする(「部屋の約束」) | 2 |
+| P7 | 読み込めなかったファイルを、HTML ごとの手書き(`__missing`)で拾っていた | 解決済み: 入口の `import()` 1つで捕まえる | 1a |
+| P8 | three.js r128 の非モジュール版に頼っていた(r160 で無くなった) | 解決済み: ES モジュールにし、版を import map で固定。上げるのは段 4 | 1a・4 |
+| P9 | 3D の試験が無かった | 解決済み: 共通の計算と、2つの配置の試験を足した。段ごとに増やす | 1a〜 |
+| P10 | `launchers/` に3つのランチャーのファイルが平らに並ぶ | ランチャーごとのフォルダに分ける(「決めてほしいこと」3。アドレスが変わる) | 2 |
+| P11 | 想定内の失敗(three.js が読めない)を `log.error` で出していた | 解決済み: `log.warn` にした | 1a |
+
+### 採らなかった案
+
+| 案 | 内容 | 採らなかった理由 |
 | --- | --- | --- |
-| `launcher-common.js` | 330 | 一覧の読み込み、リンク、アイコン、開いた回数、読み込み中の表示、3Dの共通計算(姿勢・補間・最寄りの角度) |
-| `launcher-3d-bookshelf-core.js` | 379 | 本棚の配置とカメラの計算(Node で試せる作り) |
-| `launcher-3d-bookshelf-textures.js` (+ `.json`) | 884 | 木・漆喰・布・革・紙・金属・ガラス・水・芝・敷物の絵と、本の背・表紙 |
-| `launcher-3d-bookshelf-scene.js` | 1142 | 書斎・本棚・本・照明・昼夜の組み立て |
-| `launcher-3d-bookshelf-view.js` | 437 | カメラ、見回し、拡大、タップ判定、描画ループ |
-| `launcher-3d-bookshelf.js` | 410 | 画面まわり(一覧・説明カード・ボタン・キー)と起動 |
-| `launcher-3d-museum-core.js` | 235 | 展示室の配置とカメラの計算(Node で試せる作り) |
-| `launcher-3d-museum-textures.js` | 679 | 絵・案内板・木目・額縁・形状の結合 |
-| `launcher-3d-museum-scene.js` | 417 | 展示室の組み立て(壁・通路・ベンチ・額・照明) |
-| `launcher-3d-museum.js` | 1153 | 画面・カメラ・状態の保存・部屋の移動・入口ホール・描画ループを全部(大きな `main()` 1つの中) |
+| A | r128 の非モジュール版のまま | 古いまま、直しも新しい機能も入らない。版を上げる道も無い |
+| B | three.js だけモジュールで読み、`window.THREE` に置く | 「読めた」合図を別に作る必要があり、読み込み順の管理が二重になる |
+| — | common(`log` `Env` `site.js`)もモジュールにする | 全ページに響くため。3D ランチャーの中だけをモジュールにする |
+| — | WebGPU にする | 今の場面は軽く、速くなるとは限らない。端末ごとの差もある。`WebGLRenderer` のまま |
 
-3D の部分は合わせて約 5,700 行です。
+## 構成
 
-## 外部設計(使う人から見た)の課題
+### ファイル
 
-実機では確かめていない物は「要確認」と書きます。
-
-| # | 課題 | 影響 | 方針 |
-| --- | --- | --- | --- |
-| E1 | 探す手段が「部屋の中を見て回る」だけで、検索もカテゴリへの近道も無い | ツールが増えるほど目当てが遠くなる(今 約50、増える前提) | 3D の上に「探す」(名前の検索 + カテゴリの近道)を置き、選ぶとカメラがそこへ飛ぶ。2D の一覧も同じ検索を使う |
-| E2 | 初回の表示が重い。three.js(約600KB)を読み、数十〜数百枚の絵を Canvas で描く | 古いスマホで待ち時間が長い・発熱(要確認) | 起動の各段階を `log.step` で測る。見えている部屋の絵だけを先に描き、残りは後で描く |
-| E3 | 何も動いていない時も、描画ループ(`requestAnimationFrame`)が回り続ける。描くのは変化があった時だけだが、毎フレーム起きる | 待機中の電池 | 止まっている間はループを止め、操作・アニメ・テーマの変化で起こす(Pro と同じ作り) |
-| E4 | WebGL のコンテキストが失われた時(iPhone でタブを切り替えた後など)の扱いが無い | 黒い画面のまま戻らない(要確認) | `webglcontextlost` / `restored` を受けて組み直す。だめなら2Dの一覧へ |
-| E5 | 画質の決め方が2つで違う。美術館は自前の `isPhone()` と `?q=low`、本棚は画素数の上限だけ | 同じ端末でも重さが違う。規約(判定は `Env`)からも外れる | 画質の段(低・標準・高)を1か所で決め、両方が使う。判定は `Env` と描画の速さの実測 |
-| E6 | 操作と画面の部品が、2つで少しずつ違う(説明カード、拡大ボタン、キー、ヒントの出し方) | 乗り換えた時に迷う | 操作表を1つにする(下の「操作の約束」) |
-| E7 | 3D は読み上げソフトで使えない。2D の一覧は three.js が読めない時の代わりにしか出ない | 目の見えにくい人、急いでいる人 | 2D の一覧をいつでも開けるボタンにする(今ある一覧パネルを表に出す) |
-| E8 | 昼夜のテーマ(部屋の明かり)と、サイトのテーマボタンの関係が2つで違う(要確認) | ボタンを押しても部屋が変わらない、などの迷い | サイトの `data-theme` の変化を合図に、両方とも同じ流れで部屋を切り替える |
-| E9 | 本の数・絵の数の上限(`MAX_PER_ROOM` など)を超えた時の見え方が決まっていない | ツールが増えると並びが崩れる(要確認) | 上限と、超えた時の並べ方(棚・部屋を増やす)を core に書き、Node で試す |
-| E10 | 画面を開発環境で動かせない(three.js を CDN から読むため) | 変更のたびに実機頼み。壊れても気づきにくい | 計算は core に寄せて Node で試す。画面は「three.js が無い時に2Dの一覧が出る」を smoke で試す(下の「確認」) |
-
-## プログラム設計(ソース管理)の課題
-
-| # | 課題 | 具体例 | 方針 |
-| --- | --- | --- | --- |
-| P1 | 2つの作りの分け方が違う | 本棚は core / textures / scene / view / 画面の5つ。美術館は view が無く、`launcher-3d-museum.js` 1,153 行にカメラ・状態・移動・描画ループまで入る | 同じ分け方にそろえる(下の「構成」) |
-| P2 | 同じ処理が2か所にある | カメラ(`applyCamera` `setZoom` `zoomLabel` `wideLayout` `viewPose` `moveTo` と `FOV` `ZMIN`)、描画ループとリサイズと画素比、Canvas の補助(角丸 `rr`、乱数 `rng`、`tex`、アイコンの読み込み、文字の折り返し)、昼夜の `THEME`、three.js が読めない時の扱い | 3D 共通の部品にして1か所にする |
-| P3 | 関数とファイルが大きすぎる | `buildRoom`(本棚)約420行、美術館の `main()` は約1,100行のクロージャ1つで、中の関数を外から試せない | 1ファイル 400 行・1関数 80 行を目安に割る。状態はオブジェクトにして、関数は引数で受け取る |
-| P4 | データが JS の中にある(規約: データは `.json`) | 美術館の `THEME` `FRAME_STYLE` `BANNER_COLORS` `ART`、本棚の `THEME` `CAT_HEX` `KINDS`。本棚の質感の見本だけが `.json` | 色・寸法・質感の割り当ては `.json` に出し、起動時に読む |
-| P5 | 名前が規約(`docs/naming.md`: 省略しない)に合っていない | `rr` `rng` `tex` `lin` `pr` `cr` `th` `hv` `T` `M` `LOW` `ZMIN` `FOV` `DPR` `favRecs` `rbShared` | 分ける時に、あわせて名前を直す(`roundRect` `randomOf` `textureOf` `pixelRatio` `isLowQuality` …) |
-| P6 | 部品の間の結びつきが強い | `MuseumScene.create({…})` に本体の一覧(`roomWalls` `roomSpots` `badgesBySlug`)をそのまま渡して書き換えさせる。`create` の引数が10以上の大きなオブジェクト | 部屋は「組み立てた結果を返す」だけにし、本体の状態を書き換えない(下の「部屋の約束」) |
-| P7 | 読み込めなかったファイルの扱いが、サイトの決まりと別 | HTML ごとに `__missing` と `__missingCheck` を手で書く。`launcher-common.js` にも `missingParts` `showMissing` がある | 1つの仕組みにする(`launcher-common.js` の `missingParts` に寄せ、HTML の手書きをやめる) |
-| P8 | three.js r128(2021年)に固定。非モジュール版の読み込みに頼る | r160 で非モジュール版が無くなり、r186 で縮めた版も無くなった。色の扱い(r152)と光の強さ(r155)が変わり、見た目も変わる | ES モジュールにし、版は import map で固定する(下の「ES モジュールにする検討」) |
-| P9 | 試験が無い | core は Node で試せる作りなのに、`tests/core` に3Dランチャーと `launcher-common` の試験が1つも無い | core と共通の計算に試験を足す。配置の上限(E9)もここで試す |
-| P10 | `launchers/` に3つのランチャーの 25 ファイルが平らに並ぶ | どのファイルがどのランチャーの物か、名前を読まないと分からない | ランチャーごとのフォルダに分ける(「決めてほしいこと」3。リンクが変わる) |
-| P11 | 想定内の失敗を `log.error` で出している | three.js が読めない時の `fallback()` | 規約どおり `log.warn` にする |
-
-## ES モジュールにする検討
-
-### 今の作り
-
-- three.js r128 の非モジュール版(`three.min.js`)を `<script defer>` で読み、`window.THREE` を使っています。
-- 自分のファイルは `(function (root) { … })(this)` で `window.BookshelfScene` などに載せ、HTML の `<script>` の並び順で依存をつないでいます(本棚は8本)。
-- 読めなかったファイルは、HTML ごとの `onerror` と `__missing` で拾っています。
-
-### three.js の今(2026-11-07 に確認)
-
-- 最新は r187(`three@0.187.0`、2026-10-30)。
-- 非モジュール版(`build/three.js` / `three.min.js`)は r160 で無くなりました。r186 では縮めた版(`*.min.js`)も無くなりました。
-- r171 から、ES モジュールは `build/three.module.js`(r186 で約650KB)が `build/three.core.js`(約1.46MB)を読む2ファイルの形です。
-- 圧縮していない大きさは、合わせて約2.1MB です(r128 の `three.min.js` は約600KB)。配信の時の圧縮後の大きさは、実装の時に測ります。縮めた版が要るなら、jsDelivr の `+esm` を試します。
-- r128 にも `build/three.module.js`(約1.14MB)があります。モジュールにする作業と、版を上げる作業は分けられます。
-- 使っているのは本体の基本だけです(`Mesh` `MeshPhongMaterial` `CanvasTexture` `SpotLight` `ExtrudeGeometry` `Raycaster` など)。addons(`examples/`)は使っていないので、移す手間は小さめです。
-
-### 案の比べ
-
-| 案 | 内容 | 良い所 | 悪い所 |
-| --- | --- | --- | --- |
-| A | r128 の非モジュール版のまま | 手間が無い | 古いまま。直しも新しい機能も入らない |
-| B | three.js だけモジュールで読み、`window.THREE` に置いて、自分のファイルは今のまま | 変更が小さい | 「three.js が読めた」合図を別に作る必要があり、読み込み順の管理が二重になる。中途半端 |
-| **C(推奨)** | import map で `three` を固定した版に向け、自分のファイルも `export` / `import` にする。HTML は入口の1本だけ | 依存が各ファイルの先頭に書かれ、`<script>` の並び順と `window` の名前が要らなくなる(P2・P6・P7 が楽になる)。読めない時をまとめて捕まえられる | 3D のファイルを全部書き換える。Node の試験の読み方を確かめる必要がある |
-
-### C の形
-
-```html
-<script src="../common/log.js"></script>            <!-- common は今のまま(全ページ共通の普通のスクリプト) -->
-<script src="../common/autolog.js"></script>
-<script src="../common/env.js"></script>
-<script src="../common/site.js"></script>
-<script src="./launcher-common.js"></script>        <!-- デスクトップのランチャーも使うので普通のスクリプトのまま -->
-<script type="importmap">
-  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js" } }
-</script>
-<script type="module">
-  /* 入口: three.js か自分のファイルが1つでも読めなければ、2D の一覧にする */
-  import('./launcher-3d-bookshelf.js').catch(function (err) {
-    log.warn('3D の表示に必要なファイルを読み込めませんでした', err);
-    Launcher.showListInstead();
-  });
-</script>
-```
-
-```js
-/* launcher-3d-bookshelf-case.js の頭の例 */
-import * as THREE from 'three';
-import { roundRect, textureOf } from '../launcher-3d/launcher-3d-paint.js';
-import { packShelves } from './launcher-3d-bookshelf-core.js';
-export function buildCase(plan, theme) { … }
-```
-
-- **版の固定:** import map の1行で決めます。上げる時は、その1行と色・明かりの合わせ直しだけです。
-- **common との関係:** `log` `Env` `Launcher` は普通のスクリプトのまま先に読み、モジュールの中からは `window` 越しに使います。common をモジュールにすると全ページに響くので、今回はしません。
-- **読み込みの失敗:** 動的な `import()` が、three.js と自分のファイルのどれが読めなくても失敗するので、`__missing` の仕組み(P7)は要らなくなります。
-- **Node の試験:** core のファイルは DOM も three.js も使いません。Node 22.12 以降は、`require` で ES モジュールを読めます(開発環境は 22.22)。実装の時に、今の `tests/core.js` のままで読めるか確かめ、だめなら試験を `import()` にします。
-- **ブラウザ:** import map は Safari 16.4(2023年3月)・Chrome 89 以降です。それより古い端末では、入口の失敗として 2D の一覧になります。
-- **WebGPU は使いません:** `WebGLRenderer` のままにします。今の場面は軽く、WebGPU で速くなるとは限らないためです。端末ごとの対応の差もあります。
-
-### 版を上げる時に見た目が変わる所(r128 → r186 以降)
-
-実装の時に、three.js の移行ガイド(Migration Guide)で1つずつ確かめます。今わかっている大きな物は次のとおりです。
-
-- **色の扱い(r152):**
-  - `renderer.outputEncoding` と `texture.encoding`(今 `sRGBEncoding` を3か所で使用)が、`outputColorSpace` と `texture.colorSpace = SRGBColorSpace` に変わります。
-  - 色の管理が既定で有効になり、`0xe9e4da` のような色の値の受け取り方が変わります。昼夜の `THEME` の色を合わせ直します。
-- **光の強さ(r155):** 物理的な強さが既定になります。スポット・点・面の光の `intensity` と `decay` を合わせ直します。
-- **WebGL1 の終了(r163):** WebGL2 が要ります(Safari 15 以降)。
-
-### 進め方への入れ方
-
-- C にする場合は、段 1(共通化)と同時に、r128 のモジュール版で移します。ファイルを割り直す時に import にすれば、二度手間になりません。見た目は変わりません。
-- 版を上げるのは段 4 のまま、import map の1行と、色・明かりの合わせ直しで行います。
-
-## 構成(見直し後の案)
+完成の形です。今あるのは `launcher-3d/launcher-3d-core.js` まで(段 1a)。残りは段 1b・2 で作ります。フォルダ分け(本棚・美術館のフォルダ)は「決めてほしいこと」3 で決まった場合の形です。
 
 ```
 launchers/
-├── launcher-common.js              一覧・リンク・アイコン・開いた回数(全ランチャー。今のまま)
+├── launcher-common.js              一覧・リンク・アイコン・開いた回数・読み込み中の表示(全ランチャー。普通のスクリプト)
 ├── launcher-3d/                    3D 共通の部品(本棚と美術館が使う)
-│   ├── launcher-3d-core.js         姿勢・補間・最寄りの角度・ズームの範囲・画質の段(Node で試す。今 launcher-common にある3Dの計算をここへ)
-│   ├── launcher-3d-stage.js        three.js の土台: 描き手の作成・画質・画素比・描画ループ(必要な時だけ)・リサイズ・コンテキスト喪失・後片付け
-│   ├── launcher-3d-camera.js       見回す・拡大・タップ判定・移動のアニメ(本棚の view と美術館の中の物を1つに)
+│   ├── launcher-3d-core.js         姿勢・補間・最寄りの角度・ズームの範囲・画質の段の計算(Node で試す)【済】
+│   ├── launcher-3d-stage.js        three.js の土台: 描き手・画質・画素比・描画ループ・リサイズ・コンテキスト喪失・後片付け
+│   ├── launcher-3d-camera.js       見回す・拡大・タップ判定・移動のアニメ
 │   ├── launcher-3d-paint.js        Canvas の補助: 角丸・乱数・文字の折り返し・アイコンの読み込み・テクスチャにする
-│   ├── launcher-3d-search.js       探す(名前の検索・カテゴリの近道。3D と 2D の一覧で共用)
-│   └── launcher-3d-quality.json    画質の段ごとの値(画素比の上限・異方性・テクスチャの大きさ・照明の数)
+│   ├── launcher-3d-search.js       探す(名前の検索・カテゴリの近道。3D と 2D の一覧で共用。E1 を足す場合)
+│   └── launcher-3d-quality.json    画質の段ごとの値
 ├── launcher-3d-bookshelf/
 │   ├── launcher-3d-bookshelf.html / .css / .js     画面と起動だけ
 │   ├── launcher-3d-bookshelf-core.js               本の詰め方・棚・部屋の寸法(Node で試す)
-│   ├── launcher-3d-bookshelf-textures.js (+ .json) 質感の絵(見本は今の json)
+│   ├── launcher-3d-bookshelf-textures.js (+ .json) 質感の絵
 │   ├── launcher-3d-bookshelf-room.js               書斎(壁・床・窓・机・照明)
 │   ├── launcher-3d-bookshelf-case.js               本棚と本
 │   └── launcher-3d-bookshelf-theme.json            昼夜の色と明かり
@@ -166,24 +90,55 @@ launchers/
 │   ├── launcher-3d-museum-core.js                  部屋の配置・作品の割り振り(Node で試す)
 │   ├── launcher-3d-museum-textures.js              絵・案内板・額縁
 │   ├── launcher-3d-museum-room.js                  展示室と入口ホールの組み立て
-│   ├── launcher-3d-museum-tour.js                  部屋の移動・入口ホール・見た作品の記録
+│   ├── launcher-3d-museum-tour.js                  部屋の移動・見た作品の記録
 │   └── launcher-3d-museum-theme.json               昼夜の色・額の種類・案内板の色
-└── launcher-desktop/ …(3D ではないので今回は触らない。フォルダ分けだけ合わせる)
+└── launcher-desktop/ …             3D ではないので触らない(フォルダ分けだけ合わせる)
 ```
+
+### 依存
 
 ```mermaid
 flowchart LR
-  page[ランチャーの画面 .js] --> common[launcher-common.js<br>一覧・回数]
+  html[画面の .html] -->|普通の script| common[launcher-common.js<br>一覧・回数]
+  html -->|import map| three[three.js]
+  html -->|入口の import| page[画面の .js]
   page --> stage[launcher-3d-stage<br>描き手・ループ]
   page --> camera[launcher-3d-camera<br>見回す・タップ]
   page --> search[launcher-3d-search]
   page --> room[部屋 -room / -case / -tour]
   room --> paint[launcher-3d-paint]
   room --> tex[-textures + json]
-  camera --> core3d[launcher-3d-core]
   room --> core[-core 配置]
+  camera --> core3d[launcher-3d-core]
   core --> core3d
+  stage --> three
+  room --> three
 ```
+
+- `common/` の `log` `Env` `site.js` と `launcher-common.js` は普通のスクリプトのまま先に読み、モジュールの中からは `window` 越しに使います。
+- 3D のファイルは、使う物を先頭の `import` に書きます。`<script>` の並び順と `window` の名前に頼りません。
+- three.js は、画面の .js だけが動的な `import('three')` で読みます。静的な `import` にすると、three.js が読めない時に 2D の一覧まで出せなくなるためです。ほかのファイルは、土台(stage)を通して受け取ります(段 1b)。
+
+### HTML の読み込み
+
+```html
+<script src="../common/log.js"></script>
+<script src="../common/autolog.js"></script>
+<script src="../common/env.js"></script>
+<script src="../common/site.js"></script>
+<script src="./launcher-common.js"></script>
+<script type="importmap">
+  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js" } }
+</script>
+<script type="module">
+  import('./launcher-3d-bookshelf.js').catch(function (e) {
+    if (window.Launcher) Launcher.showModuleError(e);
+    else log.error('ランチャーの共通ファイル(launcher-common.js)を読み込めませんでした', e);
+  });
+</script>
+```
+
+版の固定は import map の1行です。上げる時は、その1行と色・明かりの合わせ直しになります(段 4)。
 
 ## 仕様
 
@@ -200,6 +155,32 @@ flowchart LR
 | `applyTheme(isDark)` | 昼夜の切り替え |
 | `dispose()` | 形・材質・テクスチャを片付ける |
 
+### 土台(stage)の約束
+
+| 関数 | 内容 |
+| --- | --- |
+| `createStage({ THREE, canvas, quality })` | 描き手・シーン・カメラを作る。WebGL が使えなければ例外(画面の .js が 2D の一覧にする) |
+| `stage.add(room)` / `stage.remove(room)` | 部屋を足す・外す |
+| `stage.wake()` | 描画ループを起こす。部屋の `update` がすべて false を返したら止まる |
+| `stage.resize()` | 大きさと画素比を合わせ直す |
+| `stage.onContextLost(fn)` | コンテキストを失った時と戻った時に呼ぶ |
+| `stage.dispose()` | すべて片付ける |
+
+### 3D 共通の計算(`launcher-3d-core.js`)
+
+段 1a で作った物です。DOM も three.js も使わず、Node で試します。
+
+| 関数 | 内容 |
+| --- | --- |
+| `randomOf(seed)` | 決まった種から同じ並びを返す乱数 |
+| `groupByCategory(list)` | カテゴリごとに分ける |
+| `framePose(…)` | 物を正面から収めるカメラの姿勢 |
+| `yawToward(…)` / `nearestAngle(…)` | 向く角度、最寄りの角度 |
+| `easeInOut(t)` / `interpolatePose(a, b, t)` | 移動のなめらかさ、姿勢の補間 |
+| `nextIndex(i, step, length)` | 前後のツール |
+
+段 1b で、ズームの範囲と画質の段の計算を足します。
+
 ### 操作の約束(2つで同じ)
 
 | 操作 | 結果 |
@@ -209,7 +190,7 @@ flowchart LR
 | 何も無い所をタップ | カードを閉じる |
 | ドラッグ | 見回す |
 | 2本指 / ホイール / ＋− | 拡大・縮小 |
-| 「探す」 | 名前で探す・カテゴリへ飛ぶ |
+| 「探す」 | 名前で探す・カテゴリへ飛ぶ(E1 を足す場合) |
 | 「一覧」 | 2D の一覧(いつでも) |
 | ← → / Enter / Esc | 前後のツール / 開く / 戻る |
 
@@ -226,62 +207,81 @@ flowchart LR
 ### 描画ループ
 
 - 動いている物(カメラの移動・本の出し入れ・照明の変化)がある間だけ回し、止まったら止めます。
-- タップ・ドラッグ・リサイズ・テーマの変化で、ループを起こします。
+- タップ・ドラッグ・リサイズ・テーマの変化で、`stage.wake()` を呼んで起こします。
+
+### ログ
+
+- 起動は `起動しました(…)` を1回。各段階は `log.step` で測ります。
+- three.js が読めない・WebGL が使えない: `log.warn`(想定内)。
+- 自分のファイルが読めない: `log.error`(`Launcher.showModuleError`)。
 
 ## 処理の流れ(起動)
 
-1. `launcher-common` で一覧を読む。
-2. three.js が読めたか確かめる。読めなければ 2D の一覧を出して終わる(`log.warn`)。
-3. 画質を決め、土台(stage)を作る。
-4. 見えている部屋だけ先に組み立て、表示する。
-5. 残りの部屋とテクスチャを後から描く。
-6. 各段階を `log.step` で測り、合計の時間をログに出す。
+1. HTML が common と `launcher-common.js` を読み、入口の `import()` で画面の .js を読む。読めなければ `showModuleError` で理由を出して終わる。
+2. 画面の .js が、一覧(`Launcher.loadTools`)と three.js(`import('three')`)を同時に読む。
+3. three.js が読めない、または WebGL が使えなければ、2D の一覧を出して終わる(`log.warn`)。
+4. 画質の段を決め、土台(stage)を作る。
+5. 見えている部屋だけ先に組み立てて表示し、読み込み中の表示を消す。
+6. 残りの部屋とテクスチャを後から描く。
+7. 合計の時間をログに出す。
 
 ## 進め方(段階)
 
-| 段 | 内容 | 見た目 |
-| --- | --- | --- |
-| 1 | 3D 共通の部品(core・stage・camera・paint)を作り、2つを乗せ替える。同時に ES モジュールにする(three.js は r128 のモジュール版)。core の試験を足す。読み込みの仕組み(P7)とログ(P11)を直す | 変えない |
-| 2 | 美術館の `main()` を画面・部屋・移動に割る。本棚の `buildRoom` を部屋と本棚に割る。データを json へ出し、名前を直す | 変えない |
-| 3 | 外部設計の課題: 探す(E1)、描画ループを止める(E3)、コンテキスト喪失(E4)、画質の段(E5)、一覧ボタン(E7)、テーマ(E8) | 変わる |
-| 4 | three.js を上げる(import map の1行。決めた場合) | 色と明るさを合わせ直す |
+| 段 | 内容 | 見た目 | 状態 |
+| --- | --- | --- | --- |
+| 1a | ES モジュールにする(three.js は r128 のモジュール版)。3D 共通の計算を `launcher-3d-core.js` へ。読み込みの失敗(P7)とログ(P11)を直す。試験を足す | 変えない | 済 |
+| 1b | 土台(stage)・カメラ(camera)・Canvas の補助(paint)を共通にし、2つを乗せ替える | 変えない | 次 |
+| 2 | 美術館の `main()` を画面・部屋・移動に割る。本棚の `buildRoom` を部屋と本棚に割る。データを json へ出し、名前を直す。フォルダ分け(決めた場合) | 変えない | |
+| 3 | 使う人から見た課題(E1〜E8) | 変わる | |
+| 4 | three.js を上げる(決めた場合) | 色と明るさを合わせ直す | |
 
-1 と 2 は見た目を変えない作り変えです。画面で確かめられないので、1段ずつ小さく push し、その都度、実機で見てもらいます。
+1・2 は見た目を変えない作り変えです。1段ずつ小さく push し、開発環境で画面を撮って前と比べ、その都度、実機でも見てもらいます。
+
+### 版を上げる時に見た目が変わる所(r128 → r186 以降)
+
+段 4 で、three.js の移行ガイドで1つずつ確かめます。今わかっている大きな物です。
+
+- **色の扱い(r152):** `outputEncoding` / `texture.encoding`(今 `sRGBEncoding` を3か所)が `outputColorSpace` / `texture.colorSpace` に変わる。色の管理が既定で有効になり、昼夜の色を合わせ直す。
+- **光の強さ(r155):** 物理的な強さが既定になる。光の `intensity` と `decay` を合わせ直す。
+- **WebGL1 の終了(r163):** WebGL2 が要る(Safari 15 以降)。
+- **ファイルの形(r171):** `three.module.js` が `three.core.js` を読む2ファイルになる。圧縮前で合わせて約2.1MB。
+
+## 制限事項
+
+- three.js は、縮めていないモジュール版を読むため、約1.14MB です(圧縮前。r128 の縮めた版は約600KB)。起動が遅ければ、jsDelivr の `+esm` を試します。
+- 3D は読み上げソフトで使えません。2D の一覧で代わりにします(E7)。
+- import map が使えない古いブラウザでは、2D の一覧になります。
+- 開発環境の 3D は、ソフトウェアの描画(SwiftShader)です。速さ・発熱・電池は実機でしか分かりません。
 
 ## 確認
 
-- `tests/core/launcher-3d.test.js`: 3D 共通の計算(姿勢・補間・ズームの範囲・画質の段)。
-- `tests/core/launcher-3d-bookshelf.test.js`、`tests/core/launcher-3d-museum.test.js`: 配置(ツールが 10 / 50 / 200 個の時、上限を超えた時)。
-- `node tests/smoke.js launchers/…`: three.js を止めた状態で、2D の一覧と案内が出ること。開発環境では three.js が読めないので、これが画面の試験の全部になる。
-- 実機で、段階ごとに見てもらう:
-  - 起動の時間(ログの合計)
-  - 見た目が変わっていないこと(1・2の段)
-  - タブを切り替えて戻った時(E4)
-  - 待機中の電池(E3)
+- Node: `node tests/core.js launcher-3d`、`launcher-3d-bookshelf`(本を 10 / 47 / 200 冊)、`launcher-3d-museum`(配置・部屋の数・扉の割り振り・新着・よく使う物)。
+- 画面: `node tests/smoke.js launchers/…`。`node tests/scenarios/launcher-3d.js` は、`THREE_JS_DIR` が無ければ 2D の一覧と警告を、あれば起動のログと本のタップで説明カードが出ることを試す。
+- 見た目を変えない段(1・2): 開発環境で three.js r128 を動かし、前と後の画面を 844×390・390×844・1280×800 で撮って、画素が一致することを確かめる。
+- 実機で見てもらうこと: 起動の時間(ログの合計)、見た目が変わっていないこと、タブを切り替えて戻った時(E4)、待機中の電池(E3)。
 
 ## 決めてほしいこと
 
-1. **ES モジュールにするか、three.js を上げるか。**
-   - 推奨は、段 1 で ES モジュール(案 C)にし、three.js は r128 のモジュール版のまま見た目を変えずに移すことです。
-   - 上げるかどうかは、段 4 で決めます。上げる作業は、import map の1行と色・明かりの合わせ直しになります。
-2. **探す機能(E1)を足すか。** 3D で「眺める楽しさ」を優先し、探すのは 2D の一覧に任せる、という考え方もあります。
-3. **ランチャーごとのフォルダに分けるか(P10)。** 分けるとアドレスが変わるので、`launchers.json` を直します。ブックマークしたアドレスは古くなります。
+決まった物:
+
+1. ES モジュールにする(案 C)。three.js は r128 のまま移し、上げるかは段 4 で決める。
+
+残っている物:
+
+2. **探す機能(E1)を足すか。** 3D は「眺める楽しさ」を優先し、探すのは 2D の一覧に任せる、という考え方もあります。
+3. **ランチャーごとのフォルダに分けるか(P10)。** 分けるとアドレスが変わるので `launchers.json` を直します。ブックマークしたアドレスは古くなります。
 4. **本棚と美術館の両方を続けるか。** 片方に絞ると、手入れの量が半分になります。
+
+段 2 を始める前に、3 を決めてください。2 と 4 は段 3 の前で構いません。
 
 ## 実装の記録
 
 ### 段 1a(2026-11-07)
 
 - ES モジュールにしました。three.js は import map で r128 のモジュール版(jsDelivr の `three@0.128.0/build/three.module.js`)に固定しています。
-- HTML の読み込みは、common と `launcher-common.js`(普通のスクリプト)・import map・入口の `<script type="module">` だけにしました。`__missing` / `__missingCheck` / `__threeFailed` はやめ、入口の `import()` が失敗した時は `Launcher.showModuleError` で理由を出します。
-- three.js は画面の .js の中で `import('three')` で読みます。読めない時は `null` のまま `log.warn` を出し、2D の一覧にします。静的な `import` にすると、three.js が読めない時に一覧まで出せなくなるためです。ほかのファイルは今までどおり `create({ THREE, … })` で受け取ります(段 1b で土台にまとめる時に見直す)。
-- `launcher-common.js` の 3D の計算を `launcher-3d/launcher-3d-core.js` に移し、名前を直しました: `randomOf` `groupByCategory` `framePose` `yawToward` `nearestAngle` `easeInOut` `interpolatePose` `nextIndex`。各ランチャーの core の中の名前は、段 2 まで今のままです。
-- three.js が読めない時と WebGL が使えない時は、想定内なので `log.warn` にしました(P11)。
-- 試験を足しました:
-  - `tests/core/launcher-3d.test.js` / `-bookshelf.test.js` / `-museum.test.js`(Node 22 の `require` で ES モジュールを読む)
-  - `tests/scenarios/launcher-3d.js`
-- 確認: 開発環境で three.js r128 を git で取って動かし、変える前と後の画面を3つの大きさ(844×390・390×844・1280×800)で撮って比べ、画素が一致しました。
-- 残り(段 1b): 土台(stage)・カメラ(camera)・Canvas の補助(paint)を共通にして、2つを乗せ替えます。
-- 気になる点: モジュール版は縮めていないため、three.js の大きさが約600KB から約1.14MB になります(配信の圧縮前)。実機で起動の時間を見て、遅ければ jsDelivr の `+esm`(縮めた版)を試します。
-- 見つけた既存の不具合: 美術館の入口ホールで、操作のヒントと「エントランスホール」の札が重なっています(E6 で直す)。
-
+- HTML の `__missing` / `__missingCheck` / `__threeFailed` はやめ、入口の `import()` が失敗した時は `Launcher.showModuleError` で理由を出します。
+- three.js は画面の .js の中で `import('three')` で読みます。ほかのファイルは今までどおり `create({ THREE, … })` で受け取ります(段 1b で土台にまとめる)。
+- `launcher-common.js` の 3D の計算を `launcher-3d/launcher-3d-core.js` に移し、名前を直しました。各ランチャーの core の中の名前は、段 2 まで今のままです。
+- three.js が読めない時と WebGL が使えない時を `log.warn` にしました。
+- 試験: `tests/core/launcher-3d.test.js` / `-bookshelf.test.js` / `-museum.test.js`(Node 22 の `require` で ES モジュールを読む)、`tests/scenarios/launcher-3d.js`。
+- 確認: 前と後の画面を3つの大きさで撮って比べ、画素が一致しました。実機は未確認です。
