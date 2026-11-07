@@ -11,6 +11,8 @@
 | [naming.md](./naming.md) | 名前を付ける時 |
 | [lessons.md](./lessons.md) | カメラ・センサー・音・描画・iPhone など、つまずきやすい機能を使う時 |
 | [design/](./design/README.md) | 設計書(作る前に書く)と、その型 |
+| [design-3d.md](./design-3d.md) | 3D の画面の設計で決める項目(見た目・操作・性能・壊れにくさ・試験) |
+| [glossary.md](./glossary.md) | 文書で使う言葉 |
 | [../tests/README.md](../tests/README.md) | 試験の動かし方 |
 
 ## 作業の進め方
