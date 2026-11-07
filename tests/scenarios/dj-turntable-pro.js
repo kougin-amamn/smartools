@@ -68,7 +68,7 @@ function wav(seconds) {
     if (!(a >= 6 && m >= 6)) problems.push(`回したのにメーターが振れません(A ${a} / M ${m})`);
     if (b !== 0) problems.push('止まっているデッキ B のメーターが振れています: ' + b);
     const time = await page.locator('.deck-time').first().textContent();
-    if (!/^0:0[1-2] \//.test(time)) problems.push('再生位置が進んでいません: ' + time);
+    if (!/^-0:0[7-9]$/.test(time)) problems.push('再生位置が進んでいません: ' + time);
 
     /* クロスフェーダーを B 側いっぱいにすると、マスターが静かになる */
     await page.$eval('#crossfader', (x) => {

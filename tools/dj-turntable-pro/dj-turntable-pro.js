@@ -4,6 +4,9 @@
   'use strict';
   var K = window.DJCore;
   var MAX_SECONDS = 15 * 60;
+  /* 並べ方の隙間と、縦向きでミキサーに残す最低の高さ(CSS と合わせる) */
+  var GAP = 6,
+    MIXER_MIN = 340;
   var SETTINGS_KEY = 'dj-turntable-pro-settings',
     TRACKS_KEY = 'dj-turntable-pro-tracks';
   var DEFAULTS = {
@@ -266,23 +269,34 @@
 
   /* 画面の大きさ: 盤が入りきる一番大きな本体の幅を決める */
   function fit() {
-    var content = document.querySelector('.content');
+    var content = document.querySelector('.content'),
+      style = getComputedStyle(content);
     var landscape = window.innerWidth > window.innerHeight;
-    var wavesH = settings.waves ? $('waves').offsetHeight + 8 : 0;
-    var deckEl = decks[0].el,
-      extra = deckEl.offsetHeight - decks[0].ui.plinth.offsetHeight;
-    var width = content.clientWidth - 16,
-      height = content.clientHeight - 16 - wavesH,
+    var width = content.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+      height = content.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+    $('waves').style.height = '';
+    var wavesH = settings.waves ? $('waves').offsetHeight + GAP : 0;
+    var deck = decks[0],
+      extraW = deck.el.offsetWidth - deck.ui.plinth.offsetWidth,
+      extraH = deck.el.offsetHeight - deck.ui.plinth.offsetHeight;
+    var ratio = K.PLINTH.width / K.PLINTH.height,
       w;
     if (landscape) {
-      var column = (width - $('mixer').offsetWidth - 16) / 2;
-      w = Math.min(column, ((height - extra) * K.PLINTH.width) / K.PLINTH.height);
+      w = Math.min(
+        (width - $('mixer').offsetWidth - GAP * 2) / 2 - extraW,
+        (height - wavesH - extraH) * ratio
+      );
     } else {
-      var each = (height - $('mixer').offsetHeight - 16) / 2;
-      w = Math.min(width, ((each - extra) * K.PLINTH.width) / K.PLINTH.height);
+      /* 縦向きも2台を左右に並べ、下の残りをミキサーにする */
+      w = Math.min((width - GAP) / 2 - extraW, (height - wavesH - extraH - MIXER_MIN - GAP) * ratio);
     }
-    w = Math.round(K.clamp(w, 200, 500));
+    w = Math.round(K.clamp(w, 140, 520));
     document.documentElement.style.setProperty('--plinth', w + 'px');
+    /* 横向きで高さが余る時(タブレット)は、余りを波形に回す */
+    if (landscape && settings.waves) {
+      var free = height - extraH - w / ratio - GAP;
+      $('waves').style.height = Math.round(K.clamp(free, 44, 240)) + 'px';
+    }
     decks.forEach(function (d) {
       d.setSize(w);
     });

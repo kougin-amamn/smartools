@@ -70,6 +70,7 @@
         <div class="deck-slot" id="deckA"></div>
         <section class="mixer" id="mixer" aria-label="ミキサー">
           <div class="strip strip-a" data-log-group="チャンネル A">
+            <span class="print strip-label">CH A</span>
             <div class="knob-box">
               <div
                 class="knob"
@@ -176,6 +177,7 @@
             </div>
           </div>
           <div class="strip strip-b" data-log-group="チャンネル B">
+            <span class="print strip-label">CH B</span>
             <div class="knob-box">
               <div
                 class="knob"
@@ -296,14 +298,16 @@
     <template id="deckTemplate">
       <section class="deck">
         <div class="deck-head">
-          <span class="deck-letter"></span>
           <button type="button" class="deck-track" data-log="曲を選ぶ">
-            <span class="deck-title">曲を選んでください</span>
+            <span class="deck-letter"></span
+            ><span class="deck-name"
+              ><span class="deck-title">曲を選んでください</span
+              ><span class="deck-status" role="status">LOAD</span></span
+            >
           </button>
-          <span class="deck-read"
-            ><span class="deck-bpm">---.-</span><span class="deck-pitch">0.0%</span></span
-          >
-          <span class="deck-time">0:00 / -0:00</span>
+          <span class="lcd"><small>BPM</small><b class="deck-bpm">---.-</b></span>
+          <span class="lcd"><small>PITCH</small><b class="deck-pitch">0.0%</b></span>
+          <span class="lcd lcd-time"><small>REMAIN</small><b class="deck-time">-0:00</b></span>
         </div>
         <div class="plinth">
           <div
@@ -315,22 +319,35 @@
             ><canvas class="platter-record"></canvas><canvas class="platter-glare"></canvas>
           </div>
           <svg class="arm" viewBox="0 0 130 110" aria-hidden="true">
-            <circle cx="105" cy="23" r="12" class="arm-base" />
-            <circle cx="105" cy="23" r="7.5" class="arm-ring" />
-            <circle cx="104" cy="66" r="2.6" class="arm-rest" />
+            <rect x="93" y="9" width="27" height="29" rx="4" class="arm-plate" />
+            <circle cx="105" cy="23" r="11" class="arm-base" />
+            <circle cx="105" cy="23" r="8.6" class="arm-ring" />
+            <circle cx="105" cy="23" r="6.8" class="arm-ring-inner" />
+            <circle cx="118" cy="34" r="2.6" class="arm-dial" />
+            <line x1="118" y1="31.6" x2="118" y2="33" class="arm-dial-mark" />
+            <rect x="112.5" y="45" width="3" height="10" rx="1.2" class="arm-lever" />
+            <circle cx="104" cy="66" r="2.8" class="arm-rest" />
             <g class="arm-move" transform="translate(105 23) rotate(92)">
-              <rect x="-19" y="-5" width="11" height="10" rx="2.5" class="arm-weight" />
-              <line x1="-8" y1="0" x2="54" y2="0" class="arm-tube" />
-              <circle cx="0" cy="0" r="4" class="arm-pivot" />
+              <rect x="-20" y="-5.2" width="12" height="10.4" rx="2.5" class="arm-weight" />
+              <line x1="-20" y1="0" x2="-8" y2="0" class="arm-weight-line" />
+              <line x1="-8" y1="0" x2="53" y2="0" class="arm-tube" />
+              <line x1="-8" y1="-0.5" x2="53" y2="-0.5" class="arm-tube-light" />
+              <circle cx="0" cy="0" r="4.2" class="arm-pivot" />
               <path d="M52 -2.8 L66.5 -3.6 L67.5 3.6 L52 2.8 Z" class="arm-shell" />
+              <path d="M58 -3.4 L57 -7.5 L59.2 -7.6 L60 -3.5 Z" class="arm-lift" />
               <rect x="62.5" y="-1.4" width="4" height="2.8" class="arm-cart" />
               <line x1="-20" y1="0" x2="68" y2="0" class="arm-hit" />
             </g>
           </svg>
           <span class="strobe-lamp"></span>
-          <button type="button" class="start" data-log="START/STOP" aria-pressed="false">
-            START<br />STOP
-          </button>
+          <span class="print print-start">START·STOP</span>
+          <button
+            type="button"
+            class="start"
+            data-log="START/STOP"
+            aria-pressed="false"
+            aria-label="START/STOP"
+          ></button>
           <div class="speeds">
             <button type="button" class="speed" data-rpm="33" data-log="33回転" aria-pressed="true">33</button
             ><button type="button" class="speed" data-rpm="45" data-log="45回転" aria-pressed="false">
@@ -340,8 +357,9 @@
             </button>
           </div>
           <div class="pitch">
-            <span class="pitch-scale">±8</span>
+            <span class="print pitch-scale">±8</span>
             <div class="pitch-slot">
+              <span class="pitch-marks"><i>−</i><i>0</i><i>+</i></span>
               <input
                 type="range"
                 class="pitch-fader"
@@ -354,17 +372,16 @@
             </div>
             <span class="pitch-led" title="ピッチ 0%"></span>
             <button type="button" class="pitch-reset" data-log="ピッチを0に戻す" aria-label="ピッチを0に戻す">
-              0
+              RESET
             </button>
           </div>
         </div>
         <div class="cues">
-          <button type="button" class="cue" data-log="CUE">CUE</button>
-          <button type="button" class="hot" data-hot="0" data-log="ホットキュー 1">1</button
-          ><button type="button" class="hot" data-hot="1" data-log="ホットキュー 2">2</button
-          ><button type="button" class="hot" data-hot="2" data-log="ホットキュー 3">3</button
-          ><button type="button" class="hot" data-hot="3" data-log="ホットキュー 4">4</button>
-          <span class="deck-status" role="status"></span>
+          <button type="button" class="pad cue" data-log="CUE">CUE</button>
+          <button type="button" class="pad hot" data-hot="0" data-log="ホットキュー 1">1</button
+          ><button type="button" class="pad hot" data-hot="1" data-log="ホットキュー 2">2</button
+          ><button type="button" class="pad hot" data-hot="2" data-log="ホットキュー 3">3</button
+          ><button type="button" class="pad hot" data-hot="3" data-log="ホットキュー 4">4</button>
         </div>
       </section>
     </template>

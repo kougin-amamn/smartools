@@ -112,8 +112,9 @@
     this.host.send(message);
   };
 
+  /* 曲名の下の小さな表示。何も無い時は LOAD(押すと曲の一覧) */
   DeckView.prototype.say = function (text) {
-    this.ui.status.textContent = text || '';
+    this.ui.status.textContent = text || (this.track ? 'LOADED' : 'LOAD');
   };
 
   /* モーターと速さ */
@@ -176,6 +177,7 @@
     this.pos = 0;
     this.shownSecond = -1;
     this.ui.title.textContent = track.title;
+    this.say('');
     this.showBpm();
     this.showHotCues();
     this.drawRecord();
@@ -426,7 +428,7 @@
     var second = Math.floor(pos);
     if (second !== this.shownSecond && this.track) {
       this.shownSecond = second;
-      this.ui.time.textContent = K.formatTime(pos) + ' / -' + K.formatTime(this.track.duration - pos);
+      this.ui.time.textContent = '-' + K.formatTime(this.track.duration - pos);
     }
     return !!(this.grab || this.armDrag || this.motorOn || Math.abs(this.speed) > 0.001);
   };

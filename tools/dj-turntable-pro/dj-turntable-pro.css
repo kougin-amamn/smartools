@@ -1,4 +1,4 @@
-/* DJターンテーブルの画面。機械の部分は実物の色(黒・銀・LED)を使い、ヘッダとシートはサイトの色のまま */
+/* DJターンテーブル Pro の画面。機械の部分は実物の色と質感(黒い本体・アルミ・液晶・LED)を使い、ヘッダとシートはサイトの色のまま */
 html {
   --plinth: 300px;
 }
@@ -8,113 +8,181 @@ body {
 }
 .content {
   min-height: 0;
-  overflow: auto;
-  padding: 8px 8px calc(env(safe-area-inset-bottom, 0px) + 8px);
-  background: radial-gradient(ellipse at 50% 0%, #24262d 0%, #0f1013 70%);
+  overflow: hidden;
+  padding: 6px calc(env(safe-area-inset-right, 0px) + 6px) calc(env(safe-area-inset-bottom, 0px) + 6px)
+    calc(env(safe-area-inset-left, 0px) + 6px);
+  background: radial-gradient(ellipse 120% 60% at 50% -10%, #2a2c33 0%, rgba(42, 44, 51, 0) 70%), #0b0c0f;
   color: #e6e7ea;
   align-items: stretch;
-  --knob: 25px;
+  --knob: 32px;
+  --glass: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 45%), #090b0b;
+  --glass-edge: inset 0 0 0 1px #000, inset 0 2px 6px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.07);
+  --lcd: #9ff3dd;
 }
+/* 長押しで出るメニュー(画像の保存・文字の選択・拡大鏡)を出さない。盤やボタンを押さえ続けて使うため */
 .app {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: center;
-  align-content: start;
-  gap: 8px;
+  height: 100%;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto;
+  grid-template-areas: 'waves waves' 'status status' 'a b' 'mixer mixer';
+  align-content: center;
+  gap: 6px;
 }
 .waves {
+  grid-area: waves;
   width: 100%;
-  height: 60px;
-  border-radius: 8px;
-  background: #141519;
-  box-shadow: inset 0 0 0 1px #2a2c33;
+  height: 56px;
+  border-radius: 6px;
+  background: var(--glass);
+  box-shadow: var(--glass-edge);
   cursor: pointer;
 }
 .app .status {
+  grid-area: status;
   margin: 0;
   color: #ffb4a8;
 }
 .app .status:empty {
   display: none;
 }
+#deckA {
+  grid-area: a;
+  justify-self: end;
+}
+#deckB {
+  grid-area: b;
+  justify-self: start;
+}
+.mixer {
+  grid-area: mixer;
+}
 
-/* デッキ */
+/* 印刷された文字(本体・パネル) */
+.print {
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: #8d919b;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* デッキ: 上に液晶、本体、キューのパッド */
 .deck {
-  width: var(--plinth);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: var(--plinth);
+  grid-template-areas: 'head' 'plinth' 'cues';
+  gap: 5px;
 }
 .deck-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 28px;
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
-}
-.deck-letter {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
+  grid-area: head;
   display: grid;
-  place-items: center;
-  background: #2b2d35;
-  color: #7fe0d2;
-  font-weight: 700;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+}
+.deck-track,
+.lcd {
+  background: var(--glass);
+  box-shadow: var(--glass-edge);
+  border-radius: 5px;
 }
 .deck-track {
-  flex: 1;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
   min-width: 0;
+  height: 32px;
+  padding: 0 8px 0 5px;
   border: 0;
-  background: none;
   color: inherit;
   text-align: left;
-  font-size: 13px;
-  padding: 0;
   cursor: pointer;
+  font-family: inherit;
+}
+.deck-letter {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  background: #1c2a27;
+  color: var(--lcd);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(159, 243, 221, 0.25);
+}
+.deck-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
 }
 .deck-title {
-  display: block;
+  font-size: 12px;
+  color: #f2f3f5;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  border-bottom: 1px dashed #5a5d68;
 }
-.deck-read {
+.deck-status {
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  color: #6f8c86;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.lcd {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  justify-content: center;
+  padding: 2px 7px;
+  min-width: 0;
+  height: 30px;
   line-height: 1.1;
 }
-.deck-bpm {
-  font-weight: 700;
-  font-size: 14px;
-  color: #ffd98a;
+.lcd small {
+  font-size: 7px;
+  letter-spacing: 0.16em;
+  color: #5f726e;
 }
-.deck-pitch,
-.deck-time {
-  color: #a6a9b4;
+.lcd b {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--lcd);
+  text-shadow: 0 0 6px rgba(159, 243, 221, 0.45);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
-.deck-time {
-  min-width: 82px;
-  text-align: right;
+.lcd .deck-bpm {
+  color: #ffe2a3;
+  text-shadow: 0 0 6px rgba(255, 210, 120, 0.45);
 }
 
+/* 本体(プリンス): 黒い金属の粒子とヘアライン、面取りの光 */
 .plinth {
+  grid-area: plinth;
   position: relative;
   width: var(--plinth);
   aspect-ratio: 130 / 110;
-  border-radius: calc(var(--plinth) * 0.035);
+  border-radius: calc(var(--plinth) * 0.03);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 30%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.015) 0 1px, rgba(0, 0, 0, 0) 1px 3px), #1b1c21;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 40%),
+    linear-gradient(180deg, #26272c, #17181c);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -2px 6px rgba(0, 0, 0, 0.6),
-    0 10px 24px rgba(0, 0, 0, 0.55);
-  user-select: none;
-  -webkit-user-select: none;
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.55),
+    0 0 0 1px #040405,
+    0 14px 28px rgba(0, 0, 0, 0.65);
 }
 .platter {
   position: absolute;
@@ -126,8 +194,8 @@ body {
   touch-action: none;
   cursor: grab;
   box-shadow:
-    0 0 0 1px #0a0a0c,
-    0 8px 18px rgba(0, 0, 0, 0.7);
+    0 0 0 calc(var(--plinth) * 0.005) #070708,
+    0 calc(var(--plinth) * 0.02) calc(var(--plinth) * 0.045) rgba(0, 0, 0, 0.75);
 }
 .platter canvas {
   position: absolute;
@@ -137,9 +205,9 @@ body {
   pointer-events: none;
 }
 .platter-record {
-  inset: calc(3 / 94 * 100%) !important;
-  width: calc(88 / 94 * 100%) !important;
-  height: calc(88 / 94 * 100%) !important;
+  inset: calc(4 / 94 * 100%) !important;
+  width: calc(86 / 94 * 100%) !important;
+  height: calc(86 / 94 * 100%) !important;
   will-change: transform;
 }
 .platter-strobe {
@@ -151,60 +219,100 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 3%;
-  height: 3%;
+  width: 3.2%;
+  height: 3.2%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #ffffff, #9a9ea6 60%, #50535a);
+  background: radial-gradient(circle at 35% 35%, #ffffff, #a3a7ae 55%, #4b4e55);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   pointer-events: none;
 }
+
+/* トーンアーム(SVG。本体と同じ 130×110 の単位) */
 .arm {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  filter: drop-shadow(1px 2px 1.5px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(1px 2px 1.5px rgba(0, 0, 0, 0.65));
   overflow: visible;
 }
 .plinth.lifting .arm {
-  filter: drop-shadow(4px 7px 3px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(4px 8px 3px rgba(0, 0, 0, 0.5));
+}
+.arm-plate {
+  fill: #1c1d21;
+  stroke: #33353b;
+  stroke-width: 0.4;
 }
 .arm-base {
-  fill: #2a2c32;
-  stroke: #3d4048;
-  stroke-width: 0.6;
+  fill: #2a2c31;
+  stroke: #45484f;
+  stroke-width: 0.5;
 }
 .arm-ring {
-  fill: #8e929a;
+  fill: #c3c6cc;
+  stroke: #6c7077;
+  stroke-width: 0.4;
+}
+.arm-ring-inner {
+  fill: #8d9198;
+}
+.arm-dial {
+  fill: #2f3136;
+  stroke: #9a9ea5;
+  stroke-width: 0.4;
+}
+.arm-dial-mark {
+  stroke: #e6e7ea;
+  stroke-width: 0.5;
+}
+.arm-lever {
+  fill: #c3c6cc;
+  stroke: #5e6168;
+  stroke-width: 0.3;
 }
 .arm-rest {
-  fill: #2e3036;
-  stroke: #575a62;
+  fill: #26282d;
+  stroke: #686b73;
   stroke-width: 0.5;
 }
 .arm-weight {
-  fill: #bfc3ca;
+  fill: #d9dce1;
+  stroke: #6e727a;
+  stroke-width: 0.4;
+}
+.arm-weight-line {
   stroke: #6e727a;
   stroke-width: 0.4;
 }
 .arm-tube {
-  stroke: #d9dce1;
-  stroke-width: 2.2;
+  stroke: #bfc3c9;
+  stroke-width: 2.3;
   stroke-linecap: round;
 }
+.arm-tube-light {
+  stroke: #ffffff;
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
 .arm-pivot {
-  fill: #4b4e56;
-  stroke: #a5a9b0;
+  fill: #50535a;
+  stroke: #b8bcc3;
   stroke-width: 0.5;
 }
 .arm-shell {
-  fill: #1e1f24;
-  stroke: #9ea2aa;
+  fill: #18191d;
+  stroke: #a5a9b0;
   stroke-width: 0.4;
 }
+.arm-lift {
+  fill: #b8bcc3;
+}
 .arm-cart {
-  fill: #c9302c;
+  fill: #b42a2a;
 }
 .arm-hit {
   stroke: transparent;
@@ -215,19 +323,29 @@ body {
 }
 .strobe-lamp {
   position: absolute;
-  left: calc(1.5 / 130 * 100%);
-  top: calc(84 / 110 * 100%);
-  width: calc(5 / 130 * 100%);
+  left: calc(1.6 / 130 * 100%);
+  top: calc(83 / 110 * 100%);
+  width: calc(4.6 / 130 * 100%);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, #ffb27a, #c8502a 70%);
-  box-shadow: 0 0 8px rgba(255, 120, 60, 0.8);
+  background: radial-gradient(circle at 40% 35%, #ffd0b0, #d2552c 65%, #6b2412);
+  box-shadow:
+    0 0 0 1px #0a0a0b,
+    0 0 10px rgba(255, 110, 60, 0.75);
   pointer-events: none;
 }
+
+/* 本体のボタン */
 .plinth button {
   font-family: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+.print-start {
+  position: absolute;
+  left: calc(2 / 130 * 100%);
+  top: calc(93.5 / 110 * 100%);
+  font-size: calc(var(--plinth) * 0.019);
 }
 .start {
   position: absolute;
@@ -236,27 +354,22 @@ body {
   width: calc(18 / 130 * 100%);
   height: calc(11 / 110 * 100%);
   border: 0;
-  border-radius: 3px;
-  background: linear-gradient(180deg, #4a4d55, #2d2f35);
-  color: #e6e7ea;
-  font-size: calc(var(--plinth) * 0.022);
-  font-weight: 700;
-  line-height: 1.05;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #5b5e66, #34363c 55%, #2b2d32);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 3px 0 #101114,
-    0 4px 6px rgba(0, 0, 0, 0.5);
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 0 0 1px #050506,
+    0 3px 0 #0b0b0d,
+    0 4px 6px rgba(0, 0, 0, 0.6);
   transition: transform 0.05s;
 }
 .start:active,
 .start[aria-pressed='true'] {
   transform: translateY(2px);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 1px 0 #101114;
-}
-.start[aria-pressed='true'] {
-  color: #7fe0d2;
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 0 1px #050506,
+    0 1px 0 #0b0b0d;
 }
 .speeds {
   position: absolute;
@@ -266,21 +379,35 @@ body {
   gap: calc(var(--plinth) * 0.012);
 }
 .speed {
+  position: relative;
   width: calc(var(--plinth) * 0.075);
-  height: calc(var(--plinth) * 0.06);
+  height: calc(var(--plinth) * 0.058);
   border: 0;
   border-radius: 2px;
-  background: linear-gradient(180deg, #3d4048, #26282e);
-  color: #c6c8ce;
-  font-size: calc(var(--plinth) * 0.028);
+  background: linear-gradient(180deg, #4a4d55, #2c2e33);
+  color: #d4d6db;
+  font-size: calc(var(--plinth) * 0.027);
   font-weight: 700;
-  box-shadow: 0 2px 0 #0e0f12;
-}
-.speed[aria-pressed='true'] {
-  color: #ffffff;
   box-shadow:
-    0 2px 0 #0e0f12,
-    inset 0 -2px 0 #ff6a3d;
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 0 1px #050506,
+    0 2px 0 #0b0b0d;
+}
+/* 押した回転数の上に小さな LED */
+.speed::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: calc(var(--plinth) * -0.018);
+  width: calc(var(--plinth) * 0.012);
+  height: calc(var(--plinth) * 0.012);
+  margin-left: calc(var(--plinth) * -0.006);
+  border-radius: 50%;
+  background: #2a2f33;
+}
+.speed[aria-pressed='true']::before {
+  background: #d9f4ff;
+  box-shadow: 0 0 5px #9fdcff;
 }
 .pitch {
   position: absolute;
@@ -294,8 +421,7 @@ body {
   gap: 2px;
 }
 .pitch-scale {
-  font-size: calc(var(--plinth) * 0.026);
-  color: #a6a9b4;
+  font-size: calc(var(--plinth) * 0.024);
 }
 .pitch-slot,
 .vfader {
@@ -303,52 +429,65 @@ body {
   flex: 1;
   width: 100%;
   min-height: 0;
-  border-radius: 3px;
+  container-type: size;
 }
 .pitch-slot {
-  background: repeating-linear-gradient(
-    180deg,
-    transparent 0 calc(12.5% - 1px),
-    #50535b calc(12.5% - 1px) 12.5%
-  );
-  background-size: 30% 100%;
-  background-position: 0 0;
-  background-repeat: no-repeat;
+  border-radius: 3px;
+  background: linear-gradient(90deg, transparent 44%, #050506 44% 56%, transparent 56%);
 }
-/* 縦のフェーダーは、横の range を 90度回して作る(縦の range は対応の差が大きい) */
+.pitch-marks {
+  position: absolute;
+  left: 0;
+  top: 6%;
+  bottom: 6%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: calc(var(--plinth) * 0.022);
+  font-style: normal;
+  color: #8d919b;
+  pointer-events: none;
+}
+.pitch-marks i {
+  font-style: normal;
+  line-height: 1;
+}
+/* 縦のフェーダーは、横の range を 90度回して作る(縦の range は対応の差が大きい)。長さは入れ物の高さ(cqh) */
 .pitch-slot input,
 .vfader input {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: var(--travel);
+  width: 100cqh;
   height: 28px;
   margin: 0;
   transform: translate(-50%, -50%) rotate(90deg);
-}
-.pitch-slot {
-  --travel: calc(var(--plinth) * 0.4);
 }
 .vfader input {
   transform: translate(-50%, -50%) rotate(-90deg);
 }
 .pitch-led {
-  width: 6px;
-  height: 6px;
+  width: calc(var(--plinth) * 0.018);
+  height: calc(var(--plinth) * 0.018);
   border-radius: 50%;
-  background: #263a2b;
+  background: #1d2a21;
+  box-shadow: inset 0 0 0 1px #000;
 }
 .pitch-led.on {
-  background: #4dff88;
+  background: #6dff9e;
   box-shadow: 0 0 6px #4dff88;
 }
 .pitch-reset {
   border: 0;
-  border-radius: 3px;
-  background: #2b2d34;
-  color: #c6c8ce;
-  font-size: calc(var(--plinth) * 0.026);
-  padding: 1px 6px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #3a3c42, #26282c);
+  color: #b9bcc4;
+  font-size: calc(var(--plinth) * 0.019);
+  letter-spacing: 0.08em;
+  padding: 2px 4px;
+  box-shadow:
+    0 0 0 1px #050506,
+    0 1px 0 #0b0b0d;
 }
 
 /* range の見た目(フェーダーの溝とつまみ) */
@@ -359,99 +498,141 @@ body {
   touch-action: none;
 }
 .app input[type='range']::-webkit-slider-runnable-track {
-  height: 6px;
+  height: 5px;
   border-radius: 3px;
-  background: #07070a;
+  background: #030304;
   box-shadow:
-    inset 0 1px 2px rgba(0, 0, 0, 0.8),
-    0 1px 0 rgba(255, 255, 255, 0.06);
+    inset 0 1px 2px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.07);
 }
 .app input[type='range']::-moz-range-track {
-  height: 6px;
+  height: 5px;
   border-radius: 3px;
-  background: #07070a;
+  background: #030304;
 }
 .app input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 14px;
   height: 26px;
-  margin-top: -10px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, #6d7179, #e4e6ea 45%, #ffffff 50%, #e4e6ea 55%, #6d7179);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  margin-top: -10.5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #1d1e22, #45474e 38%, #f4f5f7 46% 54%, #45474e 62%, #1d1e22);
+  box-shadow:
+    0 0 0 1px #000,
+    0 3px 5px rgba(0, 0, 0, 0.75);
 }
 .app input[type='range']::-moz-range-thumb {
   width: 14px;
   height: 26px;
   border: 0;
-  border-radius: 3px;
-  background: linear-gradient(90deg, #6d7179, #e4e6ea 45%, #ffffff 50%, #e4e6ea 55%, #6d7179);
+  border-radius: 2px;
+  background: linear-gradient(90deg, #1d1e22, #45474e 38%, #f4f5f7 46% 54%, #45474e 62%, #1d1e22);
+}
+.pitch-fader::-webkit-slider-thumb {
+  background: linear-gradient(90deg, #7d8189, #e6e8eb 40%, #3a3c42 47% 53%, #e6e8eb 60%, #7d8189) !important;
 }
 
+/* キューのパッド(ゴム。置くと色が灯る) */
 .cues {
+  grid-area: cues;
   display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 38px;
-}
-.cues button {
+  gap: 4px;
   height: 34px;
-  min-width: 40px;
-  border: 0;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #33353c, #232429);
-  color: #c6c8ce;
-  font-weight: 700;
-  font-size: 13px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 2px 0 #0c0d10;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
 }
-.cues button:active {
-  transform: translateY(1px);
-}
-.cue {
-  color: #ffd43b !important;
-}
-.hot.set {
-  background: linear-gradient(180deg, #2f7f74, #1d5a52);
-  color: #ffffff;
-}
-.deck-status {
+.pad {
   flex: 1;
   min-width: 0;
-  font-size: 11px;
-  color: #a6a9b4;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  border: 0;
+  border-radius: 6px;
+  background: radial-gradient(circle at 50% 30%, #393b42, #212226 72%);
+  color: #8d919b;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px #040405,
+    0 2px 0 #0a0a0c;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.05s;
+}
+.pad:active {
+  transform: translateY(1px);
+  filter: brightness(1.25);
+}
+.pad.cue {
+  color: #ffd98a;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 210, 120, 0.35),
+    0 0 0 1px #040405,
+    0 2px 0 #0a0a0c;
+}
+.hot[data-hot='0'] {
+  --led: 255, 107, 129;
+}
+.hot[data-hot='1'] {
+  --led: 255, 209, 102;
+}
+.hot[data-hot='2'] {
+  --led: 127, 224, 210;
+}
+.hot[data-hot='3'] {
+  --led: 157, 180, 255;
+}
+.hot.set {
+  color: #ffffff;
+  background: radial-gradient(circle at 50% 45%, rgba(var(--led), 0.75), rgba(var(--led), 0.18) 70%), #222327;
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--led), 0.6),
+    0 0 10px rgba(var(--led), 0.35),
+    0 0 0 1px #040405,
+    0 2px 0 #0a0a0c;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* ミキサー */
+/* ミキサー: ヘアラインのパネルと四隅のネジ */
 .mixer {
+  --screw: radial-gradient(circle, #9a9da5 0 1.4px, #2b2c31 1.8px 2.4px, transparent 2.8px);
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   grid-template-areas: 'a center b' 'faders faders faders';
-  gap: 6px 4px;
-  padding: 8px;
-  border-radius: 10px;
-  width: min(100%, 392px);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 40%), #1a1b20;
+  gap: 8px 6px;
+  padding: 14px 12px 12px;
+  border-radius: 8px;
+  min-height: 0;
+  background:
+    var(--screw) 3px 3px / 12px 12px no-repeat,
+    var(--screw) calc(100% - 3px) 3px / 12px 12px no-repeat,
+    var(--screw) 3px calc(100% - 3px) / 12px 12px no-repeat,
+    var(--screw) calc(100% - 3px) calc(100% - 3px) / 12px 12px no-repeat,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 28%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    #1f2025;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 8px 20px rgba(0, 0, 0, 0.5);
-  user-select: none;
-  -webkit-user-select: none;
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 0 0 1px #040405,
+    0 12px 26px rgba(0, 0, 0, 0.6);
 }
 .strip {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
   min-width: 0;
+  position: relative;
+  padding-top: 12px;
 }
-.knob-box {
-  min-width: 0;
+.strip-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  text-align: center;
 }
 .strip-a {
   grid-area: a;
@@ -462,65 +643,93 @@ body {
 .mixer-center {
   grid-area: center;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 12px 8px 0;
+  border-left: 1px solid rgba(0, 0, 0, 0.6);
+  border-right: 1px solid rgba(0, 0, 0, 0.6);
+  box-shadow:
+    inset 1px 0 0 rgba(255, 255, 255, 0.05),
+    1px 0 0 rgba(255, 255, 255, 0.05);
 }
 .knob-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  min-width: 0;
 }
 .knob-name {
-  font-size: 8px;
-  letter-spacing: 0.04em;
-  color: #9a9da8;
+  font-size: 7.5px;
+  letter-spacing: 0.12em;
+  color: #a2a5ae;
 }
+/* つまみ: 周りの目盛り(下の 90度は空ける)と、ゴムのローレットに金属の芯 */
 .knob {
   position: relative;
   width: var(--knob);
   height: var(--knob);
   border-radius: 50%;
-  background: repeating-conic-gradient(from -135deg, #5a5d66 0 1.5deg, transparent 1.5deg 27deg);
   touch-action: none;
   cursor: ns-resize;
   outline: none;
 }
-.knob:focus-visible {
-  box-shadow: 0 0 0 2px #7fe0d2;
+.knob::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from -135deg, #8a8d96 0 1.4deg, transparent 1.4deg 27deg);
+  -webkit-mask: conic-gradient(from 135deg, transparent 0 90deg, #000 90deg);
+  mask: conic-gradient(from 135deg, transparent 0 90deg, #000 90deg);
+}
+.knob-box:focus-within .knob-name {
+  color: var(--lcd);
 }
 .knob-cap {
   position: absolute;
-  inset: 12%;
+  inset: 13%;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 55%),
-    conic-gradient(#8e929a, #d6d9de, #7d8189, #c9ccd2, #8e929a);
+    radial-gradient(circle, #d4d7dc 0 20%, #6a6d74 21% 24%, transparent 25%),
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 60%),
+    repeating-conic-gradient(#17181b 0 7deg, #2c2d32 7deg 14deg);
   box-shadow:
-    0 2px 3px rgba(0, 0, 0, 0.7),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+    0 0 0 1px #000,
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 .knob-cap::after {
   content: '';
   position: absolute;
   left: 50%;
-  top: 6%;
+  top: 3%;
   width: 2px;
-  height: 34%;
+  height: 28%;
   margin-left: -1px;
   border-radius: 1px;
-  background: #15161a;
+  background: #f4f5f7;
+}
+[data-param='filter'] .knob-cap::after {
+  background: var(--lcd);
+}
+[data-param='master'] .knob-cap::after {
+  background: #ffe2a3;
 }
 .meters {
   display: flex;
   gap: 2px;
-  height: calc(var(--knob) + 12px);
+  height: calc(var(--knob) * 4);
+  padding: 3px;
+  border-radius: 3px;
+  background: var(--glass);
+  box-shadow: var(--glass-edge);
 }
 .meter {
   position: relative;
-  width: 6px;
+  width: 5px;
   height: 100%;
-  border-radius: 1px;
   overflow: hidden;
   background: linear-gradient(0deg, #3ddc84 0 62%, #ffd43b 62% 87%, #ff5a4f 87%);
 }
@@ -531,13 +740,13 @@ body {
   background: repeating-linear-gradient(
     0deg,
     transparent 0 calc(100% / 16 - 1px),
-    #111216 calc(100% / 16 - 1px) calc(100% / 16)
+    #090b0b calc(100% / 16 - 1px) calc(100% / 16)
   );
 }
 .meter-off {
   position: absolute;
   inset: 0;
-  background: rgba(17, 18, 22, 0.85);
+  background: rgba(14, 16, 16, 0.88);
   transform-origin: top;
 }
 .meter-peak {
@@ -551,39 +760,44 @@ body {
 .faders {
   grid-area: faders;
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: stretch;
+  gap: 10px;
+  height: 160px;
 }
 .vfader {
-  --travel: 70px;
-  flex: 0 0 32px;
-  height: 76px;
-  background: linear-gradient(90deg, transparent 46%, #000 46% 54%, transparent 54%);
+  flex: 0 0 34px;
+  height: auto;
+  background:
+    repeating-linear-gradient(180deg, #5a5d66 0 1px, transparent 1px 10%) 4px 6% / 5px 88% no-repeat,
+    repeating-linear-gradient(180deg, #5a5d66 0 1px, transparent 1px 10%) calc(100% - 4px) 6% / 5px 88%
+      no-repeat;
 }
 .xfader {
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 2px;
 }
 .xfader input {
   width: 100%;
-  height: 28px;
+  height: 30px;
   margin: 0;
 }
 .xfader input::-webkit-slider-thumb {
-  width: 26px !important;
-  height: 28px !important;
-  margin-top: -11px !important;
+  width: 24px !important;
+  height: 30px !important;
+  margin-top: -12.5px !important;
 }
 .xfader-marks {
   display: flex;
   justify-content: space-between;
-  font-size: 9px;
-  color: #9a9da8;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: #8d919b;
 }
 
-/* 曲の一覧 */
+/* 曲の一覧と設定(サイトの色のシート) */
 .sheet .add {
   align-self: flex-start;
 }
@@ -619,77 +833,103 @@ body {
   padding: 6px;
 }
 
-/* 横向き: 上に波形、左右にデッキ、真ん中にミキサー */
+/* 縦向きのタブレット: ミキサーを細めにして、つまみとフェーダーを大きく */
+@media (orientation: portrait) and (min-width: 700px) {
+  .content {
+    --knob: 44px;
+  }
+  .mixer {
+    width: min(100%, 560px);
+    justify-self: center;
+  }
+  .faders {
+    height: 230px;
+  }
+  .knob-name {
+    font-size: 9px;
+  }
+}
+
+/* 横向き: 上に波形、左右にデッキ(キューは外側に縦)、真ん中にミキサー */
 @media (orientation: landscape) {
   .content {
-    --knob: 24px;
+    --knob: 22px;
+  }
+  .app {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas: 'waves waves waves' 'status status status' 'a mixer b';
+    align-content: center;
+  }
+  .waves {
+    height: 44px;
+  }
+  .deck-head {
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+  }
+  .deck-track {
+    grid-column: auto;
+  }
+  .lcd {
+    height: 32px;
+  }
+  .lcd-time {
+    min-width: 58px;
+  }
+  #deckA .deck {
+    grid-template-columns: 40px var(--plinth);
+    grid-template-areas: 'head head' 'cues plinth';
+  }
+  #deckB .deck {
+    grid-template-columns: var(--plinth) 40px;
+    grid-template-areas: 'head head' 'plinth cues';
+  }
+  .cues {
+    flex-direction: column;
+    height: auto;
+  }
+  .mixer {
+    width: 178px;
+    padding: 12px 8px 10px;
+    gap: 6px 4px;
+    align-self: stretch;
+  }
+  .strip {
+    gap: 0;
+  }
+  .mixer-center {
+    gap: 6px;
+    padding: 12px 4px 0;
   }
   .knob-box {
     gap: 0;
   }
   .knob-name {
-    font-size: 8px;
-    line-height: 10px;
-  }
-  .vfader {
-    --travel: 52px;
-    height: 56px;
-  }
-  .app {
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: start;
-    gap: 8px;
-  }
-  .waves,
-  .app .status {
-    grid-column: 1 / -1;
-  }
-  .waves {
-    height: 48px;
-  }
-  #deckA {
-    justify-self: end;
-  }
-  #deckB {
-    justify-self: start;
-  }
-  .mixer {
-    width: 196px;
-    grid-template-columns: 1fr auto 1fr;
-    grid-template-areas: 'a center b' 'faders faders faders';
-    align-self: stretch;
-  }
-  .strip {
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-  .mixer-center {
-    flex-direction: column;
+    font-size: 7px;
+    line-height: 9px;
   }
   .meters {
-    height: 96px;
+    height: 92px;
+  }
+  .faders {
+    height: auto;
+    min-height: 56px;
+  }
+  .vfader {
+    flex-basis: 28px;
   }
 }
-@media (orientation: landscape) and (min-width: 1200px) {
+@media (orientation: landscape) and (min-width: 1100px) {
   .content {
-    --knob: 36px;
+    --knob: 32px;
   }
   .mixer {
-    width: 240px;
+    width: 236px;
   }
   .waves {
-    height: 80px;
+    height: 72px;
   }
-}
-/* 長押しで出るメニュー(画像の保存・文字の選択・拡大鏡)を出さない。盤やボタンを押さえ続けて使うため */
-.app {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-/* 長押しで出るメニュー(画像の保存・文字の選択・拡大鏡)を出さない。盤やボタンを押さえ続けて使うため */
-.app {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
+  .meters {
+    height: 130px;
+  }
 }
