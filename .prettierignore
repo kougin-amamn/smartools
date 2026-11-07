@@ -1,0 +1,5 @@
+# 整形しない物(決まりは docs/format.md)
+*.svg
+*.json
+docs/
+*.md

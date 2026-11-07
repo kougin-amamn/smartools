@@ -9,6 +9,7 @@
 | [ui.md](./ui.md) | 配色・ヘッダ・設定シート・ボタン・アイコンを作る時 |
 | [logging.md](./logging.md) | ログを書く時 |
 | [naming.md](./naming.md) | 名前を付ける時 |
+| [format.md](./format.md) | ソースの整形(Prettier の設定と、整形しない物) |
 | [lessons.md](./lessons.md) | カメラ・センサー・音・描画・iPhone など、つまずきやすい機能を使う時 |
 | [design/](./design/README.md) | 設計書(作る前に書く)と、その型 |
 | [design-3d.md](./design-3d.md) | 3D の画面の設計で決める項目(見た目・操作・性能・壊れにくさ・試験) |
