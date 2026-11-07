@@ -88,7 +88,13 @@ async function launch(args) {
       /cdn\.jsdelivr\.net|cdnjs\.cloudflare\.com|unpkg\.com|storage\.googleapis\.com/,
       (r) => {
         const key = Object.keys(stubs).find((k) => r.request().url().includes(k));
-        if (key) r.fulfill({ contentType: 'text/javascript', body: stub(stubs[key]) });
+        /* ES モジュールの import は CORS で読むため、許可の見出しを付ける */
+        if (key)
+          r.fulfill({
+            contentType: 'text/javascript',
+            headers: { 'Access-Control-Allow-Origin': '*' },
+            body: stub(stubs[key]),
+          });
         else r.abort();
       }
     );

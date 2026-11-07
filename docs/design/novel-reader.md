@@ -1,6 +1,6 @@
 # 小説読み上げ(Novel Reader) 設計書
 
-2026-11-07 作成(検証用の試作。カクヨムで試す)
+2026-11-07 作成(検証用の試作。カクヨムで試す)。同日に試作を実装
 
 ## 概要
 
@@ -37,7 +37,7 @@ tools/novel-reader/
 └── app-icon-novel-reader.svg
 ```
 
-- 形態素解析: kuromoji.js(CDN、`kuromoji@0.1.2` と同じ版の辞書を `dicPath` で指定。版とアドレスは作る前に確かめる)。
+- 形態素解析: `@patdx/kuromoji@1.0.4`(kuromoji.js の改良版、ES モジュールを jsDelivr から `import()`)。元の `kuromoji@0.1.2` は辞書のアドレスを `path.join` で作り `https://` を壊す不具合があるため使わない。辞書は `kuromoji@0.1.2/dict/` の gzip 12ファイルを自分の読み込み処理で取り、`DecompressionStream` で展開する(届いた物が展開済みならそのまま)。
 - 音声合成: ブラウザ標準の `speechSynthesis`(ja-JP の声)。
 
 ## 仕様
@@ -85,6 +85,7 @@ tools/novel-reader/
 
 ## 確認
 
-- `tests/core/novel-reader.test.js`: ルビ記法、文の区切り、読みの組み立て(ルビ優先)。
+- `tests/core/novel-reader.test.js`: ルビ記法、文の区切り、読みの組み立て(ルビ優先、助詞の「は」「へ」)。
+- `tests/scenarios/novel-reader.js`: 偽のカクヨムのページ(試験のブラウザで `https://kakuyomu.jp` に見せかける)でブックマークレットを動かし、別のサイトの新しいタブへ本文とルビが届くこと、1文ずつ読み進むこと、読みの渡し方、ログに本文が出ないこと、カクヨム以外で押した時の案内。音声合成と kuromoji は偽物。
 - `node tests/smoke.js tools/novel-reader`。
 - 実機で: ブックマークレットがカクヨムで動くか(Android Chrome・iPhone Safari)、新しいタブへ渡せるか、kuromoji の辞書が CDN から読めるか、どの渡し方が聞きやすいか。

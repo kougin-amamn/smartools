@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>小説読み上げ | Web小説をルビと形態素解析の読みで朗読</title>
+    <meta
+      name="description"
+      content="Web小説の1話を、作者のルビと形態素解析(kuromoji.js)で決めた読みでブラウザの音声合成が読み上げます。カクヨムのページからブックマークレットで本文を渡すか、貼り付けて使います。小説サイトへの通信は増やしません。"
+    />
+    <meta property="og:title" content="小説読み上げ | Web小説をルビと形態素解析の読みで朗読" />
+    <meta
+      property="og:description"
+      content="Web小説の1話を、作者のルビと形態素解析(kuromoji.js)で決めた読みでブラウザの音声合成が読み上げます。カクヨムのページからブックマークレットで本文を渡すか、貼り付けて使います。小説サイトへの通信は増やしません。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-novel-reader.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./novel-reader.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "小説読み上げ",
+        "alternateName": ["Novel Reader"],
+        "description": "Web小説の1話を、作者のルビと形態素解析(kuromoji.js)で決めた読みでブラウザの音声合成が読み上げます。カクヨムのページからブックマークレットで本文を渡すか、貼り付けて使います。小説サイトへの通信は増やしません。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-novel-reader.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">小説読み上げ<span class="en">Novel Reader</span></h1>
+      <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+          />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <section class="source" id="source">
+          <p class="source-title" id="sourceTitle">本文はまだありません</p>
+          <p class="status" id="status"></p>
+          <div class="row">
+            <button class="pill small" id="pasteBtn" type="button" aria-expanded="false">貼り付け</button>
+            <button class="pill small" id="helpBtn" type="button" aria-expanded="false">
+              カクヨムから送る
+            </button>
+          </div>
+        </section>
+        <section class="paste" id="pastePanel" hidden>
+          <textarea
+            id="pasteText"
+            rows="6"
+            placeholder="本文を貼り付けます。|漢字《かんじ》 の形のルビも読めます"
+          ></textarea>
+          <div class="row">
+            <button class="pill primary small" id="pasteLoad" type="button">読み込む</button>
+          </div>
+        </section>
+        <section class="help" id="helpPanel" hidden>
+          <p class="note">
+            下のリンクをブックマークに登録し、カクヨムの話のページを開いた状態で押すと、表示中の本文がここに届きます。カクヨムへの通信は増えません。
+          </p>
+          <ol class="note">
+            <li>パソコン: リンクをブックマークバーへドラッグします。</li>
+            <li>
+              スマホ:
+              「コードをコピー」を押し、何かのページをブックマークに追加してから、そのアドレスをコピーした物に書き換えます。
+            </li>
+            <li>
+              カクヨムの話のページで、そのブックマークを開きます(Android の Chrome
+              はアドレス欄にブックマークの名前を入れて選びます)。
+            </li>
+          </ol>
+          <div class="row">
+            <a class="pill small" id="bookmarklet" href="#" data-log="小説読み上げへ送る"
+              >小説読み上げへ送る</a
+            >
+            <button class="pill small" id="copyCode" type="button">コードをコピー</button>
+          </div>
+        </section>
+        <div class="text" id="text" data-log="off"></div>
+      </div>
+    </main>
+    <footer class="player">
+      <p class="speech" id="speech" data-log="off"></p>
+      <div class="controls">
+        <button class="round" id="prevBtn" type="button" aria-label="前の文" disabled>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z" /></svg>
+        </button>
+        <button class="round play" id="playBtn" type="button" aria-label="再生" disabled>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path id="playIcon" d="M8 5v14l11-7z" /></svg>
+        </button>
+        <button class="round" id="stopBtn" type="button" aria-label="停止" disabled>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z" /></svg>
+        </button>
+        <button class="round" id="nextBtn" type="button" aria-label="次の文" disabled>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z" /></svg>
+        </button>
+      </div>
+    </footer>
+    <div class="sheet" id="settings" hidden>
+      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="sheet-head">
+          <span id="settingsTitle">設定</span
+          ><button class="sheet-close" id="settingsClose" aria-label="設定を閉じる">×</button>
+        </div>
+        <div class="opt">
+          <label for="mode">読みの渡し方</label>
+          <select id="mode">
+            <option value="original">原文(音声合成に任せる)</option>
+            <option value="ruby">ルビだけかな</option>
+            <option value="kana">すべてかな(形態素解析)</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label for="voice">声</label>
+          <select id="voice"></select>
+        </div>
+        <div class="opt">
+          <label for="rate">速さ <span id="rateValue"></span></label>
+          <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1" />
+        </div>
+        <p class="note" id="dictStatus"></p>
+      </div>
+    </div>
+    <script src="../../common/log.js"></script>
+    <script src="../../common/autolog.js"></script>
+    <script src="../../common/env.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.ToolKit && window.ToolKit.media) ||
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+        );
+    </script>
+    <script src="./novel-reader-core.js"></script>
+    <script src="./novel-reader.js"></script>
+  </body>
+</html>
