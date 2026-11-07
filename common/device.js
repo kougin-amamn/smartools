@@ -58,23 +58,59 @@
     return Promise.resolve(fallback());
   }
 
+  /* ページを離れる時の終了処理と保存(設計: docs/design/page-exit.md)
+     addCleanup(fn, name): pagehide の時に fn() を呼ぶ。true を返したら「name を停止しました(ページを離れたため)」
+     addSave(fn): 画面が隠れた時と pagehide の時に fn() を呼ぶ。どちらの fn も、何度呼ばれても困らないように書く */
+  var cleanups = [],
+    saves = [],
+    cleaned = false;
+  function addCleanup(fn, name) {
+    cleanups.push({ fn: fn, name: name || '処理' });
+  }
+  function addSave(fn) {
+    saves.push(fn);
+  }
+  function runSaves() {
+    saves.forEach(function (fn) {
+      try {
+        fn();
+      } catch (e) {
+        log.error('保存でエラーが発生しました', e);
+      }
+    });
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) runSaves();
+  });
+  window.addEventListener('pagehide', function () {
+    runSaves();
+    cleanups.forEach(function (c) {
+      try {
+        if (c.fn() === true) log(c.name + 'を停止しました(ページを離れたため)');
+      } catch (e) {
+        log.error(c.name + 'の終了処理でエラーが発生しました', e);
+      }
+    });
+    if (cleanups.length) cleaned = true;
+  });
+  /* 戻るボタンで復元された時、止めた物を使ったままの画面にしないため、読み込み直す */
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted && cleaned) location.reload();
+  });
+
   /* カメラ・マイク
      open(constraints, label) → {stream} か {stream:null, message}。label は「カメラ」「マイク」。
-     https でない・ブラウザが非対応・許可されない・使用中・見つからない、をログと画面用の文に分ける */
-  var opened = []; /* 開いたカメラ・マイク(ページを離れる時に自動で止める) */
-  window.addEventListener('pagehide', function () {
-    opened.forEach(function (o) {
-      var live = o.stream.getTracks().filter(function (t) {
-        return t.readyState === 'live';
-      });
-      if (!live.length) return;
-      live.forEach(function (t) {
-        t.stop();
-      });
-      log(o.label + 'を停止しました(ページを離れたため)');
+     https でない・ブラウザが非対応・許可されない・使用中・見つからない、をログと画面用の文に分ける。
+     開いた物は終了処理に登録し、ページを離れる時に自動で止める */
+  function stopLive(stream) {
+    var live = stream.getTracks().filter(function (t) {
+      return t.readyState === 'live';
     });
-    opened = [];
-  });
+    live.forEach(function (t) {
+      t.stop();
+    });
+    return live.length > 0;
+  }
   function open(constraints, label) {
     label = label || (constraints && constraints.video ? 'カメラ' : 'マイク');
     var needHttps = root.Env
@@ -92,10 +128,9 @@
     }
     return navigator.mediaDevices.getUserMedia(constraints).then(
       function (stream) {
-        opened = opened.filter(function (o) {
-          return o.stream.active;
-        });
-        opened.push({ stream: stream, label: label });
+        addCleanup(function () {
+          return stopLive(stream);
+        }, label);
         return { stream: stream };
       },
       function (e) {
@@ -197,6 +232,8 @@
     }, ms);
   }
 
+  root.ToolKit.addCleanup = addCleanup;
+  root.ToolKit.addSave = addSave;
   root.ToolKit.vibrate = vibrate;
   root.ToolKit.copyText = copyText;
   root.ToolKit.media = { open: open, stop: stop, size: size, torch: torch };

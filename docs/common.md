@@ -25,6 +25,8 @@
 | `ToolKit.media.stop(stream)` | 全部止める | 止めた物があれば true |
 | `ToolKit.media.size(track)` | ログ用の大きさ `'1280×720'` | 文字列 |
 | `ToolKit.media.torch(track, on)` | ライト(対応を確かめる)。`ライトを点灯しました` | Promise\<{ok} か {ok: false, reason, message}\> |
+| `ToolKit.addCleanup(fn, 名前)` | ページを離れる時(`pagehide`)に fn() を呼ぶ。true を返したら `<名前>を停止しました(ページを離れたため)`。失敗してもほかは呼ぶ。登録したページは、戻るボタンで戻ると読み込み直す(設計: `design/page-exit.md`) | — |
+| `ToolKit.addSave(fn)` | 画面が隠れた時とページを離れる時に fn() を呼ぶ(保存用。ログは出さない) | — |
 | `ToolKit.sensor.permit('orientation' \| 'motion')` | iOS 13 以降の許可(タップの中で呼ぶ)。許可が要らない端末では true | Promise\<bool\> |
 | `ToolKit.sensor.watchData(ms, got, onTimeout, 名前)` | ms たっても got() が false なら `<秒>秒たっても<名前>のデータが届きませんでした` | タイマーの番号 |
 

@@ -1,6 +1,6 @@
 # ページを離れる時の終了処理 設計書
 
-状態: 確認中(5章は決定。3章と4章の確認を待つ)。作成 2026-11-08、更新 2026-11-08。
+状態: 段 1 まで実装。作成 2026-11-08、更新 2026-11-08。
 
 ## 1. 概要
 
@@ -168,3 +168,26 @@ sequenceDiagram
 - Q2 画面が隠れた時にカメラ・マイクも止めるか: 決定(2026-11-08)。止めない。
 - Q3 戻るボタンで戻った時: 決定(2026-11-08)。読み込み直す。
 - Q4 進め方: 決定(2026-11-08)。段 1 は仕組みと QR、段 2 は懐中電灯とメモ帳。ほかは手を入れる時に移す。
+
+## 6. 実装の記録
+
+### 段 1 / 2026-11-08
+
+やった事:
+- `common/device.js` に `ToolKit.addCleanup` / `ToolKit.addSave` と、`pagehide`・`visibilitychange`・`pageshow` の扱いを足した。カメラ・マイクの自動停止を、開くたびに `addCleanup` へ登録する形に載せ直した。
+- `tools/qr-reader/qr-reader.js`: カメラを `ToolKit.media.open` で開き、ZXing は `decodeFromStream` だけにした。止める時は `codeReader.reset()` と `ToolKit.media.stop`。自前の `pagehide` と `beforeunload` を消した。https とブラウザの対応の確認は `ToolKit.media.open` に任せた。
+- `tests/stubs/fake-zxing.js` と `tests/scenarios/page-exit.js` を足した。
+
+確かめた事:
+- `node tests/scenarios/page-exit.js`: T-01〜T-06 が合格。
+- 古い QR 読み取りに、本物の 0.21.3 と同じく何も返さない `decodeFromConstraints` を偽物に足して流すと、T-06 が「読めた後もカメラが点いている」「ページを離れた後もカメラが点いている」で落ちた。不具合が本当にあった事を確かめた。
+- `node tests/core.js`、`node tests/smoke.js all` が合格。
+
+残った事:
+- T-07(実機): QR 読み取りで読んだ後、カメラのランプが消えるか。本物の ZXing と、戻るボタンで読み込み直す動きも実機で要確認。
+- 段 2: 懐中電灯とメモ帳。
+
+AI が決めた事:
+- `fn` が `true` を返した時だけ停止のログを出す。止める物が無い時にログが出ないようにするため(`ToolKit.media.stop` と同じ約束)。
+- QR 読み取りは、読めた時に `reset()` に加えて `ToolKit.media.stop` も呼ぶ。本物の `reset()` もトラックを止めるが、止めるのを ZXing だけに頼らないため。
+

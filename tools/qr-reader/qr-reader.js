@@ -1,4 +1,4 @@
-/* QRコード読み取りの画面(読み取りは ZXing) */
+/* QRコード読み取りの画面。カメラは ToolKit.media で開き、ZXing には読み取りだけをさせる */
 (function () {
   const video = document.getElementById('video');
   const statusText = document.getElementById('statusText');
@@ -10,7 +10,7 @@
   const rescanBtn = document.getElementById('rescanBtn');
 
   let codeReader = null;
-  let controls = null; // decodeFromConstraints() が返す、停止用のコントローラ
+  let stream = null;
 
   function isUrl(s) {
     try {
@@ -21,16 +21,16 @@
     } /* URL でない文字列(想定内) */
   }
 
-  function errText(e) {
-    if (!e) return '不明なエラー';
-    return `${e.name || 'Error'}: ${e.message || String(e)}`;
+  /* 読み取りの繰り返しとカメラを止める。止めたら true */
+  function stopCamera() {
+    if (codeReader) codeReader.reset();
+    const stopped = ToolKit.media.stop(stream);
+    stream = null;
+    return stopped;
   }
 
   function showResult(text) {
-    if (controls) {
-      controls.stop();
-      controls = null;
-    }
+    stopCamera();
     scanLine.style.display = 'none';
     resultText.textContent = text;
     if (isUrl(text)) {
@@ -50,63 +50,45 @@
     scanLine.style.display = '';
     statusText.textContent = 'カメラを起動しています…';
 
-    var needHttps = Env.requireSecure('カメラ');
-    if (needHttps) {
-      statusText.textContent = needHttps;
-      return;
-    }
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      statusText.textContent = 'このブラウザはカメラ機能に対応していません。';
-      log.warn('このブラウザはカメラ機能に対応していません');
-      return;
-    }
     if (!window.ZXing) {
       statusText.textContent = 'ライブラリを読み込めませんでした。通信環境をご確認ください。';
       log.error('QRコード読み取りライブラリ(ZXing)を読み込めませんでした(通信が必要です)');
       return;
     }
+    stopCamera();
+    const r = await ToolKit.media.open(
+      { video: { facingMode: { ideal: 'environment' } } },
+      'カメラ',
+    );
+    if (!r.stream) {
+      statusText.textContent = r.message;
+      return;
+    }
+    stream = r.stream;
 
     try {
       if (!codeReader) codeReader = new ZXing.BrowserQRCodeReader();
-      controls = await codeReader.decodeFromConstraints(
-        { video: { facingMode: { ideal: 'environment' } } },
-        video,
-        (result, err) => {
-          if (result) {
-            showResult(result.getText());
-            return;
-          }
-          // 見つからなかった場合は毎フレーム NotFoundException が来る(想定内の動作、エラー扱いしない)
-          if (
-            err &&
-            err.name &&
-            err.name !== 'NotFoundException' &&
-            err.name !== 'NotFoundException2'
-          ) {
-            log.warn('QRコードの読み取り中にエラーが発生しました', err);
-          }
-        },
-      );
+      await codeReader.decodeFromStream(stream, video, (result, err) => {
+        if (result) {
+          showResult(result.getText());
+          return;
+        }
+        // 見つからなかった場合は毎フレーム NotFoundException が来る(想定内の動作、エラー扱いしない)
+        if (
+          err &&
+          err.name &&
+          err.name !== 'NotFoundException' &&
+          err.name !== 'NotFoundException2'
+        ) {
+          log.warn('QRコードの読み取り中にエラーが発生しました', err);
+        }
+      });
       statusText.textContent = 'QRコードを枠内に写してください';
-      log('カメラを開始しました(読み取り待ち)');
+      log(`カメラを開始しました(読み取り待ち / ${ToolKit.media.size(stream.getVideoTracks()[0])})`);
     } catch (e) {
-      if (e && e.name === 'NotAllowedError') {
-        statusText.textContent =
-          'カメラへのアクセスが許可されていません。ブラウザの設定から許可してください。';
-      } else if (e && e.name === 'NotFoundError') {
-        statusText.textContent = '利用できるカメラが見つかりませんでした。';
-      } else {
-        statusText.textContent = `カメラを起動できませんでした(${errText(e)})`;
-      }
-      log.error('カメラの起動でエラーが発生しました', e);
-    }
-  }
-
-  function stopCamera() {
-    if (controls) {
-      controls.stop();
-      controls = null;
-      log('カメラを停止しました');
+      stopCamera();
+      statusText.textContent = 'カメラの映像を読み取りに使えませんでした。';
+      log.error('QRコードの読み取りの開始でエラーが発生しました', e);
     }
   }
 
@@ -127,9 +109,6 @@
     ToolKit.vibrate();
     startCamera();
   });
-
-  window.addEventListener('pagehide', stopCamera);
-  window.addEventListener('beforeunload', stopCamera);
 
   startCamera();
 })();

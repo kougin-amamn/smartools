@@ -12,6 +12,7 @@
 | `node tests/scenarios/file-transfer.js` | ファイル転送の通し試験(2つのタブ・確認番号・圧縮・切断からの再開) | 10秒 |
 | `node tests/scenarios/novel-reader.js` | 小説読み上げの通し試験(偽のカクヨムでブックマークレット・別タブへ受け渡し・1文ずつの読み上げ) | 5秒 |
 | `node tests/scenarios/dj-turntable-pro.js` | DJターンテーブル Pro の通し試験(作った曲を2台に読み込み、BPM・START・メーター・クロスフェーダー・スクラッチ・ホットキュー) | 10秒 |
+| `node tests/scenarios/page-exit.js` | ページを離れる時の終了処理と保存、カメラの自動停止、QR 読み取りのカメラの停止(偽のカメラと ZXing の偽物) | 5秒 |
 | `THREE_JS_DIR=… node tests/scenarios/launcher-3d.js` | 3Dランチャー(本棚・美術館)の起動・本のタップ・three.js が無い時の 2D の一覧 | 20秒 |
 
 出力は合格なら `OK <名前>` の1行、不合格なら理由を並べます。
@@ -24,6 +25,7 @@
 | `core/*.test.js` | 計算部分の試験(`assert` を使う。1ファイル1対象) |
 | `scenarios/*.js` | ツールごとの通し試験 |
 | `stubs/fake-peer.js` | PeerJS の偽物(同じブラウザのタブ間を BroadcastChannel でつなぐ。`window.__delay` で遅らせ、`window.__drop()` で切る) |
+| `stubs/fake-zxing.js` | ZXing の偽物(QR 読み取りの試験用。`window.__qr('文字')` で読めたことにする。`reset` で映像を止める) |
 | `stubs/fake-tf.js` | TensorFlow.js の偽物(画像分類の試験用。どの画像でも「トラ猫」を返す) |
 
 ## 書き足す時

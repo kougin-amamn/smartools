@@ -25,7 +25,7 @@
 | ファイル | 中身 |
 | --- | --- |
 | `common/tool-kit.js` | `window.ToolKit` を作る。`esc`、設定シート、ランチャーへ戻るボタン。最後に `device.js` を読む |
-| `common/device.js` | `ToolKit.vibrate`・`ToolKit.copyText`・`ToolKit.media`(open・stop・size・torch、ページを離れる時の自動停止)・`ToolKit.sensor`(permit・watchData) |
+| `common/device.js` | `ToolKit.vibrate`・`ToolKit.copyText`・`ToolKit.media`(open・stop・size・torch、ページを離れる時の自動停止)・`ToolKit.sensor`(permit・watchData)・`ToolKit.addCleanup` / `addSave`(ページを離れる時の終了処理と保存。設計は [page-exit.md](./page-exit.md)) |
 
 読み込みの順(HTML は今のまま): `tool-kit.js` → (`tool-kit.js` が書き出す)`device.js` → 読み込み確認 → ツールの js。
 
