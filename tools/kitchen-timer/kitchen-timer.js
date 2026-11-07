@@ -88,7 +88,9 @@ function onTap(c, sel, h) {
     stopBtn.disabled = true;
     ToolKit.vibrate();
     rafId = requestAnimationFrame(tick);
-    log(`${resumed ? '再開' : '開始'}しました(残り ${formatTime(remaining)} / 終了予定 ${hhmm(endAt)})`);
+    log(
+      `${resumed ? '再開' : '開始'}しました(残り ${formatTime(remaining)} / 終了予定 ${hhmm(endAt)})`,
+    );
   }
 
   function pause() {

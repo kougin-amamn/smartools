@@ -28,7 +28,7 @@
       el.getAttribute('data-log') ||
         el.getAttribute('aria-label') ||
         el.getAttribute('title') ||
-        el.textContent
+        el.textContent,
     );
   }
   function groupOf(el) {
@@ -58,6 +58,6 @@
           : MSG.press;
       log(format(text, { グループ: groupOf(el), 名前: name }));
     },
-    true
+    true,
   );
 })();

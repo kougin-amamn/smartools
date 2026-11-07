@@ -53,7 +53,10 @@
       log.warn('位置情報の利用が許可されませんでした');
     } else {
       statusText.textContent = '位置情報を取得できませんでした。';
-      log.warn('位置情報を取得できませんでした(電波の届く屋外で試してください)', err && err.message);
+      log.warn(
+        '位置情報を取得できませんでした(電波の届く屋外で試してください)',
+        err && err.message,
+      );
     }
   }
 
@@ -102,7 +105,7 @@
     render(0);
     ToolKit.vibrate();
     log(
-      `計測を一時停止しました(${summary()} / 測位 ${fixes}回${lowAcc ? ' うち精度低 ' + lowAcc + '回' : ''})`
+      `計測を一時停止しました(${summary()} / 測位 ${fixes}回${lowAcc ? ' うち精度低 ' + lowAcc + '回' : ''})`,
     );
   }
 

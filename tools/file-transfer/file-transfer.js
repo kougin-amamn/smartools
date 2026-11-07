@@ -5,9 +5,12 @@
   var C = window.TransferCore;
 
   /* 送り方 */
-  var CHUNK = 64 * 1024; /* 1回に送る大きさ。Safari の上限(256KB)より小さく、往復の回数が増えすぎない値 */
-  var READ = 1024 * 1024; /* ファイルから一度に読み出す大きさ。圧縮する時はこの区切りごとに圧縮する */
-  var HIGH = 2 * 1024 * 1024; /* 送り待ちがこれを超えたら止める(PeerJS 自身がためこみ始める 8MB より下) */
+  var CHUNK =
+    64 * 1024; /* 1回に送る大きさ。Safari の上限(256KB)より小さく、往復の回数が増えすぎない値 */
+  var READ =
+    1024 * 1024; /* ファイルから一度に読み出す大きさ。圧縮する時はこの区切りごとに圧縮する */
+  var HIGH =
+    2 * 1024 * 1024; /* 送り待ちがこれを超えたら止める(PeerJS 自身がためこみ始める 8MB より下) */
   var LOW = 512 * 1024; /* ここまで減ったら再開 */
   /* 時間切れ(ms)
      どこで止まったかで案内を変えるため、段階ごとに分ける */
@@ -63,12 +66,14 @@
     sending = null,
     receiving = null,
     partials = {} /* 途中まで受け取ったファイル。key → {r, it} */,
-    finished = {} /* 受け取り終えたファイル(相手の id|key)。完了の知らせが届かずに送り直された時に使う */,
+    finished =
+      {} /* 受け取り終えたファイル(相手の id|key)。完了の知らせが届かずに送り直された時に使う */,
     wake = null,
     wakeWarned = false;
 
   if (!window.Peer) {
-    statusEl.textContent = '接続用のライブラリを読み込めませんでした。通信状態を確認して開き直してください';
+    statusEl.textContent =
+      '接続用のライブラリを読み込めませんでした。通信状態を確認して開き直してください';
     log.error('接続用のライブラリ(PeerJS)を読み込めませんでした');
   }
   var needHttps = Env.requireSecure('ファイル転送');
@@ -102,7 +107,7 @@
       if (p !== peer || p.open) return;
       log.warn('待ち合わせ用のサーバーにつながりませんでした(' + T_SIGNAL / 1000 + '秒)');
       failSetup(
-        '待ち合わせ用のサーバーにつながりませんでした。通信状態を確かめて、少し待ってからやり直してください'
+        '待ち合わせ用のサーバーにつながりませんでした。通信状態を確かめて、少し待ってからやり直してください',
       );
     });
     p.on('open', function () {
@@ -138,7 +143,7 @@
     if (t === 'peer-unavailable') {
       log.warn('その番号の相手が見つかりませんでした');
       failSetup(
-        'その番号の相手が見つかりませんでした。番号と、相手の画面に番号が出ているかを確かめてください'
+        'その番号の相手が見つかりませんでした。番号と、相手の画面に番号が出ているかを確かめてください',
       );
       return;
     }
@@ -148,7 +153,7 @@
         ? '待ち合わせ用のサーバーにつながりませんでした。通信状態を確かめて、少し待ってからやり直してください'
         : t === 'browser-incompatible' || t === 'webrtc'
           ? 'このブラウザでは直接の接続が使えません'
-          : 'つながりませんでした(' + t + ')'
+          : 'つながりませんでした(' + t + ')',
     );
   }
   /* つなぐ前の失敗。最初の画面に戻して理由を出す */
@@ -170,7 +175,7 @@
       function (e) {
         log.warn('確認番号を作れませんでした', e);
         return '';
-      }
+      },
     );
   }
   function showSas(el, c) {
@@ -251,7 +256,9 @@
       if (session) {
         /* 再接続。最初に渡した合言葉が合えば、確認なしで続ける */
         if (m.token === session.token) {
-          c.send(JSON.stringify({ t: 'accept', name: myName, token: session.token, gzip: canGzip }));
+          c.send(
+            JSON.stringify({ t: 'accept', name: myName, token: session.token, gzip: canGzip }),
+          );
           attach(c, true);
         } else {
           refuse(c, 'busy');
@@ -348,14 +355,19 @@
       if (reconnect) return;
       log.warn('相手の端末と時間内につながりませんでした(' + T_CONNECT / 1000 + '秒)');
       failSetup(
-        '相手の端末とつながりませんでした。2台を同じWi-Fiにつないでやり直してください(携帯回線どうしではつながらないことがあります)'
+        '相手の端末とつながりませんでした。2台を同じWi-Fiにつないでやり直してください(携帯回線どうしではつながらないことがあります)',
       );
     });
     c.on('open', function () {
       if (p !== peer) return;
       stop('connect');
       c.send(
-        JSON.stringify({ t: 'hello', name: myName, gzip: canGzip, token: session ? session.token : '' })
+        JSON.stringify({
+          t: 'hello',
+          name: myName,
+          gzip: canGzip,
+          token: session ? session.token : '',
+        }),
       );
       if (reconnect) return;
       joinWait.textContent = '相手の許可を待っています…';
@@ -479,7 +491,7 @@
           ' / ' +
           (role === 'host' ? '番号を発行した側' : '番号で参加した側') +
           (session.gzip && canGzip ? ' / 圧縮あり' : '') +
-          ')'
+          ')',
       );
     pump();
   }
@@ -533,7 +545,8 @@
       giveUp();
       return;
     }
-    linkState.textContent = '接続が切れました。再接続しています…(残り ' + Math.ceil(left / 1000) + '秒)';
+    linkState.textContent =
+      '接続が切れました。再接続しています…(残り ' + Math.ceil(left / 1000) + '秒)';
     if (role === 'join') {
       /* 待ち合わせサーバーとのつながりも切れていれば作り直す */
       if (!peer || peer.destroyed || peer.disconnected) {
@@ -629,13 +642,16 @@
     if (!force && now - it.ui < UI_INTERVAL) return;
     it.ui = now;
     var r = it.speed.rate();
-    it.el.querySelector('.bar span').style.width = (it.size ? (it.done / it.size) * 100 : 100) + '%';
+    it.el.querySelector('.bar span').style.width =
+      (it.size ? (it.done / it.size) * 100 : 100) + '%';
     setState(
       it,
       C.bytes(it.done) +
         ' / ' +
         C.bytes(it.size) +
-        (r > 0 ? ' ・ ' + C.bytes(r) + '/秒 ・ 残り ' + C.seconds(C.eta(it.size - it.done, r)) : '')
+        (r > 0
+          ? ' ・ ' + C.bytes(r) + '/秒 ・ 残り ' + C.seconds(C.eta(it.size - it.done, r))
+          : ''),
     );
   }
   function buttons(it, list) {
@@ -708,7 +724,8 @@
     setState(it, text, cls || 'stopped');
     var list = [];
     /* 送れなかった物は、つなぎ直してから送り直せるようにファイルを持っておく */
-    if (cls === 'failed' && it.file) list.push({ label: '再送', primary: true, on: resend.bind(null, it) });
+    if (cls === 'failed' && it.file)
+      list.push({ label: '再送', primary: true, on: resend.bind(null, it) });
     else it.file = null;
     buttons(it, list);
   }
@@ -719,7 +736,9 @@
     pump();
   }
   function gzip(buf) {
-    return new Response(new Blob([buf]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();
+    return new Response(
+      new Blob([buf]).stream().pipeThrough(new CompressionStream('gzip')),
+    ).arrayBuffer();
   }
   function gunzip(blob) {
     return new Response(blob.stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
@@ -760,13 +779,22 @@
       if (g !== gen) throw DROP;
     };
     if (!it.t0) it.t0 = performance.now();
-    it.enc = canGzip && session && session.gzip && C.shouldCompress(f.name, f.type, f.size) ? 'gzip' : '';
+    it.enc =
+      canGzip && session && session.gzip && C.shouldCompress(f.name, f.type, f.size) ? 'gzip' : '';
     it.wire = it.wire || 0; /* 通信量は再開をまたいで数える */
     it.key = C.fileKey(it.name, f.size, f.lastModified, it.enc);
     setState(it, '相手の準備を待っています');
     new Promise(function (ok, ng) {
       it.ready = { ok: ok, ng: ng };
-      send({ t: 'file', id: it.id, key: it.key, name: it.name, size: f.size, enc: it.enc, type: f.type });
+      send({
+        t: 'file',
+        id: it.id,
+        key: it.key,
+        name: it.name,
+        size: f.size,
+        enc: it.enc,
+        type: f.type,
+      });
     })
       .then(function (from) {
         alive();
@@ -863,7 +891,7 @@
           log.error('ファイルの送信でエラーが発生しました', e);
           finishOut(it, '送れませんでした', 'failed');
           pump();
-        }
+        },
       );
   }
 
@@ -875,13 +903,15 @@
     }
     var m = C.parseMsg(d);
     if (!m) {
-      if (d && typeof d !== 'string') log.warn('想定していない形のデータが届きました(' + typeof d + ')');
+      if (d && typeof d !== 'string')
+        log.warn('想定していない形のデータが届きました(' + typeof d + ')');
       return;
     }
     if (m.t === 'ping') return;
     if (m.t === 'file') onFile(m);
     else if (m.t === 'blk') {
-      if (receiving && receiving.r.enc) receiving.blk = { n: m.n, z: m.z, gz: !!m.gz, bufs: [], have: 0 };
+      if (receiving && receiving.r.enc)
+        receiving.blk = { n: m.n, z: m.z, gz: !!m.gz, bufs: [], have: 0 };
     } else if (m.t === 'ready') {
       var s = items[m.id];
       if (s && s.ready) s.ready.ok(m.from);
@@ -938,7 +968,8 @@
       .then(function () {
         if (rc.r.cancelled || rc.bad) return;
         return (b.gz ? gunzip(data) : data.arrayBuffer()).then(function (raw) {
-          if (raw.byteLength !== b.n || !rc.r.add(raw)) throw new Error('区切りの大きさが合いません');
+          if (raw.byteLength !== b.n || !rc.r.add(raw))
+            throw new Error('区切りの大きさが合いません');
           rc.it.done = rc.r.got;
           progress(rc.it);
         });
@@ -1067,7 +1098,7 @@
             function (e) {
               if (e && e.name === 'AbortError') log('共有をやめました');
               else log.warn('共有できませんでした', e);
-            }
+            },
           );
         },
       });
@@ -1122,7 +1153,7 @@
         /* 断られた時は毎回同じになるため、1回だけ記録する */
         if (!wakeWarned) log.warn('画面を消えないようにできませんでした', e);
         wakeWarned = true;
-      }
+      },
     );
   }
   function releaseWake() {

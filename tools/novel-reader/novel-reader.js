@@ -77,7 +77,9 @@
     if (!voices.length) return;
     voiceEl.innerHTML = voices
       .map(function (v) {
-        return '<option value="' + ToolKit.esc(v.voiceURI) + '">' + ToolKit.esc(v.name) + '</option>';
+        return (
+          '<option value="' + ToolKit.esc(v.voiceURI) + '">' + ToolKit.esc(v.name) + '</option>'
+        );
       })
       .join('');
     if (
@@ -108,7 +110,11 @@
                 sentence
                   .map(function (s) {
                     return s.ruby
-                      ? '<ruby>' + ToolKit.esc(s.text) + '<rt>' + ToolKit.esc(s.ruby) + '</rt></ruby>'
+                      ? '<ruby>' +
+                          ToolKit.esc(s.text) +
+                          '<rt>' +
+                          ToolKit.esc(s.ruby) +
+                          '</rt></ruby>'
                       : ToolKit.esc(s.text);
                   })
                   .join('') +
@@ -143,7 +149,7 @@
         chars +
         '字 / ルビ ' +
         C.countRuby(paragraphs) +
-        ')'
+        ')',
     );
   }
 
@@ -163,7 +169,8 @@
     sentenceEls.forEach(function (el, i) {
       el.classList.toggle('now', i === current);
     });
-    if (sentenceEls[current]) sentenceEls[current].scrollIntoView({ block: 'center', behavior: 'smooth' });
+    if (sentenceEls[current])
+      sentenceEls[current].scrollIntoView({ block: 'center', behavior: 'smooth' });
     showSpeech();
   }
   function setPlaying(on) {
@@ -217,7 +224,7 @@
         modeEl.options[modeEl.selectedIndex].text +
         ' / 速さ ' +
         settings.rate.toFixed(1) +
-        'x)'
+        'x)',
     );
   }
   function pause() {
@@ -290,7 +297,8 @@
 
   /* ブックマークレットからの受け取り: 開いた元へ「準備できた」を送り、本文を待つ */
   window.addEventListener('message', function (e) {
-    if (ALLOWED_ORIGINS.indexOf(e.origin) < 0 || !e.data || e.data.type !== 'novel-reader-text') return;
+    if (ALLOWED_ORIGINS.indexOf(e.origin) < 0 || !e.data || e.data.type !== 'novel-reader-text')
+      return;
     if (!C.isParagraphs(e.data.paragraphs) || !e.data.paragraphs.length) {
       log.warn('届いた本文の形が正しくないため読み込みませんでした');
       return;
@@ -331,21 +339,24 @@
       statusEl.textContent = 'ブックマークレットを用意できていません。';
       return;
     }
-    ToolKit.copyText(bookmarkletEl.href, 'ブックマークレット', bookmarkletEl.href.length + '文字').then(
-      function (ok) {
-        statusEl.textContent = ok
-          ? 'コピーしました。ブックマークのアドレスに貼り付けてください。'
-          : 'コピーできませんでした。';
-      }
-    );
+    ToolKit.copyText(
+      bookmarkletEl.href,
+      'ブックマークレット',
+      bookmarkletEl.href.length + '文字',
+    ).then(function (ok) {
+      statusEl.textContent = ok
+        ? 'コピーしました。ブックマークのアドレスに貼り付けてください。'
+        : 'コピーできませんでした。';
+    });
   });
 
   /* 形態素解析の辞書: 12個の gzip ファイルを読み、展開して渡す(届いた物が展開済みならそのまま) */
   function gunzip(buffer) {
     var head = new Uint8Array(buffer, 0, 2);
-    if (head[0] !== 0x1f || head[1] !== 0x8b || !window.DecompressionStream) return Promise.resolve(buffer);
+    if (head[0] !== 0x1f || head[1] !== 0x8b || !window.DecompressionStream)
+      return Promise.resolve(buffer);
     return new Response(
-      new Blob([buffer]).stream().pipeThrough(new DecompressionStream('gzip'))
+      new Blob([buffer]).stream().pipeThrough(new DecompressionStream('gzip')),
     ).arrayBuffer();
   }
   function loadDictionary() {
@@ -381,7 +392,7 @@
         },
         function () {
           return loaded + 'ファイル';
-        }
+        },
       )
       .then(function (r) {
         if (r.ok) {

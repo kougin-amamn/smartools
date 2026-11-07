@@ -108,7 +108,12 @@
       });
     }
     g.fillStyle = '#ffffff';
-    g.fillRect(Math.round(W / 2) - Math.round(r / 2), 0, Math.max(1, Math.round(r)), this.canvas.height);
+    g.fillRect(
+      Math.round(W / 2) - Math.round(r / 2),
+      0,
+      Math.max(1, Math.round(r)),
+      this.canvas.height,
+    );
   };
 
   root.DJWaveView = WaveView;

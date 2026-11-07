@@ -7,7 +7,7 @@
   var KANJI = '[\\u4e00-\\u9fff\\u3400-\\u4dbf\\uf900-\\ufaff々〆ヶ〇]';
   var RUBY_PATTERN = new RegExp(
     '[|｜]([^|｜《》\\n]+)《([^《》\\n]+)》|(' + KANJI + '+)《([^《》\\n]+)》',
-    'g'
+    'g',
   );
   function segmentsFromLine(line) {
     line = line.replace(/《《([^《》]*)》》/g, '$1');
@@ -128,7 +128,11 @@
         return (
           Array.isArray(segments) &&
           segments.every(function (s) {
-            return s && typeof s.text === 'string' && (s.ruby === undefined || typeof s.ruby === 'string');
+            return (
+              s &&
+              typeof s.text === 'string' &&
+              (s.ruby === undefined || typeof s.ruby === 'string')
+            );
           })
         );
       })

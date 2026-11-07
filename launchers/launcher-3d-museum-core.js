@@ -176,7 +176,11 @@ function mergeAttributes(list) {
     nn += list[i].normal.length;
     nu += list[i].uv.length;
   }
-  var out = { position: new Float32Array(np), normal: new Float32Array(nn), uv: new Float32Array(nu) };
+  var out = {
+    position: new Float32Array(np),
+    normal: new Float32Array(nn),
+    uv: new Float32Array(nu),
+  };
   var op = 0,
     on = 0,
     ou = 0;

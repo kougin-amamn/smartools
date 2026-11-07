@@ -7,14 +7,18 @@ const { launch, report, splitErrors, ROOT } = require('./lib/harness');
 function pagesFrom(args) {
   const list = args.filter((a) => !a.startsWith('--'));
   if (list.includes('all')) {
-    const tools = fs.readdirSync(path.join(ROOT, 'tools')).map((s) => 'tools/' + s + '/' + s + '.html');
+    const tools = fs
+      .readdirSync(path.join(ROOT, 'tools'))
+      .map((s) => 'tools/' + s + '/' + s + '.html');
     const launchers = fs
       .readdirSync(path.join(ROOT, 'launchers'))
       .filter((f) => f.endsWith('.html'))
       .map((f) => 'launchers/' + f);
     return ['index.html'].concat(launchers, tools);
   }
-  return list.map((p) => (p.endsWith('.html') ? p : p.replace(/\/$/, '') + '/' + path.basename(p) + '.html'));
+  return list.map((p) =>
+    p.endsWith('.html') ? p : p.replace(/\/$/, '') + '/' + path.basename(p) + '.html',
+  );
 }
 
 (async () => {
@@ -41,7 +45,8 @@ function pagesFrom(args) {
         const w = await page.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
         if (w[0] > w[1]) problems.push('横にはみ出しています(' + w[0] + 'px)');
         const ids = await page.$$eval('.site-bar > button', (b) => b.map((e) => e.id).join(' '));
-        if (!/infoBtn colorBtn themeBtn dbgBtn$/.test(ids)) problems.push('ヘッダのボタンの並びが ' + ids);
+        if (!/infoBtn colorBtn themeBtn dbgBtn$/.test(ids))
+          problems.push('ヘッダのボタンの並びが ' + ids);
         /* ヘッダを隠しているツール(つまみで引き出す)は、先に出す */
         if (await page.$('.bar-handle')) {
           await page.click('.bar-handle');
@@ -63,7 +68,10 @@ function pagesFrom(args) {
         const errors = splitErrors(logs);
         errors.real.forEach((l) => problems.push('エラー: ' + l.split('\n')[0]));
         if (errors.cdn.length) notes.push(p + ': CDN のライブラリは開発環境では読めないため未確認');
-        if (!errors.cdn.length && !logs.some((l) => /起動しました|読み込みました|準備ができました/.test(l)))
+        if (
+          !errors.cdn.length &&
+          !logs.some((l) => /起動しました|読み込みました|準備ができました/.test(l))
+        )
           problems.push('起動のログがありません');
         if (args.includes('--logs')) console.log('  ' + p + '\n    ' + logs.join('\n    '));
       }
@@ -73,7 +81,11 @@ function pagesFrom(args) {
     const blocks = [/\/common\//].concat(p.startsWith('tools/') ? [/\/common\/device\.js/] : []);
     for (const block of blocks) {
       const missing = await site.open(p, { block });
-      if (!(await missing.page.textContent('body')).includes('共通ファイル(common/)を読み込めませんでした'))
+      if (
+        !(await missing.page.textContent('body')).includes(
+          '共通ファイル(common/)を読み込めませんでした',
+        )
+      )
         problems.push('共通ファイルが無い時の案内が出ません(' + block + ')');
       await missing.context.close();
     }

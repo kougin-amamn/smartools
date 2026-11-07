@@ -14,7 +14,7 @@ var threeReady = import('three').then(
   },
   function (e) {
     log.warn('3D表示用のライブラリ(three.js)を読み込めませんでした(通信が必要です)', e);
-  }
+  },
 );
 var L = window.Launcher,
   loading = L.loading,
@@ -34,17 +34,17 @@ var texDefs = fetch('./launcher-3d-bookshelf-textures.json', { cache: 'no-cache'
           (d.swatches || []).length +
           '種類 / 対応表 ' +
           Object.keys(d.assign || {}).length +
-          'か所)'
+          'か所)',
       );
       return d;
     },
     function (e) {
       log.warn(
         'テクスチャの設定(launcher-3d-bookshelf-textures.json)を読み込めませんでした(既定の見た目で表示します)',
-        e
+        e,
       );
       return null;
-    }
+    },
   );
 Promise.all([L.loadTools(), threeReady]).then(
   function (all) {
@@ -55,7 +55,7 @@ Promise.all([L.loadTools(), threeReady]).then(
   },
   function (e) {
     main(null, '', L.loadErrorMessage(), e);
-  }
+  },
 );
 
 /* 本体(list=ツール一覧 / source=読んだファイル名 / loadMsg・loadErr=読めなかった時の説明 / texDefs=テクスチャの設定) */
@@ -185,7 +185,7 @@ function main(list, source, loadMsg, loadErr, texDefs) {
       'よく使うツールを机に置きます(' +
         favorites.map(nameOf).join(' / ') +
         (ranked.length ? ' / 開いた回数の多い順' : ' / 記録がまだ無いため一覧の先頭から') +
-        ')'
+        ')',
     );
     var world = BookshelfScene.create({
       THREE: THREE,
@@ -214,7 +214,7 @@ function main(list, source, loadMsg, loadErr, texDefs) {
         world.deskCount() +
         '冊 / ' +
         Math.round(performance.now() - t0) +
-        'ms)'
+        'ms)',
     );
 
     var zoomBtn = $('zoomBtn'),
@@ -282,7 +282,8 @@ function main(list, source, loadMsg, loadErr, texDefs) {
 
     /* 扉: 前の画面があれば戻る。このランチャーから始まった時はタブを閉じ、閉じられなければサイトの入口へ */
     function leave() {
-      var back = document.referrer && document.referrer.indexOf(location.origin) === 0 && history.length > 1;
+      var back =
+        document.referrer && document.referrer.indexOf(location.origin) === 0 && history.length > 1;
       log(back ? '前の画面へ戻ります' : 'ランチャーを閉じます');
       if (back) {
         history.back();
@@ -332,7 +333,7 @@ function main(list, source, loadMsg, loadErr, texDefs) {
             books.length +
             ' / ' +
             books[i].cat +
-            ')'
+            ')',
         );
       });
     }
@@ -390,7 +391,10 @@ function main(list, source, loadMsg, loadErr, texDefs) {
           step(e.key === 'ArrowRight' ? 1 : -1);
         } else view.look((e.key === 'ArrowRight' ? -1 : 1) * 0.15);
       } else if ((e.key === '+' || e.key === ';' || e.key === '-') && tag !== 'INPUT') {
-        view.zoomBy(e.key === '-' ? 1 / 1.25 : 1.25, '「' + (e.key === '-' ? '−' : '＋') + '」キー');
+        view.zoomBy(
+          e.key === '-' ? 1 / 1.25 : 1.25,
+          '「' + (e.key === '-' ? '−' : '＋') + '」キー',
+        );
       } else if (e.key === 'Enter' && f >= 0 && tag !== 'BUTTON' && tag !== 'A' && !view.moving()) {
         log('Enterキーを押下しました');
         openTool(books[f].tool);
@@ -405,7 +409,13 @@ function main(list, source, loadMsg, loadErr, texDefs) {
     next(function () {
       view.start();
       log(
-        '起動しました(ツール ' + N + '冊 / 本棚 ' + groups.length + 'マス / 一覧の元データ ' + source + ')'
+        '起動しました(ツール ' +
+          N +
+          '冊 / 本棚 ' +
+          groups.length +
+          'マス / 一覧の元データ ' +
+          source +
+          ')',
       );
     });
   }

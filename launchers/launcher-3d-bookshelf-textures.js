@@ -29,7 +29,14 @@ var KINDS = {
 var COMMON = [
   { k: 'color', type: 'color', label: '地の色' },
   { k: 'contrast', min: 0, max: 1, step: 0.01, label: '濃淡', help: '明るい所と暗い所の差' },
-  { k: 'grain', min: 0, max: 1, step: 0.01, label: '模様の細かさ', help: '木目の本数・布目や草の密度など' },
+  {
+    k: 'grain',
+    min: 0,
+    max: 1,
+    step: 0.01,
+    label: '模様の細かさ',
+    help: '木目の本数・布目や草の密度など',
+  },
   {
     k: 'scale',
     min: 0.1,
@@ -47,7 +54,14 @@ var COMMON = [
     help: '光の照り返し(3Dの材質で効く。金属・ガラスは絵の光の帯にも効く)',
   },
   { k: 'bump', min: 0, max: 1, step: 0.01, label: '凹凸', help: '表面のざらつき(3Dで効く)' },
-  { k: 'seed', min: 1, max: 999, step: 1, label: '柄の番号', help: '同じ設定で別の柄にしたい時に変える' },
+  {
+    k: 'seed',
+    min: 1,
+    max: 999,
+    step: 1,
+    label: '柄の番号',
+    help: '同じ設定で別の柄にしたい時に変える',
+  },
 ];
 var EXTRA = {
   wood: [{ k: 'planks', min: 1, max: 12, step: 1, label: '板の枚数' }],
@@ -64,7 +78,14 @@ var EXTRA = {
     },
   ],
   glass: [
-    { k: 'opacity', min: 0, max: 1, step: 0.01, label: '不透明度', help: '0で透明、1で向こうが見えない' },
+    {
+      k: 'opacity',
+      min: 0,
+      max: 1,
+      step: 0.01,
+      label: '不透明度',
+      help: '0で透明、1で向こうが見えない',
+    },
   ],
   grass: [{ k: 'length', min: 0, max: 1, step: 0.01, label: '草の長さ' }],
   rug: [
@@ -234,7 +255,10 @@ function paintLeather(d, S) {
       dk = R() < 0.5;
     wrap(S, x, y, r, function (px, py) {
       var gr = g.createRadialGradient(px, py, 0, px, py, r);
-      gr.addColorStop(0, dk ? 'rgba(0,0,0,' + 0.18 * ct + ')' : 'rgba(255,230,200,' + 0.12 * ct + ')');
+      gr.addColorStop(
+        0,
+        dk ? 'rgba(0,0,0,' + 0.18 * ct + ')' : 'rgba(255,230,200,' + 0.12 * ct + ')',
+      );
       gr.addColorStop(1, 'rgba(0,0,0,0)');
       g.fillStyle = gr;
       g.fillRect(px - r, py - r, r * 2, r * 2);
@@ -270,7 +294,7 @@ function paintLeather(d, S) {
         px + Math.cos(an) * len * 0.5 + R() * 8,
         py + Math.sin(an) * len * 0.5,
         px + Math.cos(an) * len,
-        py + Math.sin(an) * len
+        py + Math.sin(an) * len,
       );
       g.stroke();
     });
@@ -306,7 +330,8 @@ function paintPaper(d, S) {
       fy = R() * S,
       fl = S * (0.01 + R() * 0.03),
       fa = R() * Math.PI * 2;
-    g.strokeStyle = R() < 0.6 ? 'rgba(110,90,60,' + 0.25 * ct + ')' : 'rgba(255,255,255,' + 0.4 * ct + ')';
+    g.strokeStyle =
+      R() < 0.6 ? 'rgba(110,90,60,' + 0.25 * ct + ')' : 'rgba(255,255,255,' + 0.4 * ct + ')';
     g.beginPath();
     g.moveTo(fx, fy);
     g.lineTo(fx + Math.cos(fa) * fl, fy + Math.sin(fa) * fl);
@@ -404,7 +429,8 @@ function paintGlass(d, S) {
       g.lineTo(b[0] * S + b[1] * S + off + S, S);
       g.lineTo(b[0] * S + off + S, S);
       g.closePath();
-      g.fillStyle = 'rgba(255,255,255,' + Math.min(0.85, b[2] * gl * val(d, 'contrast') * 2 * 1.2) + ')';
+      g.fillStyle =
+        'rgba(255,255,255,' + Math.min(0.85, b[2] * gl * val(d, 'contrast') * 2 * 1.2) + ')';
       g.fill();
       g.restore();
     });

@@ -41,7 +41,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-color-picker.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">カラーピッカー<span class="en">Color Picker</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        カラーピッカー<span class="en">Color Picker</span>
+      </h1>
     </header>
     <main class="content">
       <div class="app">
@@ -49,12 +51,20 @@
           <button class="tab active" id="tabCam" role="tab" data-mode="cam" aria-selected="true">
             カメラで判定
           </button>
-          <button class="tab" id="tabPick" role="tab" data-mode="pick" aria-selected="false">色を選ぶ</button>
+          <button class="tab" id="tabPick" role="tab" data-mode="pick" aria-selected="false">
+            色を選ぶ
+          </button>
         </div>
 
         <div class="mode-panel" id="pickPanel">
           <div class="swatch-wrap">
-            <input type="color" id="colorInput" data-log="off" value="#7c3aed" aria-label="色を選ぶ" />
+            <input
+              type="color"
+              id="colorInput"
+              data-log="off"
+              value="#7c3aed"
+              aria-label="色を選ぶ"
+            />
           </div>
         </div>
 
@@ -123,7 +133,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./color-picker-core.js"></script>

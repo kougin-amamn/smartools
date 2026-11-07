@@ -105,7 +105,7 @@
     t.addEventListener('click', () => {
       ToolKit.vibrate();
       setMode(t.dataset.mode);
-    })
+    }),
   );
 
   /* 色を選ぶ */
@@ -132,7 +132,10 @@
     freezeBtn.classList.remove('active');
     emptyState.classList.remove('hide');
     camStatus.textContent = 'カメラを起動しています…';
-    const r = await ToolKit.media.open({ video: { facingMode: { ideal: 'environment' } } }, 'カメラ');
+    const r = await ToolKit.media.open(
+      { video: { facingMode: { ideal: 'environment' } } },
+      'カメラ',
+    );
     if (!r.stream) {
       camStatus.textContent = r.message;
       return;
@@ -176,7 +179,7 @@
       Math.max(0, Math.round((w - box) / 2)),
       Math.max(0, Math.round((h - box) / 2)),
       box,
-      box
+      box,
     ).data;
     showColor(CP.average(data), { live: true });
   }
@@ -244,9 +247,9 @@
       searchLogTimer = setTimeout(
         () =>
           log(
-            `色名を検索しました(${q.length}文字 / ${matched.length}件${matched.length > 60 ? ' / 先頭60件を表示' : ''})`
+            `色名を検索しました(${q.length}文字 / ${matched.length}件${matched.length > 60 ? ' / 先頭60件を表示' : ''})`,
           ),
-        600
+        600,
       );
   });
 

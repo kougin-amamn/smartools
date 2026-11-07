@@ -51,7 +51,7 @@ function checksum(buf) {
       return s && /MB \//.test(s.textContent) && parseFloat(s.textContent) > 1.5;
     },
     null,
-    { timeout: 20000 }
+    { timeout: 20000 },
   );
   await B.evaluate(() => window.__drop());
   await A.waitForTimeout(300);
@@ -66,8 +66,8 @@ function checksum(buf) {
         let s = 0;
         for (const v of buf) s = (s * 31 + v) % 1000003;
         return { name: a.download, size: buf.length, sum: s };
-      })
-    )
+      }),
+    ),
   );
   const want = { 'data.csv': text, 'video.mp4': big };
   for (const g of got)
@@ -79,9 +79,11 @@ function checksum(buf) {
 
   await B.click('#byeBtn');
   await A.waitForSelector('#start:not([hidden])', { timeout: 3000 }).catch(() =>
-    problems.push('切断が相手に伝わりません')
+    problems.push('切断が相手に伝わりません'),
   );
-  splitErrors(first.logs.concat(logsB)).real.forEach((l) => problems.push('エラー: ' + l.split('\n')[0]));
+  splitErrors(first.logs.concat(logsB)).real.forEach((l) =>
+    problems.push('エラー: ' + l.split('\n')[0]),
+  );
   await site.close();
   process.exitCode = report('ファイル転送の通し試験', problems) ? 0 : 1;
 })();

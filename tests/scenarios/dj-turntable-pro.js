@@ -55,7 +55,7 @@ function wav(seconds) {
         deck,
         {
           timeout: 8000,
-        }
+        },
       );
     }
     const bpm = await page.locator('.deck-bpm').first().textContent();
@@ -97,7 +97,10 @@ function wav(seconds) {
     /* 指で半周、逆に回す */
     for (let k = 1; k <= 10; k++) {
       const ang = (-Math.PI * k) / 10;
-      await page.mouse.move(cx + Math.cos(ang) * box.width * 0.3, cy + Math.sin(ang) * box.width * 0.3);
+      await page.mouse.move(
+        cx + Math.cos(ang) * box.width * 0.3,
+        cy + Math.sin(ang) * box.width * 0.3,
+      );
       await page.waitForTimeout(16);
     }
     await page.mouse.up();

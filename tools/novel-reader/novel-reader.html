@@ -41,7 +41,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-novel-reader.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">小説読み上げ<span class="en">Novel Reader</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        小説読み上げ<span class="en">Novel Reader</span>
+      </h1>
       <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
         <svg
           viewBox="0 0 24 24"
@@ -64,7 +66,9 @@
           <p class="source-title" id="sourceTitle">本文はまだありません</p>
           <p class="status" id="status"></p>
           <div class="row">
-            <button class="pill small" id="pasteBtn" type="button" aria-expanded="false">貼り付け</button>
+            <button class="pill small" id="pasteBtn" type="button" aria-expanded="false">
+              貼り付け
+            </button>
             <button class="pill small" id="helpBtn" type="button" aria-expanded="false">
               カクヨムから送る
             </button>
@@ -112,13 +116,17 @@
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z" /></svg>
         </button>
         <button class="round play" id="playBtn" type="button" aria-label="再生" disabled>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path id="playIcon" d="M8 5v14l11-7z" /></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path id="playIcon" d="M8 5v14l11-7z" />
+          </svg>
         </button>
         <button class="round" id="stopBtn" type="button" aria-label="停止" disabled>
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z" /></svg>
         </button>
         <button class="round" id="nextBtn" type="button" aria-label="次の文" disabled>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z" /></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 5h2v14h-2zM4 5v14l11-7z" />
+          </svg>
         </button>
       </div>
     </footer>
@@ -156,7 +164,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./novel-reader-core.js"></script>

@@ -52,7 +52,7 @@
         function (e) {
           log.debug('クリップボードが使えないため、別の方法でコピーします');
           return fallback(e);
-        }
+        },
       );
     }
     return Promise.resolve(fallback());
@@ -85,7 +85,10 @@
     if (needHttps) return Promise.resolve({ stream: null, message: needHttps });
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       log.warn('このブラウザは' + label + 'に対応していません');
-      return Promise.resolve({ stream: null, message: 'このブラウザは' + label + 'に対応していません。' });
+      return Promise.resolve({
+        stream: null,
+        message: 'このブラウザは' + label + 'に対応していません。',
+      });
     }
     return navigator.mediaDevices.getUserMedia(constraints).then(
       function (stream) {
@@ -112,7 +115,7 @@
           log.error(label + 'の起動でエラーが発生しました', e);
         }
         return { stream: null, message: msg };
-      }
+      },
     );
   }
   /* 止める。止めたら true(ログは呼ぶ側の言い方に任せる) */
@@ -151,7 +154,7 @@
       function (e) {
         log.warn('ライトを切り替えられませんでした', e);
         return { ok: false, reason: 'error', message: 'ライトを切り替えられませんでした。' };
-      }
+      },
     );
   }
 
@@ -177,7 +180,7 @@
       function (e) {
         log.warn(name + 'の許可を取得できませんでした(https で開いているか確認してください)', e);
         return false;
-      }
+      },
     );
   }
   /* データ待ち: ms ミリ秒たっても got() が true にならなければ onTimeout() を呼んでログを残す */
@@ -188,7 +191,7 @@
         ms / 1000 +
           '秒たっても' +
           (name || 'センサー') +
-          'のデータが届きませんでした(センサーが無いか、ブラウザが対応していません)'
+          'のデータが届きませんでした(センサーが無いか、ブラウザが対応していません)',
       );
       if (onTimeout) onTimeout();
     }, ms);

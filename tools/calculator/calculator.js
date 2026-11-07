@@ -33,7 +33,8 @@ function onTap(c, sel, h) {
     } else if (act === 'equals') {
       var r = C.equals();
       if (r) {
-        if (r.result === 'エラー') log.warn('計算できませんでした(' + r.expr + ' / 0で割ることはできません)');
+        if (r.result === 'エラー')
+          log.warn('計算できませんでした(' + r.expr + ' / 0で割ることはできません)');
         else log('計算しました(' + G(r.expr) + ' ' + G(r.result) + ')');
       } else log('演算子が無いため計算しませんでした');
     } else if (act === 'clear') {

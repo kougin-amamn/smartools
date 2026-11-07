@@ -14,12 +14,15 @@ const PAGES = ['launcher-3d-bookshelf', 'launcher-3d-museum'];
   const h = await launch(['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist']);
   const problems = [];
   const errorsOf = (logs) =>
-    logs.filter((l) => /^PAGEERROR|^error /.test(l) && !/GL Driver|GroupMarker|swiftshader/i.test(l));
+    logs.filter(
+      (l) => /^PAGEERROR|^error /.test(l) && !/GL Driver|GroupMarker|swiftshader/i.test(l),
+    );
   try {
     for (const name of PAGES) {
       /* three.js が読めない時: 2D の一覧と、想定内の警告(error ではない) */
       const off = await h.open('launchers/' + name + '.html', { width: 844, wait: 1500 });
-      if (await off.page.isHidden('#listPanel')) problems.push(name + ': three.js が無い時に一覧が出ません');
+      if (await off.page.isHidden('#listPanel'))
+        problems.push(name + ': three.js が無い時に一覧が出ません');
       if (!off.logs.some((l) => /^warning .*three\.js\)を読み込めませんでした/.test(l)))
         problems.push(name + ': three.js が無い時の警告がありません');
       errorsOf(off.logs).forEach((l) => problems.push(name + '(three.js 無し): ' + l));
@@ -37,15 +40,18 @@ const PAGES = ['launcher-3d-bookshelf', 'launcher-3d-museum'];
         null,
         {
           timeout: 60000,
-        }
+        },
       );
       await on.page.waitForTimeout(1500);
-      if (!on.logs.some((l) => /起動しました\(/.test(l))) problems.push(name + ': 起動のログがありません');
+      if (!on.logs.some((l) => /起動しました\(/.test(l)))
+        problems.push(name + ': 起動のログがありません');
       /* 画面の真ん中をタップ(本棚は本、美術館は入口の旗) */
       await on.page.mouse.click(370, 190);
       await on.page.waitForTimeout(1500);
       if (name === 'launcher-3d-bookshelf' && (await on.page.isHidden('#card')))
-        problems.push(name + ': 本をタップしても説明カードが出ません(' + on.logs.slice(-3).join(' / ') + ')');
+        problems.push(
+          name + ': 本をタップしても説明カードが出ません(' + on.logs.slice(-3).join(' / ') + ')',
+        );
       errorsOf(on.logs).forEach((l) => problems.push(name + ': ' + l));
       await on.context.close();
     }
@@ -54,6 +60,7 @@ const PAGES = ['launcher-3d-bookshelf', 'launcher-3d-museum'];
   } finally {
     await h.close();
   }
-  if (!DIR) console.log('注意: THREE_JS_DIR が無いため、3D の表示は確かめていません(2D の一覧だけ)');
+  if (!DIR)
+    console.log('注意: THREE_JS_DIR が無いため、3D の表示は確かめていません(2D の一覧だけ)');
   process.exitCode = report('launcher-3d シナリオ', problems) ? 0 : 1;
 })();

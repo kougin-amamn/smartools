@@ -126,7 +126,10 @@
     document.getElementById('font').value = st.font;
     document.getElementById('frame').value = st.frame;
     document.querySelectorAll('.sw').forEach(function (b) {
-      b.classList.toggle('on', b.dataset.kind === 'color' ? b.dataset.v === st.color : b.dataset.v === st.bg);
+      b.classList.toggle(
+        'on',
+        b.dataset.kind === 'color' ? b.dataset.v === st.color : b.dataset.v === st.bg,
+      );
     });
     document.getElementById('colorFree').value = st.color;
     document.getElementById('bgFree').value = st.bg;

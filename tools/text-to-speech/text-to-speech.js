@@ -46,11 +46,16 @@
     u.onerror = (e) => {
       statusText.textContent = '';
       if (e.error !== 'canceled' && e.error !== 'interrupted')
-        log.warn('読み上げでエラーが発生しました(端末にこの言語の音声が無い可能性があります)', e.error);
+        log.warn(
+          '読み上げでエラーが発生しました(端末にこの言語の音声が無い可能性があります)',
+          e.error,
+        );
     };
     statusText.textContent = '読み上げ中…';
     window.speechSynthesis.speak(u);
-    log(`読み上げを開始しました(${u.lang} / ${text.length}文字 / 速さ ${u.rate}x / 高さ ${u.pitch})`);
+    log(
+      `読み上げを開始しました(${u.lang} / ${text.length}文字 / 速さ ${u.rate}x / 高さ ${u.pitch})`,
+    );
   });
 
   stopBtn.addEventListener('click', () => {
@@ -68,11 +73,12 @@
       const v = speechSynthesis.getVoices();
       if (v.length)
         log(
-          `読み上げの音声を確認しました(${v.length}種類 / 日本語 ${v.filter((x) => /^ja/.test(x.lang)).length}種類)`
+          `読み上げの音声を確認しました(${v.length}種類 / 日本語 ${v.filter((x) => /^ja/.test(x.lang)).length}種類)`,
         );
       return v.length;
     };
-    if (!countVoices()) speechSynthesis.addEventListener('voiceschanged', countVoices, { once: true });
+    if (!countVoices())
+      speechSynthesis.addEventListener('voiceschanged', countVoices, { once: true });
   }
   log('起動しました');
 })();

@@ -138,7 +138,9 @@
     tracks = records.map((r) => ({ ...r, url: URL.createObjectURL(r.blob) }));
     renderPlaylist();
     if (tracks.length) statusText.textContent = '';
-    log(`起動しました(保存したプレイリスト ${tracks.length}曲 / ${Math.round(performance.now() - t0)}ms)`);
+    log(
+      `起動しました(保存したプレイリスト ${tracks.length}曲 / ${Math.round(performance.now() - t0)}ms)`,
+    );
   }
 
   async function addFiles(fileList) {
@@ -169,14 +171,17 @@
         id = await window.PlayerDB.add(record);
         saved++;
       } catch (e) {
-        log.warn('曲を端末に保存できませんでした(次回は復元されません / 保存容量を確認してください)', e);
+        log.warn(
+          '曲を端末に保存できませんでした(次回は復元されません / 保存容量を確認してください)',
+          e,
+        );
         id = 'tmp-' + Date.now() + Math.random();
       }
       tracks.push({ ...record, id, url: URL.createObjectURL(file) });
     }
     statusText.textContent = '';
     log(
-      `曲を追加しました(${files.length}曲 / 端末に保存 ${saved}曲 / 全 ${tracks.length}曲 / ${Math.round(performance.now() - t0)}ms)`
+      `曲を追加しました(${files.length}曲 / 端末に保存 ${saved}曲 / 全 ${tracks.length}曲 / ${Math.round(performance.now() - t0)}ms)`,
     );
     renderPlaylist();
     if (currentTrackId === null && tracks.length) playTrack(tracks[0].id);
@@ -207,7 +212,7 @@
     audio.src = t.url;
     audio.play().then(
       () => log(`再生しました(${posOf(id)})`),
-      (e) => log.warn('再生を開始できませんでした(形式に対応していないか、操作が必要です)', e)
+      (e) => log.warn('再生を開始できませんでした(形式に対応していないか、操作が必要です)', e),
     );
     renderNowPlaying();
     renderPlaylist();
@@ -252,7 +257,7 @@
     if (audio.paused)
       audio.play().then(
         () => log(`再生を再開しました(${fmtTime(audio.currentTime)})`),
-        (e) => log.warn('再生を開始できませんでした', e)
+        (e) => log.warn('再生を開始できませんでした', e),
       );
     else {
       audio.pause();
@@ -339,7 +344,7 @@
     if (audio.getAttribute('src'))
       log.error(
         '曲を再生できませんでした(ファイルが壊れているか、形式に対応していません)',
-        audio.error && audio.error.message
+        audio.error && audio.error.message,
       );
   });
 
@@ -389,8 +394,8 @@
               blob: t.blob,
               pictureDataUrl: t.pictureDataUrl,
               order: t.order,
-            })
-          )
+            }),
+          ),
       );
     } catch (e) {
       log.warn('並び順の保存に失敗しました', e);

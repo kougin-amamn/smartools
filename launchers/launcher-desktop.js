@@ -2,7 +2,8 @@
    配置とアイコンの大きさは localStorage に保存する */
 (function () {
   'use strict';
-  if (!window.Launcher) return; /* launcher-common.js が無い時は、ページ末尾の確認でファイル名を表示する */
+  if (!window.Launcher)
+    return; /* launcher-common.js が無い時は、ページ末尾の確認でファイル名を表示する */
   var L =
     window.Launcher; /* 共通(launcher-common.js): 一覧の読み込み・リンク・開いた回数・読み込み中の表示 */
   L.loading(40, 'ツールの一覧を読み込んでいます…');
@@ -89,7 +90,13 @@
       iconStat = { ok: 0, ng: 0, pend: 0 };
     function iconDone() {
       if (--iconStat.pend === 0)
-        log('アイコン画像の読み込みが終わりました(使用 ' + iconStat.ok + ' / 使えず ' + iconStat.ng + ')');
+        log(
+          'アイコン画像の読み込みが終わりました(使用 ' +
+            iconStat.ok +
+            ' / 使えず ' +
+            iconStat.ng +
+            ')',
+        );
     }
     /* ツールの絵: 画像が無い時は頭文字のタイル */
     function toolMedia(t, count) {
@@ -141,7 +148,13 @@
       '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 12a3 3 0 0 1 3-3h11l4 4h19a3 3 0 0 1 3 3v3H4z" fill="#e0b52f"/><rect x="4" y="16" width="40" height="25" rx="3" fill="#ffd43b"/></svg>';
     function folderItem(f) {
       var key = core.folderKey(f.id);
-      byId[key] = { id: key, folder: f.id, title: f.name, desc: f.items.length + '個のツール', cat: '' };
+      byId[key] = {
+        id: key,
+        folder: f.id,
+        title: f.name,
+        desc: f.items.length + '個のツール',
+        cat: '',
+      };
       var el = els[key];
       if (!el) {
         var media = document.createElement('div');
@@ -305,7 +318,10 @@
           act: 'open',
         });
         if (oneFolder) {
-          items.push({ label: '名前を変更', act: 'rename' }, { label: 'フォルダを削除', act: 'delfolder' });
+          items.push(
+            { label: '名前を変更', act: 'rename' },
+            { label: 'フォルダを削除', act: 'delfolder' },
+          );
         } else if (!ids.some(core.isFolderKey)) {
           items.push({ sep: true }, { head: 'フォルダへ移動' });
           state.folders.forEach(function (f) {
@@ -363,7 +379,11 @@
       menu.style.top = Math.max(4, Math.min(y, innerHeight - h - 4)) + 'px';
       var first = menu.querySelector('li[data-act]');
       if (first) first.focus({ preventScroll: true });
-      log('メニューを表示しました(' + (menuIn ? 'フォルダの中' : onIcon ? 'アイコン' : 'デスクトップ') + ')');
+      log(
+        'メニューを表示しました(' +
+          (menuIn ? 'フォルダの中' : onIcon ? 'アイコン' : 'デスクトップ') +
+          ')',
+      );
     }
     function closeMenu() {
       if (!menuOpen) return;
@@ -393,14 +413,16 @@
           state.pos[key] = core.cellAt(
             menuAt.x - r.left + desk.scrollLeft,
             menuAt.y - r.top + desk.scrollTop,
-            m
+            m,
           );
         }
         var moved = act === 'newinto' ? core.moveToFolder(state, selIds(), f.id) : 0;
         save();
         refresh();
         selectOnly(key);
-        log('フォルダ「' + f.name + '」を作りました' + (moved ? '(' + moved + '個を入れました)' : ''));
+        log(
+          'フォルダ「' + f.name + '」を作りました' + (moved ? '(' + moved + '個を入れました)' : ''),
+        );
         renameInline(key);
         return;
       }
@@ -423,7 +445,9 @@
           back = core.deleteFolder(state, byId[dk].folder);
         save();
         refresh();
-        log('フォルダ「' + name + '」を削除しました(中の ' + back + '個はデスクトップに戻しました)');
+        log(
+          'フォルダ「' + name + '」を削除しました(中の ' + back + '個はデスクトップに戻しました)',
+        );
         return;
       }
       if (act.indexOf('size:') === 0) {
@@ -432,7 +456,9 @@
         state.size = s;
         save();
         layout(false);
-        log('表示を「' + core.SIZES[s].label + '」に変更しました(マス ' + m.cols + '×' + m.rows + ')');
+        log(
+          '表示を「' + core.SIZES[s].label + '」に変更しました(マス ' + m.cols + '×' + m.rows + ')',
+        );
         return;
       }
       if (act.indexOf('sort:') === 0) {
@@ -445,8 +471,8 @@
             }),
             by,
             m.cols,
-            m.rows
-          )
+            m.rows,
+          ),
         );
         log((by === 'cat' ? 'カテゴリ順' : '名前順') + 'に並べ替えました(' + order.length + '個)');
         return;
@@ -511,7 +537,7 @@
         )
           closeMenu();
       },
-      true
+      true,
     );
     window.addEventListener('blur', closeMenu);
 
@@ -644,7 +670,7 @@
       function (e) {
         if (ptr && ptr.dragging) e.preventDefault();
       },
-      { passive: false }
+      { passive: false },
     );
     desk.addEventListener('contextmenu', function (e) {
       if (ptr && ptr.touch) {
@@ -658,7 +684,11 @@
         var id = icon.dataset.id;
         if (!sel[id]) selectOnly(id);
       } else selectOnly(null);
-      log('右クリックしました(' + (icon ? '「' + byId[icon.dataset.id].title + '」' : 'デスクトップ') + ')');
+      log(
+        '右クリックしました(' +
+          (icon ? '「' + byId[icon.dataset.id].title + '」' : 'デスクトップ') +
+          ')',
+      );
       showMenu(e.clientX, e.clientY, !!icon);
     });
     function endPointer(e, cancel) {
@@ -696,7 +726,13 @@
         var np = core.moveGroup(pos, P.ids, dc, dr, m.cols, m.rows);
         applyPos(np);
         if (P.ids.length === 1)
-          log('アイコンを移動しました(「' + byId[P.ids[0]].title + '」→ ' + posText(np[P.ids[0]]) + ')');
+          log(
+            'アイコンを移動しました(「' +
+              byId[P.ids[0]].title +
+              '」→ ' +
+              posText(np[P.ids[0]]) +
+              ')',
+          );
         else
           log(
             'アイコンを移動しました(' +
@@ -707,7 +743,7 @@
               ' ・ 縦 ' +
               (dr > 0 ? '+' : '') +
               dr +
-              ' マス)'
+              ' マス)',
           );
         return;
       }
@@ -833,7 +869,8 @@
         var old = f.name;
         if (ok && core.renameFolder(state, f.id, input.value)) {
           save();
-          if (old !== f.name) log('フォルダの名前を変更しました(「' + old + '」→「' + f.name + '」)');
+          if (old !== f.name)
+            log('フォルダの名前を変更しました(「' + old + '」→「' + f.name + '」)');
         }
         refresh();
         if (win && win.fid === f.id) win.title.textContent = f.name;
@@ -1011,7 +1048,7 @@
         savedCount +
         '件 / 元データ ' +
         source +
-        ')'
+        ')',
     );
   }
 })();

@@ -72,7 +72,8 @@
     title.innerHTML = view.y + '年' + view.m + '月<small>' + japaneseEra(view.y) + '</small>';
     for (var i = 0; i < 7; i++) {
       var w = (i + ws) % 7;
-      html += '<div class="wd' + (w === 0 ? ' sun' : w === 6 ? ' sat' : '') + '">' + WD[w] + '</div>';
+      html +=
+        '<div class="wd' + (w === 0 ? ' sun' : w === 6 ? ' sat' : '') + '">' + WD[w] + '</div>';
     }
     cells.forEach(function (c) {
       var d = info(c),
@@ -85,7 +86,8 @@
       if (d.day === selected) cls.push('sel');
       var body = '<span class="n">' + c.d + '</span>';
       if (showRokuyo.checked)
-        body += '<span class="rk' + (d.rokuyo === '大安' ? ' taian' : '') + '">' + d.rokuyo + '</span>';
+        body +=
+          '<span class="rk' + (d.rokuyo === '大安' ? ' taian' : '') + '">' + d.rokuyo + '</span>';
       if (d.holiday) body += '<span class="hn">' + d.holiday + '</span>';
       else if (d.sekki) body += '<span class="sk">' + d.sekki + '</span>';
       if (showMoon.checked) body += moonSvg(d.age, d.phase);
@@ -209,7 +211,7 @@
         (d.holiday ? ' / ' + d.holiday : '') +
         (d.tensha ? ' / 天赦日' : '') +
         (d.ichiryu ? ' / 一粒万倍日' : '') +
-        ')'
+        ')',
     );
   });
 
@@ -222,7 +224,7 @@
       sx = e.touches[0].clientX;
       sy = e.touches[0].clientY;
     },
-    { passive: true }
+    { passive: true },
   );
   grid.addEventListener('touchend', function (e) {
     if (sx === null) return;
@@ -287,6 +289,6 @@
       (weekStartSel.value === '1' ? '月' : '日') +
       ' / ' +
       Math.round(performance.now() - t0) +
-      'ms)'
+      'ms)',
   );
 })();

@@ -8,7 +8,13 @@
       totalSec = Math.floor(ms / 1000),
       m = Math.floor(totalSec / 60),
       s = totalSec % 60;
-    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0') + '.' + String(cs).padStart(2, '0');
+    return (
+      String(m).padStart(2, '0') +
+      ':' +
+      String(s).padStart(2, '0') +
+      '.' +
+      String(cs).padStart(2, '0')
+    );
   }
   function create(now) {
     now = now || Date.now;

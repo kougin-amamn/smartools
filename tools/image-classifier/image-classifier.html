@@ -26,7 +26,13 @@
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "画像分類",
-        "alternateName": ["Image Classifier", "画像認識", "物の名前を調べる", "AIカメラ", "MobileNet"],
+        "alternateName": [
+          "Image Classifier",
+          "画像認識",
+          "物の名前を調べる",
+          "AIカメラ",
+          "MobileNet"
+        ],
         "description": "カメラの映像や写真に写っている物が何かを、AI(TensorFlow.js の MobileNet)が1000種類の中から判定し、日本語の名前と確からしさの上位を表示します。犬や猫の種類、食べ物、道具、乗り物などに対応。画像は端末の外に送らず、ブラウザの中で判定します。",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any (Webブラウザ)",
@@ -41,7 +47,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-image-classifier.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">画像分類<span class="en">Image Classifier</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        画像分類<span class="en">Image Classifier</span>
+      </h1>
       <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
         <svg
           viewBox="0 0 24 24"
@@ -120,7 +128,9 @@
         <div class="opt">
           <label for="topN">候補の数</label>
           <div class="slide">
-            <input type="range" id="topN" min="1" max="10" step="1" value="5" /><span id="topNVal">5件</span>
+            <input type="range" id="topN" min="1" max="10" step="1" value="5" /><span id="topNVal"
+              >5件</span
+            >
           </div>
         </div>
         <div class="opt">
@@ -138,7 +148,8 @@
           </div>
         </div>
         <label class="check"
-          ><input type="checkbox" id="smooth" checked /> カメラの結果をならす(表示のちらつきを抑える)</label
+          ><input type="checkbox" id="smooth" checked />
+          カメラの結果をならす(表示のちらつきを抑える)</label
         >
         <p class="note">
           AIは画像を224×224の正方形に縮めて判定します。中央の正方形にすると、縦横比が崩れず当たりやすくなります。
@@ -154,7 +165,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./image-classifier-core.js"></script>

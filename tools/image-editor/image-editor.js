@@ -90,7 +90,7 @@
     maxTex = Math.min(
       SAVE_MAX,
       gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096,
-      gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) || 4096
+      gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) || 4096,
     );
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
@@ -106,7 +106,7 @@
       0,
       gl.RGBA,
       gl.UNSIGNED_BYTE,
-      C.buildLut(C.evenPalette(256))
+      C.buildLut(C.evenPalette(256)),
     );
     dithTex = makeTex(UNITS.dith, true);
     tex = makeTex(UNITS.tex);
@@ -134,7 +134,17 @@
     }
     gl.activeTexture(gl.TEXTURE0 + UNITS.lut);
     gl.bindTexture(gl.TEXTURE_2D, lutTex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1024, 32, 0, gl.RGBA, gl.UNSIGNED_BYTE, C.buildLut(cols));
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      1024,
+      32,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      C.buildLut(cols),
+    );
     palette = { colors: cols, key: key };
     drawPalette();
     log(
@@ -144,7 +154,7 @@
         (kind === 'auto' ? '画像に合わせる' : '均等') +
         ' / ' +
         Math.round(performance.now() - t1) +
-        'ms)'
+        'ms)',
     );
   }
   /* 使っている色を、明るさの順に帯で見せる */
@@ -241,7 +251,9 @@
   /* 画像を開く: 画像を読み込み、長い辺を上限(端末の上限か 4096 画素)まで縮めたキャンバスにして、テクスチャに入れる */
   function openFile(file, how) {
     if (!file || !/^image\//.test(file.type)) {
-      log.warn('画像ではないため開けませんでした(' + (file ? file.type || '種類不明' : 'なし') + ')');
+      log.warn(
+        '画像ではないため開けませんでした(' + (file ? file.type || '種類不明' : 'なし') + ')',
+      );
       dropText.textContent = '画像のファイルを選んでください';
       return;
     }
@@ -288,13 +300,19 @@
           ps[1] +
           ' / ' +
           Math.round(performance.now() - t1) +
-          'ms)'
+          'ms)',
       );
     };
     el.onerror = function () {
       URL.revokeObjectURL(url);
       dropText.textContent = 'この画像は開けませんでした。JPEG・PNG・WebP などを選んでください';
-      log.warn('画像を読み込めませんでした(' + (file.type || '種類不明') + ' / ' + C.bytes(file.size) + ')');
+      log.warn(
+        '画像を読み込めませんでした(' +
+          (file.type || '種類不明') +
+          ' / ' +
+          C.bytes(file.size) +
+          ')',
+      );
     };
     el.src = url;
   }
@@ -387,7 +405,13 @@
         state.effect === 'none' ? [] : ['強さ ' + state.amount + '%'],
         state.filter.id === 'none'
           ? []
-          : ['色 ' + C.FILTERS[C.filterIndex(state.filter.id)][1] + ' ' + state.filter.amount + '%']
+          : [
+              '色 ' +
+                C.FILTERS[C.filterIndex(state.filter.id)][1] +
+                ' ' +
+                state.filter.amount +
+                '%',
+            ],
       )
       .join(' / ');
   }
@@ -533,7 +557,7 @@
       '色を「' +
         b.textContent +
         '」にしました' +
-        (state.filter.id === 'none' ? '' : '(強さ ' + state.filter.amount + '%)')
+        (state.filter.id === 'none' ? '' : '(強さ ' + state.filter.amount + '%)'),
     );
   });
   filtAmt.addEventListener('input', function () {
@@ -592,7 +616,11 @@
           log.error('画像を作れませんでした(' + w + '×' + h + ')');
           return;
         }
-        var name = C.outName(img.name, state.effect !== 'none' ? state.effect : state.filter.id, ext),
+        var name = C.outName(
+            img.name,
+            state.effect !== 'none' ? state.effect : state.filter.id,
+            ext,
+          ),
           a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = name;
@@ -613,11 +641,11 @@
             C.bytes(blob.size) +
             ' / ' +
             Math.round(performance.now() - t1) +
-            'ms)'
+            'ms)',
         );
       },
       type,
-      0.92
+      0.92,
     );
   }
   savePng.addEventListener('click', function () {
@@ -672,6 +700,6 @@
       (summary() ? ' / ' + summary() : '') +
       ' / 保存の上限 ' +
       maxTex +
-      '画素)'
+      '画素)',
   );
 })();

@@ -77,7 +77,10 @@
       this.fadePos = this.pos;
       this.fadeLeft = Math.round(FADE_SECONDS * this.outputRate);
     }
-    this.pos = Math.max(0, Math.min(this.length ? this.length - 1 : Infinity, seconds * this.sourceRate));
+    this.pos = Math.max(
+      0,
+      Math.min(this.length ? this.length - 1 : Infinity, seconds * this.sourceRate),
+    );
     if (mode === 'stop') {
       this.motorOn = false;
       this.platter = this.speed = 0;
@@ -213,7 +216,13 @@
       }
       report(i) {
         var d = this.decks[i];
-        this.port.postMessage({ type: 'state', deck: i, pos: d.seconds(), speed: d.speed, motor: d.motorOn });
+        this.port.postMessage({
+          type: 'state',
+          deck: i,
+          pos: d.seconds(),
+          speed: d.speed,
+          motor: d.motorOn,
+        });
       }
       process(inputs, outputs) {
         for (var i = 0; i < 2; i++) {

@@ -80,7 +80,8 @@
   function jitter(hs) {
     if (hs.length < 3) return 0;
     var d = [];
-    for (var i = 2; i < hs.length; i++) d.push(Math.abs(diff(hs[i - 1], hs[i]) - diff(hs[i - 2], hs[i - 1])));
+    for (var i = 2; i < hs.length; i++)
+      d.push(Math.abs(diff(hs[i - 1], hs[i]) - diff(hs[i - 2], hs[i - 1])));
     d.sort(function (a, b) {
       return a - b;
     });

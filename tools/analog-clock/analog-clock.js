@@ -52,7 +52,7 @@
     el(
       'feDropShadow',
       { dx: '1', dy: '1.6', stdDeviation: '1.1', 'flood-color': '#000', 'flood-opacity': '.65' },
-      f
+      f,
     );
     f = el('filter', { id: 'f-glow', x: '-60%', y: '-60%', width: '220%', height: '220%' }, d);
     el('feGaussianBlur', { in: 'SourceGraphic', stdDeviation: '2.2', result: 'b' }, f);
@@ -72,12 +72,19 @@
         'flood-opacity': '.75',
         result: 'a',
       },
-      f
+      f,
     );
     el(
       'feDropShadow',
-      { in: 'a', dx: '-.7', dy: '-.7', stdDeviation: '.25', 'flood-color': '#fff', 'flood-opacity': '.65' },
-      f
+      {
+        in: 'a',
+        dx: '-.7',
+        dy: '-.7',
+        stdDeviation: '.25',
+        'flood-color': '#fff',
+        'flood-opacity': '.65',
+      },
+      f,
     );
     var g = el('linearGradient', { id: 'g-bezel', x1: '0', y1: '0', x2: '1', y2: '1' }, d);
     [
@@ -100,29 +107,57 @@
       el(
         'circle',
         { cx: 0, cy: 0, r: R_OUT - w / 2, fill: 'none', stroke: color, 'stroke-width': w },
-        parent
+        parent,
       );
     else if (st.frame === 'double') {
       el(
         'circle',
-        { cx: 0, cy: 0, r: R_OUT - w * 0.18, fill: 'none', stroke: color, 'stroke-width': w * 0.36 },
-        parent
+        {
+          cx: 0,
+          cy: 0,
+          r: R_OUT - w * 0.18,
+          fill: 'none',
+          stroke: color,
+          'stroke-width': w * 0.36,
+        },
+        parent,
       );
       el(
         'circle',
-        { cx: 0, cy: 0, r: R_OUT - w * 0.82, fill: 'none', stroke: color, 'stroke-width': w * 0.36 },
-        parent
+        {
+          cx: 0,
+          cy: 0,
+          r: R_OUT - w * 0.82,
+          fill: 'none',
+          stroke: color,
+          'stroke-width': w * 0.36,
+        },
+        parent,
       );
     } else if (st.frame === 'bezel') {
       el(
         'circle',
-        { cx: 0, cy: 0, r: R_OUT - w / 2, fill: 'none', stroke: 'url(#g-bezel)', 'stroke-width': w },
-        parent
+        {
+          cx: 0,
+          cy: 0,
+          r: R_OUT - w / 2,
+          fill: 'none',
+          stroke: 'url(#g-bezel)',
+          'stroke-width': w,
+        },
+        parent,
       );
       el(
         'circle',
-        { cx: 0, cy: 0, r: R_OUT - w - 0.4, fill: 'none', stroke: 'rgba(0,0,0,.45)', 'stroke-width': 0.8 },
-        parent
+        {
+          cx: 0,
+          cy: 0,
+          r: R_OUT - w - 0.4,
+          fill: 'none',
+          stroke: 'rgba(0,0,0,.45)',
+          'stroke-width': 0.8,
+        },
+        parent,
       );
     } else if (st.frame === 'neon') {
       el(
@@ -136,7 +171,7 @@
           'stroke-width': Math.max(0.8, w * 0.5),
           filter: 'url(#f-glow)',
         },
-        parent
+        parent,
       );
     } else if (st.frame === 'dots') {
       var rr = R_OUT - w / 2,
@@ -154,7 +189,7 @@
           'stroke-linecap': 'round',
           'stroke-dasharray': '0.01 ' + (circ / n - 0.01),
         },
-        parent
+        parent,
       );
     }
     return rf;
@@ -167,7 +202,9 @@
       g = el('g', { transform: 'translate(100 100)' }, svg);
     defs(g, color);
     var rf = drawFrame(g, color, face);
-    var filt = { shadow: 'url(#f-shadow)', glow: 'url(#f-glow)', emboss: 'url(#f-emboss)' }[st.effect];
+    var filt = { shadow: 'url(#f-shadow)', glow: 'url(#f-glow)', emboss: 'url(#f-emboss)' }[
+      st.effect
+    ];
 
     /* 目盛り(分・時) */
     var ticks = el('g', { stroke: color, 'stroke-linecap': 'round' }, g),
@@ -188,7 +225,7 @@
           'stroke-width': big ? 1.6 : 0.6,
           opacity: big ? 1 : 0.7,
         },
-        ticks
+        ticks,
       );
     }
 
@@ -197,8 +234,13 @@
       rr = rf - 10 - fs * 0.7;
     var tg = el(
       'g',
-      { fill: color, 'font-family': fontStack(), 'text-anchor': 'middle', 'dominant-baseline': 'central' },
-      g
+      {
+        fill: color,
+        'font-family': fontStack(),
+        'text-anchor': 'middle',
+        'dominant-baseline': 'central',
+      },
+      g,
     );
     if (filt) tg.setAttribute('filter', filt);
     if (st.effect === 'outline') {

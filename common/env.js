@@ -77,7 +77,7 @@
           },
           function (e) {
             if (log.debug) log.debug('OS の版番号を取得できませんでした(' + (e && e.message) + ')');
-          }
+          },
         )
       : Promise.resolve();
 
@@ -162,7 +162,10 @@
         ['表示領域(縦×横)', innerHeight + '×' + innerWidth + 'px'],
         ['向き', innerWidth > innerHeight ? '横向き' : '縦向き'],
         ['https', yesNo(isSecure())],
-        ['通信', (nav.onLine !== false ? 'オンライン' : 'オフライン') + (net ? '(' + net + ')' : '')],
+        [
+          '通信',
+          (nav.onLine !== false ? 'オンライン' : 'オフライン') + (net ? '(' + net + ')' : ''),
+        ],
         ['言語', nav.language || '不明'],
         ['タイムゾーン', timeZone()],
         ['振動', yesNo(typeof nav.vibrate === 'function')],

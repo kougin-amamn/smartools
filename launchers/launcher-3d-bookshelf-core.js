@@ -44,9 +44,21 @@ function wallOf(name, hx, hz) {
   if (name === 'back')
     return { c: { x: 0, z: -hz }, t: { x: 1, z: 0 }, n: { x: 0, z: 1 }, ry: 0, len: 2 * hx };
   if (name === 'right')
-    return { c: { x: hx, z: 0 }, t: { x: 0, z: 1 }, n: { x: -1, z: 0 }, ry: -Math.PI / 2, len: 2 * hz };
+    return {
+      c: { x: hx, z: 0 },
+      t: { x: 0, z: 1 },
+      n: { x: -1, z: 0 },
+      ry: -Math.PI / 2,
+      len: 2 * hz,
+    };
   if (name === 'left')
-    return { c: { x: -hx, z: 0 }, t: { x: 0, z: -1 }, n: { x: 1, z: 0 }, ry: Math.PI / 2, len: 2 * hz };
+    return {
+      c: { x: -hx, z: 0 },
+      t: { x: 0, z: -1 },
+      n: { x: 1, z: 0 },
+      ry: Math.PI / 2,
+      len: 2 * hz,
+    };
   return { c: { x: 0, z: hz }, t: { x: -1, z: 0 }, n: { x: 0, z: -1 }, ry: Math.PI, len: 2 * hx };
 }
 /* 本棚は4段×2列(真ん中に仕切り)。マスは左上から右へ、段が変わったら次の段の左から(読む順)。
@@ -238,7 +250,10 @@ function boxArrays(boxes, frame) {
           /* 背表紙の面(pz)だけ絵の全体、他の面は絵の真ん中の無地の所。rect=[u0,v0,u1,v1] で絵の一部 */
           var rc = b.rect || [0, 0, 1, 1];
           if (f.k === 'pz')
-            U.push(rc[0] + ((rc[2] - rc[0]) * (q[0] + 1)) / 2, rc[1] + ((rc[3] - rc[1]) * (q[1] + 1)) / 2);
+            U.push(
+              rc[0] + ((rc[2] - rc[0]) * (q[0] + 1)) / 2,
+              rc[1] + ((rc[3] - rc[1]) * (q[1] + 1)) / 2,
+            );
           else U.push((rc[0] + rc[2]) / 2, (rc[1] + rc[3]) / 2);
         } else if (b.uv === 'panel') {
           /* 手すりなど: 前後の面に絵を横に ru 回くり返す */
@@ -247,7 +262,7 @@ function boxArrays(boxes, frame) {
         } else
           U.push(
             (q[0] * eu + cen[0] + cen[2] + b.x + frame.x) * 1.0,
-            (q[1] * ev + b.y) * 1.0
+            (q[1] * ev + b.y) * 1.0,
           ); /* 木目: およそ1mで1回 */
       });
     });
@@ -270,7 +285,15 @@ function caseBoxes(x, wood, o) {
   bx.push({ x: x - w / 2 + s / 2, y: y0 + h / 2, z: -d / 2, sx: s, sy: h, sz: d, color: wood });
   bx.push({ x: x + w / 2 - s / 2, y: y0 + h / 2, z: -d / 2, sx: s, sy: h, sz: d, color: wood });
   sh.forEach(function (y) {
-    bx.push({ x: x, y: y0 + y - t / 2, z: -d / 2, sx: w - 2 * s, sy: t, sz: d - 0.02, color: wood });
+    bx.push({
+      x: x,
+      y: y0 + y - t / 2,
+      z: -d / 2,
+      sx: w - 2 * s,
+      sy: t,
+      sz: d - 0.02,
+      color: wood,
+    });
   });
   bx.push({ x: x, y: y0 + h - 0.02, z: -d / 2, sx: w, sy: 0.04, sz: d, color: wood }); /* 天板 */
   bx.push({

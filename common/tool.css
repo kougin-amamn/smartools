@@ -160,7 +160,9 @@ body {
    理由: 縦向き前提の縦積みのままだと、横向きでは主役が画面の外へはみ出し、操作のたびにスクロールが要るため */
 @media (orientation: landscape) and (max-height: 600px) {
   :root {
-    --land-h: calc(100dvh - 60px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    --land-h: calc(
+      100dvh - 60px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+    );
   }
   .site-bar {
     min-height: 42px;

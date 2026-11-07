@@ -41,7 +41,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-analog-clock.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">アナログ時計<span class="en">Analog Clock</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        アナログ時計<span class="en">Analog Clock</span>
+      </h1>
       <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
         <svg
           viewBox="0 0 24 24"
@@ -61,7 +63,12 @@
     <main class="content">
       <div class="app">
         <div class="clock-wrap">
-          <svg id="clockSvg" viewBox="0 0 200 200" role="img" aria-label="現在時刻のアナログ時計"></svg>
+          <svg
+            id="clockSvg"
+            viewBox="0 0 200 200"
+            role="img"
+            aria-label="現在時刻のアナログ時計"
+          ></svg>
         </div>
       </div>
     </main>
@@ -87,7 +94,9 @@
           <div class="opt">
             <label for="size">文字サイズ</label>
             <div class="size-row">
-              <input type="range" id="size" step="5" data-log="文字サイズ" /><span id="sizeVal"></span>
+              <input type="range" id="size" step="5" data-log="文字サイズ" /><span
+                id="sizeVal"
+              ></span>
             </div>
           </div>
           <div class="opt">
@@ -109,7 +118,9 @@
           <div class="opt" id="fwidthRow">
             <label for="fwidth">フレーム幅</label>
             <div class="size-row">
-              <input type="range" id="fwidth" step="1" data-log="フレーム幅" /><span id="fwidthVal"></span>
+              <input type="range" id="fwidth" step="1" data-log="フレーム幅" /><span
+                id="fwidthVal"
+              ></span>
             </div>
           </div>
         </div>
@@ -126,7 +137,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./analog-clock-core.js"></script>

@@ -34,7 +34,8 @@
       return;
     }
     if (typeof QRCode === 'undefined') {
-      statusText.textContent = 'QRコード生成ライブラリを読み込めませんでした。通信環境をご確認ください。';
+      statusText.textContent =
+        'QRコード生成ライブラリを読み込めませんでした。通信環境をご確認ください。';
       log.error('QRコード生成ライブラリ(qrcodejs)を読み込めませんでした(通信が必要です)');
       return;
     }

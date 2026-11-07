@@ -41,7 +41,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-speed-test.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">回線速度テスト<span class="en">Speed Test</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        回線速度テスト<span class="en">Speed Test</span>
+      </h1>
     </header>
     <main class="content">
       <div class="app" data-land="split">
@@ -54,7 +56,9 @@
         <button class="pill primary" id="startBtn">計測開始</button>
 
         <div class="results">
-          <div class="result-box"><span class="label">Ping</span><span class="val" id="pingVal">-</span></div>
+          <div class="result-box">
+            <span class="label">Ping</span><span class="val" id="pingVal">-</span>
+          </div>
           <div class="result-box">
             <span class="label">ジッター</span><span class="val" id="jitterVal">-</span>
           </div>
@@ -83,7 +87,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./speed-test-core.js"></script>

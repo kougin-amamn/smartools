@@ -107,7 +107,10 @@
 
   /* ツールの「戻る」ボタン(tool-kit.js)がこの一覧に戻れるよう、ランチャーと同じ形で戻り先を残す */
   try {
-    localStorage.setItem('launcher-return', JSON.stringify({ href: location.href, title: 'ツール一覧' }));
+    localStorage.setItem(
+      'launcher-return',
+      JSON.stringify({ href: location.href, title: 'ツール一覧' }),
+    );
   } catch (e) {
     log.warn('戻り先の保存に失敗しました', e);
   }
@@ -149,7 +152,7 @@
           cats +
           '分類 / ' +
           Math.round(performance.now() - t0) +
-          'ms)'
+          'ms)',
       );
     })
     .catch(function (e) {

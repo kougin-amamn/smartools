@@ -69,7 +69,9 @@
     const mimeType = pickMimeType();
     chunks = [];
     try {
-      mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+      mediaRecorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
     } catch (e) {
       log.warn('この端末・ブラウザは録音に対応していません', e);
       statusText.textContent = 'この端末・ブラウザは録音に対応していません。';
@@ -83,7 +85,7 @@
       const blob = new Blob(chunks, { type: mediaRecorder.mimeType || 'audio/webm' });
       addItem(blob, mediaRecorder.mimeType || 'audio/webm');
       log(
-        `録音を保存しました(録音 ${count} / ${timerEl.textContent} / ${(blob.size / 1024).toFixed(0)}KB / ${mediaRecorder.mimeType || 'audio/webm'})`
+        `録音を保存しました(録音 ${count} / ${timerEl.textContent} / ${(blob.size / 1024).toFixed(0)}KB / ${mediaRecorder.mimeType || 'audio/webm'})`,
       );
       ToolKit.media.stop(stream);
       stream = null;

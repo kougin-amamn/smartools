@@ -72,7 +72,8 @@
         <p class="note">
           端末のモーションセンサー(加速度)を使い、合成加速度の変化からピークを検出して歩数を数える簡易的な方式です。歩数計専用機ほどの精度はありません。iPhoneでは初回にモーションセンサーの利用許可が必要です。<br />
           距離・カロリーは一般的な歩幅(約70cm)・消費量(体重60kg想定)を仮定した概算です。<br />
-          「画面を消灯させない」はWake Lock APIを使っています。対応していないブラウザでは効果がありません。
+          「画面を消灯させない」はWake Lock
+          APIを使っています。対応していないブラウザでは効果がありません。
         </p>
       </div>
     </main>
@@ -85,7 +86,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./step-counter-core.js"></script>

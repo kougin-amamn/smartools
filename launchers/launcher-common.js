@@ -38,7 +38,7 @@
           list.length +
           '件 / ' +
           Math.round(performance.now() - t0) +
-          'ms)'
+          'ms)',
       );
       return { list: list, src: DATA };
     });
@@ -56,7 +56,7 @@
       },
       function (e) {
         main(null, '', loadErrorMessage(), e);
-      }
+      },
     );
   }
 
@@ -125,7 +125,7 @@
         n +
         '回目' +
         (how ? ' / ' + how : '') +
-        ')'
+        ')',
     );
     if (newTab) window.open(href, '_blank', 'noopener');
     else location.href = href;
@@ -147,7 +147,9 @@
       setTimeout(function () {
         el.hidden = true;
       }, 450);
-      log('表示の準備ができました(読み込み開始から ' + Math.round(performance.now() - LD_T0) + 'ms)');
+      log(
+        '表示の準備ができました(読み込み開始から ' + Math.round(performance.now() - LD_T0) + 'ms)',
+      );
     }
   }
   /* 次の画面更新のあとに続ける(読み込み中の表示を先に画面へ出すため) */
@@ -205,7 +207,7 @@
           JSON.stringify({
             href: location.href.split('#')[0],
             title: h1 ? h1.firstChild.textContent.trim() : document.title,
-          })
+          }),
         );
       }
     } catch (e) {

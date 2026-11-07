@@ -101,7 +101,9 @@
     } catch (e) {
       log.warn('映像の再生を開始できませんでした', e);
     }
-    log(`カメラを開始しました(${facingMode === 'user' ? '前面' : '背面'} / ${ToolKit.media.size(track)})`);
+    log(
+      `カメラを開始しました(${facingMode === 'user' ? '前面' : '背面'} / ${ToolKit.media.size(track)})`,
+    );
     emptyState.style.display = 'none';
     torchOn = false;
     torchBtn.classList.remove('active');
@@ -184,7 +186,7 @@
     capturedList.prepend(a);
     ToolKit.vibrate(30);
     log(
-      `撮影しました(${shotCount}枚目 / ${canvas.width}×${canvas.height} / ${Math.round((url.length * 0.75) / 1024)}KB)`
+      `撮影しました(${shotCount}枚目 / ${canvas.width}×${canvas.height} / ${Math.round((url.length * 0.75) / 1024)}KB)`,
     );
   }
 

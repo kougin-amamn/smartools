@@ -22,7 +22,11 @@
   function step(key, value, delta) {
     var lim = LIMITS[key],
       v = Math.max(lim[0], Math.min(lim[1], value + delta));
-    return { value: v, changed: v !== value, limit: v === value ? (delta > 0 ? '上限' : '下限') : null };
+    return {
+      value: v,
+      changed: v !== value,
+      limit: v === value ? (delta > 0 ? '上限' : '下限') : null,
+    };
   }
   /* 端末の日付(yyyy-mm-dd)。UTC ではなく端末の時刻で日付を切り替える */
   function localDate(d) {

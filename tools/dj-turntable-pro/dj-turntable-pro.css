@@ -11,12 +11,14 @@ body {
   overflow: hidden;
   padding: calc(env(safe-area-inset-top, 0px) + 6px) calc(env(safe-area-inset-right, 0px) + 6px)
     calc(env(safe-area-inset-bottom, 0px) + 6px) calc(env(safe-area-inset-left, 0px) + 6px);
-  background: radial-gradient(ellipse 120% 60% at 50% -10%, #2a2c33 0%, rgba(42, 44, 51, 0) 70%), #0b0c0f;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -10%, #2a2c33 0%, rgba(42, 44, 51, 0) 70%), #0b0c0f;
   color: #e6e7ea;
   align-items: stretch;
   --knob: 32px;
   --glass: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 45%), #090b0b;
-  --glass-edge: inset 0 0 0 1px #000, inset 0 2px 6px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.07);
+  --glass-edge:
+    inset 0 0 0 1px #000, inset 0 2px 6px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.07);
   --lcd: #9ff3dd;
 }
 /* ヘッダは画面の上に隠す(common の bar-hidden)。つまみだけ機械の色にする */
@@ -540,7 +542,14 @@ body {
   background: linear-gradient(90deg, #1d1e22, #45474e 38%, #f4f5f7 46% 54%, #45474e 62%, #1d1e22);
 }
 .pitch-fader::-webkit-slider-thumb {
-  background: linear-gradient(90deg, #7d8189, #e6e8eb 40%, #3a3c42 47% 53%, #e6e8eb 60%, #7d8189) !important;
+  background: linear-gradient(
+    90deg,
+    #7d8189,
+    #e6e8eb 40%,
+    #3a3c42 47% 53%,
+    #e6e8eb 60%,
+    #7d8189
+  ) !important;
 }
 
 /* キューのパッド(ゴム。置くと色が灯る) */
@@ -593,7 +602,8 @@ body {
 }
 .hot.set {
   color: #ffffff;
-  background: radial-gradient(circle at 50% 45%, rgba(var(--led), 0.75), rgba(var(--led), 0.18) 70%), #222327;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(var(--led), 0.75), rgba(var(--led), 0.18) 70%), #222327;
   box-shadow:
     inset 0 0 0 1px rgba(var(--led), 0.6),
     0 0 10px rgba(var(--led), 0.35),
@@ -780,8 +790,8 @@ body {
   height: auto;
   background:
     repeating-linear-gradient(180deg, #5a5d66 0 1px, transparent 1px 10%) 4px 6% / 5px 88% no-repeat,
-    repeating-linear-gradient(180deg, #5a5d66 0 1px, transparent 1px 10%) calc(100% - 4px) 6% / 5px 88%
-      no-repeat;
+    repeating-linear-gradient(180deg, #5a5d66 0 1px, transparent 1px 10%) calc(100% - 4px) 6% / 5px
+      88% no-repeat;
 }
 .xfader {
   flex: 1;

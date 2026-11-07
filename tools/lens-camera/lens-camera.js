@@ -150,7 +150,7 @@
           how +
           ' / ' +
           (zoomInfo.textContent || '画像の拡大') +
-          ')'
+          ')',
       );
   }
 
@@ -305,16 +305,17 @@
   view.addEventListener(
     'touchstart',
     function (e) {
-      if (state.lens === 'magnify' && e.touches.length === 2) pinch = { d: dist(e.touches), z: zoomValue() };
+      if (state.lens === 'magnify' && e.touches.length === 2)
+        pinch = { d: dist(e.touches), z: zoomValue() };
     },
-    { passive: true }
+    { passive: true },
   );
   view.addEventListener(
     'touchmove',
     function (e) {
       if (pinch && e.touches.length === 2) setZoom((pinch.z * dist(e.touches)) / pinch.d);
     },
-    { passive: true }
+    { passive: true },
   );
   view.addEventListener('touchend', function () {
     if (pinch) {
@@ -331,7 +332,7 @@
       setZoom(zoomValue() * (e.deltaY < 0 ? 1.1 : 1 / 1.1), 'ホイール');
       save();
     },
-    { passive: false }
+    { passive: false },
   );
 
   /* 設定(レンズと調整)を端末に保存 */
@@ -361,11 +362,21 @@
     lightBtn.setAttribute('aria-pressed', 'false');
     var r = await ToolKit.media.open(
       deviceId
-        ? { video: { deviceId: { exact: deviceId }, width: { ideal: 1920 }, height: { ideal: 1440 } } }
+        ? {
+            video: {
+              deviceId: { exact: deviceId },
+              width: { ideal: 1920 },
+              height: { ideal: 1440 },
+            },
+          }
         : {
-            video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1440 } },
+            video: {
+              facingMode: { ideal: 'environment' },
+              width: { ideal: 1920 },
+              height: { ideal: 1440 },
+            },
           },
-      'カメラ'
+      'カメラ',
     );
     if (!r.stream) {
       statusText.textContent = r.message;
@@ -376,7 +387,10 @@
     track = stream.getVideoTracks()[0];
     /* カメラ自体の拡大に対応しているか(Android の Chrome などで使える。iPhone の Safari は対応していない) */
     var caps = track.getCapabilities ? track.getCapabilities() : {};
-    camZoom = caps.zoom && caps.zoom.max > caps.zoom.min ? { min: caps.zoom.min, max: caps.zoom.max } : null;
+    camZoom =
+      caps.zoom && caps.zoom.max > caps.zoom.min
+        ? { min: caps.zoom.min, max: caps.zoom.max }
+        : null;
     video.srcObject = stream;
     try {
       await video.play();
@@ -402,7 +416,7 @@
         devices.length +
         '台 / カメラの拡大 ' +
         (camZoom ? camZoom.min + '〜' + camZoom.max + '倍' : 'なし') +
-        ')'
+        ')',
     );
   }
   switchCamBtn.addEventListener('click', function () {
@@ -463,7 +477,7 @@
         ' / ' +
         lensOf().name +
         (summary() ? ' / ' + summary() : '') +
-        ')'
+        ')',
     );
   });
   capturedList.addEventListener('click', function (e) {
@@ -480,7 +494,8 @@
     log.error('レンズの処理の準備でエラーが発生しました', e);
   }
   if (!ok) {
-    statusText.textContent = 'この端末のブラウザでは WebGL が使えないため、レンズの写りを表示できません。';
+    statusText.textContent =
+      'この端末のブラウザでは WebGL が使えないため、レンズの写りを表示できません。';
     log.warn('WebGL が使えないため起動できませんでした');
     return;
   }

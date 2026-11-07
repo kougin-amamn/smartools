@@ -20,7 +20,11 @@
       name: '干支',
       labels: ['丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子'],
     },
-    { id: 'arabic', name: '数字', labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] },
+    {
+      id: 'arabic',
+      name: '数字',
+      labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+    },
   ];
   var ORIENTS = [
     { id: 'upright', name: '正' },
@@ -30,14 +34,19 @@
     {
       id: 'gothic',
       name: 'ゴシック',
-      stack: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic",sans-serif',
+      stack:
+        '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic",sans-serif',
     },
     {
       id: 'serif',
       name: '明朝',
       stack: '"Hiragino Mincho ProN","Yu Mincho",Georgia,"Times New Roman",serif',
     },
-    { id: 'mono', name: '等幅', stack: 'ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace' },
+    {
+      id: 'mono',
+      name: '等幅',
+      stack: 'ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace',
+    },
     {
       id: 'round',
       name: '丸ゴシック',

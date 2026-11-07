@@ -41,7 +41,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-object-detector.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">物体検出<span class="en">Object Detector</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        物体検出<span class="en">Object Detector</span>
+      </h1>
       <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
         <svg
           viewBox="0 0 24 24"
@@ -108,7 +110,8 @@
         <div class="opt">
           <label for="minScore">表示する確からしさ</label>
           <div class="slide">
-            <input type="range" id="minScore" min="10" max="90" step="5" value="50" /><span id="minScoreVal"
+            <input type="range" id="minScore" min="10" max="90" step="5" value="50" /><span
+              id="minScoreVal"
               >50%</span
             >
           </div>
@@ -116,7 +119,8 @@
         <div class="opt">
           <label for="maxBoxes">最大件数</label>
           <div class="slide">
-            <input type="range" id="maxBoxes" min="1" max="50" step="1" value="20" /><span id="maxBoxesVal"
+            <input type="range" id="maxBoxes" min="1" max="50" step="1" value="20" /><span
+              id="maxBoxesVal"
               >20件</span
             >
           </div>
@@ -133,7 +137,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./object-detector-core.js"></script>

@@ -72,9 +72,14 @@
 
   async function downloadTest() {
     setGauge('0', 'Mbps', 'ダウンロードを計測中…');
-    const result = await xhrTransfer('GET', `${DOWN_URL}?bytes=${DOWNLOAD_BYTES}`, null, (loaded, ms) => {
-      if (ms > 100) setGauge(bpsToMbps(loaded, ms).toFixed(1), 'Mbps', 'ダウンロードを計測中…');
-    });
+    const result = await xhrTransfer(
+      'GET',
+      `${DOWN_URL}?bytes=${DOWNLOAD_BYTES}`,
+      null,
+      (loaded, ms) => {
+        if (ms > 100) setGauge(bpsToMbps(loaded, ms).toFixed(1), 'Mbps', 'ダウンロードを計測中…');
+      },
+    );
     return bpsToMbps(result.bytes, result.ms);
   }
 
@@ -111,7 +116,7 @@
       setGauge(up.toFixed(1), 'Mbps', '計測完了');
       ToolKit.vibrate();
       log(
-        `計測が完了しました(Ping ${pingVal.textContent} / 下り ${downVal.textContent} / 上り ${upVal.textContent} / ${((performance.now() - t0) / 1000).toFixed(1)}秒)`
+        `計測が完了しました(Ping ${pingVal.textContent} / 下り ${downVal.textContent} / 上り ${upVal.textContent} / ${((performance.now() - t0) / 1000).toFixed(1)}秒)`,
       );
     } catch (e) {
       setGauge('-', '', `計測に失敗しました(${e.message})`);

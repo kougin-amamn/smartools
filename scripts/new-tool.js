@@ -8,7 +8,9 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const [slug, name, en, catchCopy, description] = process.argv.slice(2);
 if (!slug || !name || !en || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) {
-  console.log('使い方: node scripts/new-tool.js <slug(英小文字とハイフン)> <名称> <英名> [キャッチ] [説明]');
+  console.log(
+    '使い方: node scripts/new-tool.js <slug(英小文字とハイフン)> <名称> <英名> [キャッチ] [説明]',
+  );
   process.exit(1);
 }
 const vals = {
@@ -24,7 +26,7 @@ function fill(text) {
 
 const files = {
   ['tools/' + slug + '/' + slug + '.html']: fill(
-    fs.readFileSync(path.join(__dirname, 'template/tool.html'), 'utf8')
+    fs.readFileSync(path.join(__dirname, 'template/tool.html'), 'utf8'),
   ),
   ['tools/' + slug + '/' + slug + '.css']:
     '/* ' +
@@ -52,5 +54,6 @@ for (const [rel, text] of Object.entries(files)) {
   console.log('作成 ' + rel);
 }
 console.log(
-  '次: 設計書を書く → アイコンの絵を描く → index-data.json に1行足す → node tests/smoke.js tools/' + slug
+  '次: 設計書を書く → アイコンの絵を描く → index-data.json に1行足す → node tests/smoke.js tools/' +
+    slug,
 );

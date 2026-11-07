@@ -41,7 +41,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-heart-rate.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">心拍数計<span class="en">Heart Rate Monitor</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        心拍数計<span class="en">Heart Rate Monitor</span>
+      </h1>
     </header>
     <main class="content">
       <div class="app" data-land="split">
@@ -57,7 +59,9 @@
             <div class="bpm"><span id="bpm">--</span><small>bpm</small></div>
           </div>
         </div>
-        <div class="status" id="status">背面のカメラとライトを、人差し指の腹でそっとふさいでください</div>
+        <div class="status" id="status">
+          背面のカメラとライトを、人差し指の腹でそっとふさいでください
+        </div>
         <div class="progress"><i id="bar"></i></div>
         <canvas id="wave" class="wave" width="680" height="160" aria-label="脈の波形"></canvas>
         <button class="pill primary big" id="startBtn">測定を始める</button>
@@ -81,7 +85,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./heart-rate-core.js"></script>

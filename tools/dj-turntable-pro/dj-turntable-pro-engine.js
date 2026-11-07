@@ -131,7 +131,8 @@
     if (this.channels[deck]) this.ramp(this.channels[deck].trim.gain, K.trimGainOf(value));
   };
   DJEngine.prototype.setBand = function (deck, band, value) {
-    if (this.channels[deck]) this.ramp(this.channels[deck].bands[band].gain, K.isolatorGainOf(value));
+    if (this.channels[deck])
+      this.ramp(this.channels[deck].bands[band].gain, K.isolatorGainOf(value));
   };
   DJEngine.prototype.setFilter = function (deck, value) {
     var ch = this.channels[deck];
@@ -158,7 +159,8 @@
 
   /* メーターの最大の振れ(0〜1)。which は 0 / 1 / 'master' */
   DJEngine.prototype.levelOf = function (which) {
-    var a = which === 'master' ? this.masterMeter : this.channels[which] && this.channels[which].meter;
+    var a =
+      which === 'master' ? this.masterMeter : this.channels[which] && this.channels[which].meter;
     if (!a) return 0;
     a.getFloatTimeDomainData(this.buffer);
     var m = 0;
@@ -202,7 +204,7 @@
       r16 = right ? int16Of(right) : null;
     this.send(
       { type: 'load', deck: deck, left: l16, right: r16, sampleRate: audio.sampleRate },
-      r16 ? [l16.buffer, r16.buffer] : [l16.buffer]
+      r16 ? [l16.buffer, r16.buffer] : [l16.buffer],
     );
     return { mono: mono, rate: audio.sampleRate / factor };
   };

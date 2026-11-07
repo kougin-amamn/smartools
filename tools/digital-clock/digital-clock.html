@@ -8,7 +8,10 @@
       name="description"
       content="デジタル時計を全画面に近い大きさで表示。表示形式(24時間・12時間・日付つきなど)、文字色、フォント、文字サイズ、背景色、フレームを自由に選べ、設定は端末に保存されます。"
     />
-    <meta property="og:title" content="デジタル時計 | 表示形式・色・フォント・フレームを選べる時計" />
+    <meta
+      property="og:title"
+      content="デジタル時計 | 表示形式・色・フォント・フレームを選べる時計"
+    />
     <meta
       property="og:description"
       content="デジタル時計を全画面に近い大きさで表示。表示形式(24時間・12時間・日付つきなど)、文字色、フォント、文字サイズ、背景色、フレームを自由に選べ、設定は端末に保存されます。"
@@ -41,7 +44,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-digital-clock.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">デジタル時計<span class="en">Digital Clock</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        デジタル時計<span class="en">Digital Clock</span>
+      </h1>
       <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
         <svg
           viewBox="0 0 24 24"
@@ -90,7 +95,9 @@
           <div class="opt">
             <label for="size">文字サイズ</label>
             <div class="size-row">
-              <input type="range" id="size" step="5" data-log="文字サイズ" /><span id="sizeVal"></span>
+              <input type="range" id="size" step="5" data-log="文字サイズ" /><span
+                id="sizeVal"
+              ></span>
             </div>
           </div>
           <div class="opt">
@@ -115,7 +122,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./digital-clock-core.js"></script>

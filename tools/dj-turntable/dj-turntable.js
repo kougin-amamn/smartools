@@ -39,7 +39,10 @@
     }
     ctx = new AC();
     ready = ctx.audioWorklet.addModule('./dj-turntable-worklet.js').then(function () {
-      node = new AudioWorkletNode(ctx, 'turntable-deck', { numberOfInputs: 0, outputChannelCount: [2] });
+      node = new AudioWorkletNode(ctx, 'turntable-deck', {
+        numberOfInputs: 0,
+        outputChannelCount: [2],
+      });
       node.port.onmessage = onMessage;
       gain = ctx.createGain();
       gain.gain.value = volume;
@@ -85,14 +88,14 @@
     lastFrame = now;
     $('rot').setAttribute(
       'transform',
-      'rotate(' + K.platterAngle(pos).toFixed(2) + ' ' + G.cx + ' ' + G.cy + ')'
+      'rotate(' + K.platterAngle(pos).toFixed(2) + ' ' + G.cx + ' ' + G.cy + ')',
     );
 
     var target = armDown ? K.armAngle(duration ? pos / duration : 0) : G.restDeg;
     armDeg += (target - armDeg) * (1 - Math.exp(-dt / 0.22));
     $('arm').setAttribute(
       'transform',
-      'translate(' + G.px + ' ' + G.py + ') rotate(' + armDeg.toFixed(2) + ')'
+      'translate(' + G.px + ' ' + G.py + ') rotate(' + armDeg.toFixed(2) + ')',
     );
 
     var txt = K.fmtTime(pos) + ' / ' + K.fmtTime(duration);
@@ -104,7 +107,8 @@
     $('played').style.width = pct + '%';
     $('head').style.left = 'calc(' + pct + '% - 1px)';
 
-    var moving = Math.abs(view.cur) > 1e-3 || drag || Math.abs(target - armDeg) > 0.05 || now - lastMsg < 300;
+    var moving =
+      Math.abs(view.cur) > 1e-3 || drag || Math.abs(target - armDeg) > 0.05 || now - lastMsg < 300;
     if (moving) raf = requestAnimationFrame(frame);
   }
 
@@ -120,7 +124,8 @@
     var g = c.getContext('2d');
     g.clearRect(0, 0, w, h);
     if (!peaks) return;
-    g.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4a4e7a';
+    g.fillStyle =
+      getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4a4e7a';
     var n = peaks.length,
       bw = w / n;
     for (var i = 0; i < n; i++) {
@@ -215,7 +220,8 @@
       async function () {
         var buf = await ctx.decodeAudioData(await t.file.arrayBuffer());
         var chs = [];
-        for (var c = 0; c < Math.min(2, buf.numberOfChannels); c++) chs.push(buf.getChannelData(c).slice());
+        for (var c = 0; c < Math.min(2, buf.numberOfChannels); c++)
+          chs.push(buf.getChannelData(c).slice());
         return {
           chs: chs,
           rate: buf.sampleRate,
@@ -224,8 +230,13 @@
         };
       },
       function (v) {
-        return K.fmtTime(v.sec) + ' / ' + Math.round((v.chs.length * v.chs[0].length * 4) / 1048576) + 'MB';
-      }
+        return (
+          K.fmtTime(v.sec) +
+          ' / ' +
+          Math.round((v.chs.length * v.chs[0].length * 4) / 1048576) +
+          'MB'
+        );
+      },
     );
     if (token !== loadToken) return;
     if (!r.ok) {
@@ -242,7 +253,7 @@
       { t: 'load', ch: v.chs, rate: v.rate },
       v.chs.map(function (a) {
         return a.buffer;
-      })
+      }),
     );
     drawWave();
     setStatus('');
@@ -305,7 +316,7 @@
     log(
       motorOn
         ? '再生を始めました(' + K.fmtTime(curPos(performance.now())) + ')'
-        : '一時停止しました(' + K.fmtTime(curPos(performance.now())) + ')'
+        : '一時停止しました(' + K.fmtTime(curPos(performance.now())) + ')',
     );
   };
   $('cueBtn').onclick = function () {

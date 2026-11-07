@@ -78,7 +78,7 @@
           if (param === 'master') self.values.master = v;
           else self.values.decks[deck][param] = v;
           self.apply(param, deck, v);
-        })
+        }),
       );
     });
     this.knobs.forEach(function (k) {

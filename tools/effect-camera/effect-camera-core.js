@@ -33,7 +33,11 @@
       name: 'VHS',
       params: [pct('noise', 'ノイズ', 45), pct('shift', '色ずれ', 50)],
     },
-    { id: 'crt', name: 'ブラウン管', params: [pct('curve', '画面の丸み', 50), pct('glow', 'にじみ', 50)] },
+    {
+      id: 'crt',
+      name: 'ブラウン管',
+      params: [pct('curve', '画面の丸み', 50), pct('glow', 'にじみ', 50)],
+    },
     { id: 'trail', name: '残像', params: [pct('length', '残る長さ', 70)] },
     {
       id: 'slit',

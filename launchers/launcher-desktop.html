@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>デスクトップ風ランチャー | パソコンのデスクトップのようにアイコンを並べるアプリランチャー</title>
+    <title>
+      デスクトップ風ランチャー | パソコンのデスクトップのようにアイコンを並べるアプリランチャー
+    </title>
     <meta
       name="description"
       content="ツールを開くアプリランチャーです。パソコンのデスクトップのように、ツールのアイコンを自由に並べ替えられます。ダブルクリック(スマホはタップ)で開き、ドラッグで移動、範囲選択、右クリックのメニューで整列やアイコンの大きさを変えられます。配置は保存されます。"
@@ -29,7 +31,12 @@
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "デスクトップ風ランチャー",
-        "alternateName": ["Desktop Launcher", "デスクトップ", "アイコンランチャー", "アプリランチャー"],
+        "alternateName": [
+          "Desktop Launcher",
+          "デスクトップ",
+          "アイコンランチャー",
+          "アプリランチャー"
+        ],
         "description": "ツールを開くアプリランチャーです。パソコンのデスクトップのように、ツールのアイコンを自由に並べ替えられます。ダブルクリック(スマホはタップ)で開き、ドラッグで移動、範囲選択、右クリックのメニューで整列やアイコンの大きさを変えられます。配置は保存されます。",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any (Webブラウザ)",
@@ -59,7 +66,13 @@
       <div class="hint" id="hint"></div>
       <ul class="menu" id="menu" role="menu" hidden></ul>
       <div class="taskbar">
-        <button class="start" id="startBtn" aria-label="メニュー" title="メニュー" aria-haspopup="menu">
+        <button
+          class="start"
+          id="startBtn"
+          aria-label="メニュー"
+          title="メニュー"
+          aria-haspopup="menu"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -93,7 +106,7 @@
       window.log ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script

@@ -5,7 +5,7 @@ let i = 0;
 const seq = [0.05, 0.15, 0.95, 0.0, 0.5, 0.99];
 a.equal(
   C.makeCode(() => seq[i++]),
-  '019059'
+  '019059',
 );
 a.equal(C.parseCode('１２３ ４５６'), '123456');
 a.equal(C.parseCode('#123-456'), '123456');

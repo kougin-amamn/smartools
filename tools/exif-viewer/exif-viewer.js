@@ -55,7 +55,9 @@
     {
       label: '露出補正',
       get: (e) =>
-        e.ExposureCompensation ? `${e.ExposureCompensation > 0 ? '+' : ''}${e.ExposureCompensation}` : null,
+        e.ExposureCompensation
+          ? `${e.ExposureCompensation > 0 ? '+' : ''}${e.ExposureCompensation}`
+          : null,
     },
     { label: 'フラッシュ', get: (e) => (typeof e.Flash === 'string' ? esc(e.Flash) : null) },
     {
@@ -68,7 +70,8 @@
     },
     {
       label: '向き',
-      get: (e) => (e.Orientation ? ORIENTATION_LABELS[e.Orientation] || String(e.Orientation) : null),
+      get: (e) =>
+        e.Orientation ? ORIENTATION_LABELS[e.Orientation] || String(e.Orientation) : null,
     },
     { label: '色空間', get: (e) => (e.ColorSpace === 1 ? 'sRGB' : e.ColorSpace || null) },
     { label: 'ソフトウェア', get: (e) => (e.Software ? esc(e.Software) : null) },
@@ -98,7 +101,14 @@
       img.onload = resolve;
       img.onerror = resolve;
     });
-    return { file, url, exif: exif || {}, hasExif: !!exif, w: img.naturalWidth, h: img.naturalHeight };
+    return {
+      file,
+      url,
+      exif: exif || {},
+      hasExif: !!exif,
+      w: img.naturalWidth,
+      h: img.naturalHeight,
+    };
   }
 
   function buildTable(photos) {
@@ -108,7 +118,7 @@
         .map(
           (p) => `
       <th><div class="photo-head"><img src="${p.url}" alt=""><span class="fname">${esc(p.file.name)}</span></div></th>
-    `
+    `,
         )
         .join('');
 
@@ -127,7 +137,9 @@
       const tr = document.createElement('tr');
       tr.innerHTML =
         '<td class="field-col">備考</td>' +
-        photos.map((p) => (p.hasExif ? '<td>-</td>' : '<td class="empty-cell">Exif情報なし</td>')).join('');
+        photos
+          .map((p) => (p.hasExif ? '<td>-</td>' : '<td class="empty-cell">Exif情報なし</td>'))
+          .join('');
       bodyRows.appendChild(tr);
     }
   }
@@ -154,7 +166,7 @@
       const withExif = photos.filter((p) => p.hasExif).length,
         withGps = photos.filter((p) => p.exif.latitude != null).length;
       log(
-        `写真の情報を表示しました(${photos.length}枚 / Exifあり ${withExif}枚 / 位置情報あり ${withGps}枚 / ${Math.round(performance.now() - t0)}ms)`
+        `写真の情報を表示しました(${photos.length}枚 / Exifあり ${withExif}枚 / 位置情報あり ${withGps}枚 / ${Math.round(performance.now() - t0)}ms)`,
       );
     } catch (e) {
       statusText.textContent = '写真を読み込めませんでした。';

@@ -41,7 +41,10 @@ export function groupByCategory(tools, maxPer) {
 export function framePose(item, o) {
   var t = Math.tan((o.fov * Math.PI) / 360),
     m = o.margin || 1.08;
-  var dist = Math.max((item.h * m) / (2 * t * o.availH), (item.w * m) / (2 * t * o.aspect * o.availW));
+  var dist = Math.max(
+    (item.h * m) / (2 * t * o.availH),
+    (item.w * m) / (2 * t * o.aspect * o.availW),
+  );
   dist = Math.max(o.minDist || 3, Math.min(o.maxDist || 30, dist));
   var vh = 2 * dist * t,
     vw = vh * o.aspect;

@@ -41,12 +41,16 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-file-transfer.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">ファイル転送<span class="en">File Transfer</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        ファイル転送<span class="en">File Transfer</span>
+      </h1>
     </header>
     <main class="content">
       <div class="app">
         <section class="card" id="start">
-          <p class="lead">2台のスマホで、片方が「番号を出す」、もう片方が「番号で参加」を押してください。</p>
+          <p class="lead">
+            2台のスマホで、片方が「番号を出す」、もう片方が「番号で参加」を押してください。
+          </p>
           <div class="row">
             <button class="pill primary big" type="button" id="hostBtn">番号を出す</button>
             <button class="pill big" type="button" id="joinBtn">番号で参加</button>
@@ -62,7 +66,9 @@
           <div class="ask" id="ask" hidden>
             <p>「<b id="askName"></b>」から接続の申し込みがあります。</p>
             <p class="sas" id="askSas"></p>
-            <p class="sub">相手の画面の確認番号と同じなら許可してください。違う時は断ってください。</p>
+            <p class="sub">
+              相手の画面の確認番号と同じなら許可してください。違う時は断ってください。
+            </p>
             <div class="row">
               <button class="pill primary" type="button" id="allowBtn">許可する</button>
               <button class="pill" type="button" id="denyBtn">断る</button>
@@ -92,7 +98,9 @@
           <p class="link-state" id="linkState"></p>
           <p class="sas" id="sas"></p>
           <div class="row">
-            <button class="pill primary big" type="button" id="sendBtn">ファイルを選んで送る</button>
+            <button class="pill primary big" type="button" id="sendBtn">
+              ファイルを選んで送る
+            </button>
             <input type="file" id="file" multiple aria-label="送るファイル" hidden />
           </div>
           <button class="pill small" type="button" id="byeBtn">切断</button>
@@ -101,8 +109,8 @@
         <ul class="list" id="list"></ul>
         <p class="empty" id="empty">送ったファイル・受け取ったファイルがここに並びます</p>
         <p class="note">
-          ファイルは端末どうしの暗号化された通信(WebRTC)で直接届きます。つなぐ相手を見つける時だけ PeerJS
-          の公開サーバーを使い、直接つながらない時は PeerJS
+          ファイルは端末どうしの暗号化された通信(WebRTC)で直接届きます。つなぐ相手を見つける時だけ
+          PeerJS の公開サーバーを使い、直接つながらない時は PeerJS
           の中継サーバーを通りますが、どちらも中身は読めません。両方の画面の確認番号が同じなら、間に誰も入っていません。つなぐ時、お互いのIPアドレスが相手と待ち合わせ用のサーバーに伝わります。文字の多いファイルは自動で圧縮して送ります。途中で切れた時は60秒まで自動でつなぎ直して続きから送り、それでもだめな時は、もう一度つないで「再送」を押すと続きから送れます(どちらかのページを閉じると最初からになります)。受け取ったファイルはいったん端末のメモリに置くため、スマホでは1ファイル数百MB〜1GB程度までが目安です。転送中は画面を開いたままにしてください。
         </p>
       </div>
@@ -118,7 +126,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./file-transfer-core.js"></script>

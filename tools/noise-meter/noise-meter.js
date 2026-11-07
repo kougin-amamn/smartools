@@ -74,7 +74,7 @@
     statusText.textContent = '停止しました';
     ToolKit.vibrate();
     log(
-      `計測を停止しました(最小 ${fmt(st.min)} / 平均 ${fmt(S.avg())} / 最大 ${fmt(st.max)} / ${st.count}回)`
+      `計測を停止しました(最小 ${fmt(st.min)} / 平均 ${fmt(S.avg())} / 最大 ${fmt(st.max)} / ${st.count}回)`,
     );
   }
 

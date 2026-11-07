@@ -82,13 +82,13 @@
       return;
     }
     files.forEach((f) =>
-      images.push({ id: Date.now() + Math.random(), url: URL.createObjectURL(f), rotate: 0 })
+      images.push({ id: Date.now() + Math.random(), url: URL.createObjectURL(f), rotate: 0 }),
     );
     if (currentIndex === -1) currentIndex = 0;
     statusText.textContent = '';
     render();
     log(
-      `画像を追加しました(${files.length}枚 / 全 ${images.length}枚 / ${(files.reduce((s, f) => s + f.size, 0) / 1024 / 1024).toFixed(1)}MB)`
+      `画像を追加しました(${files.length}枚 / 全 ${images.length}枚 / ${(files.reduce((s, f) => s + f.size, 0) / 1024 / 1024).toFixed(1)}MB)`,
     );
   }
   function removeImage(i) {

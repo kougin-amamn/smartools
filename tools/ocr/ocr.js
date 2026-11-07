@@ -38,7 +38,10 @@
 
   async function startCamera() {
     if (stream) return;
-    const r = await ToolKit.media.open({ video: { facingMode: { ideal: 'environment' } } }, 'カメラ');
+    const r = await ToolKit.media.open(
+      { video: { facingMode: { ideal: 'environment' } } },
+      'カメラ',
+    );
     if (!r.stream) {
       camStatus.textContent = r.message;
       return;
@@ -98,7 +101,8 @@
       return;
     }
     if (!window.Tesseract) {
-      statusText.textContent = '文字認識ライブラリを読み込めませんでした。通信環境をご確認ください。';
+      statusText.textContent =
+        '文字認識ライブラリを読み込めませんでした。通信環境をご確認ください。';
       log.error('文字認識ライブラリ(Tesseract.js)を読み込めませんでした(通信が必要です)');
       return;
     }
@@ -133,7 +137,7 @@
         return data;
       },
       (data) =>
-        `${langSelect.options[langSelect.selectedIndex].text} / ${data.text.trim().length}文字 / 確からしさ ${Math.round(data.confidence || 0)}%`
+        `${langSelect.options[langSelect.selectedIndex].text} / ${data.text.trim().length}文字 / 確からしさ ${Math.round(data.confidence || 0)}%`,
     );
     progressWrap.hidden = true;
     if (r.ok) {
@@ -147,7 +151,11 @@
 
   copyBtn.addEventListener('click', async () => {
     ToolKit.vibrate();
-    const ok = await ToolKit.copyText(resultText.value, '認識した文字', `${resultText.value.length}文字`);
+    const ok = await ToolKit.copyText(
+      resultText.value,
+      '認識した文字',
+      `${resultText.value.length}文字`,
+    );
     if (ok) {
       copyBtn.textContent = 'コピーしました';
       setTimeout(() => (copyBtn.textContent = 'コピー'), 1500);

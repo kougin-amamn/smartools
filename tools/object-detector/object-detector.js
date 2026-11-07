@@ -6,8 +6,10 @@
 
   /* 設定 */
   var TF_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
-  var SSD_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js';
-  var CACHE_PREFIX = 'indexeddb://object-detector-ssd-2.2.3-'; /* 版を名前に入れ、版を上げたら取り直す */
+  var SSD_URL =
+    'https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js';
+  var CACHE_PREFIX =
+    'indexeddb://object-detector-ssd-2.2.3-'; /* 版を名前に入れ、版を上げたら取り直す */
   var MAX_SIDE = 1280; /* 表示用の絵の長い辺。検出はモデルの中で 300×300 に縮むので、これ以上は無駄 */
   var MIN_INTERVAL = 150; /* カメラの検出の最短間隔(ms)。電池と発熱を抑える */
   var BASE_NAME = { lite_mobilenet_v2: '軽量', mobilenet_v1: '標準', mobilenet_v2: '高精度' };
@@ -187,10 +189,10 @@
             function (e) {
               log.warn('モデルを端末に保存できませんでした(次回も通信します)', e);
               return { m: m, from: 'ネット' };
-            }
+            },
           );
         });
-      }
+      },
     );
   }
   function prepare() {
@@ -215,7 +217,7 @@
           },
           function (v) {
             return v.from + 'から';
-          }
+          },
         );
       })
       .then(function (v) {
@@ -223,7 +225,9 @@
         loadingModel = false;
         if (settings.base !== base) {
           /* 読み込み中にモデルの種類が変わった時は、選び直された方を読み込む */
-          log('読み込み中にモデルが変わったため、読み込み直します(' + BASE_NAME[settings.base] + ')');
+          log(
+            '読み込み中にモデルが変わったため、読み込み直します(' + BASE_NAME[settings.base] + ')',
+          );
           return prepare();
         }
         showLoader(false);
@@ -235,7 +239,7 @@
             tf.getBackend() +
             ' / 合計 ' +
             ((performance.now() - t0) / 1000).toFixed(1) +
-            '秒)'
+            '秒)',
         );
         if (mode === 'image') detectImage();
       })
@@ -243,7 +247,8 @@
         loadingModel = false;
         clearInterval(tick);
         retryBtn.hidden = false;
-        statusEl.textContent = '読み込めませんでした。通信状態を確認して「もう一度読み込む」を押してください';
+        statusEl.textContent =
+          '読み込めませんでした。通信状態を確認して「もう一度読み込む」を押してください';
       });
   }
   retryBtn.onclick = prepare;
@@ -328,7 +333,8 @@
     fileIn.click();
   };
   function decode(file) {
-    if (window.createImageBitmap) return createImageBitmap(file, { imageOrientation: 'from-image' });
+    if (window.createImageBitmap)
+      return createImageBitmap(file, { imageOrientation: 'from-image' });
     return new Promise(function (ok, ng) {
       var url = URL.createObjectURL(file),
         im = new Image();
@@ -372,7 +378,7 @@
         },
         function (v) {
           return v + 'px';
-        }
+        },
       )
       .then(function (r) {
         if (!r.ok) {
@@ -397,7 +403,7 @@
         },
         function (list) {
           return list.length + '件 / ' + C.summaryText(C.summarize(list, labels));
-        }
+        },
       )
       .then(function (r) {
         if (!r.ok) {
@@ -421,8 +427,10 @@
   function startCamera() {
     return ToolKit.media
       .open(
-        { video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 720 } } },
-        'カメラ'
+        {
+          video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 720 } },
+        },
+        'カメラ',
       )
       .then(function (r) {
         if (!r.stream) {
@@ -447,7 +455,7 @@
               (facing === 'user' ? '前面' : '背面') +
               ' / ' +
               ToolKit.media.size(stream.getVideoTracks()[0]) +
-              ')'
+              ')',
           );
           cancelAnimationFrame(raf);
           raf = requestAnimationFrame(frame);
@@ -474,14 +482,15 @@
         stats.runs +
         '回' +
         (stats.runs ? ' / 平均 ' + Math.round(stats.ms / stats.runs) + 'ms' : '') +
-        ')'
+        ')',
     );
   }
   function frame(now) {
     if (mode !== 'camera') return;
     raf = requestAnimationFrame(frame);
     if (paused || !video.videoWidth) return;
-    if (video.videoWidth !== Math.round(cv.width / scale)) sizeCanvas(video.videoWidth, video.videoHeight);
+    if (video.videoWidth !== Math.round(cv.width / scale))
+      sizeCanvas(video.videoWidth, video.videoHeight);
     var mirror = facing === 'user';
     ctx.save();
     if (mirror) {
@@ -510,7 +519,7 @@
         log.error('カメラの映像の検出でエラーが発生しました', e);
         statusEl.textContent = '検出できませんでした';
         stopCamera('検出のエラー');
-      }
+      },
     );
   }
   camBtn.onclick = function () {
@@ -570,7 +579,7 @@
       settings.minScore +
       '%以上 / 最大 ' +
       settings.maxBoxes +
-      '件)'
+      '件)',
   );
   prepare();
 })();

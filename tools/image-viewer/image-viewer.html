@@ -41,12 +41,20 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-image-viewer.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">画像ビューア<span class="en">Image Viewer</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        画像ビューア<span class="en">Image Viewer</span>
+      </h1>
     </header>
     <main class="content">
       <div class="app" data-land="split">
         <label class="pill small file-label"
-          >画像を追加<input type="file" id="fileInput" data-log="画像" accept="image/*" multiple hidden
+          >画像を追加<input
+            type="file"
+            id="fileInput"
+            data-log="画像"
+            accept="image/*"
+            multiple
+            hidden
         /></label>
 
         <div class="viewer-wrap" data-land-main="fill" id="viewerWrap">
@@ -80,7 +88,12 @@
           </button>
           <button class="exit-fs-btn" id="exitFsBtn" aria-label="全画面解除" hidden>
             <svg viewBox="0 0 24 24" width="18" height="18">
-              <path d="M6 6l12 12M18 6L6 18" stroke="#fff" stroke-width="2.2" stroke-linecap="round" />
+              <path
+                d="M6 6l12 12M18 6L6 18"
+                stroke="#fff"
+                stroke-width="2.2"
+                stroke-linecap="round"
+              />
             </svg>
           </button>
           <div class="counter" id="counterText"></div>
@@ -131,7 +144,9 @@
         </div>
 
         <div class="thumb-strip" id="thumbStrip"></div>
-        <div class="status" id="statusText">端末内の画像を追加してください(サーバーには送信されません)</div>
+        <div class="status" id="statusText">
+          端末内の画像を追加してください(サーバーには送信されません)
+        </div>
       </div>
     </main>
     <script src="../../common/log.js"></script>
@@ -143,7 +158,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./image-viewer.js"></script>

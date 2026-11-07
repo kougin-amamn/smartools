@@ -8,7 +8,7 @@ p[900] = 0.3;
 p[3] = 0.1;
 a.deepStrictEqual(
   C.topK(p, 3).map((e) => e.index),
-  [5, 900, 3]
+  [5, 900, 3],
 );
 a.deepStrictEqual(C.smooth([0, 1], [1, 0], 0.25), [0.25, 0.75]);
 a.deepStrictEqual(C.centerSquare(1280, 720), { x: 280, y: 0, s: 720 });

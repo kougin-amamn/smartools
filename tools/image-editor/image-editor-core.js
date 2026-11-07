@@ -191,7 +191,9 @@
             if (o[0] === p.value) k = j;
           });
         out[i] = k;
-      } else out[i] = typeof x === 'number' && isFinite(x) ? Math.max(p.min, Math.min(p.max, x)) : p.value;
+      } else
+        out[i] =
+          typeof x === 'number' && isFinite(x) ? Math.max(p.min, Math.min(p.max, x)) : p.value;
     });
     return out;
   }
@@ -443,7 +445,9 @@
   }
   /* 画像の大きさ(バイト)の表示 */
   function bytes(n) {
-    return n < 1024 * 1024 ? Math.max(1, Math.round(n / 1024)) + 'KB' : (n / 1024 / 1024).toFixed(1) + 'MB';
+    return n < 1024 * 1024
+      ? Math.max(1, Math.round(n / 1024)) + 'KB'
+      : (n / 1024 / 1024).toFixed(1) + 'MB';
   }
 
   var api = {

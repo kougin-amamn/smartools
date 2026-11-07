@@ -24,7 +24,11 @@
         pct('strength', '強さ', 70),
       ],
     },
-    { id: 'wide', name: '広角', params: [pct('distort', 'ゆがみ', 60), pct('vignette', '周辺減光', 40)] },
+    {
+      id: 'wide',
+      name: '広角',
+      params: [pct('distort', 'ゆがみ', 60), pct('vignette', '周辺減光', 40)],
+    },
     {
       id: 'portrait',
       name: '望遠・ポートレート',
@@ -62,7 +66,11 @@
       id: 'oldlens',
       name: 'オールドレンズ',
       scale: 0.7,
-      params: [pct('swirl', 'ぐるぐるボケ', 60), pct('fringe', '色にじみ', 40), pct('flare', 'フレア', 40)],
+      params: [
+        pct('swirl', 'ぐるぐるボケ', 60),
+        pct('fringe', '色にじみ', 40),
+        pct('flare', 'フレア', 40),
+      ],
     },
     {
       id: 'anamorphic',
@@ -166,7 +174,9 @@
           if (o[0] === (x === undefined ? p.value : x)) k = j;
         });
         out[i] = k;
-      } else out[i] = typeof x === 'number' && isFinite(x) ? Math.max(p.min, Math.min(p.max, x)) : p.value;
+      } else
+        out[i] =
+          typeof x === 'number' && isFinite(x) ? Math.max(p.min, Math.min(p.max, x)) : p.value;
     });
     return out;
   }

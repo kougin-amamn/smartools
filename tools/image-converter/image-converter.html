@@ -41,7 +41,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-image-converter.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">画像変換<span class="en">Image Converter</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        画像変換<span class="en">Image Converter</span>
+      </h1>
     </header>
     <main class="content">
       <div class="app">
@@ -82,7 +84,8 @@
           </div>
           <div class="row">
             <label class="chk"
-              ><input type="checkbox" id="resizeChk" data-log="リサイズ" /> 長辺をリサイズする</label
+              ><input type="checkbox" id="resizeChk" data-log="リサイズ" />
+              長辺をリサイズする</label
             >
             <input type="number" id="maxSideInput" value="1600" min="64" max="8000" step="10" />
             <span class="unit">px</span>
@@ -115,7 +118,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./image-converter-codecs.js"></script>

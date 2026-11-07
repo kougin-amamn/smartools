@@ -41,12 +41,20 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-video-player.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">動画プレイヤー<span class="en">Video Player</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        動画プレイヤー<span class="en">Video Player</span>
+      </h1>
     </header>
     <main class="content">
       <div class="app" data-land="split">
         <label class="pill small file-label"
-          >動画を追加<input type="file" id="fileInput" data-log="動画" accept="video/*" multiple hidden
+          >動画を追加<input
+            type="file"
+            id="fileInput"
+            data-log="動画"
+            accept="video/*"
+            multiple
+            hidden
         /></label>
 
         <div class="player-wrap" data-land-main="fill">
@@ -130,7 +138,13 @@
                 stroke-linejoin="round"
               />
             </svg>
-            <svg id="repeatOneIcon" viewBox="0 0 24 24" width="17" height="17" style="display: none">
+            <svg
+              id="repeatOneIcon"
+              viewBox="0 0 24 24"
+              width="17"
+              height="17"
+              style="display: none"
+            >
               <path
                 d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"
                 stroke="currentColor"
@@ -157,7 +171,15 @@
                 stroke-linecap="round"
               />
             </svg>
-            <input type="range" id="volumeSlider" data-log="音量" min="0" max="1" step="0.01" value="1" />
+            <input
+              type="range"
+              id="volumeSlider"
+              data-log="音量"
+              min="0"
+              max="1"
+              step="0.01"
+              value="1"
+            />
           </div>
           <button class="chip" id="fullscreenBtn" aria-label="全画面">
             <svg viewBox="0 0 24 24" width="15" height="15">
@@ -188,7 +210,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./video-player.js"></script>

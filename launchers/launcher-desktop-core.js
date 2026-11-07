@@ -27,7 +27,8 @@
 
   /* 列優先で最初の空きマス(空きが無ければ null) */
   function firstFree(occ, cols, rows) {
-    for (var c = 0; c < cols; c++) for (var r = 0; r < rows; r++) if (!occ[key(c, r)]) return [c, r];
+    for (var c = 0; c < cols; c++)
+      for (var r = 0; r < rows; r++) if (!occ[key(c, r)]) return [c, r];
     return null;
   }
   /* (c,r) に最も近い空きマス。距離が同じなら列優先の順で先のもの */
@@ -123,7 +124,7 @@
       }),
       {},
       cols,
-      rows
+      rows,
     );
   }
 
@@ -190,11 +191,16 @@
           if (!f || typeof f.id !== 'string' || !/^f\d+$/.test(f.id) || seenF[f.id]) return;
           seenF[f.id] = 1;
           var items = (Array.isArray(f.items) ? f.items : []).filter(function (id) {
-            if (typeof id !== 'string' || seenT[id]) return false; /* 1つのツールは1つのフォルダだけ */
+            if (typeof id !== 'string' || seenT[id])
+              return false; /* 1つのツールは1つのフォルダだけ */
             seenT[id] = 1;
             return true;
           });
-          st.folders.push({ id: f.id, name: String(f.name || '新しいフォルダ').slice(0, 40), items: items });
+          st.folders.push({
+            id: f.id,
+            name: String(f.name || '新しいフォルダ').slice(0, 40),
+            items: items,
+          });
         });
       }
     }
@@ -220,7 +226,8 @@
       return f.name;
     });
     if (names.indexOf(base) < 0) return base;
-    for (var n = 2; ; n++) if (names.indexOf(base + ' (' + n + ')') < 0) return base + ' (' + n + ')';
+    for (var n = 2; ; n++)
+      if (names.indexOf(base + ' (' + n + ')') < 0) return base + ' (' + n + ')';
   }
   function addFolder(st, name) {
     var n = 1;
@@ -292,7 +299,7 @@
       .concat(
         st.folders.map(function (f) {
           return folderKey(f.id);
-        })
+        }),
       );
   }
 

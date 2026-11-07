@@ -89,7 +89,7 @@
         statusText.textContent =
           'センサーのデータが届きません。この端末にはモーションセンサーが無いか、ブラウザが対応していない可能性があります。';
       },
-      'モーションセンサー'
+      'モーションセンサー',
     );
 
     if (wakeLockChk.checked) await requestWakeLock();
@@ -103,7 +103,7 @@
     statusText.textContent = '';
     releaseWakeLock();
     log(
-      `計測を停止しました(今回 ${(counter.getCount() - startSteps).toLocaleString()}歩 / 合計 ${summary()})`
+      `計測を停止しました(今回 ${(counter.getCount() - startSteps).toLocaleString()}歩 / 合計 ${summary()})`,
     );
   }
 

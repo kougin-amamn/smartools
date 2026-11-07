@@ -16,11 +16,13 @@ a.deepStrictEqual(C.segmentsFromLine('《《ここ》》が大事'), [{ text: '�
 a.equal(C.paragraphsFromText('一行目\r\n\r\n二行目\n').length, 2);
 a.equal(
   C.textFromParagraphs(C.paragraphsFromText('彼は|魔法使い《ウィザード》だ')),
-  '彼は|魔法使い《ウィザード》だ'
+  '彼は|魔法使い《ウィザード》だ',
 );
 
 /* 文の区切り: 。と閉じかっこ、ルビの中では切らない */
-const s = C.sentencesFromParagraph(C.segmentsFromLine('「刺された。」腹が痛い！東京《とうきょう》。続き'));
+const s = C.sentencesFromParagraph(
+  C.segmentsFromLine('「刺された。」腹が痛い！東京《とうきょう》。続き'),
+);
 a.deepStrictEqual(s.map(C.plainText), ['「刺された。」', '腹が痛い！', '東京。', '続き']);
 
 /* 音声合成に渡す文 */

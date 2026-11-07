@@ -43,7 +43,14 @@
     for (var d = 0; d < 360; d++) {
       var len = d % 10 === 0 ? 16 : d % 5 === 0 ? 10 : 6,
         cls = d % 10 === 0 ? 't10' + (d === 0 ? ' north' : '') : d % 5 === 0 ? 't5' : 't1';
-      el('line', { class: cls, x1: 0, y1: -136, x2: 0, y2: -136 + len, transform: 'rotate(' + d + ')' });
+      el('line', {
+        class: cls,
+        x1: 0,
+        y1: -136,
+        x2: 0,
+        y2: -136 + len,
+        transform: 'rotate(' + d + ')',
+      });
     }
     var CARD = { 0: 'N', 90: 'E', 180: 'S', 270: 'W' },
       INTER = { 45: 'NE', 135: 'SE', 225: 'SW', 315: 'NW' };
@@ -60,24 +67,28 @@
             'dominant-baseline': 'central',
           },
           g,
-          CARD[a]
+          CARD[a],
         );
       else if (INTER[a] !== undefined)
         el(
           'text',
           { class: 'inter', x: 0, y: -98, 'text-anchor': 'middle', 'dominant-baseline': 'central' },
           g,
-          INTER[a]
+          INTER[a],
         );
       else if (a % 30 === 0)
         el(
           'text',
           { class: 'num', x: 0, y: -106, 'text-anchor': 'middle', 'dominant-baseline': 'central' },
           g,
-          String(a)
+          String(a),
         );
     }
-    targetMark = el('path', { class: 'target', d: 'M0 -138 L7 -150 L-7 -150 Z', visibility: 'hidden' });
+    targetMark = el('path', {
+      class: 'target',
+      d: 'M0 -138 L7 -150 L-7 -150 Z',
+      visibility: 'hidden',
+    });
   }
   var targetMark = null;
 
@@ -113,7 +124,7 @@
           C.dirLabel(raw) +
           ' / 画面の向き ' +
           screenAngle() +
-          '°)'
+          '°)',
       );
     }
   }
@@ -124,7 +135,7 @@
       shake = C.jitter(
         history.map(function (x) {
           return x.h;
-        })
+        }),
       );
     var bad =
       (typeof acc === 'number' && (acc < 0 || acc > 20)) ||
@@ -145,12 +156,13 @@
               : typeof acc === 'number'
                 ? '精度 ' + Math.round(acc) + '°'
                 : '揺れ ' + shake.toFixed(1) + '°') +
-            ')'
+            ')',
         );
       }
     } else if (statusText.classList.contains('warn') || statusText.textContent) {
       statusText.classList.remove('warn');
-      statusText.textContent = level.tilt > 20 ? '端末を水平に近づけると、方位が正確になります' : '';
+      statusText.textContent =
+        level.tilt > 20 ? '端末を水平に近づけると、方位が正確になります' : '';
     }
   }
 
@@ -179,7 +191,8 @@
   }
 
   function start() {
-    var name = 'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
+    var name =
+      'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
     window.addEventListener(name, onOrientation);
     startBtn.hidden = true;
     statusText.textContent = '端末を水平に持って回してください';
@@ -193,7 +206,7 @@
         statusText.textContent =
           '方位のデータが届きません。この端末には方位センサーが無いか、ブラウザが対応していない可能性があります。';
       },
-      '方位'
+      '方位',
     );
   }
   startBtn.addEventListener('click', async function () {

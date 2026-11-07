@@ -133,8 +133,8 @@ function create(o) {
         'normal',
         new THREE.Float32BufferAttribute(
           [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-          3
-        )
+          3,
+        ),
       );
       geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
       geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
@@ -225,7 +225,7 @@ function create(o) {
     function plaque(g, kicker, name, sub) {
       var m = new THREE.Mesh(
         new THREE.PlaneGeometry(1.5, 0.94),
-        new THREE.MeshBasicMaterial({ map: plaqueTexture(kicker, name, sub) })
+        new THREE.MeshBasicMaterial({ map: plaqueTexture(kicker, name, sub) }),
       );
       m.position.set(OPEN.w / 2 + 0.45 + 0.75, EYE - 0.2 - OPEN.h / 2, 0.03);
       g.add(m);
@@ -278,7 +278,7 @@ function create(o) {
         new THREE.MeshBasicMaterial({
           map: isTool ? artTexture(e.tool) : M.bannerTexture(e),
           transparent: isTool,
-        })
+        }),
       );
       art.position.z = isTool ? FRAMES[FRAME_STYLE].art : 0.08;
       if (!isTool) {
@@ -303,7 +303,7 @@ function create(o) {
         group.add(hg);
         var stem = new THREE.Mesh(
           new THREE.CylinderGeometry(0.025, 0.025, HEAD_DROP - 0.1, 8, 1, false),
-          fixtureMat
+          fixtureMat,
         );
         stem.position.y = (HEAD_DROP - 0.1) / 2 + 0.05;
         hg.add(stem);
@@ -312,12 +312,12 @@ function create(o) {
         hg.add(tilt);
         var body = new THREE.Mesh(
           new THREE.CylinderGeometry(0.13, 0.13, 0.52, LOW ? 12 : 24, 1, false),
-          fixtureMat
+          fixtureMat,
         );
         tilt.add(body);
         var lens = new THREE.Mesh(
           new THREE.CylinderGeometry(0.1, 0.1, 0.02, LOW ? 12 : 24, 1, false),
-          lampMat
+          lampMat,
         );
         lens.position.y = -0.265;
         tilt.add(lens);
@@ -342,9 +342,13 @@ function create(o) {
           new THREE.PlaneGeometry(1.2, 0.75),
           new THREE.MeshBasicMaterial({
             map: captionTexture('No.' + pad2(i + 1), nameOf(e.tool), e.tool.desc || ''),
-          })
+          }),
         );
-        plate.position.set((it.w + FRAMES[FRAME_STYLE].out) / 2 + 0.35 + 0.6, EYE - 0.2 - it.y, 0.03);
+        plate.position.set(
+          (it.w + FRAMES[FRAME_STYLE].out) / 2 + 0.35 + 0.6,
+          EYE - 0.2 - it.y,
+          0.03,
+        );
         g.add(plate);
       }
       /* 新着バッジ(見るまで付いている) */
@@ -352,7 +356,7 @@ function create(o) {
       if (isTool && isNewTool(e.tool)) {
         badge = new THREE.Mesh(
           new THREE.PlaneGeometry(0.62, 0.31),
-          new THREE.MeshBasicMaterial({ map: badgeTex, transparent: true })
+          new THREE.MeshBasicMaterial({ map: badgeTex, transparent: true }),
         );
         badge.position.set(it.w / 2 + 0.36, it.h / 2 + 0.4, 0.3);
         g.add(badge);
@@ -404,7 +408,7 @@ function create(o) {
         stat.meshes +
         'メッシュ / ' +
         Math.round(performance.now() - t0) +
-        'ms)'
+        'ms)',
     );
     return R;
   }

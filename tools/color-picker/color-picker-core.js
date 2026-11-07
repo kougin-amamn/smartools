@@ -30,7 +30,9 @@
       b += data[i + 2];
       n++;
     }
-    return n ? { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n) } : { r: 0, g: 0, b: 0 };
+    return n
+      ? { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n) }
+      : { r: 0, g: 0, b: 0 };
   }
   /* 色名で探す(英名は大文字小文字を区別しない) */
   function search(dict, q) {

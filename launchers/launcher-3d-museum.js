@@ -13,9 +13,10 @@ var threeReady = import('three').then(
   },
   function (e) {
     log.warn('3D表示用のライブラリ(three.js)を読み込めませんでした(通信が必要です)', e);
-  }
+  },
 );
-var L = window.Launcher; /* 共通(launcher-common.js): 一覧の読み込み・リンク・開いた回数・読み込み中の表示 */
+var L =
+  window.Launcher; /* 共通(launcher-common.js): 一覧の読み込み・リンク・開いた回数・読み込み中の表示 */
 L.loading(30, 'ツールの一覧を読み込んでいます…');
 threeReady.then(function () {
   L.run(main);
@@ -394,7 +395,8 @@ function main(list, source, loadMsg, loadErr) {
       if (points[k]) points[k].position.set(p[0], p[1], p[2]);
     });
   }
-  var roomSpots = []; /* 通常画質: 全部屋のスポット(部屋ごとにグループ内。見えている部屋のものだけ働く) */
+  var roomSpots =
+    []; /* 通常画質: 全部屋のスポット(部屋ごとにグループ内。見えている部屋のものだけ働く) */
   var lowSpots = [],
     lowActive = 0,
     spotKey = '';
@@ -454,7 +456,8 @@ function main(list, source, loadMsg, loadErr) {
     if (id === HALL_ID) {
       var d = hallDef();
       if (rooms[HALL_ID] && rooms[HALL_ID].sig === d.sig) return rooms[HALL_ID];
-      if (rooms[HALL_ID]) scene.remove(rooms[HALL_ID].group); /* 新着・よく使うが変わったので作り直す */
+      if (rooms[HALL_ID])
+        scene.remove(rooms[HALL_ID].group); /* 新着・よく使うが変わったので作り直す */
       rooms[HALL_ID] = buildRoom(d);
       return rooms[HALL_ID];
     }
@@ -464,12 +467,13 @@ function main(list, source, loadMsg, loadErr) {
 
   /* テーマ */
   function applyTheme() {
-    var th = THEME[document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'];
+    var th =
+      THEME[document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'];
     curTh = th;
     scene.background = new THREE.Color(th.bg);
     roomWalls.forEach(function (r) {
       r.mat.color.setHex(
-        r.accent === null ? th.wall : mix(th.wall, r.accent, th === THEME.dark ? 0.34 : 0.3)
+        r.accent === null ? th.wall : mix(th.wall, r.accent, th === THEME.dark ? 0.34 : 0.3),
       );
     });
     ceilMat.color.setHex(th.ceil);
@@ -495,7 +499,8 @@ function main(list, source, loadMsg, loadErr) {
       s.intensity = k < lowActive ? th.spot : 0;
     });
     washMat.opacity =
-      th.wash * (LOW ? 2.4 : 1); /* 軽量モードはスポットが3灯だけなので、残りの作品は加算の光だまりで見せる */
+      th.wash *
+      (LOW ? 2.4 : 1); /* 軽量モードはスポットが3灯だけなので、残りの作品は加算の光だまりで見せる */
     dirty = true;
   }
 
@@ -546,7 +551,9 @@ function main(list, source, loadMsg, loadErr) {
       h: door ? it.h + 0.8 : it.h + 1.0,
     };
     var across =
-      it.wall === 'left' || it.wall === 'right' ? cr.dims.w : cr.dims.d; /* 作品の壁から反対側の壁まで */
+      it.wall === 'left' || it.wall === 'right'
+        ? cr.dims.w
+        : cr.dims.d; /* 作品の壁から反対側の壁まで */
     var o = {
       fov: FOV,
       aspect: camera.aspect,
@@ -561,8 +568,13 @@ function main(list, source, loadMsg, loadErr) {
       o.cy = 0.47;
     } else {
       var sh = stage.clientHeight || 1,
-        top = card.hidden ? sh : card.getBoundingClientRect().top - stage.getBoundingClientRect().top;
-      var free = Math.max(0.35, Math.min(0.9, (top - 12) / sh)); /* カードより上の、使える高さの割合 */
+        top = card.hidden
+          ? sh
+          : card.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+      var free = Math.max(
+        0.35,
+        Math.min(0.9, (top - 12) / sh),
+      ); /* カードより上の、使える高さの割合 */
       o.availW = 0.92;
       o.availH = free - 0.1;
       o.cx = 0.5;
@@ -696,9 +708,12 @@ function main(list, source, loadMsg, loadErr) {
     card.hidden = true;
     showNav(false);
     var yaw = core.yawToward(cr.home, { x: from.x, z: from.z });
-    moveTo({ x: cr.home.x, y: cr.home.y, z: cr.home.z, yaw: yaw, pitch: cr.home.pitch }, function () {
-      log('部屋全体の表示に戻りました');
-    });
+    moveTo(
+      { x: cr.home.x, y: cr.home.y, z: cr.home.z, yaw: yaw, pitch: cr.home.pitch },
+      function () {
+        log('部屋全体の表示に戻りました');
+      },
+    );
   }
   function step(dir) {
     if (focus < 0 || switching) return;
@@ -759,11 +774,17 @@ function main(list, source, loadMsg, loadErr) {
           zoom: 1,
         }; /* 戻ってきた展示室のバナーの前から */
         moveTo(
-          { x: it.x + it.nx * 3.6, y: HOME_Y, z: it.z + it.nz * 3.6, yaw: it.ry + Math.PI, pitch: 0 },
+          {
+            x: it.x + it.nx * 3.6,
+            y: HOME_Y,
+            z: it.z + it.nz * 3.6,
+            yaw: it.ry + Math.PI,
+            pitch: 0,
+          },
           function () {
             moveTo(home, null, 900); /* 振り返ってホール全体を見渡す */
           },
-          1000
+          1000,
         );
       } else {
         cur = {
@@ -809,7 +830,7 @@ function main(list, source, loadMsg, loadErr) {
           switching = false;
         }, 120);
       },
-      1200
+      1200,
     );
   }
   function leaveRoom() {
@@ -839,7 +860,7 @@ function main(list, source, loadMsg, loadErr) {
       function () {
         log('拡大率を等倍に戻しました(' + zoomLabel(z0) + ' → 1.0倍)');
       },
-      500
+      500,
     );
   };
 
@@ -900,7 +921,8 @@ function main(list, source, loadMsg, loadErr) {
       touches[e.pointerId].y = e.clientY;
     }
     if (pinch) {
-      if (touchList().length >= 2 && !tween && !switching) setZoom((pinch.z0 * spread()) / pinch.d0);
+      if (touchList().length >= 2 && !tween && !switching)
+        setZoom((pinch.z0 * spread()) / pinch.d0);
       return;
     }
     if (ptr) {
@@ -932,7 +954,13 @@ function main(list, source, loadMsg, loadErr) {
     if (pinch) {
       if (touchList().length < 2) {
         if (Math.abs(cur.zoom - pinch.from) > 0.01)
-          log('ピンチで拡大率を変えました(' + zoomLabel(pinch.from) + ' → ' + zoomLabel(cur.zoom) + ')');
+          log(
+            'ピンチで拡大率を変えました(' +
+              zoomLabel(pinch.from) +
+              ' → ' +
+              zoomLabel(cur.zoom) +
+              ')',
+          );
         pinch = null;
         ptr = null;
         canvas.classList.remove('drag');
@@ -998,7 +1026,9 @@ function main(list, source, loadMsg, loadErr) {
       var w = wheelLog;
       wheelLog = null;
       if (Math.abs(cur.zoom - w.from) > 0.01)
-        log(w.how + 'で拡大率を変えました(' + zoomLabel(w.from) + ' → ' + zoomLabel(cur.zoom) + ')');
+        log(
+          w.how + 'で拡大率を変えました(' + zoomLabel(w.from) + ' → ' + zoomLabel(cur.zoom) + ')',
+        );
     }, 350);
   }
   canvas.addEventListener(
@@ -1007,7 +1037,7 @@ function main(list, source, loadMsg, loadErr) {
       e.preventDefault();
       zoomBy(Math.exp(-e.deltaY * 0.0015), 'ホイール');
     },
-    { passive: false }
+    { passive: false },
   );
   window.addEventListener('keydown', function (e) {
     var tag = e.target && e.target.tagName;
@@ -1068,7 +1098,9 @@ function main(list, source, loadMsg, loadErr) {
         cur.yaw = q.yaw;
         cur.pitch = q.pitch;
         cur.zoom = tween.from.zoom + (tween.to.zoom - tween.from.zoom) * eq;
-        bobY = tween.steps ? Math.sin(p * tween.steps * Math.PI * 2) * 0.05 * Math.sin(p * Math.PI) : 0;
+        bobY = tween.steps
+          ? Math.sin(p * tween.steps * Math.PI * 2) * 0.05 * Math.sin(p * Math.PI)
+          : 0;
       }
       dirty = true;
     }
@@ -1145,7 +1177,7 @@ function main(list, source, loadMsg, loadErr) {
       source +
       ' / 画質 ' +
       (LOW ? '軽量(スマホ向け)' : '通常') +
-      ')'
+      ')',
   );
   L.loadingDone();
 }

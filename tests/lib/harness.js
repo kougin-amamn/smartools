@@ -97,12 +97,12 @@ async function launch(args) {
             body: stub(stubs[key]),
           });
         else r.abort();
-      }
+      },
     );
     if (opts.block) await context.route(opts.block, (r) => r.abort());
     if (opts.insecure)
       await context.addInitScript(() =>
-        Object.defineProperty(window, 'isSecureContext', { get: () => false })
+        Object.defineProperty(window, 'isSecureContext', { get: () => false }),
       );
     const page = await context.newPage();
     const logs = collect(page);

@@ -131,7 +131,7 @@
         this.rpm +
         '回転 / ピッチ ' +
         K.formatPitch(this.pitch) +
-        ')'
+        ')',
     );
     this.host.request();
   };
@@ -238,7 +238,13 @@
     var now = this.positionAt(performance.now());
     if (this.motorOn || Math.abs(this.speed) > 0.01) {
       this.seek(this.track.cue || 0, 'stop');
-      log('デッキ ' + this.letter + ' のキューへ戻りました(' + K.formatTime(this.track.cue || 0) + ')');
+      log(
+        'デッキ ' +
+          this.letter +
+          ' のキューへ戻りました(' +
+          K.formatTime(this.track.cue || 0) +
+          ')',
+      );
     } else {
       this.track.cue = now;
       this.host.save(this);
@@ -260,7 +266,7 @@
           (i + 1) +
           ' を置きました(' +
           K.formatTime(hots[i]) +
-          ')'
+          ')',
       );
     } else {
       this.seek(hots[i], 'start');
@@ -292,7 +298,11 @@
       el = this.ui.platter;
     function angleOf(e, rect) {
       return (
-        (Math.atan2(e.clientY - rect.top - rect.height / 2, e.clientX - rect.left - rect.width / 2) * 180) /
+        (Math.atan2(
+          e.clientY - rect.top - rect.height / 2,
+          e.clientX - rect.left - rect.width / 2,
+        ) *
+          180) /
         Math.PI
       );
     }
@@ -318,7 +328,8 @@
         recordAngle: (self.positionAt(now) * K.DEGREES_PER_SECOND) % 360,
         nudge: 0,
       };
-      if (self.grab.mode === 'scratch') self.send({ type: 'touch', down: true, angle: 0, stamp: now / 1000 });
+      if (self.grab.mode === 'scratch')
+        self.send({ type: 'touch', down: true, angle: 0, stamp: now / 1000 });
       self.host.request();
     });
     el.addEventListener('pointermove', function (e) {
@@ -408,7 +419,7 @@
     this.shownArm = angle;
     this.ui.arm.setAttribute(
       'transform',
-      'translate(' + P.pivotX + ' ' + P.pivotY + ') rotate(' + angle.toFixed(2) + ')'
+      'translate(' + P.pivotX + ' ' + P.pivotY + ') rotate(' + angle.toFixed(2) + ')',
     );
   };
 
@@ -421,7 +432,8 @@
         ? this.grab.recordAngle + this.grab.total
         : pos * K.DEGREES_PER_SECOND;
     this.ui.record.style.transform = 'rotate(' + (angle % 360).toFixed(2) + 'deg)';
-    this.strobeAngle = (this.strobeAngle + K.strobeDriftOf(this.speed / SPEED_RATIO[this.rpm]) * dt) % 360;
+    this.strobeAngle =
+      (this.strobeAngle + K.strobeDriftOf(this.speed / SPEED_RATIO[this.rpm]) * dt) % 360;
     this.ui.strobe.style.transform = 'rotate(' + this.strobeAngle.toFixed(2) + 'deg)';
     if (this.armDrag) this.drawArm(this.armDrag.angle);
     else this.drawArm(this.track ? K.armAngleOf(pos / this.track.duration) : P.restAngle);

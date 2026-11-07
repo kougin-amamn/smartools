@@ -6,7 +6,11 @@
   /* ±の調整(0〜99:59 で止める)。changed=false なら変えられなかった */
   function adjust(total, delta) {
     var v = Math.max(0, Math.min(MAX, total + delta));
-    return { value: v, changed: v !== total, limit: v === total ? (delta > 0 ? '上限' : '下限') : null };
+    return {
+      value: v,
+      changed: v !== total,
+      limit: v === total ? (delta > 0 ? '上限' : '下限') : null,
+    };
   }
   function adjustLabel(delta) {
     var a = Math.abs(delta);

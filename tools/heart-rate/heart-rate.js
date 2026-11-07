@@ -160,7 +160,15 @@
     if (!coveredSince) {
       coveredSince = now;
       lostLogged = false;
-      log('指を検出しました(赤 ' + Math.round(r) + ' / 緑 ' + Math.round(g) + ' / 青 ' + Math.round(b) + ')');
+      log(
+        '指を検出しました(赤 ' +
+          Math.round(r) +
+          ' / 緑 ' +
+          Math.round(g) +
+          ' / 青 ' +
+          Math.round(b) +
+          ')',
+      );
     }
     /* 赤は明るすぎて飽和しやすいので、赤と緑を混ぜた明るさを使う(緑は脈の揺れが大きい) */
     samples.push({ t: now, v: r * 0.5 + g * 0.5 });
@@ -172,7 +180,8 @@
       var est = H.estimate(samples);
       if (est.signal) drawWave(est.signal, est.peaks);
       /* いちばん新しい脈の時刻が変わったら、ハートを動かす */
-      var pt = est.peaks && est.peaks.length ? samples[0].t + est.peaks[est.peaks.length - 1] / H.FS : -1;
+      var pt =
+        est.peaks && est.peaks.length ? samples[0].t + est.peaks[est.peaks.length - 1] / H.FS : -1;
       if (pt > lastPeak + 0.25) {
         lastPeak = pt;
         if (est.quality >= 0.5) beat();
@@ -181,11 +190,16 @@
         live = est;
         bpmEl.textContent = Math.round(est.bpm);
         setStatus(
-          '測っています…そのまま動かさないでください(あと ' + Math.max(0, Math.ceil(MEASURE - held)) + '秒)',
-          true
+          '測っています…そのまま動かさないでください(あと ' +
+            Math.max(0, Math.ceil(MEASURE - held)) +
+            '秒)',
+          true,
         );
       } else
-        setStatus(held < 6 ? '脈を探しています…' : '波形が乱れています。指の力を少しゆるめてください', true);
+        setStatus(
+          held < 6 ? '脈を探しています…' : '波形が乱れています。指の力を少しゆるめてください',
+          true,
+        );
     }
     if (held >= MEASURE) finish();
   }
@@ -199,7 +213,13 @@
       setStatus('測り終えました:' + bpm + ' bpm(' + H.zone(bpm) + ')', true);
       addHistory(bpm);
       log(
-        '測定が終わりました(' + bpm + ' bpm / 品質 ' + est.quality.toFixed(2) + ' / ' + samples.length + '点)'
+        '測定が終わりました(' +
+          bpm +
+          ' bpm / 品質 ' +
+          est.quality.toFixed(2) +
+          ' / ' +
+          samples.length +
+          '点)',
       );
     } else {
       bpmEl.textContent = '--';
@@ -218,7 +238,7 @@
           frameRate: { ideal: 30 },
         },
       },
-      'カメラ'
+      'カメラ',
     );
     if (!r.stream) {
       setStatus(r.message);
@@ -234,7 +254,8 @@
     }
     var t = await ToolKit.media.torch(track, true);
     torch = !!t.ok;
-    if (!torch) log.warn('ライトが使えないため、周りの光で測ります(' + (t.message || '非対応') + ')');
+    if (!torch)
+      log.warn('ライトが使えないため、周りの光で測ります(' + (t.message || '非対応') + ')');
     running = true;
     samples = [];
     coveredSince = 0;
@@ -244,9 +265,15 @@
     setStatus(
       torch
         ? '背面のカメラとライトを、人差し指の腹でそっとふさいでください'
-        : 'この端末はライトが使えません。明るい所で、指先をカメラにそっと当ててください'
+        : 'この端末はライトが使えません。明るい所で、指先をカメラにそっと当ててください',
     );
-    log('測定を始めました(' + ToolKit.media.size(track) + ' / ライト ' + (torch ? 'あり' : 'なし') + ')');
+    log(
+      '測定を始めました(' +
+        ToolKit.media.size(track) +
+        ' / ライト ' +
+        (torch ? 'あり' : 'なし') +
+        ')',
+    );
   }
   function stop(byUser) {
     running = false;

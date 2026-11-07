@@ -11,8 +11,18 @@
   var GCS = 'https://storage.googleapis.com/tfjs-models/';
   var MODELS = {
     /* v1 は Keras 形式。入力は -1〜1、出力は確率(1000) */
-    v1_025: { name: '軽量', url: GCS + 'tfjs/mobilenet_v1_0.25_224/model.json', layers: true, signed: true },
-    v1_050: { name: '標準', url: GCS + 'tfjs/mobilenet_v1_0.50_224/model.json', layers: true, signed: true },
+    v1_025: {
+      name: '軽量',
+      url: GCS + 'tfjs/mobilenet_v1_0.25_224/model.json',
+      layers: true,
+      signed: true,
+    },
+    v1_050: {
+      name: '標準',
+      url: GCS + 'tfjs/mobilenet_v1_0.50_224/model.json',
+      layers: true,
+      signed: true,
+    },
     /* v2 は TF Hub 形式。入力は 0〜1(中で -1〜1 に直す)、出力は先頭に「背景」を含む 1001 個の値 */
     v2_100: {
       name: '高精度',
@@ -210,10 +220,10 @@
             function (e) {
               log.warn('モデルを端末に保存できませんでした(次回も通信します)', e);
               return { m: m, from: 'ネット' };
-            }
+            },
           );
         });
-      }
+      },
     );
   }
   function prepare() {
@@ -237,7 +247,7 @@
           },
           function (v) {
             return v.from + 'から';
-          }
+          },
         );
       })
       .then(function (v) {
@@ -254,7 +264,11 @@
         loadingModel = false;
         if (settings.model !== id) {
           /* 読み込み中にモデルの種類が変わった時は、選び直された方を読み込む */
-          log('読み込み中にモデルが変わったため、読み込み直します(' + MODELS[settings.model].name + ')');
+          log(
+            '読み込み中にモデルが変わったため、読み込み直します(' +
+              MODELS[settings.model].name +
+              ')',
+          );
           return prepare();
         }
         showLoader(false);
@@ -266,7 +280,7 @@
             tf.getBackend() +
             ' / 合計 ' +
             ((performance.now() - t0) / 1000).toFixed(1) +
-            '秒)'
+            '秒)',
         );
         if (mode === 'image') classifyImage();
       })
@@ -274,7 +288,8 @@
         loadingModel = false;
         clearInterval(tick);
         retryBtn.hidden = false;
-        statusEl.textContent = '読み込めませんでした。通信状態を確認して「もう一度読み込む」を押してください';
+        statusEl.textContent =
+          '読み込めませんでした。通信状態を確認して「もう一度読み込む」を押してください';
       });
   }
   retryBtn.onclick = prepare;
@@ -373,7 +388,9 @@
     topPct.textContent = level === 'low' ? '' : C.pct(first.p);
     hintEl.textContent =
       level === 'low'
-        ? '物を' + (settings.range === 'center' ? '枠の中央に' : '') + '大きく写すと当たりやすくなります'
+        ? '物を' +
+          (settings.range === 'center' ? '枠の中央に' : '') +
+          '大きく写すと当たりやすくなります'
         : level === 'mid'
           ? '似た物と迷っています。下の候補も見てください'
           : '';
@@ -400,7 +417,8 @@
     fileIn.click();
   };
   function decode(file) {
-    if (window.createImageBitmap) return createImageBitmap(file, { imageOrientation: 'from-image' });
+    if (window.createImageBitmap)
+      return createImageBitmap(file, { imageOrientation: 'from-image' });
     return new Promise(function (ok, ng) {
       var url = URL.createObjectURL(file),
         im = new Image();
@@ -443,7 +461,7 @@
         },
         function (v) {
           return v + 'px';
-        }
+        },
       )
       .then(function (r) {
         if (!r.ok) {
@@ -472,7 +490,7 @@
         },
         function (p) {
           return topText(C.topK(p, 3)) + ' / ' + RANGE_NAME[settings.range];
-        }
+        },
       )
       .then(function (r) {
         busy = false;
@@ -496,8 +514,10 @@
   function startCamera() {
     return ToolKit.media
       .open(
-        { video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 720 } } },
-        'カメラ'
+        {
+          video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 720 } },
+        },
+        'カメラ',
       )
       .then(function (r) {
         if (!r.stream) {
@@ -525,7 +545,7 @@
               (facing === 'user' ? '前面' : '背面') +
               ' / ' +
               ToolKit.media.size(stream.getVideoTracks()[0]) +
-              ')'
+              ')',
           );
           cancelAnimationFrame(raf);
           raf = requestAnimationFrame(frame);
@@ -553,7 +573,7 @@
         '回' +
         (stats.runs ? ' / 平均 ' + Math.round(stats.ms / stats.runs) + 'ms' : '') +
         (probs ? ' / 最後 ' + topText(C.topK(probs, 1)) : '') +
-        ')'
+        ')',
     );
   }
   function frame(now) {
@@ -594,7 +614,7 @@
         log.error('カメラの映像の判定でエラーが発生しました', e);
         statusEl.textContent = '判定できませんでした';
         stopCamera('判定のエラー');
-      }
+      },
     );
   }
   camBtn.onclick = function () {
@@ -676,7 +696,7 @@
       settings.topN +
       '件 / 目安 ' +
       settings.minScore +
-      '%)'
+      '%)',
   );
   prepare();
 })();

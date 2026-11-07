@@ -80,7 +80,11 @@
     progs[key] = o;
     if (key.indexOf('fx-') === 0)
       log.debug(
-        '効果の処理を準備しました(' + key.slice(3) + ' / ' + Math.round(performance.now() - t1) + 'ms)'
+        '効果の処理を準備しました(' +
+          key.slice(3) +
+          ' / ' +
+          Math.round(performance.now() - t1) +
+          'ms)',
       );
     return o;
   }
@@ -213,7 +217,7 @@
             SLOT,
             SLOT,
             W,
-            H
+            H,
           );
       if (!frozen && frameNo++ % val('step') === 0) {
         head = (head + 1) % 24;
@@ -225,7 +229,7 @@
           SLOT,
           SLOT,
           W,
-          H
+          H,
         );
       }
       bindTo(UNITS.atlas, atlasT);
@@ -262,7 +266,8 @@
     try {
       var s = JSON.parse(localStorage.getItem(KEY) || 'null');
       if (!s) return;
-      if (typeof s.mode === 'string' && C.MODES[C.modeIndex(s.mode)].id === s.mode) state.mode = s.mode;
+      if (typeof s.mode === 'string' && C.MODES[C.modeIndex(s.mode)].id === s.mode)
+        state.mode = s.mode;
       if (typeof s.kelvin === 'number') state.kelvin = Math.max(2000, Math.min(12000, s.kelvin));
       if (s.values && typeof s.values === 'object') state.values = s.values;
     } catch (e) {
@@ -404,7 +409,20 @@
   });
 
   /* VHS の画面表示(再生の印と日時)。撮影した写真にも書き込む */
-  var MON = ['JAN.', 'FEB.', 'MAR.', 'APR.', 'MAY', 'JUN.', 'JUL.', 'AUG.', 'SEP.', 'OCT.', 'NOV.', 'DEC.'];
+  var MON = [
+    'JAN.',
+    'FEB.',
+    'MAR.',
+    'APR.',
+    'MAY',
+    'JUN.',
+    'JUL.',
+    'AUG.',
+    'SEP.',
+    'OCT.',
+    'NOV.',
+    'DEC.',
+  ];
   function vhsText() {
     var d = new Date(),
       h = d.getHours();
@@ -426,9 +444,21 @@
     stream = null;
     var r = await ToolKit.media.open(
       deviceId
-        ? { video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 960 } } }
-        : { video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 960 } } },
-      'カメラ'
+        ? {
+            video: {
+              deviceId: { exact: deviceId },
+              width: { ideal: 1280 },
+              height: { ideal: 960 },
+            },
+          }
+        : {
+            video: {
+              facingMode: { ideal: 'environment' },
+              width: { ideal: 1280 },
+              height: { ideal: 960 },
+            },
+          },
+      'カメラ',
     );
     if (!r.stream) {
       statusText.textContent = r.message;
@@ -454,7 +484,9 @@
         log.warn('カメラの一覧を取得できませんでした', e);
       }
     }
-    log('カメラを開始しました(' + ToolKit.media.size(track) + ' / カメラ ' + devices.length + '台)');
+    log(
+      'カメラを開始しました(' + ToolKit.media.size(track) + ' / カメラ ' + devices.length + '台)',
+    );
   }
   switchCamBtn.addEventListener('click', function () {
     ToolKit.vibrate();
@@ -519,7 +551,7 @@
         C.MODES[C.modeIndex(state.mode)].name +
         ' / ' +
         summary() +
-        ')'
+        ')',
     );
   });
   capturedList.addEventListener('click', function (e) {
@@ -538,7 +570,8 @@
     log.error('映像を加工する処理の準備でエラーが発生しました', e);
   }
   if (!ok) {
-    statusText.textContent = 'この端末のブラウザでは WebGL が使えないため、加工した映像を表示できません。';
+    statusText.textContent =
+      'この端末のブラウザでは WebGL が使えないため、加工した映像を表示できません。';
     log.warn('WebGL が使えないため起動できませんでした');
     return;
   }

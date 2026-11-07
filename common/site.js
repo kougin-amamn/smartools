@@ -41,7 +41,7 @@
     dbtn = addHeaderButton(
       'dbgBtn',
       'デバッグ',
-      '<path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2"/>'
+      '<path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2"/>',
     );
   var I = {
     light:
@@ -97,8 +97,10 @@
     colorStyle = null,
     themes = null;
   /* themes.json は site.js と同じフォルダ。ページの深さ(tools/〜、launchers/)によらず site.js の場所から求める */
-  var themesUrl = new URL('themes.json', document.currentScript ? document.currentScript.src : location.href)
-    .href;
+  var themesUrl = new URL(
+    'themes.json',
+    document.currentScript ? document.currentScript.src : location.href,
+  ).href;
   function rgb(h) {
     var n = parseInt(h.slice(1), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
@@ -193,7 +195,7 @@
             list.length +
             '件 / ' +
             Math.round(performance.now() - t0) +
-            'ms)'
+            'ms)',
         );
         return list;
       });
@@ -263,7 +265,7 @@
         menu.querySelector('.color-list').innerHTML =
           '<p class="color-msg">一覧を読み込めませんでした。https で配信したページで開いてください。</p>';
         log.warn('カラーテーマの一覧の読み込みに失敗しました', e);
-      }
+      },
     );
   }
   /* ヘッダのテーマボタンの前にカラーボタンを足す(ヘッダのあるページだけ)。
@@ -274,7 +276,7 @@
       'カラーテーマ',
       '<path d="M12 3a9 9 0 1 0 0 18c1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2a1.7 1.7 0 0 1 1.3-2.9H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11.5" r=".6"/><circle cx="10" cy="7.5" r=".6"/><circle cx="15" cy="7.5" r=".6"/>',
       tbtn,
-      true
+      true,
     );
 
     menu = document.createElement('div');
@@ -293,7 +295,8 @@
       else closeMenu();
     };
     document.addEventListener('click', function (e) {
-      if (!menu.hidden && !menu.contains(e.target) && !cbtn.contains(e.target)) closeMenu('外側を押下');
+      if (!menu.hidden && !menu.contains(e.target) && !cbtn.contains(e.target))
+        closeMenu('外側を押下');
     });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !menu.hidden) {
@@ -339,7 +342,7 @@
         innerHeight +
         '×' +
         innerWidth +
-        'px)'
+        'px)',
     );
   }
   /* カラーボタンの前に足す(ヘッダのあるページだけ。env.js が読めない時は出さない)。
@@ -350,7 +353,7 @@
       '環境情報',
       '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.6" r=".7"/>',
       cbtn || tbtn,
-      true
+      true,
     );
 
     imenu = document.createElement('div');
@@ -369,7 +372,8 @@
       else closeInfo();
     };
     document.addEventListener('click', function (e) {
-      if (!imenu.hidden && !imenu.contains(e.target) && !ibtn.contains(e.target)) closeInfo('外側を押下');
+      if (!imenu.hidden && !imenu.contains(e.target) && !ibtn.contains(e.target))
+        closeInfo('外側を押下');
     });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !imenu.hidden) {

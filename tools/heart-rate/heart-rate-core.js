@@ -99,7 +99,7 @@
         null,
         tops.map(function (t) {
           return ac[t];
-        })
+        }),
       ),
       best = tops.filter(function (t) {
         return ac[t] >= maxv * 0.9;

@@ -31,7 +31,10 @@
       addEventListener: function () {},
       removeEventListener: function () {},
     };
-    this.peerConnection = { localDescription: { sdp: fp(peer.id) }, remoteDescription: { sdp: fp(other) } };
+    this.peerConnection = {
+      localDescription: { sdp: fp(peer.id) },
+      remoteDescription: { sdp: fp(other) },
+    };
     this.q = [];
   }
   Conn.prototype = Object.create(E.prototype);

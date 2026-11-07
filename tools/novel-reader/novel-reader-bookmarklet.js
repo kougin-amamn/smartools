@@ -86,19 +86,24 @@
     navigator.clipboard.writeText(text).then(
       function () {
         alert(
-          '読み上げのツールに渡せなかったため、本文をコピーしました。ツールの「貼り付け」に貼ってください。'
+          '読み上げのツールに渡せなかったため、本文をコピーしました。ツールの「貼り付け」に貼ってください。',
         );
       },
       function () {
         alert('読み上げのツールに渡せませんでした。');
-      }
+      },
     );
   }
   var tool = window.open(TOOL_URL, '_blank');
   if (!tool) return copyInstead();
   var sent = false;
   window.addEventListener('message', function onReady(e) {
-    if (e.source !== tool || e.origin !== TOOL_ORIGIN || !e.data || e.data.type !== 'novel-reader-ready')
+    if (
+      e.source !== tool ||
+      e.origin !== TOOL_ORIGIN ||
+      !e.data ||
+      e.data.type !== 'novel-reader-ready'
+    )
       return;
     window.removeEventListener('message', onReady);
     sent = true;

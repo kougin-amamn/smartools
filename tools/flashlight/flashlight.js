@@ -139,7 +139,9 @@
     const stream = await findAndEnableTorch();
     if (!stream) {
       statusText.textContent = 'この端末のカメラはライトの制御に対応していません。';
-      log.warn('ライトを点灯できませんでした(この端末のカメラはブラウザからのライト制御に対応していません)');
+      log.warn(
+        'ライトを点灯できませんでした(この端末のカメラはブラウザからのライト制御に対応していません)',
+      );
       return;
     }
     torchStream = stream;

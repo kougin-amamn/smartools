@@ -193,7 +193,7 @@
     statusText.textContent = 'マイクを準備中…';
     const r = await ToolKit.media.open(
       { audio: { echoCancellation: true, noiseSuppression: true } },
-      'マイク'
+      'マイク',
     );
     if (!r.stream) {
       statusText.textContent = r.message;
@@ -215,7 +215,7 @@
     panel.classList.add('show');
     statusText.textContent = 'モードを選んでください(通常は加工なしの素通しです)';
     log(
-      `マイクを開始しました(モード ${modeName(currentMode)} / モニター ${monitorChk.checked ? 'ON' : 'OFF'} / ${audioCtx.sampleRate}Hz)`
+      `マイクを開始しました(モード ${modeName(currentMode)} / モニター ${monitorChk.checked ? 'ON' : 'OFF'} / ${audioCtx.sampleRate}Hz)`,
     );
   });
 
@@ -261,7 +261,7 @@
       const blob = new Blob(recChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
       addRecordingItem(blob, mediaRecorder.mimeType || 'audio/webm');
       log(
-        `録音を停止しました(${recTime.textContent || '00:00'} / ${(blob.size / 1024).toFixed(0)}KB / ${mediaRecorder.mimeType || 'audio/webm'})`
+        `録音を停止しました(${recTime.textContent || '00:00'} / ${(blob.size / 1024).toFixed(0)}KB / ${mediaRecorder.mimeType || 'audio/webm'})`,
       );
       recording = false;
       recRow.classList.remove('recording');

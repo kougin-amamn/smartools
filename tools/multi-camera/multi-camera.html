@@ -41,7 +41,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-multi-camera.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">多機能カメラ<span class="en">Multi Camera</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        多機能カメラ<span class="en">Multi Camera</span>
+      </h1>
       <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
         <svg
           viewBox="0 0 24 24"
@@ -145,19 +147,47 @@
         <div class="sliders">
           <div class="slider-row">
             <span>明るさ</span
-            ><input type="range" id="brightnessSlider" data-log="明るさ" min="60" max="200" value="100" />
+            ><input
+              type="range"
+              id="brightnessSlider"
+              data-log="明るさ"
+              min="60"
+              max="200"
+              value="100"
+            />
           </div>
           <div class="slider-row">
             <span>コントラスト</span
-            ><input type="range" id="contrastSlider" data-log="コントラスト" min="60" max="200" value="100" />
+            ><input
+              type="range"
+              id="contrastSlider"
+              data-log="コントラスト"
+              min="60"
+              max="200"
+              value="100"
+            />
           </div>
           <div class="slider-row">
             <span>彩度</span
-            ><input type="range" id="saturateSlider" data-log="彩度" min="0" max="200" value="100" />
+            ><input
+              type="range"
+              id="saturateSlider"
+              data-log="彩度"
+              min="0"
+              max="200"
+              value="100"
+            />
           </div>
           <div class="slider-row">
             <span>ズーム</span
-            ><input type="range" id="zoomSlider" data-log="ズーム" min="100" max="300" value="100" />
+            ><input
+              type="range"
+              id="zoomSlider"
+              data-log="ズーム"
+              min="100"
+              max="300"
+              value="100"
+            />
           </div>
         </div>
 
@@ -177,7 +207,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./multi-camera.js"></script>

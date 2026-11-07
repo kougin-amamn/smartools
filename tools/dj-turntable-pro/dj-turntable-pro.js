@@ -72,13 +72,13 @@
             e.context.sampleRate +
             'Hz / 遅れ ' +
             Math.round((e.context.baseLatency || 0) * 1000) +
-            'ms)'
+            'ms)',
         );
       },
       function (err) {
         log.error('音の部品の準備でエラーが発生しました', err);
         $('status').textContent = '音の準備ができませんでした';
-      }
+      },
     );
     return true;
   }
@@ -260,7 +260,7 @@
         return v.tooLong
           ? '長すぎる曲'
           : K.formatTime(v.duration) + ' / ' + (v.bpm ? v.bpm.toFixed(1) + ' BPM' : 'BPM 不明');
-      }
+      },
     );
     if (!r.ok) return deck.say('曲を読み込めませんでした(形式を確かめてください)');
     if (r.value.tooLong) {
@@ -278,8 +278,10 @@
     var content = document.querySelector('.content'),
       style = getComputedStyle(content);
     var landscape = window.innerWidth > window.innerHeight;
-    var width = content.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
-      height = content.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+    var width =
+        content.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+      height =
+        content.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
     $('waves').style.height = '';
     var wavesH = settings.waves ? $('waves').offsetHeight + GAP : 0;
     var deck = decks[0],
@@ -290,11 +292,14 @@
     if (landscape) {
       w = Math.min(
         (width - $('mixer').offsetWidth - GAP * 2) / 2 - extraW,
-        (height - wavesH - extraH) * ratio
+        (height - wavesH - extraH) * ratio,
       );
     } else {
       /* 縦向きも2台を左右に並べ、下の残りをミキサーにする */
-      w = Math.min((width - GAP) / 2 - extraW, (height - wavesH - extraH - MIXER_MIN - GAP) * ratio);
+      w = Math.min(
+        (width - GAP) / 2 - extraW,
+        (height - wavesH - extraH - MIXER_MIN - GAP) * ratio,
+      );
     }
     w = Math.round(K.clamp(w, 140, 520));
     document.documentElement.style.setProperty('--plinth', w + 'px');
@@ -396,7 +401,8 @@
     '.': [1, 'nudge', 0.02],
   };
   document.addEventListener('keydown', function (e) {
-    if (e.ctrlKey || e.metaKey || e.altKey || /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+    if (e.ctrlKey || e.metaKey || e.altKey || /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName))
+      return;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       mixer.setCrossfader(mixer.values.crossfader + (e.key === 'ArrowLeft' ? -0.05 : 0.05));
       return e.preventDefault();
@@ -432,6 +438,6 @@
       settings.brakeSeconds +
       '秒 / ' +
       (settings.slipmat ? 'スリップマット' : '直結') +
-      ')'
+      ')',
   );
 })();

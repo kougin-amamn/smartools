@@ -65,7 +65,9 @@
   qualitySlider.addEventListener('input', () => {
     qualityVal.textContent = Math.round(qualitySlider.value * 100) + '%';
   });
-  maxSideInput.addEventListener('change', () => log(`リサイズの長辺を ${maxSideInput.value}px にしました`));
+  maxSideInput.addEventListener('change', () =>
+    log(`リサイズの長辺を ${maxSideInput.value}px にしました`),
+  );
   updateQualityVisibility();
 
   fileInput.addEventListener('change', async () => {
@@ -139,7 +141,9 @@
     img.onerror = () => {
       row.querySelector('.new').textContent = '画像を読み込めませんでした';
       item.broken = true;
-      log.warn(`画像を読み込めませんでした(${formatBytes(file.size)} / 形式 ${file.type || '不明'})`);
+      log.warn(
+        `画像を読み込めませんでした(${formatBytes(file.size)} / 形式 ${file.type || '不明'})`,
+      );
     };
     img.src = sourceUrl;
   }
@@ -162,7 +166,7 @@
       format === 'image/gif'
         ? Math.min(
             resizeChk.checked ? parseInt(maxSideInput.value, 10) || GIF_MAX_SIDE : GIF_MAX_SIDE,
-            GIF_MAX_SIDE
+            GIF_MAX_SIDE,
           )
         : resizeChk.checked
           ? parseInt(maxSideInput.value, 10)
@@ -170,7 +174,7 @@
     const { w, h } = calcSize(
       item.origW || item.img.naturalWidth,
       item.origH || item.img.naturalHeight,
-      maxSide
+      maxSide,
     );
 
     const canvas = document.createElement('canvas');
@@ -253,7 +257,7 @@
     convertBtn.textContent = 'すべて変換';
     if (items.some((i) => i.converted)) batchRow.hidden = false;
     (ng ? log.warn : log)(
-      `変換しました(${FMT_NAME[formatSelect.value]} / 成功 ${ok}件${ng ? ' / 失敗 ' + ng + '件' : ''} / ${formatBytes(before)} → ${formatBytes(after)} / ${Math.round(performance.now() - t0)}ms)`
+      `変換しました(${FMT_NAME[formatSelect.value]} / 成功 ${ok}件${ng ? ' / 失敗 ' + ng + '件' : ''} / ${formatBytes(before)} → ${formatBytes(after)} / ${Math.round(performance.now() - t0)}ms)`,
     );
   });
 
@@ -291,6 +295,6 @@
       (window.heic2any ? 'あり' : 'なし') +
       ' / ZIP ' +
       (window.JSZip ? 'あり' : 'なし') +
-      ')'
+      ')',
   );
 })();

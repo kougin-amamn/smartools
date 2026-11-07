@@ -57,7 +57,8 @@
       if (e.key === 'Escape') hide('Escapeキー');
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initSettings);
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', initSettings);
   else initSettings();
 
   /* ランチャーへ戻る: ランチャーから開いた時は、ヘッダの左に戻るボタンを出す */
@@ -82,7 +83,9 @@
     b.addEventListener('click', function () {
       // ランチャーから来たばかりなら履歴で戻る(3Dの位置などがそのまま残る)。それ以外はランチャーを開く
       var fromIt = document.referrer && document.referrer.split('#')[0] === ret.href;
-      log('ランチャーへ戻ります(' + (ret.title || ret.href) + (fromIt ? ' / 履歴で戻る' : '') + ')');
+      log(
+        'ランチャーへ戻ります(' + (ret.title || ret.href) + (fromIt ? ' / 履歴で戻る' : '') + ')',
+      );
       if (fromIt && history.length > 1) history.back();
       else location.href = ret.href;
     });

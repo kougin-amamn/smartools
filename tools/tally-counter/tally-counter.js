@@ -104,6 +104,6 @@
       (vib.checked ? 'ON' : 'OFF') +
       ' / クリック音 ' +
       (snd.checked ? 'ON' : 'OFF') +
-      ')'
+      ')',
   );
 })();

@@ -230,7 +230,14 @@
     return new Uint8Array(out);
   }
 
-  root.ImageCodecs = { encodeBMP, encodeICOFromPNG, encodeGIF, quantizeImage, gifLZWEncode, minCodeSizeFor };
+  root.ImageCodecs = {
+    encodeBMP,
+    encodeICOFromPNG,
+    encodeGIF,
+    quantizeImage,
+    gifLZWEncode,
+    minCodeSizeFor,
+  };
 })(typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : this);
 
 if (typeof module !== 'undefined' && module.exports) {

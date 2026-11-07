@@ -223,7 +223,7 @@
               /* 切断済み(想定内) */
             }
           },
-          r * 1000 + 400
+          r * 1000 + 400,
         );
       },
     };
@@ -408,7 +408,7 @@
           (d > 0 ? '上限' : '下限') +
           'のため移動できませんでした(' +
           $('octLabel').textContent +
-          ')'
+          ')',
       );
       return;
     }
@@ -543,13 +543,13 @@
         function () {
           startVoice('auto' + i, m, false);
         },
-        isScale ? i * 260 : 0
+        isScale ? i * 260 : 0,
       );
       later(
         function () {
           stopVoice('auto' + i);
         },
-        isScale ? i * 260 + 240 : 1300
+        isScale ? i * 260 + 240 : 1300,
       );
     });
     log('コード・スケールを再生しました(' + $('chInfo').textContent + ')');
@@ -643,7 +643,7 @@
         pr.length() +
         '音 / ' +
         $('octLabel').textContent +
-        ')'
+        ')',
     );
   };
   $('prStop').onclick = function () {
@@ -672,7 +672,7 @@
         function () {
           stopVoice('auto' + i);
         },
-        t + d * 0.9
+        t + d * 0.9,
       );
       t += d;
     });
@@ -688,7 +688,7 @@
         $('bpm').value +
         ' BPM / ' +
         (t / 1000).toFixed(1) +
-        '秒)'
+        '秒)',
     );
   };
 
@@ -746,7 +746,8 @@
         }
       }
       recUi();
-      if (recEvents.length) log('録音を停止しました(' + $('recInfo').textContent.replace('録音: ', '') + ')');
+      if (recEvents.length)
+        log('録音を停止しました(' + $('recInfo').textContent.replace('録音: ', '') + ')');
       else log.warn('音が無かったため録音を残しませんでした');
     }
   };
@@ -818,7 +819,7 @@
         }
         $('recInfo').textContent = '共有できませんでした。「MIDIで保存」をお使いください。';
         log.warn('共有できませんでした', e);
-      }
+      },
     );
   };
   recUi();
@@ -831,6 +832,6 @@
       $('octLabel').textContent +
       ' / 録音 ' +
       (lastRec ? lastRec.length / 2 + '音' : 'なし') +
-      ')'
+      ')',
   );
 })();

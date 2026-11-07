@@ -76,7 +76,9 @@ function create(o) {
   var iconStat = { ok: 0, ng: 0, pend: 0, warned: false };
   function iconDone() {
     if (--iconStat.pend > 0) return;
-    log('アイコン画像の読み込みが終わりました(使用 ' + iconStat.ok + ' / 使えず ' + iconStat.ng + ')');
+    log(
+      'アイコン画像の読み込みが終わりました(使用 ' + iconStat.ok + ' / 使えず ' + iconStat.ng + ')',
+    );
   }
   function loadIcon(t, c, texture) {
     iconStat.pend++;
@@ -98,7 +100,7 @@ function create(o) {
           iconStat.warned = true;
           log.warn(
             'アイコン画像を3Dに使えませんでした(file:// で開くと読めません。https で配信すると表示されます)',
-            e
+            e,
           );
         }
       }
@@ -299,7 +301,8 @@ function create(o) {
         g.lineWidth = 0.6 + R() * 1.4;
         g.beginPath();
         g.moveTo(x, 0);
-        for (y = 0; y <= size; y += 16) g.lineTo(x + Math.sin((y / size) * Math.PI * 4 + ph) * amp, y);
+        for (y = 0; y <= size; y += 16)
+          g.lineTo(x + Math.sin((y / size) * Math.PI * 4 + ph) * amp, y);
         g.stroke();
       }
       g.fillStyle = 'rgba(40,22,10,0.55)';
@@ -316,7 +319,12 @@ function create(o) {
   var floorTileMat = (function () {
     var t = tex(woodCanvas(512, 8, [206, 180, 146], 13, 22));
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    return new THREE.MeshPhongMaterial({ color: 0xffffff, map: t, specular: 0x3a3026, shininess: 35 });
+    return new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+      map: t,
+      specular: 0x3a3026,
+      shininess: 35,
+    });
   })();
   var passFloorMat = new THREE.MeshPhongMaterial({
     color: 0xffffff,
@@ -331,15 +339,18 @@ function create(o) {
       geo = new THREE.BufferGeometry();
     geo.setAttribute(
       'position',
-      new THREE.Float32BufferAttribute([x0, y, z0, x1, y, z0, x1, y, z1, x0, y, z1], 3)
+      new THREE.Float32BufferAttribute([x0, y, z0, x1, y, z0, x1, y, z1, x0, y, z1], 3),
     );
-    geo.setAttribute('normal', new THREE.Float32BufferAttribute([0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], 3));
+    geo.setAttribute(
+      'normal',
+      new THREE.Float32BufferAttribute([0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], 3),
+    );
     geo.setAttribute(
       'uv',
       new THREE.Float32BufferAttribute(
         [x0 / S, -z0 / S, x1 / S, -z0 / S, x1 / S, -z1 / S, x0 / S, -z1 / S],
-        2
-      )
+        2,
+      ),
     );
     geo.setIndex([0, 2, 1, 0, 3, 2]);
     return new THREE.Mesh(geo, mat || floorTileMat);
@@ -402,7 +413,11 @@ function create(o) {
   var trimMat = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0x2a2018, shininess: 25 });
   var brassMat = new THREE.MeshPhongMaterial({ color: BRASS, specular: 0xe6d9b0, shininess: 45 });
   var darkMat = new THREE.MeshPhongMaterial({ color: 0x1c140e, specular: 0x3a3028, shininess: 40 });
-  var linerMat = new THREE.MeshPhongMaterial({ color: 0xd8cfbb, specular: 0x222018, shininess: 20 });
+  var linerMat = new THREE.MeshPhongMaterial({
+    color: 0xd8cfbb,
+    specular: 0x222018,
+    shininess: 20,
+  });
   var frameMatV = new THREE.MeshPhongMaterial({
     color: 0xffffff,
     map: frameTexture(false),
@@ -415,7 +430,11 @@ function create(o) {
     specular: 0x4a3a2c,
     shininess: 35,
   });
-  var benchMat = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0x141420, shininess: 12 });
+  var benchMat = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    specular: 0x141420,
+    shininess: 12,
+  });
   var skyMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
   var matMat = new THREE.MeshBasicMaterial({ color: 0xf3f1ec }); /* 白い台紙 */
   var frameBlackMat = new THREE.MeshPhongMaterial({
@@ -426,7 +445,12 @@ function create(o) {
   var frameOakMat = (function () {
     var t = tex(woodCanvas(256, 1, [214, 188, 152], 21, 30));
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    return new THREE.MeshPhongMaterial({ color: 0xffffff, map: t, specular: 0x3a3026, shininess: 25 });
+    return new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+      map: t,
+      specular: 0x3a3026,
+      shininess: 25,
+    });
   })(); /* 明るいオークの額縁 */
   var frameBoxMat = new THREE.MeshPhongMaterial({
     color: 0xf2f1ee,

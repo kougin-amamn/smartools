@@ -177,7 +177,7 @@
         s.size +
         'px / 元に戻せる回数 ' +
         history.index +
-        ')'
+        ')',
     );
   }
   cv.addEventListener('pointerup', endStroke);
@@ -186,7 +186,15 @@
   function fillAt(p) {
     var img = ctx.getImageData(0, 0, cv.width, cv.height),
       t0 = performance.now(),
-      n = core.floodFill(img.data, cv.width, cv.height, p.x, p.y, core.hexToRgb(colorIn.value), FILL_TOL);
+      n = core.floodFill(
+        img.data,
+        cv.width,
+        cv.height,
+        p.x,
+        p.y,
+        core.hexToRgb(colorIn.value),
+        FILL_TOL,
+      );
     if (!n) {
       log.warn('塗りつぶす場所がありませんでした');
       return;
@@ -194,7 +202,13 @@
     ctx.putImageData(img, 0, 0);
     snapshot(false);
     log(
-      '塗りつぶしました(' + n + '画素 / ' + colorIn.value + ' / ' + Math.round(performance.now() - t0) + 'ms)'
+      '塗りつぶしました(' +
+        n +
+        '画素 / ' +
+        colorIn.value +
+        ' / ' +
+        Math.round(performance.now() - t0) +
+        'ms)',
     );
   }
 
@@ -221,7 +235,8 @@
     fileIn.click();
   };
   function decode(file) {
-    if (window.createImageBitmap) return createImageBitmap(file, { imageOrientation: 'from-image' });
+    if (window.createImageBitmap)
+      return createImageBitmap(file, { imageOrientation: 'from-image' });
     return new Promise(function (ok, ng) {
       var url = URL.createObjectURL(file),
         im = new Image();
@@ -260,7 +275,7 @@
         },
         function (v) {
           return v.from + ' → ' + v.to + 'px';
-        }
+        },
       )
       .then(function (r) {
         statusEl.textContent = r.ok ? '' : '画像を読み込めませんでした';
@@ -305,7 +320,7 @@
       },
       function (size) {
         return cv.width + '×' + cv.height + 'px / ' + Math.round(size / 1024) + 'KB';
-      }
+      },
     );
   };
 

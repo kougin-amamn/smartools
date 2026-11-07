@@ -91,7 +91,9 @@ function create(o) {
     specular: 0x111111,
     shininess: 8,
   });
-  var glassMat = new THREE.MeshBasicMaterial({ color: 0xdfeaf4 }); /* 窓の外の明るさ(テーマで色を変える) */
+  var glassMat = new THREE.MeshBasicMaterial({
+    color: 0xdfeaf4,
+  }); /* 窓の外の明るさ(テーマで色を変える) */
   var glassOverMat = new THREE.MeshBasicMaterial({
     map: T.tex(T.paint(D.glass, 512)),
     transparent: true,
@@ -157,7 +159,10 @@ function create(o) {
   var floorBulbMat = new THREE.MeshBasicMaterial({ color: 0x5a554c }); /* フロアランプの電球 */
   var floorOn = null; /* フロアランプ。null の間はテーマに合わせる(夜は点ける) */
   var deskOn = null; /* アームライト。null の間はテーマに合わせる(夜は点ける) */
-  var sofaCv = T.paint({ kind: 'cloth', color: '#5b6f5f', contrast: 0.3, grain: 0.9, seed: 37 }, 256),
+  var sofaCv = T.paint(
+      { kind: 'cloth', color: '#5b6f5f', contrast: 0.3, grain: 0.9, seed: 37 },
+      256,
+    ),
     sofaTex = T.tex(sofaCv, true);
   sofaTex.repeat.set(10, 10); /* 織り目は細かく */
   var sofaMat = new THREE.MeshPhongMaterial({
@@ -270,7 +275,13 @@ function create(o) {
     iconStat = { ok: 0, ng: 0, pend: 0 };
   function iconDone() {
     if (--iconStat.pend === 0)
-      log('アイコン画像の読み込みが終わりました(使用 ' + iconStat.ok + ' / 使えず ' + iconStat.ng + ')');
+      log(
+        'アイコン画像の読み込みが終わりました(使用 ' +
+          iconStat.ok +
+          ' / 使えず ' +
+          iconStat.ng +
+          ')',
+      );
   }
   groups.forEach(function (grp, gi) {
     grp.tools.forEach(function (t, ti) {
@@ -362,7 +373,7 @@ function create(o) {
     null,
     groups.map(function (g) {
       return g.tools.length;
-    })
+    }),
   );
   function plane(parent, w, h, mat, x, y, z, rx, ry) {
     var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
@@ -423,7 +434,15 @@ function create(o) {
           ends,
           core.boxArrays(
             [
-              { x: sb.end.x, y: sy + 0.11, z: -0.15, sx: 0.006, sy: 0.22, sz: 0.14, color: [1, 1, 1] },
+              {
+                x: sb.end.x,
+                y: sy + 0.11,
+                z: -0.15,
+                sx: 0.006,
+                sy: 0.22,
+                sz: 0.14,
+                color: [1, 1, 1],
+              },
               {
                 x: sb.end.x + 0.05,
                 y: sy + 0.003,
@@ -434,8 +453,8 @@ function create(o) {
                 color: [1, 1, 1],
               },
             ],
-            f
-          )
+            f,
+          ),
         );
       }
       books.forEach(function (r) {
@@ -522,11 +541,11 @@ function create(o) {
       fb = [];
     fb.push(
       { x: u, y: y + h / 2 + b / 2, z: 0.02, sx: w + 2 * b, sy: b, sz: 0.04, color: [1, 1, 1] },
-      { x: u, y: y - h / 2 - b / 2, z: 0.02, sx: w + 2 * b, sy: b, sz: 0.04, color: [1, 1, 1] }
+      { x: u, y: y - h / 2 - b / 2, z: 0.02, sx: w + 2 * b, sy: b, sz: 0.04, color: [1, 1, 1] },
     );
     fb.push(
       { x: u - w / 2 - b / 2, y: y, z: 0.02, sx: b, sy: h, sz: 0.04, color: [1, 1, 1] },
-      { x: u + w / 2 + b / 2, y: y, z: 0.02, sx: b, sy: h, sz: 0.04, color: [1, 1, 1] }
+      { x: u + w / 2 + b / 2, y: y, z: 0.02, sx: b, sy: h, sz: 0.04, color: [1, 1, 1] },
     );
     curRoom.add(meshOf(core.boxArrays(fb, f), frameMat));
     var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), artMats[k % 3]);
@@ -563,10 +582,18 @@ function create(o) {
         core.boxArrays(
           [
             { x: 0, y: 0.05, z: 0.008, sx: w.len, sy: 0.1, sz: 0.016, color: TRIM } /* 幅木 */,
-            { x: 0, y: RH - 0.04, z: 0.02, sx: w.len, sy: 0.08, sz: 0.04, color: TRIM } /* 回り縁 */,
+            {
+              x: 0,
+              y: RH - 0.04,
+              z: 0.02,
+              sx: w.len,
+              sy: 0.08,
+              sz: 0.04,
+              color: TRIM,
+            } /* 回り縁 */,
           ],
-          f
-        )
+          f,
+        ),
       );
     });
     /* 壁ごとの家具・建具(書斎のよくある配置: 奥=本棚、右=窓と机、左=ドアと飾り棚と絵、手前=ソファと絵)
@@ -628,7 +655,7 @@ function create(o) {
     });
     bx.push(
       { x: WU, y: WY, z: 0.03, sx: 0.04, sy: WH, sz: 0.04, color: TRIM },
-      { x: WU, y: WY + 0.15, z: 0.03, sx: WW, sy: 0.035, sz: 0.04, color: TRIM }
+      { x: WU, y: WY + 0.15, z: 0.03, sx: WW, sy: 0.035, sz: 0.04, color: TRIM },
     );
     var railY = WY + WH / 2 + 0.16,
       curBot = WY - WH / 2 - 0.07,
@@ -698,7 +725,8 @@ function create(o) {
     deskBooks.length = 0;
     var fav = favRecs(),
       bw = core.TOOL.w + 0.004,
-      bu = WU + 0.55 - core.TOOL.w / 2 - (fav.length - 1) * bw; /* 右端の本の外側が机の右端から5cm */
+      bu =
+        WU + 0.55 - core.TOOL.w / 2 - (fav.length - 1) * bw; /* 右端の本の外側が机の右端から5cm */
     fav.forEach(function (rec, i) {
       var m = new THREE.Mesh(bookGeo, rec.mats);
       m.userData.index = rec.mesh.userData.index;
@@ -715,8 +743,8 @@ function create(o) {
             { x: ex, y: 0.737 + 0.11, z: 0.33, sx: 0.006, sy: 0.22, sz: 0.14, color: [1, 1, 1] },
             { x: ex - 0.05, y: 0.74, z: 0.33, sx: 0.1, sy: 0.006, sz: 0.14, color: [1, 1, 1] },
           ],
-          RW
-        )
+          RW,
+        ),
       );
     }
     g.add(meshOf(brassA, brassMatV));
@@ -745,7 +773,10 @@ function create(o) {
     joint(0.05, 0.36);
     rod(0.05, 0.36, 0.27, 0.43, 0.008);
     joint(0.27, 0.43);
-    var shade = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.075, 0.13, 24, 1, true), bankMat);
+    var shade = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.022, 0.075, 0.13, 24, 1, true),
+      bankMat,
+    );
     shade.position.set(0.31, 0.38, 0);
     shade.rotation.z = 0.5;
     shade.userData.kind = 'desklamp';
@@ -792,18 +823,32 @@ function create(o) {
       [0.55, 0.72],
       [1.47, 0.98],
     ].forEach(function (q) {
-      dwood.push({ x: DU, y: q[0], z: 0.042, sx: 0.62, sy: q[1], sz: 0.006, color: [0.72, 0.72, 0.72] });
+      dwood.push({
+        x: DU,
+        y: q[0],
+        z: 0.042,
+        sx: 0.62,
+        sy: q[1],
+        sz: 0.006,
+        color: [0.72, 0.72, 0.72],
+      });
     }); /* 羽目板の彫り込み(少し暗く) */
     door.push(
       { x: DU + 0.34, y: 1.0, z: 0.05, sx: 0.05, sy: 0.12, sz: 0.012, color: BRASS },
-      { x: DU + 0.3, y: 1.0, z: 0.075, sx: 0.12, sy: 0.018, sz: 0.02, color: BRASS }
+      { x: DU + 0.3, y: 1.0, z: 0.075, sx: 0.12, sy: 0.018, sz: 0.02, color: BRASS },
     ); /* 座金とレバー */
     [0.35, 1.75].forEach(function (y) {
       door.push({ x: DU - 0.435, y: y, z: 0.045, sx: 0.012, sy: 0.1, sz: 0.012, color: BRASS });
     }); /* 丁番 */
     merge(houseA, core.boxArrays(door, LW));
     // タップの判定用の見えない板(扉を押すと戻る・閉じる)
-    var dp = onWall('left', DU, 1.06, 0.09, new THREE.Mesh(new THREE.PlaneGeometry(1.0, 2.15), pickMat));
+    var dp = onWall(
+      'left',
+      DU,
+      1.06,
+      0.09,
+      new THREE.Mesh(new THREE.PlaneGeometry(1.0, 2.15), pickMat),
+    );
     dp.userData.kind = 'door';
     extraPicks.push(dp);
     merge(woodA, core.boxArrays(dwood, LW));
@@ -813,7 +858,15 @@ function create(o) {
         { x: SU, y: 0.73, z: 0.23, sx: 1.14, sy: 0.035, sz: 0.45, color: [0.9, 0.9, 0.9] },
       ];
     [-0.27, 0.27].forEach(function (dx) {
-      side.push({ x: SU + dx, y: 0.4, z: 0.44, sx: 0.52, sy: 0.56, sz: 0.01, color: [0.78, 0.78, 0.78] });
+      side.push({
+        x: SU + dx,
+        y: 0.4,
+        z: 0.44,
+        sx: 0.52,
+        sy: 0.56,
+        sz: 0.01,
+        color: [0.78, 0.78, 0.78],
+      });
     });
     [
       [-0.5, 0.06],
@@ -841,7 +894,16 @@ function create(o) {
       }
       return m;
     }
-    sofaPart(0, 0.215, SD / 2, SW - 0.02, 0.17, SD - 0.02, 0.045, sofaMat); /* 台(床から13cmの脚の上) */
+    sofaPart(
+      0,
+      0.215,
+      SD / 2,
+      SW - 0.02,
+      0.17,
+      SD - 0.02,
+      0.045,
+      sofaMat,
+    ); /* 台(床から13cmの脚の上) */
     [-0.335, 0.335].forEach(function (u) {
       sofaPart(u, 0.365, 0.53, 0.66, 0.13, 0.62, 0.055, sofaMat2);
     }); /* 座クッション(座面高43cm) */
@@ -863,7 +925,7 @@ function create(o) {
         q[0],
         0.065,
         q[1],
-        new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.012, 0.13, 12), woodMatPlain)
+        new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.012, 0.13, 12), woodMatPlain),
       ); /* 先細りの木の脚 */
     });
     picture('front', 0, 1.62, 1.1, 0.6, 2);
@@ -882,28 +944,43 @@ function create(o) {
       [0.02, 1.36, -0.02, 0.2],
       [0.14, 0.7, -0.1, 0.22],
     ].forEach(function (l) {
-      add(new THREE.Mesh(new THREE.IcosahedronGeometry(l[3], 1), leafMat), PX + l[0], l[1], PZ + l[2]);
+      add(
+        new THREE.Mesh(new THREE.IcosahedronGeometry(l[3], 1), leafMat),
+        PX + l[0],
+        l[1],
+        PZ + l[2],
+      );
     });
     add(new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.025, 0.6, 8), woodMatPlain), PX, 0.6, PZ);
     var fBase = add(
         new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 0.03, 24), brassMat),
         LX,
         0.015,
-        LZ
+        LZ,
       ),
-      fPole = add(new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 1.45, 10), brassMat), LX, 0.74, LZ),
+      fPole = add(
+        new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 1.45, 10), brassMat),
+        LX,
+        0.74,
+        LZ,
+      ),
       fShade = add(
         new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.24, 0.32, 28, 1, true), shadeMat),
         LX,
         1.56,
-        LZ
+        LZ,
       ),
-      fBulb = add(new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 8), floorBulbMat), LX, 1.52, LZ),
+      fBulb = add(
+        new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 8), floorBulbMat),
+        LX,
+        1.52,
+        LZ,
+      ),
       fHit = add(
         new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 1.5, 8), floorBulbMat),
         LX,
         0.75,
-        LZ
+        LZ,
       ); /* 細いポールでも押せるよう、見えない太めの当たり判定を重ねる */
     fHit.visible = false;
     [fBase, fPole, fShade, fBulb, fHit].forEach(function (m) {
@@ -920,23 +997,28 @@ function create(o) {
       0.004,
       0.15,
       -Math.PI / 2,
-      0
+      0,
     ); /* ラグ(部屋の中ほど) */
     add(
       new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.5, 6), cordMat),
       0,
       RH - 0.25,
-      0
+      0,
     ); /* 天井のペンダント */
     var shade = add(
       new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.26, 0.2, 32, 1, true), pendMat),
       0,
       RH - 0.56,
-      0
+      0,
     );
     shade.userData.kind = 'pendant';
     extraPicks.push(shade);
-    var bulb = add(new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 12), bulbMat), 0, RH - 0.6, 0);
+    var bulb = add(
+      new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 12), bulbMat),
+      0,
+      RH - 0.6,
+      0,
+    );
     bulb.userData.kind = 'pendant';
     extraPicks.push(bulb);
     lights.pend = add(new THREE.PointLight(0xffe2b0, 0, 9, 2), 0, RH - 0.68, 0);
@@ -1017,11 +1099,13 @@ function create(o) {
     if (!lights.desk) return;
     lights.desk.intensity = on ? (dark ? 3.2 : 1.6) : 0;
     lampBulbMat.color.setHex(on ? 0xfff3d6 : 0x5a554c);
-    if (bankMat.emissive) bankMat.emissive.setHex(on ? 0x221a0e : dark ? THEME.dark.bank : THEME.light.bank);
+    if (bankMat.emissive)
+      bankMat.emissive.setHex(on ? 0x221a0e : dark ? THEME.dark.bank : THEME.light.bank);
     api.needsRender = true;
   }
   function applyTheme() {
-    var th = THEME[document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'];
+    var th =
+      THEME[document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'];
     scene.background = new THREE.Color(th.bg);
     lights.ambient.intensity = th.ambient;
     lights.hemi.intensity = th.hemi;
@@ -1040,7 +1124,8 @@ function create(o) {
   function dispose(g) {
     (function walk(x) {
       (x.children || []).forEach(walk);
-      if (x.geometry && x.geometry.dispose && !x.userData.desk && !rbShared(x.geometry)) x.geometry.dispose();
+      if (x.geometry && x.geometry.dispose && !x.userData.desk && !rbShared(x.geometry))
+        x.geometry.dispose();
     })(g);
   }
 

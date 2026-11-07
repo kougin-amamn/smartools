@@ -71,7 +71,7 @@
             resolve(null);
           }
         },
-        { once: true }
+        { once: true },
       );
       v.addEventListener('error', () => resolve(null));
     });
@@ -127,7 +127,7 @@
     }
     statusText.textContent = '';
     log(
-      `動画を追加しました(${files.length}本 / 全 ${videos.length}本 / ${(files.reduce((s, f) => s + f.size, 0) / 1024 / 1024).toFixed(1)}MB)`
+      `動画を追加しました(${files.length}本 / 全 ${videos.length}本 / ${(files.reduce((s, f) => s + f.size, 0) / 1024 / 1024).toFixed(1)}MB)`,
     );
   }
 
@@ -156,7 +156,7 @@
     video.playbackRate = SPEEDS[speedIdx];
     video.play().then(
       () => log(`再生しました(${posOf(id)} / 速度 ${SPEEDS[speedIdx]}x)`),
-      (e) => log.warn('再生を開始できませんでした(形式に対応していないか、操作が必要です)', e)
+      (e) => log.warn('再生を開始できませんでした(形式に対応していないか、操作が必要です)', e),
     );
     trackTitle.textContent = v.name;
     emptyState.style.display = 'none';
@@ -198,7 +198,7 @@
     if (video.paused)
       video.play().then(
         () => log(`再生を再開しました(${fmtTime(video.currentTime)})`),
-        (e) => log.warn('再生を開始できませんでした', e)
+        (e) => log.warn('再生を開始できませんでした', e),
       );
     else {
       video.pause();
@@ -246,7 +246,7 @@
     if (document.fullscreenElement) {
       document.exitFullscreen().then(
         () => log('全画面表示を終了しました'),
-        (e) => log.warn('全画面表示を終了できませんでした', e)
+        (e) => log.warn('全画面表示を終了できませんでした', e),
       );
       return;
     }
@@ -256,7 +256,7 @@
         (e) => {
           log.warn('全画面表示にできなかったため、画面いっぱいの表示にします', e);
           setCssFullscreen(true);
-        }
+        },
       );
       return;
     }
@@ -340,7 +340,7 @@
     if (video.getAttribute('src'))
       log.error(
         '動画を再生できませんでした(ファイルが壊れているか、形式に対応していません)',
-        video.error && video.error.message
+        video.error && video.error.message,
       );
   });
 

@@ -37,7 +37,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-dj-turntable.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">DJターンテーブル<span class="en">DJ Turntable</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        DJターンテーブル<span class="en">DJ Turntable</span>
+      </h1>
     </header>
     <main class="content">
       <div class="app">
@@ -208,23 +210,41 @@
           <div class="opt">
             <div class="lbl">回転数</div>
             <div class="seg" role="group" aria-label="回転数" data-log-group="回転数">
-              <button type="button" class="seg-btn on" data-rpm="33.3333" data-log="33回転">33⅓ 回転</button>
+              <button type="button" class="seg-btn on" data-rpm="33.3333" data-log="33回転">
+                33⅓ 回転
+              </button>
               <button type="button" class="seg-btn" data-rpm="45" data-log="45回転">45 回転</button>
             </div>
           </div>
           <div class="opt">
             <label for="pitch">ピッチ(速さの微調整)</label>
             <div class="row">
-              <input type="range" id="pitch" min="-8" max="8" step="0.1" value="0" data-log="ピッチ" /><output
-                id="pitchVal"
-                >0.0%</output
-              ><button type="button" class="mini" id="pitchReset" aria-label="ピッチを0に戻す">0</button>
+              <input
+                type="range"
+                id="pitch"
+                min="-8"
+                max="8"
+                step="0.1"
+                value="0"
+                data-log="ピッチ"
+              /><output id="pitchVal">0.0%</output
+              ><button type="button" class="mini" id="pitchReset" aria-label="ピッチを0に戻す">
+                0
+              </button>
             </div>
           </div>
           <div class="opt">
             <label for="volume">音量</label>
             <div class="row">
-              <input type="range" id="volume" min="0" max="1" step="0.01" value="0.8" data-log="音量" />
+              <input
+                type="range"
+                id="volume"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.8"
+                data-log="音量"
+              />
             </div>
           </div>
         </div>
@@ -257,7 +277,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./dj-turntable-core.js"></script>

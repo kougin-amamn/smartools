@@ -3,7 +3,8 @@
 (function () {
   'use strict';
 
-  var PREFIX = 'smartools-ft-'; /* 公開サーバーの ID は世界で共有されるため、他のアプリと重ならない前置き */
+  var PREFIX =
+    'smartools-ft-'; /* 公開サーバーの ID は世界で共有されるため、他のアプリと重ならない前置き */
 
   /* 6桁の番号。先頭が 0 でも 6 桁で扱う */
   function makeCode(rand) {
@@ -70,7 +71,9 @@
   function shouldCompress(name, type, size) {
     if (size < 1024) return false;
     return (
-      /^text\//.test(type || '') || /(json|xml|javascript|svg)/.test(type || '') || PLAIN_EXT.test(name || '')
+      /^text\//.test(type || '') ||
+      /(json|xml|javascript|svg)/.test(type || '') ||
+      PLAIN_EXT.test(name || '')
     );
   }
 
@@ -166,7 +169,12 @@
       if (!m || !TYPES[m.t]) return null;
       if (
         m.t === 'file' &&
-        !(typeof m.id === 'string' && typeof m.key === 'string' && typeof m.name === 'string' && m.size >= 0)
+        !(
+          typeof m.id === 'string' &&
+          typeof m.key === 'string' &&
+          typeof m.name === 'string' &&
+          m.size >= 0
+        )
       )
         return null;
       /* from が -1 なら受け取り済み */

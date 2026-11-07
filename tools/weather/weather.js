@@ -65,7 +65,7 @@
       renderDaily(data.daily);
       statusText.textContent = '';
       log(
-        `天気を取得しました(${label} / ${weatherInfo(data.current.weather_code)[0]} ${Math.round(data.current.temperature_2m)}° / ${data.daily.time.length}日分 / ${Math.round(performance.now() - t0)}ms)`
+        `天気を取得しました(${label} / ${weatherInfo(data.current.weather_code)[0]} ${Math.round(data.current.temperature_2m)}° / ${data.daily.time.length}日分 / ${Math.round(performance.now() - t0)}ms)`,
       );
     } catch (e) {
       log.error('天気の取得でエラーが発生しました', e);
@@ -163,7 +163,8 @@
       return;
     }
     if (!navigator.geolocation) {
-      statusText.textContent = 'この端末・ブラウザは位置情報に対応していません。地名で検索してください。';
+      statusText.textContent =
+        'この端末・ブラウザは位置情報に対応していません。地名で検索してください。';
       log.warn('この端末・ブラウザは位置情報に対応していません');
       return;
     }
@@ -188,10 +189,10 @@
           denied
             ? '位置情報の利用が許可されませんでした'
             : '現在地を取得できませんでした(時間切れか、電波が届きません)',
-          e && e.message
+          e && e.message,
         );
       },
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 10 * 60 * 1000 } // 10分以内に取った位置があれば使い、すぐ表示する
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 10 * 60 * 1000 }, // 10分以内に取った位置があれば使い、すぐ表示する
     );
   }
   useLocationBtn.addEventListener('click', () => {

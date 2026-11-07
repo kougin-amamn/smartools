@@ -79,7 +79,9 @@ function create(o) {
       opt.cy = 0.47;
     } else {
       var sh = stage.clientHeight || 1,
-        top = o.card.hidden ? sh : o.card.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+        top = o.card.hidden
+          ? sh
+          : o.card.getBoundingClientRect().top - stage.getBoundingClientRect().top;
       var free = Math.max(0.35, Math.min(0.9, (top - 12) / sh));
       opt.availW = 0.9;
       opt.availH = free - 0.08;
@@ -127,7 +129,9 @@ function create(o) {
       var w = zoomLog;
       zoomLog = null;
       if (Math.abs(cur.zoom - w.from) > 0.01)
-        log(w.how + 'で拡大率を変えました(' + zoomLabel(w.from) + ' → ' + zoomLabel(cur.zoom) + ')');
+        log(
+          w.how + 'で拡大率を変えました(' + zoomLabel(w.from) + ' → ' + zoomLabel(cur.zoom) + ')',
+        );
     }, 350);
   }
   function resetZoom(done) {
@@ -234,7 +238,13 @@ function create(o) {
     if (pinch) {
       if (touchList().length < 2) {
         if (Math.abs(cur.zoom - pinch.from) > 0.01)
-          log('ピンチで拡大率を変えました(' + zoomLabel(pinch.from) + ' → ' + zoomLabel(cur.zoom) + ')');
+          log(
+            'ピンチで拡大率を変えました(' +
+              zoomLabel(pinch.from) +
+              ' → ' +
+              zoomLabel(cur.zoom) +
+              ')',
+          );
         pinch = null;
         ptr = null;
         canvas.classList.remove('drag');
@@ -280,7 +290,7 @@ function create(o) {
       e.preventDefault();
       zoomBy(Math.exp(-e.deltaY * 0.0015), 'ホイール');
     },
-    { passive: false }
+    { passive: false },
   );
 
   /* 描画ループ */

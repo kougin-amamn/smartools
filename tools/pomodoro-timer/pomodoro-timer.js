@@ -48,7 +48,10 @@
   }
   function saveStats() {
     try {
-      localStorage.setItem('pomodoro-stats', JSON.stringify({ date: todayStr(), count: workSessionsDone }));
+      localStorage.setItem(
+        'pomodoro-stats',
+        JSON.stringify({ date: todayStr(), count: workSessionsDone }),
+      );
     } catch (e) {
       log.warn('本日の完了数の保存に失敗しました', e);
     }
@@ -137,7 +140,7 @@
     ToolKit.vibrate();
     rafId = requestAnimationFrame(tick);
     log(
-      `${P.NAMES[mode]}を${auto ? '自動で開始' : resumed ? '再開' : '開始'}しました(残り ${fmt(remaining)} / 終了予定 ${hhmm(endAt)})`
+      `${P.NAMES[mode]}を${auto ? '自動で開始' : resumed ? '再開' : '開始'}しました(残り ${fmt(remaining)} / 終了予定 ${hhmm(endAt)})`,
     );
   }
   function pause() {
@@ -182,7 +185,7 @@
     }
     mode = nextMode();
     log(
-      `${P.NAMES[done]}が完了しました(${P.NAMES[done]} → ${P.NAMES[mode]} / 本日 ${workSessionsDone} ポモドーロ)`
+      `${P.NAMES[done]}が完了しました(${P.NAMES[done]} → ${P.NAMES[mode]} / 本日 ${workSessionsDone} ポモドーロ)`,
     );
     updateModeUI();
     renderDots();
@@ -247,6 +250,6 @@
   renderDots();
   setModeDuration();
   log(
-    `起動しました(作業 ${durations.work}分 / 短い休憩 ${durations.short}分 / 長い休憩 ${durations.long}分 / 本日 ${workSessionsDone} ポモドーロ)`
+    `起動しました(作業 ${durations.work}分 / 短い休憩 ${durations.short}分 / 長い休憩 ${durations.long}分 / 本日 ${workSessionsDone} ポモドーロ)`,
   );
 })();

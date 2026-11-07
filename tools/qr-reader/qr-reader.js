@@ -77,10 +77,15 @@
             return;
           }
           // 見つからなかった場合は毎フレーム NotFoundException が来る(想定内の動作、エラー扱いしない)
-          if (err && err.name && err.name !== 'NotFoundException' && err.name !== 'NotFoundException2') {
+          if (
+            err &&
+            err.name &&
+            err.name !== 'NotFoundException' &&
+            err.name !== 'NotFoundException2'
+          ) {
             log.warn('QRコードの読み取り中にエラーが発生しました', err);
           }
-        }
+        },
       );
       statusText.textContent = 'QRコードを枠内に写してください';
       log('カメラを開始しました(読み取り待ち)');
@@ -110,7 +115,7 @@
     const ok = await ToolKit.copyText(
       resultText.textContent,
       '読み取った内容',
-      `${resultText.textContent.length}文字`
+      `${resultText.textContent.length}文字`,
     );
     if (ok) {
       copyBtn.textContent = 'コピーしました';

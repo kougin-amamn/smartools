@@ -44,11 +44,13 @@ function fakeSpeech() {
   const first = await site.open(URL, { stubs: { '@patdx/kuromoji': 'fake-kuromoji.js' } });
   const ctx = first.context;
   await ctx.addInitScript(fakeSpeech);
-  await ctx.route('https://kakuyomu.jp/**', (r) => r.fulfill({ contentType: 'text/html', body: PAGE }));
+  await ctx.route('https://kakuyomu.jp/**', (r) =>
+    r.fulfill({ contentType: 'text/html', body: PAGE }),
+  );
   await first.page.reload();
   await first.page.waitForFunction(() => window.__kuromojiBuilt);
   await first.page.waitForFunction(() =>
-    document.getElementById('bookmarklet').href.startsWith('javascript:')
+    document.getElementById('bookmarklet').href.startsWith('javascript:'),
   );
   const href = await first.page.getAttribute('#bookmarklet', 'href');
 
@@ -57,7 +59,10 @@ function fakeSpeech() {
   await K.goto(EPISODE);
   const [tool] = await Promise.all([
     ctx.waitForEvent('page'),
-    K.evaluate((code) => new Function(code)(), decodeURIComponent(href.slice('javascript:'.length))),
+    K.evaluate(
+      (code) => new Function(code)(),
+      decodeURIComponent(href.slice('javascript:'.length)),
+    ),
   ]);
   const logs = collect(tool);
   await tool.waitForSelector('#text .sentence', { timeout: 10000 });
@@ -65,7 +70,8 @@ function fakeSpeech() {
   if (count !== 5) problems.push('文の数が ' + count + '(期待 5)');
   const rubies = await tool.$$eval('#text rt', (e) => e.map((x) => x.textContent).join(','));
   if (rubies !== 'なべ,ウィザード') problems.push('ルビが ' + rubies);
-  if (!/試験の作品/.test(await tool.textContent('#sourceTitle'))) problems.push('題名が出ていません');
+  if (!/試験の作品/.test(await tool.textContent('#sourceTitle')))
+    problems.push('題名が出ていません');
 
   /* 再生: 最後まで1文ずつ進む(初期は「ルビだけかな」) */
   await tool.waitForFunction(() => window.__kuromojiBuilt);
@@ -74,7 +80,9 @@ function fakeSpeech() {
   const spoken = await tool.evaluate(() => window.__spoken);
   if (spoken[2] !== 'なべか。') problems.push('ルビの読みが渡っていません: ' + spoken[2]);
   if (spoken[4] !== '「ウィザードだ！」') problems.push('ルビの読みが渡っていません: ' + spoken[4]);
-  await tool.waitForFunction(() => document.getElementById('playBtn').getAttribute('aria-label') === '再生');
+  await tool.waitForFunction(
+    () => document.getElementById('playBtn').getAttribute('aria-label') === '再生',
+  );
 
   /* すべてかな: 形態素解析の読み(偽物)で、助詞以外の語がかなになる */
   await tool.click('#setBtn');
@@ -87,10 +95,11 @@ function fakeSpeech() {
   await tool.click('#stopBtn');
 
   /* ログに本文が出ていない */
-  if (logs.some((l) => /刺された|ウィザード|試験の作品/.test(l))) problems.push('ログに本文が出ています');
+  if (logs.some((l) => /刺された|ウィザード|試験の作品/.test(l)))
+    problems.push('ログに本文が出ています');
   if (
     !logs.some((l) =>
-      /本文を受け取りました\(ブックマークレット \/ 段落 4 \/ 5文 \/ \d+字 \/ ルビ 2\)/.test(l)
+      /本文を受け取りました\(ブックマークレット \/ 段落 4 \/ 5文 \/ \d+字 \/ ルビ 2\)/.test(l),
     )
   )
     problems.push('受け取りのログがありません');
@@ -104,7 +113,10 @@ function fakeSpeech() {
     alerted = d.message();
     d.dismiss();
   });
-  await other.evaluate((code) => new Function(code)(), decodeURIComponent(href.slice('javascript:'.length)));
+  await other.evaluate(
+    (code) => new Function(code)(),
+    decodeURIComponent(href.slice('javascript:'.length)),
+  );
   if (!/カクヨム/.test(alerted)) problems.push('カクヨム以外での案内が出ません');
 
   const ok = report('小説読み上げの通し試験', problems);

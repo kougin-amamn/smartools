@@ -77,7 +77,7 @@
     deviceIndex = (deviceIndex + 1) % devices.length;
     log(`カメラを切り替えます(${deviceIndex + 1} / ${devices.length}台目)`);
     startCamera(devices[deviceIndex].deviceId).catch((e) =>
-      log.error('カメラの切り替えでエラーが発生しました', e)
+      log.error('カメラの切り替えでエラーが発生しました', e),
     );
   });
 
@@ -114,7 +114,7 @@
     a.appendChild(img);
     capturedList.prepend(a);
     log(
-      `撮影しました(${shotCount}枚目 / ${canvas.width}×${canvas.height} / 暗視 ${nightModeChk.checked ? 'ON' : 'OFF'})`
+      `撮影しました(${shotCount}枚目 / ${canvas.width}×${canvas.height} / 暗視 ${nightModeChk.checked ? 'ON' : 'OFF'})`,
     );
   });
   capturedList.addEventListener('click', (e) => {

@@ -41,7 +41,9 @@
   <body>
     <header class="site-bar">
       <img src="./app-icon-kitchen-timer.svg" alt="" />
-      <h1 style="margin: 0; font: inherit; flex: 1">キッチンタイマー<span class="en">Kitchen Timer</span></h1>
+      <h1 style="margin: 0; font: inherit; flex: 1">
+        キッチンタイマー<span class="en">Kitchen Timer</span>
+      </h1>
     </header>
     <main class="content">
       <div class="app" data-land="split" role="group" aria-label="キッチンタイマー">
@@ -115,7 +117,13 @@
             </svg>
           </button>
 
-          <button class="icon-btn secondary" id="stopBtn" data-log="アラーム停止" aria-label="停止" disabled>
+          <button
+            class="icon-btn secondary"
+            id="stopBtn"
+            data-log="アラーム停止"
+            aria-label="停止"
+            disabled
+          >
             <svg
               class="ico"
               viewBox="0 0 24 24"
@@ -140,7 +148,7 @@
       (window.ToolKit && window.ToolKit.media) ||
         document.body.insertAdjacentHTML(
           'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./kitchen-timer-core.js"></script>

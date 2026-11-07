@@ -17,9 +17,14 @@
     {
       id: 'gothic',
       name: 'ゴシック',
-      stack: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic",sans-serif',
+      stack:
+        '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic",sans-serif',
     },
-    { id: 'mono', name: '等幅', stack: 'ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace' },
+    {
+      id: 'mono',
+      name: '等幅',
+      stack: 'ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace',
+    },
     {
       id: 'serif',
       name: '明朝',
@@ -63,7 +68,14 @@
     ['藍紫', '#4a4e7a'],
   ];
 
-  var DEFAULTS = { format: 'h24s', color: '#7fe0d2', font: 'seg', size: 80, bg: '#000000', frame: 'thin' };
+  var DEFAULTS = {
+    format: 'h24s',
+    color: '#7fe0d2',
+    font: 'seg',
+    size: 80,
+    bg: '#000000',
+    frame: 'thin',
+  };
   var SIZE_MIN = 20,
     SIZE_MAX = 100;
   var WEEK = ['日', '月', '火', '水', '木', '金', '土'];
@@ -96,7 +108,14 @@
         break;
       case 'date':
         out.date =
-          d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日(' + WEEK[d.getDay()] + ')';
+          d.getFullYear() +
+          '年' +
+          (d.getMonth() + 1) +
+          '月' +
+          d.getDate() +
+          '日(' +
+          WEEK[d.getDay()] +
+          ')';
         out.time = p2(h) + ':' + p2(m) + ':' + p2(s);
         break;
       default:

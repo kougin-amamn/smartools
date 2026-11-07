@@ -7,7 +7,9 @@ const near = (x, y, e, what) => a.ok(Math.abs(x - y) <= e, what + ': ' + x + ' (
 
 /* アームの角度と針の位置: 外の溝 → 内の溝、行って戻せる */
 const P = C.PLINTH;
-[0, 0.5, 1].forEach((p) => near(C.progressOfArmAngle(C.armAngleOf(p)), p, 1e-6, 'アームの往復 ' + p));
+[0, 0.5, 1].forEach((p) =>
+  near(C.progressOfArmAngle(C.armAngleOf(p)), p, 1e-6, 'アームの往復 ' + p),
+);
 a.equal(C.progressOfArmAngle(P.restAngle), null);
 a.ok(C.armAngleOf(1) > C.armAngleOf(0));
 
@@ -36,7 +38,7 @@ near(C.strobeDriftOf(1.01), 2, 1e-6, 'ストロボ +1%');
 const beats = C.beatsBetween(120, 0.25, 0, 2.1);
 a.deepStrictEqual(
   beats.map((b) => b.time),
-  [0.25, 0.75, 1.25, 1.75]
+  [0.25, 0.75, 1.25, 1.75],
 );
 a.ok(beats[0].isBar && !beats[1].isBar);
 a.equal(C.formatTime(252.9), '4:12');
@@ -44,16 +46,17 @@ a.equal(C.formatPitch(2.34), '+2.3%');
 a.equal(C.formatPitch(0), '0.0%');
 a.equal(C.titleOf('曲.mp3'), '曲');
 a.equal(C.trackKeyOf('a.mp3', 10, 1.23), 'a.mp3|10|12');
-a.deepStrictEqual(Object.keys(C.pruneTracks({ a: { used: 1 }, b: { used: 3 }, c: { used: 2 } }, 2)), [
-  'b',
-  'c',
-]);
+a.deepStrictEqual(
+  Object.keys(C.pruneTracks({ a: { used: 1 }, b: { used: 3 }, c: { used: 2 } }, 2)),
+  ['b', 'c'],
+);
 
 /* 盤の音: 1秒の 440Hz を Int16 で */
 const RATE = 48000;
 function tone(seconds) {
   const d = new Int16Array(RATE * seconds);
-  for (let i = 0; i < d.length; i++) d[i] = Math.round(Math.sin((2 * Math.PI * 440 * i) / RATE) * 16000);
+  for (let i = 0; i < d.length; i++)
+    d[i] = Math.round(Math.sin((2 * Math.PI * 440 * i) / RATE) * 16000);
   return d;
 }
 function run(deck, seconds, now) {
@@ -129,7 +132,8 @@ function beatsTrack(bpm, seconds, rate) {
   const period = (60 / bpm) * rate;
   for (let b = 0.1 * rate; b < m.length; b += period) {
     for (let i = 0; i < 0.06 * rate && b + i < m.length; i++) {
-      m[Math.floor(b + i)] += Math.sin((2 * Math.PI * 60 * i) / rate) * Math.exp(-i / (0.02 * rate)) * 0.8;
+      m[Math.floor(b + i)] +=
+        Math.sin((2 * Math.PI * 60 * i) / rate) * Math.exp(-i / (0.02 * rate)) * 0.8;
     }
   }
   for (let i = 0; i < m.length; i++) m[i] += Math.sin((2 * Math.PI * 3000 * i) / rate) * 0.05;

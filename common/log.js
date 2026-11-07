@@ -58,7 +58,8 @@
     return String(e);
   }
   function emit(level, msg, err) {
-    var line = stamp() + ' ' + msg + (err !== undefined ? format(MSG.detail, { 詳細: detailOf(err) }) : '');
+    var line =
+      stamp() + ' ' + msg + (err !== undefined ? format(MSG.detail, { 詳細: detailOf(err) }) : '');
     var extra = err instanceof Error ? err : undefined;
     if (!replayed) {
       buf.push([level, line, extra]);
@@ -99,7 +100,8 @@
     log.error(
       MSG.uncaught,
       e.error ||
-        (e.message || '') + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '')
+        (e.message || '') +
+          (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : ''),
     );
   });
   window.addEventListener('unhandledrejection', function (e) {
@@ -124,7 +126,7 @@
         function (e) {
           log.error(format(MSG.stepError, { 名前: name }), e);
           return { ok: false, error: e };
-        }
+        },
       );
   };
 })();
