@@ -1,5 +1,6 @@
 /* 呼び出す画面の共通部品(本棚・ミュージアム・デスクトップのランチャーで共用)。
-   一覧データの読み込み・ツールのリンクとアイコン・開いた回数の記録・読み込み中の表示・3Dの共通計算。window.Launcher / window.Launcher3DCore */
+   一覧データの読み込み・ツールのリンクとアイコン・開いた回数の記録・読み込み中の表示。window.Launcher。
+   3D の共通の計算は launcher-3d/launcher-3d-core.js(ES モジュール) */
 (function (root) {
   'use strict';
   /* 置き場所
@@ -156,109 +157,6 @@
     });
   }
 
-  /* 3Dの表示(本棚・ミュージアム)で共用する計算(カテゴリ分け・カメラの姿勢・乱数)。DOM/three.js非依存 */
-  /* 種(seed)から毎回同じ並びになる乱数 */
-  function rng(seed) {
-    seed = seed >>> 0 || 1;
-    return function () {
-      seed = (seed * 1664525 + 1013904223) >>> 0;
-      return seed / 4294967296;
-    };
-  }
-
-  /* カテゴリごとに分ける。1区画の上限 maxPer を超えたら「名前 1/2」のように分ける */
-  function groupByCat(tools, maxPer) {
-    var order = [],
-      map = {},
-      out = [];
-    tools.forEach(function (t) {
-      var c = t.cat || 'ツール';
-      if (!map[c]) {
-        map[c] = [];
-        order.push(c);
-      }
-      map[c].push(t);
-    });
-    order.forEach(function (c) {
-      var arr = map[c],
-        parts = Math.max(1, Math.ceil(arr.length / (maxPer || 15))),
-        per = Math.ceil(arr.length / parts);
-      for (var p = 0; p < parts; p++)
-        out.push({
-          cat: parts > 1 ? c + ' ' + (p + 1) + '/' + parts : c,
-          base: c,
-          tools: arr.slice(p * per, (p + 1) * per),
-        });
-    });
-    return out;
-  }
-
-  /* 作品(本の表紙・絵画)の正面に立つ姿勢。水平に見て、上下・左右に平行移動して作品を画面の (cx,cy) に置く。
-     o={fov, aspect, availW, availH(作品に使える画面の割合), cx, cy, minDist, maxDist, minY(これより低い時は少し見下ろす), margin} */
-  function framePose(item, o) {
-    var t = Math.tan((o.fov * Math.PI) / 360),
-      m = o.margin || 1.08;
-    var dist = Math.max((item.h * m) / (2 * t * o.availH), (item.w * m) / (2 * t * o.aspect * o.availW));
-    dist = Math.max(o.minDist || 3, Math.min(o.maxDist || 30, dist));
-    var vh = 2 * dist * t,
-      vw = vh * o.aspect;
-    var y = item.y - (0.5 - o.cy) * vh,
-      pitch = 0;
-    if (o.minY && y < o.minY) {
-      pitch = Math.atan2(y - o.minY, dist);
-      y = o.minY;
-    }
-    var s = (0.5 - o.cx) * vw,
-      c = Math.cos(item.ry),
-      sn = Math.sin(item.ry);
-    return {
-      x: item.x + item.nx * dist + c * s,
-      y: y,
-      z: item.z + item.nz * dist - sn * s,
-      yaw: item.ry,
-      pitch: pitch,
-      dist: dist,
-    };
-  }
-  /* from から to の方を向く yaw */
-  function yawToward(from, to) {
-    return Math.atan2(-(to.x - from.x), -(to.z - from.z));
-  }
-  /* a から見て b にいちばん近い同じ向きの角度(ぐるっと遠回りしない) */
-  function nearestAngle(a, b) {
-    var d = (b - a) % (2 * Math.PI);
-    if (d > Math.PI) d -= 2 * Math.PI;
-    if (d < -Math.PI) d += 2 * Math.PI;
-    return a + d;
-  }
-  function ease(t) {
-    t = Math.max(0, Math.min(1, t));
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-  function lerpPose(a, b, t) {
-    return {
-      x: a.x + (b.x - a.x) * t,
-      y: a.y + (b.y - a.y) * t,
-      z: a.z + (b.z - a.z) * t,
-      yaw: a.yaw + (b.yaw - a.yaw) * t,
-      pitch: a.pitch + (b.pitch - a.pitch) * t,
-    };
-  }
-  function nextIndex(i, n, dir) {
-    return n > 0 ? (((i + dir) % n) + n) % n : -1;
-  }
-
-  var core3d = {
-    rng: rng,
-    groupByCat: groupByCat,
-    framePose: framePose,
-    yawToward: yawToward,
-    nearestAngle: nearestAngle,
-    ease: ease,
-    lerpPose: lerpPose,
-    nextIndex: nextIndex,
-  };
-
   /* 必要な部品(グローバル名 → ファイル名)がそろっているか。足りない時はファイル名の一覧を返す(空ならそろっている) */
   function missingParts(need) {
     var out = (window.__missing || []).slice();
@@ -284,6 +182,19 @@
     );
   }
 
+  /* ES モジュールのランチャーで、入口の import() が失敗した時(自分のファイルが置かれていない等)の表示 */
+  function showModuleError(err) {
+    var msg =
+      '表示に必要なファイルを読み込めませんでした(' +
+      ((err && err.message) || err) +
+      ')。サーバーにファイルが置かれているか、名前が合っているか確認してください';
+    log.error(msg, err);
+    var ld = document.getElementById('loading'),
+      st = document.getElementById('ldStep');
+    if (st) st.textContent = msg;
+    if (ld) ld.classList.add('err');
+  }
+
   /* ツールの「戻る」ボタンの行き先として、開いているランチャーを覚える(?embed=1 の埋め込みは除く) */
   if (typeof document !== 'undefined')
     try {
@@ -305,7 +216,7 @@
     missingParts: missingParts,
     missingMessage: missingMessage,
     showMissing: showMissing,
-    core3d: core3d,
+    showModuleError: showModuleError,
     DATA: DATA,
     fromRoot: fromRoot,
     loadTools: loadTools,
@@ -325,6 +236,5 @@
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (typeof window !== 'undefined') {
     window.Launcher = api;
-    window.Launcher3DCore = core3d;
   }
 })(this);

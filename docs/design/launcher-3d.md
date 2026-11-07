@@ -1,6 +1,6 @@
 # 3Dランチャー(本棚・美術館) 見直しの設計書
 
-2026-11-07 作成。今の2つの3Dランチャーを読み直して課題を洗い出し、プログラム設計(ソース管理)を組み直す案をまとめる。まだ実装しない(「決めてほしいこと」を決めてから段階ごとに進める)。
+2026-11-07 作成。今の2つの3Dランチャーを読み直して課題を洗い出し、プログラム設計(ソース管理)を組み直す案をまとめる。同日、方針(ES モジュールの案 C、段階で進める)が決まり、段 1 の前半(1a)を実装した(下の「実装の記録」)。
 
 ## 概要
 
@@ -267,3 +267,21 @@ flowchart LR
 2. **探す機能(E1)を足すか。** 3D で「眺める楽しさ」を優先し、探すのは 2D の一覧に任せる、という考え方もあります。
 3. **ランチャーごとのフォルダに分けるか(P10)。** 分けるとアドレスが変わるので、`launchers.json` を直します。ブックマークしたアドレスは古くなります。
 4. **本棚と美術館の両方を続けるか。** 片方に絞ると、手入れの量が半分になります。
+
+## 実装の記録
+
+### 段 1a(2026-11-07)
+
+- ES モジュールにしました。three.js は import map で r128 のモジュール版(jsDelivr の `three@0.128.0/build/three.module.js`)に固定しています。
+- HTML の読み込みは、common と `launcher-common.js`(普通のスクリプト)・import map・入口の `<script type="module">` だけにしました。`__missing` / `__missingCheck` / `__threeFailed` はやめ、入口の `import()` が失敗した時は `Launcher.showModuleError` で理由を出します。
+- three.js は画面の .js の中で `import('three')` で読みます。読めない時は `null` のまま `log.warn` を出し、2D の一覧にします。静的な `import` にすると、three.js が読めない時に一覧まで出せなくなるためです。ほかのファイルは今までどおり `create({ THREE, … })` で受け取ります(段 1b で土台にまとめる時に見直す)。
+- `launcher-common.js` の 3D の計算を `launcher-3d/launcher-3d-core.js` に移し、名前を直しました: `randomOf` `groupByCategory` `framePose` `yawToward` `nearestAngle` `easeInOut` `interpolatePose` `nextIndex`。各ランチャーの core の中の名前は、段 2 まで今のままです。
+- three.js が読めない時と WebGL が使えない時は、想定内なので `log.warn` にしました(P11)。
+- 試験を足しました:
+  - `tests/core/launcher-3d.test.js` / `-bookshelf.test.js` / `-museum.test.js`(Node 22 の `require` で ES モジュールを読む)
+  - `tests/scenarios/launcher-3d.js`
+- 確認: 開発環境で three.js r128 を git で取って動かし、変える前と後の画面を3つの大きさ(844×390・390×844・1280×800)で撮って比べ、画素が一致しました。
+- 残り(段 1b): 土台(stage)・カメラ(camera)・Canvas の補助(paint)を共通にして、2つを乗せ替えます。
+- 気になる点: モジュール版は縮めていないため、three.js の大きさが約600KB から約1.14MB になります(配信の圧縮前)。実機で起動の時間を見て、遅ければ jsDelivr の `+esm`(縮めた版)を試します。
+- 見つけた既存の不具合: 美術館の入口ホールで、操作のヒントと「エントランスホール」の札が重なっています(E6 で直す)。
+

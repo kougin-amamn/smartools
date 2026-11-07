@@ -58,4 +58,5 @@
 ## ランチャー
 
 - `launcher-common.js` で読み込み時に `document` や `localStorage` に触る所は `if (typeof document !== 'undefined')` で囲む(Node の試験が読み込むため)。
-- 3D ランチャーは three.js を CDN から読むので、開発環境では画面で動かせない。`node --check` だけにし、変更は小さくし、画面で確かめていないと伝える。
+- 3D ランチャーは three.js を CDN から読むが、開発環境でも動かせる。npm は使えないので、git で r128 の `build/three.module.js` だけを取り(手順は `tests/scenarios/launcher-3d.js` の頭)、`THREE_JS_DIR` を付けてシナリオを動かす。Chromium は `--use-gl=swiftshader --enable-webgl --ignore-gpu-blocklist` で WebGL が使える。
+- 見た目を変えない作り変えは、変える前の画面を同じ大きさで撮っておき、後の画面と画素で比べる(3D でも同じ版の three.js なら一致する)。

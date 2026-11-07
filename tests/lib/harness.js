@@ -40,8 +40,9 @@ function serve() {
   });
 }
 
+/* 差し替えの中身。名前は tests/stubs のファイル名か、絶対パス(リポジトリに置かない大きなライブラリ) */
 function stub(name) {
-  return fs.readFileSync(path.join(STUBS, name), 'utf8');
+  return fs.readFileSync(path.isAbsolute(name) ? name : path.join(STUBS, name), 'utf8');
 }
 
 /* 時刻を取り除いたログの行。資源の読み込み失敗(CDN を止めているため)は除く */

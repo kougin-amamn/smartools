@@ -109,11 +109,6 @@
         </div>
       </div>
     </main>
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
-      onerror="window.__threeFailed = true"
-    ></script>
     <script src="../common/log.js"></script>
     <script src="../common/autolog.js"></script>
     <script src="../common/env.js"></script>
@@ -125,50 +120,15 @@
           '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
         );
     </script>
-    <script
-      defer
-      src="./launcher-common.js"
-      onerror="(window.__missing = window.__missing || []).push('launcher-common.js')"
-    ></script>
-    <script
-      defer
-      src="./launcher-3d-bookshelf-core.js"
-      onerror="(window.__missing = window.__missing || []).push('launcher-3d-bookshelf-core.js')"
-    ></script>
-    <script
-      defer
-      src="./launcher-3d-bookshelf-textures.js"
-      onerror="(window.__missing = window.__missing || []).push('launcher-3d-bookshelf-textures.js')"
-    ></script>
-    <script
-      defer
-      src="./launcher-3d-bookshelf-scene.js"
-      onerror="(window.__missing = window.__missing || []).push('launcher-3d-bookshelf-scene.js')"
-    ></script>
-    <script
-      defer
-      src="./launcher-3d-bookshelf-view.js"
-      onerror="(window.__missing = window.__missing || []).push('launcher-3d-bookshelf-view.js')"
-    ></script>
-    <script
-      defer
-      src="./launcher-3d-bookshelf.js"
-      onerror="(window.__missing = window.__missing || []).push('launcher-3d-bookshelf.js')"
-    ></script>
-    <script>
-      /* __missingCheck: 読み込めなかったファイルがあり、画面が始まらなかった時にファイル名を表示する */
-      window.addEventListener('load', function () {
-        var miss = window.__missing || [],
-          ld = document.getElementById('loading');
-        if (!miss.length || !ld || ld.classList.contains('done')) return;
-        var msg =
-          '表示に必要なファイル(' +
-          miss.join('、') +
-          ')を読み込めませんでした。サーバーにファイルが置かれているか、名前が合っているか確認してください';
-        log.error(msg);
-        var st = document.getElementById('ldStep');
-        if (st) st.textContent = msg;
-        ld.classList.add('err');
+    <script src="./launcher-common.js"></script>
+    <script type="importmap">
+      { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js" } }
+    </script>
+    <script type="module">
+      /* 入口: 自分のファイルが1つでも読めなければ、読み込み中の表示に理由を出す(three.js が読めない時は 2D の一覧) */
+      import('./launcher-3d-bookshelf.js').catch(function (e) {
+        if (window.Launcher) Launcher.showModuleError(e);
+        else log.error('ランチャーの共通ファイル(launcher-common.js)を読み込めませんでした', e);
       });
     </script>
   </body>

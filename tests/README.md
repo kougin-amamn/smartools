@@ -12,6 +12,7 @@
 | `node tests/scenarios/file-transfer.js` | ファイル転送の通し試験(2つのタブ・確認番号・圧縮・切断からの再開) | 10秒 |
 | `node tests/scenarios/novel-reader.js` | 小説読み上げの通し試験(偽のカクヨムでブックマークレット・別タブへ受け渡し・1文ずつの読み上げ) | 5秒 |
 | `node tests/scenarios/dj-turntable-pro.js` | DJターンテーブル Pro の通し試験(作った曲を2台に読み込み、BPM・START・メーター・クロスフェーダー・スクラッチ・ホットキュー) | 10秒 |
+| `THREE_JS_DIR=… node tests/scenarios/launcher-3d.js` | 3Dランチャー(本棚・美術館)の起動・本のタップ・three.js が無い時の 2D の一覧 | 20秒 |
 
 出力は合格なら `OK <名前>` の1行、不合格なら理由を並べます。
 
@@ -29,4 +30,4 @@
 
 - 計算部分を作ったら `core/<slug>.test.js` を足す。
 - 画面の操作が複雑なツール(通信・カメラ・音)は `scenarios/<slug>.js` を足し、`lib/harness.js` の `open()` を使う。
-- 3D ランチャーは three.js が開発環境で読めないため、構文チェック(`node --check`)だけにする。
+- 3D ランチャーは、three.js r128 を手元に置いた時(`THREE_JS_DIR`)だけ 3D を動かす(`tests/scenarios/launcher-3d.js`)。置いていない時は、three.js が読めない時の 2D の一覧だけを確かめる。
