@@ -129,5 +129,4 @@
     ToolKit.vibrate();
     runAll();
   });
-  log('起動しました');
 })();

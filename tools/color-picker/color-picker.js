@@ -286,7 +286,7 @@
     log.warn('前回のモードを読み込めませんでした', e);
   }
   showHex(currentHex);
-  log(`起動しました(モード ${MODE_NAME[saved]})`);
+  log.started(`モード ${MODE_NAME[saved]}`);
   setMode(saved, { force: true, silent: true });
   loadDictionary();
 })();

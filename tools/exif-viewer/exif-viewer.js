@@ -177,5 +177,4 @@
   tableWrap.addEventListener('click', (e) => {
     if (e.target.closest('a')) log('GPS位置のリンクを押下しました(地図を開きます)');
   });
-  log('起動しました');
 })();

@@ -333,5 +333,5 @@
   setColor(colorIn.value);
   layout();
   window.addEventListener('resize', layout);
-  log('起動しました(絵の大きさ ' + cv.width + '×' + cv.height + 'px)');
+  log.started('絵の大きさ ' + cv.width + '×' + cv.height + 'px');
 })();

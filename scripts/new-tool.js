@@ -35,7 +35,7 @@ const files = {
   ['tools/' + slug + '/' + slug + '.js']:
     '/* ' +
     name +
-    "の画面の動き。共通の log・Env・ToolKit を使う */\n(function () {\n  'use strict';\n  var $ = function (id) {\n    return document.getElementById(id);\n  };\n  var statusEl = $('status');\n\n  log('起動しました');\n})();\n",
+    "の画面の動き。共通の log・Env・ToolKit を使う */\n(function () {\n  'use strict';\n  var $ = function (id) {\n    return document.getElementById(id);\n  };\n  var statusEl = $('status');\n\n  // 起動のログは log.js が自動で出す。設定などを出す時は、初期化の最後に log.started('…')\n})();\n",
   ['tools/' + slug + '/app-icon-' + slug + '.svg']:
     '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">\n  <rect width="64" height="64" rx="16" fill="#4a4e7a"/>\n  <g transform="translate(9.6 9.6) scale(1.867)">\n    <rect x="3" y="3" width="18" height="18" rx="4" fill="#e9ecf5"/>\n  </g>\n</svg>\n',
   ['docs/design/' + slug + '.md']:

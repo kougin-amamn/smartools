@@ -694,12 +694,12 @@
     log.warn('WebGL が使えないため起動できませんでした');
     return;
   }
-  log(
-    '起動しました(効果 ' +
+  log.started(
+    '効果 ' +
       eff().name +
       (summary() ? ' / ' + summary() : '') +
       ' / 保存の上限 ' +
       maxTex +
-      '画素)',
+      '画素',
   );
 })();

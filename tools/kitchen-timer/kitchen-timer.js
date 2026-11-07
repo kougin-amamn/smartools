@@ -208,5 +208,5 @@ function onTap(c, sel, h) {
   });
 
   updateDisplay();
-  log(`起動しました(${formatTime(remaining)})`);
+  log.started(formatTime(remaining));
 })();

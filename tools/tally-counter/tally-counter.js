@@ -97,13 +97,7 @@
     if (snd.checked) click();
   };
   draw();
-  log(
-    '起動しました(' +
-      n +
-      ' / 振動 ' +
-      (vib.checked ? 'ON' : 'OFF') +
-      ' / クリック音 ' +
-      (snd.checked ? 'ON' : 'OFF') +
-      ')',
+  log.started(
+    n + ' / 振動 ' + (vib.checked ? 'ON' : 'OFF') + ' / クリック音 ' + (snd.checked ? 'ON' : 'OFF'),
   );
 })();

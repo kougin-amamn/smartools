@@ -436,5 +436,5 @@
   st = load();
   apply();
   tick();
-  log('起動しました (' + st.chars + ' / ' + st.orient + ' / ' + st.font + ' / ' + st.frame + ')');
+  log.started(st.chars + ' / ' + st.orient + ' / ' + st.font + ' / ' + st.frame);
 })();

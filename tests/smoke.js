@@ -1,4 +1,4 @@
-/* どのページにも共通する確認(起動・テーマ・幅・ヘッダのボタン・環境情報・ログ・共通ファイルが無い時の案内)。
+/* どのページにも共通する確認(起動のログが1回・テーマ・幅・ヘッダのボタン・環境情報・ログ・共通ファイルが無い時の案内)。
    使い方: node tests/smoke.js tools/calculator tools/paint   (all でツールとランチャー全部、--logs で各ページのログも出す) */
 const fs = require('fs');
 const path = require('path');
@@ -68,11 +68,9 @@ function pagesFrom(args) {
         const errors = splitErrors(logs);
         errors.real.forEach((l) => problems.push('エラー: ' + l.split('\n')[0]));
         if (errors.cdn.length) notes.push(p + ': CDN のライブラリは開発環境では読めないため未確認');
-        if (
-          !errors.cdn.length &&
-          !logs.some((l) => /起動しました|読み込みました|準備ができました/.test(l))
-        )
-          problems.push('起動のログがありません');
+        /* 起動のログは log.started() がちょうど1回出す(docs/logging.md) */
+        const started = logs.filter((l) => /起動しました\(/.test(l)).length;
+        if (started !== 1) problems.push('起動のログが ' + started + ' 回です(期待 1)');
         if (args.includes('--logs')) console.log('  ' + p + '\n    ' + logs.join('\n    '));
       }
       await context.close();

@@ -499,7 +499,7 @@
     log.warn('WebGL が使えないため起動できませんでした');
     return;
   }
-  log('起動しました(レンズ ' + lensOf().name + (summary() ? ' / ' + summary() : '') + ')');
+  log.started('レンズ ' + lensOf().name + (summary() ? ' / ' + summary() : ''));
   startCamera().catch(function (e) {
     log.error('カメラの開始でエラーが発生しました', e);
   });

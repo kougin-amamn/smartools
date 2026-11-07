@@ -275,20 +275,15 @@
     });
   });
 
-  var t0 = performance.now();
   render();
   var td = info(C.fromJdn(today));
-  log(
-    '起動しました(' +
-      view.y +
+  log.started(
+    view.y +
       '年' +
       view.m +
       '月 / 今日は' +
       td.rokuyo +
       ' / 週の始まり ' +
-      (weekStartSel.value === '1' ? '月' : '日') +
-      ' / ' +
-      Math.round(performance.now() - t0) +
-      'ms)',
+      (weekStartSel.value === '1' ? '月' : '日'),
   );
 })();

@@ -249,7 +249,7 @@
   updateModeUI();
   renderDots();
   setModeDuration();
-  log(
-    `起動しました(作業 ${durations.work}分 / 短い休憩 ${durations.short}分 / 長い休憩 ${durations.long}分 / 本日 ${workSessionsDone} ポモドーロ)`,
+  log.started(
+    `作業 ${durations.work}分 / 短い休憩 ${durations.short}分 / 長い休憩 ${durations.long}分 / 本日 ${workSessionsDone} ポモドーロ`,
   );
 })();

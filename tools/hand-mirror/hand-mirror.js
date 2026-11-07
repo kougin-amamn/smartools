@@ -71,6 +71,5 @@
   zoomSlider.addEventListener('input', applyStyle);
   brightnessSlider.addEventListener('input', applyStyle);
 
-  log('起動しました');
   startCamera().catch((e) => log.error('カメラの開始でエラーが発生しました', e));
 })();

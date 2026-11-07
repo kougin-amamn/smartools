@@ -77,5 +77,4 @@ function onTap(c, sel, h) {
   });
 
   render();
-  log('起動しました');
 })();

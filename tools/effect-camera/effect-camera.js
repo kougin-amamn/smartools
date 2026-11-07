@@ -575,7 +575,7 @@
     log.warn('WebGL が使えないため起動できませんでした');
     return;
   }
-  log('起動しました(効果 ' + C.MODES[C.modeIndex(state.mode)].name + ' / ' + summary() + ')');
+  log.started('効果 ' + C.MODES[C.modeIndex(state.mode)].name + ' / ' + summary());
   startCamera().catch(function (e) {
     log.error('カメラの開始でエラーが発生しました', e);
   });

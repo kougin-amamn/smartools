@@ -67,5 +67,4 @@
   });
 
   timeText.textContent = fmt(0);
-  log('起動しました');
 })();

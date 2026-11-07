@@ -412,6 +412,6 @@
   } else {
     statusEl.textContent = 'この端末・ブラウザは読み上げに対応していません。';
   }
-  log('起動しました(読みの渡し方 ' + settings.mode + ' / 速さ ' + settings.rate.toFixed(1) + 'x)');
+  log.started('読みの渡し方 ' + settings.mode + ' / 速さ ' + settings.rate.toFixed(1) + 'x');
   loadDictionary();
 })();

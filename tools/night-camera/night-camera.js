@@ -128,6 +128,5 @@
     applyFilter();
   });
 
-  log('起動しました');
   startCamera().catch((e) => log.error('カメラの開始でエラーが発生しました', e));
 })();

@@ -3,6 +3,8 @@
    3D の共通の計算は launcher-3d/launcher-3d-core.js(ES モジュール) */
 (function (root) {
   'use strict';
+  /* どのランチャーも一覧を読んでから準備が終わるので、起動のログは各ランチャーが出す */
+  if (root.log && root.log.started) root.log.started.later();
   /* 置き場所
      サイトの一番上に index-data.json(ツールの一覧)、tools/<slug>/ にツール、launchers/ にこの画面がある。
      一覧の href・icon を省いた時は tools/<slug>/ を指す。書いた時は「サイトの一番上から」の相対パス(http や data: で始まるものはそのまま) */

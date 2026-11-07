@@ -199,6 +199,6 @@
     ToolKit.vibrate();
     locate(false);
   });
-  log('起動しました(現在地から表示します)');
+  log.started('現在地から表示します');
   locate(true);
 })();

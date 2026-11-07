@@ -140,5 +140,5 @@
     log.warn('この端末・ブラウザはモーションセンサーに対応していません');
   }
   updateDisplay();
-  log(`起動しました(スリープ防止 ${'wakeLock' in navigator ? '対応' : '非対応'})`);
+  log.started(`スリープ防止 ${'wakeLock' in navigator ? '対応' : '非対応'}`);
 })();

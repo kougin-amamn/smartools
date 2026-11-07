@@ -253,6 +253,5 @@
     if (e.target.closest('a')) log('撮影した写真を押下しました(保存します)');
   });
 
-  log('起動しました');
   startCamera().catch((e) => log.error('カメラの開始でエラーが発生しました', e));
 })();

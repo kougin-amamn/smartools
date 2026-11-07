@@ -1,5 +1,6 @@
 /* 音楽プレイヤーの画面。プレイリストの保存は music-player-db.js */
 (function () {
+  log.started.later(); // 保存した曲を読み終えた時に出す
   const fileInput = document.getElementById('fileInput');
   const folderInput = document.getElementById('folderInput');
   const albumArt = document.getElementById('albumArt');
@@ -126,21 +127,19 @@
 
   // 永続化(IndexedDB)
   async function loadFromDb() {
-    const t0 = performance.now();
     let records;
     try {
       records = await window.PlayerDB.getAll();
     } catch (e) {
       log.error('保存したプレイリストの読み込みでエラーが発生しました', e);
+      log.started('保存したプレイリスト 読み込めず');
       return;
     }
     records.sort((a, b) => a.order - b.order);
     tracks = records.map((r) => ({ ...r, url: URL.createObjectURL(r.blob) }));
     renderPlaylist();
     if (tracks.length) statusText.textContent = '';
-    log(
-      `起動しました(保存したプレイリスト ${tracks.length}曲 / ${Math.round(performance.now() - t0)}ms)`,
-    );
+    log.started(`保存したプレイリスト ${tracks.length}曲`);
   }
 
   async function addFiles(fileList) {

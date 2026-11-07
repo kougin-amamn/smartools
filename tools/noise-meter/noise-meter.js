@@ -90,5 +90,4 @@
   resetBtn.addEventListener('click', () => {
     reset();
   });
-  log('起動しました');
 })();

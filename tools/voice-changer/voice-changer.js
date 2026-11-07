@@ -291,6 +291,4 @@
     item.innerHTML = `<audio controls src="${url}"></audio><a href="${url}" download="voice-changer-${recCount}.${ext}">保存</a>`;
     recordings.prepend(item);
   }
-
-  log('起動しました');
 })();

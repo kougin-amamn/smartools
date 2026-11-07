@@ -1168,7 +1168,7 @@
 
   /* 起動 */
   show('start');
-  log('起動しました(' + myName + (canGzip ? '' : ' / 圧縮なし') + ')');
+  log.started(myName + (canGzip ? '' : ' / 圧縮なし'));
   var fromUrl = C.parseCode(location.hash);
   if (fromUrl && window.Peer && !needHttps) {
     log('QRコードのリンクから開いたため、つなぎます');

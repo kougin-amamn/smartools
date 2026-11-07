@@ -572,14 +572,13 @@
     .catch(function (e) {
       log.warn('日本語の名前の表を読み込めませんでした(英語の名前で表示します)', e);
     });
-  log(
-    '起動しました(' +
-      BASE_NAME[settings.base] +
+  log.started(
+    BASE_NAME[settings.base] +
       'モデル / 確からしさ ' +
       settings.minScore +
       '%以上 / 最大 ' +
       settings.maxBoxes +
-      '件)',
+      '件',
   );
   prepare();
 })();

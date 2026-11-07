@@ -308,5 +308,5 @@
 
   renderHistory();
   raf = requestAnimationFrame(frame);
-  log('起動しました(記録 ' + loadHistory().length + '件)');
+  log.started('記録 ' + loadHistory().length + '件');
 })();

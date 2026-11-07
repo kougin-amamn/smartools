@@ -80,5 +80,4 @@
     if (!countVoices())
       speechSynthesis.addEventListener('voiceschanged', countVoices, { once: true });
   }
-  log('起動しました');
 })();

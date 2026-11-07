@@ -73,5 +73,4 @@
     a.click();
     log(`QRコードを保存しました(qrcode.png / ${canvas.width}×${canvas.height})`);
   });
-  log('起動しました');
 })();

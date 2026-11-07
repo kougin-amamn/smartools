@@ -231,7 +231,6 @@
   });
 
   render();
-  log('起動しました');
   window.addEventListener('pagehide', () => {
     images.forEach((i) => URL.revokeObjectURL(i.url));
   });

@@ -139,5 +139,5 @@
 
   renderDots();
   setBpm(120);
-  log('起動しました(120 BPM / 4拍子)');
+  log.started('120 BPM / 4拍子');
 })();

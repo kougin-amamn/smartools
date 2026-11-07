@@ -429,15 +429,14 @@
   decks.forEach(function (d) {
     d.setRpm(33);
   });
-  log(
-    '起動しました(ピッチ ±' +
+  log.started(
+    'ピッチ ±' +
       settings.pitchRange +
       '% / 起動 ' +
       settings.startSeconds +
       '秒 / ブレーキ ' +
       settings.brakeSeconds +
       '秒 / ' +
-      (settings.slipmat ? 'スリップマット' : '直結') +
-      ')',
+      (settings.slipmat ? 'スリップマット' : '直結'),
   );
 })();

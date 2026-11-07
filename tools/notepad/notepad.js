@@ -151,5 +151,5 @@
 
   load();
   showList();
-  log(`起動しました(メモ ${notes.length}件)`);
+  log.started(`メモ ${notes.length}件`);
 })();

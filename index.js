@@ -1,6 +1,7 @@
 /* 一覧ページ。index-data.json のツールを分類ごとに並べる。common/site.js(ログ・テーマ)の後に読み込む */
 (function () {
   'use strict';
+  log.started.later(); // 一覧を読んで並べ終えた時に出す
   var listEl = document.getElementById('list'),
     statusEl = document.getElementById('status');
 
@@ -136,7 +137,6 @@
       log.warn('ランチャーの一覧を読み込めませんでした(切り替えを出さずに表示します)', e);
     });
 
-  var t0 = performance.now();
   fetch('./index-data.json')
     .then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -145,15 +145,7 @@
     .then(function (tools) {
       var cats = render(tools);
       statusEl.hidden = true;
-      log(
-        '起動しました(' +
-          tools.length +
-          '件 / ' +
-          cats +
-          '分類 / ' +
-          Math.round(performance.now() - t0) +
-          'ms)',
-      );
+      log.started(tools.length + '件 / ' + cats + '分類');
     })
     .catch(function (e) {
       statusEl.textContent =

@@ -131,6 +131,5 @@
   window.addEventListener('pagehide', stopCamera);
   window.addEventListener('beforeunload', stopCamera);
 
-  log('起動しました');
   startCamera();
 })();

@@ -122,6 +122,7 @@ function main(list, source, loadMsg, loadErr, texDefs) {
     note.hidden = false;
     listPanel.hidden = false;
     loadingDone();
+    log.started('2D の一覧 / ツール ' + N + '件');
   }
   if (loadMsg) {
     fallback(loadMsg, loadErr);
@@ -408,15 +409,7 @@ function main(list, source, loadMsg, loadErr, texDefs) {
     loading(85, '描画の準備をしています…');
     next(function () {
       view.start();
-      log(
-        '起動しました(ツール ' +
-          N +
-          '冊 / 本棚 ' +
-          groups.length +
-          'マス / 一覧の元データ ' +
-          source +
-          ')',
-      );
+      log.started('ツール ' + N + '冊 / 本棚 ' + groups.length + 'マス / 一覧の元データ ' + source);
     });
   }
 }

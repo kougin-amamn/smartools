@@ -116,5 +116,5 @@
     else startRecording().catch((e) => log.error('録音の開始でエラーが発生しました', e));
   });
 
-  log(`起動しました(録音 ${window.MediaRecorder ? '対応' : '非対応'})`);
+  log.started(`録音 ${window.MediaRecorder ? '対応' : '非対応'}`);
 })();

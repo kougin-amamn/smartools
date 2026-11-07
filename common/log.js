@@ -1,6 +1,6 @@
 /* ログの仕組み(全ページ共通。site.js より先に読む)。書き方の決まりは docs/logging.md。
    log / log.warn / log.error / log.debug(時刻付きでコンソールへ。直近の履歴はデバッグ画面を開いた時にまとめて出す)・
-   log.step(時間のかかる処理の結果と所要時間)。押下の自動ログは autolog.js(この後に読む) */
+   log.step(時間のかかる処理の結果と所要時間)・log.started(起動のログ。呼ばないページは自動で出す)。押下の自動ログは autolog.js(この後に読む) */
 (function () {
   'use strict';
   /* メッセージの一覧
@@ -13,6 +13,8 @@
     stepDone: '{名前}が終わりました({時間}ms)',
     stepDoneWith: '{名前}が終わりました({詳細} / {時間}ms)',
     stepError: '{名前}でエラーが発生しました',
+    started: '起動しました({時間}ms)',
+    startedWith: '起動しました({詳細} / {時間}ms)',
   });
   /* 文言の {キー} を値で埋める。値の無いキーは空にする */
   function format(text, vals) {
@@ -129,4 +131,28 @@
         },
       );
   };
+
+  /* 起動のログ(ページを開いてから1回だけ。時間はページを開き始めてから)
+     log.started('音色 ピアノ') → 「起動しました(音色 ピアノ / 180ms)」
+     呼ばないページは、読み込みが終わった時に「起動しました(180ms)」を自動で出す。
+     読み込みの後で準備が終わるページは、先に log.started.later() を呼び、準備ができた時に log.started(…) を呼ぶ */
+  var startState = 'auto'; // auto: 自動で出す / later: 後でページが出す / done: 出した
+  log.started = function (detail) {
+    if (startState === 'done') return;
+    startState = 'done';
+    log(
+      format(detail ? MSG.startedWith : MSG.started, {
+        詳細: detail,
+        時間: Math.round(performance.now()),
+      }),
+    );
+  };
+  log.started.later = function () {
+    if (startState === 'auto') startState = 'later';
+  };
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      if (startState === 'auto') log.started();
+    }, 0);
+  });
 })();

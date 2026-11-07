@@ -235,5 +235,5 @@
   st = load();
   apply();
   tick();
-  log('起動しました (' + st.format + ' / ' + st.font + ' / ' + st.size + '% / ' + st.frame + ')');
+  log.started(st.format + ' / ' + st.font + ' / ' + st.size + '% / ' + st.frame);
 })();

@@ -226,5 +226,5 @@
   startStopBtn.addEventListener('click', () => {
     running ? stop() : start().catch((e) => log.error('計測の開始でエラーが発生しました', e));
   });
-  log(`起動しました(照度センサー ${'AmbientLightSensor' in window ? 'あり' : 'なし'})`);
+  log.started(`照度センサー ${'AmbientLightSensor' in window ? 'あり' : 'なし'}`);
 })();

@@ -187,5 +187,4 @@
   window.addEventListener('pagehide', () => {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   });
-  log('起動しました');
 })();

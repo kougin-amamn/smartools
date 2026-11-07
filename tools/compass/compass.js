@@ -243,5 +243,4 @@
 
   buildDial();
   requestAnimationFrame(frame);
-  log('起動しました');
 })();

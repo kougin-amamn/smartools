@@ -687,16 +687,15 @@
     .catch(function (e) {
       log.warn('日本語の名前の表を読み込めませんでした(番号で表示します)', e);
     });
-  log(
-    '起動しました(' +
-      MODELS[settings.model].name +
+  log.started(
+    MODELS[settings.model].name +
       'モデル / 範囲 ' +
       RANGE_NAME[settings.range] +
       ' / 上位 ' +
       settings.topN +
       '件 / 目安 ' +
       settings.minScore +
-      '%)',
+      '%',
   );
   prepare();
 })();

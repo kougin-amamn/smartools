@@ -151,13 +151,7 @@
   buildSel();
   tick();
   setInterval(tick, 1000);
-  log(
-    '起動しました(都市 ' +
-      st.ids.length +
-      ' / 端末 ' +
-      localTz +
-      ' / 12時間表示 ' +
-      (st.h12 ? 'ON' : 'OFF') +
-      ')',
+  log.started(
+    '都市 ' + st.ids.length + ' / 端末 ' + localTz + ' / 12時間表示 ' + (st.h12 ? 'ON' : 'OFF'),
   );
 })();

@@ -303,6 +303,7 @@ function main(list, source, loadMsg, loadErr) {
     note.hidden = false;
     listPanel.hidden = false;
     L.loadingDone();
+    log.started('2D の一覧 / ツール ' + N + '件');
   }
 
   if (loadMsg) {
@@ -1168,16 +1169,15 @@ function main(list, source, loadMsg, loadErr) {
   resize();
   swapTo(HALL_MODE ? HALL_ID : 'main', null, true);
   requestAnimationFrame(frame);
-  log(
-    '起動しました(作品 ' +
+  log.started(
+    '作品 ' +
       N +
       '点 / ' +
       (HALL_MODE ? '展示室 ' + groups.length + '室+ホール' : '1室') +
       ' / 一覧の元データ ' +
       source +
       ' / 画質 ' +
-      (LOW ? '軽量(スマホ向け)' : '通常') +
-      ')',
+      (LOW ? '軽量(スマホ向け)' : '通常'),
   );
   L.loadingDone();
 }

@@ -347,5 +347,4 @@
   window.addEventListener('pagehide', () => {
     videos.forEach((v) => URL.revokeObjectURL(v.url));
   });
-  log('起動しました');
 })();

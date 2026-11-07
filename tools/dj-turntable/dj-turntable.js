@@ -455,5 +455,5 @@
   document.querySelector('.app').addEventListener('contextmenu', function (e) {
     e.preventDefault();
   });
-  log('起動しました(33回転 / ピッチ 0% / 音量 80%)');
+  log.started('33回転 / ピッチ 0% / 音量 80%');
 })();

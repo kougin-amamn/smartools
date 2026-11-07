@@ -1035,8 +1035,8 @@
     if (window.ResizeObserver) new ResizeObserver(onResize).observe(desk);
     window.addEventListener('resize', onResize);
     L.loadingDone();
-    log(
-      '起動しました(アイコン ' +
+    log.started(
+      'アイコン ' +
         order.length +
         '個 / マス ' +
         m.cols +
@@ -1047,8 +1047,7 @@
         ' / 保存した配置 ' +
         savedCount +
         '件 / 元データ ' +
-        source +
-        ')',
+        source,
     );
   }
 })();

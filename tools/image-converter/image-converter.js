@@ -290,11 +290,10 @@
     a.download = 'converted-images.zip';
     a.click();
   });
-  log(
-    '起動しました(HEIC変換 ' +
+  log.started(
+    'HEIC変換 ' +
       (window.heic2any ? 'あり' : 'なし') +
       ' / ZIP ' +
-      (window.JSZip ? 'あり' : 'なし') +
-      ')',
+      (window.JSZip ? 'あり' : 'なし'),
   );
 })();

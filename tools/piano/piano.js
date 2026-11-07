@@ -825,13 +825,12 @@
   recUi();
 
   build();
-  log(
-    '起動しました(音色 ' +
+  log.started(
+    '音色 ' +
       optText('inst') +
       ' / ' +
       $('octLabel').textContent +
       ' / 録音 ' +
-      (lastRec ? lastRec.length / 2 + '音' : 'なし') +
-      ')',
+      (lastRec ? lastRec.length / 2 + '音' : 'なし'),
   );
 })();
