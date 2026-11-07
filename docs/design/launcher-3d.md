@@ -123,7 +123,6 @@ flowchart LR
 
 ```html
 <script src="../common/log.js"></script>
-<script src="../common/autolog.js"></script>
 <script src="../common/env.js"></script>
 <script src="../common/site.js"></script>
 <script src="./launcher-common.js"></script>

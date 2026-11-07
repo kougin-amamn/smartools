@@ -34,7 +34,7 @@ flowchart LR
   NAV["navigator / screen / Intl<br>userAgentData"] --> ENV
 ```
 
-読み込み順: `log.js` → `autolog.js` → `env.js` → `site.js` →(ツールのみ)`tool-kit.js` → 読み込み確認 → ツールのファイル。`env.js` はログ(`log.js`)を使います。
+読み込み順: `log.js` → `env.js` → `site.js` →(ツールのみ)`tool-kit.js` → 読み込み確認 → ツールのファイル。`env.js` はログ(`log.js`)を使います。
 
 判定の中身(UA の読み取り)は DOM を使わない関数にして、Node でテストできるようにします(`module.exports` も出す)。
 

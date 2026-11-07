@@ -1,6 +1,6 @@
 /* ログの仕組み(全ページ共通。site.js より先に読む)。書き方の決まりは docs/logging.md。
    log / log.warn / log.error / log.debug(時刻付きでコンソールへ。直近の履歴はデバッグ画面を開いた時にまとめて出す)・
-   log.step(時間のかかる処理の結果と所要時間)・log.started(起動のログ。呼ばないページは自動で出す)。押下の自動ログは autolog.js(この後に読む) */
+   log.step(時間のかかる処理の結果と所要時間)・log.started(起動のログ。呼ばないページは自動で出す)。押下の自動ログもこのファイル(後半) */
 (function () {
   'use strict';
   /* メッセージの一覧
@@ -155,4 +155,68 @@
       if (startState === 'auto') log.started();
     }, 0);
   });
+})();
+
+/* 押下の自動ログ(後半。前半の log() を呼ぶだけで、本体の中には触れない)。ボタン・リンク・data-log を付けた要素を人が押した時、
+   部品の名前から「…を押下しました」を log() で書く。値の変更や選択(select・チェック・スライダー・色・ファイル・文字入力)は出さない */
+(function () {
+  'use strict';
+  if (!window.log) return;
+  var log = window.log,
+    format = log.format;
+  /* メッセージの一覧
+     {グループ} には data-log-group がある時だけ「録音 3」の が入り、無い時は空になる */
+  var MSG = Object.freeze({
+    group: '「{グループ名}」の',
+    pressButton: '{グループ}「{名前}」ボタンを押下しました',
+    pressLink: '{グループ}「{名前}」のリンクを押下しました',
+    press: '{グループ}「{名前}」を押下しました',
+  });
+
+  /* 名前: data-log → aria-label → title → 部品の文字。空白をまとめ、先頭の飾りの記号は文字が残る時だけ外し、24文字で切る */
+  function clean(text) {
+    text = String(text || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    var plain = text.replace(/^[●■▶⏸⏹⏺]\s*(?=\S)/, '');
+    if (plain) text = plain;
+    return text.length > 24 ? text.slice(0, 24) + '…' : text;
+  }
+  function nameOf(el) {
+    return clean(
+      el.getAttribute('data-log') ||
+        el.getAttribute('aria-label') ||
+        el.getAttribute('title') ||
+        el.textContent,
+    );
+  }
+  function groupOf(el) {
+    var g = el.parentElement && el.parentElement.closest('[data-log-group]');
+    return g ? format(MSG.group, { グループ名: clean(g.getAttribute('data-log-group')) }) : '';
+  }
+
+  /* キャプチャで見張り、ページ側の結果のログより先に出す。プログラムから呼んだ click() は出さない */
+  document.addEventListener(
+    'click',
+    function (e) {
+      if (!e.isTrusted) return;
+      var el = e.target.closest && e.target.closest('button,[role="button"],a[href],[data-log]');
+      if (
+        !el ||
+        el.matches('input,select,textarea,option,label') ||
+        el.closest('[data-log="off"]') ||
+        el.disabled
+      )
+        return;
+      var name = nameOf(el);
+      if (!name) return;
+      var text = el.matches('button,[role="button"]')
+        ? MSG.pressButton
+        : el.matches('a[href]')
+          ? MSG.pressLink
+          : MSG.press;
+      log(format(text, { グループ: groupOf(el), 名前: name }));
+    },
+    true,
+  );
 })();

@@ -25,6 +25,7 @@ function load() {
     window: {
       addEventListener: (type, f) => (listeners[type] = f),
     },
+    document: { addEventListener() {} },
   };
   vm.runInNewContext(src, sandbox);
   const fireLoad = () => {

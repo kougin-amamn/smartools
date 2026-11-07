@@ -4,8 +4,7 @@
 
 | ファイル | 読むページ | 役割 |
 | --- | --- | --- |
-| `log.js` | 全ページ(最初) | ログ・`log.step`・`log.MSG` / `log.format` |
-| `autolog.js` | 全ページ(log.js の次) | ボタン・リンクの押下の自動ログ |
+| `log.js` | 全ページ(最初) | ログ・`log.step`・`log.started`・`log.MSG` / `log.format`・ボタンとリンクの押下の自動ログ(後半) |
 | `env.js` | 全ページ | `window.Env`: OS・ブラウザ・端末名・`requireSecure`・`canVibrate`・環境情報の行 |
 | `site.css` / `site.js` / `themes.json` | 全ページ | 配色のトークン、ヘッダ、テーマ、カラーテーマ、環境情報、デバッグ画面、埋め込み表示 |
 | `tool.css` / `tool-kit.js` | ツールだけ | ページの土台、`window.ToolKit`(`esc`)、設定シート、ランチャーへ戻るボタン |
