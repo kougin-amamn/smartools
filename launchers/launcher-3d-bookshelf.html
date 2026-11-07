@@ -1,14 +1,20 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" class="bar-hidden">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>3D本棚ランチャー | 書斎の本棚からツールを開くアプリランチャー</title>
     <meta
       name="description"
       content="ツールを開くアプリランチャーです。家の書斎の木の本棚に、ツールが一冊ずつ本になって並び、机の上にはよく使うツールが置かれます。ドラッグで見回し、ピンチやホイールで拡大、本をタップすると棚から引き出して表紙と説明を見せ、もう一度タップでツールを開けます。"
     />
-    <meta property="og:title" content="3D本棚ランチャー | 書斎の本棚からツールを開くアプリランチャー" />
+    <meta
+      property="og:title"
+      content="3D本棚ランチャー | 書斎の本棚からツールを開くアプリランチャー"
+    />
     <meta
       property="og:description"
       content="ツールを開くアプリランチャーです。家の書斎の木の本棚に、ツールが一冊ずつ本になって並び、机の上にはよく使うツールが置かれます。ドラッグで見回し、ピンチやホイールで拡大、本をタップすると棚から引き出して表紙と説明を見せ、もう一度タップでツールを開けます。"
@@ -17,7 +23,11 @@
     <meta property="og:locale" content="ja_JP" />
     <meta property="og:image" content="../og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" type="image/svg+xml" href="./app-icon-launcher-3d-bookshelf.svg" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="./app-icon-launcher-3d-bookshelf.svg"
+    />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
     <link rel="stylesheet" href="../common/site.css" />
     <link rel="stylesheet" href="./launcher.css" />
@@ -27,7 +37,12 @@
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "3D本棚ランチャー",
-        "alternateName": ["3D Bookshelf Launcher", "本棚ランチャー", "アプリランチャー", "書斎ランチャー"],
+        "alternateName": [
+          "3D Bookshelf Launcher",
+          "本棚ランチャー",
+          "アプリランチャー",
+          "書斎ランチャー"
+        ],
         "description": "ツールを開くアプリランチャーです。家の書斎の木の本棚に、ツールが一冊ずつ本になって並び、机の上にはよく使うツールが置かれます。ドラッグで見回し、ピンチやホイールで拡大、本をタップすると棚から引き出して表紙と説明を見せ、もう一度タップでツールを開けます。",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any (Webブラウザ)",
@@ -53,7 +68,13 @@
 
       <div class="card" id="card" hidden>
         <div class="card-head">
-          <button class="nav-btn" id="prevBtn" aria-label="前の本" title="前の本" hidden>
+          <button
+            class="nav-btn"
+            id="prevBtn"
+            aria-label="前の本"
+            title="前の本"
+            hidden
+          >
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -66,7 +87,13 @@
             </svg>
           </button>
           <div class="card-no" id="cardNo"></div>
-          <button class="nav-btn" id="nextBtn" aria-label="次の本" title="次の本" hidden>
+          <button
+            class="nav-btn"
+            id="nextBtn"
+            aria-label="次の本"
+            title="次の本"
+            hidden
+          >
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -116,19 +143,27 @@
     <script>
       window.log ||
         document.body.insertAdjacentHTML(
-          'afterbegin',
-          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>'
+          "afterbegin",
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
     <script src="./launcher-common.js"></script>
     <script type="importmap">
-      { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js" } }
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js"
+        }
+      }
     </script>
     <script type="module">
       /* 入口: 自分のファイルが1つでも読めなければ、読み込み中の表示に理由を出す(three.js が読めない時は 2D の一覧) */
-      import('./launcher-3d-bookshelf.js').catch(function (e) {
+      import("./launcher-3d-bookshelf.js").catch(function (e) {
         if (window.Launcher) Launcher.showModuleError(e);
-        else log.error('ランチャーの共通ファイル(launcher-common.js)を読み込めませんでした', e);
+        else
+          log.error(
+            "ランチャーの共通ファイル(launcher-common.js)を読み込めませんでした",
+            e,
+          );
       });
     </script>
   </body>
