@@ -440,5 +440,9 @@
   renderList();
   setLabel('');
   kick();
+  /* 長押しのメニューを出さない(盤を押さえ続けるスクラッチやホットキューの長押しと重なるため) */
+  document.querySelector('.app').addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
   log('起動しました(33回転 / ピッチ 0% / 音量 80%)');
 })();

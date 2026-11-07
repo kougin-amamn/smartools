@@ -395,6 +395,10 @@
     if (k && k[1] === 'nudge') decks[k[0]].send({ type: 'nudge', amount: 0 });
   });
 
+  /* 長押しのメニューを出さない(盤を押さえ続けるスクラッチやホットキューの長押しと重なるため) */
+  document.querySelector('.app').addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
   applySettings();
   decks.forEach(function (d) {
     d.setRpm(33);

@@ -47,6 +47,7 @@
 - 指で回す SVG(レコード盤)は、SVG に `touch-action: none`、当たり判定に pointer capture、角度の差は ±180° に直す(横の軸を越えた時に跳ばないように)。
 - 何周も回る回転は CSS の transition では遠回りしない。`requestAnimationFrame` で `transform` を書く。
 - 回る盤は先に canvas へ1回描き、毎フレームは `transform: rotate` だけにする(描き直さない)。光の反射は別の層にして回さない。
+- 押さえ続けて使う画面(盤・長押しのボタン)は、`contextmenu` を `preventDefault` し、`-webkit-touch-callout: none` と `user-select: none` にする。タブレットで長押しのメニューが開いてしまう。
 - 縦のフェーダーは横の range を `rotate(-90deg)` で回す(縦の range は端末の差が大きい)。
 - 画面の大きさを JS で CSS 変数に入れる時は、同じ変数を子の要素の CSS で初期値として決めない(子の値が勝ち、JS の値が効かない)。
 

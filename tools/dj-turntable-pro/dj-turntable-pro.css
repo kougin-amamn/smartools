@@ -681,3 +681,15 @@ body {
     height: 80px;
   }
 }
+/* 長押しで出るメニュー(画像の保存・文字の選択・拡大鏡)を出さない。盤やボタンを押さえ続けて使うため */
+.app {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* 長押しで出るメニュー(画像の保存・文字の選択・拡大鏡)を出さない。盤やボタンを押さえ続けて使うため */
+.app {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
