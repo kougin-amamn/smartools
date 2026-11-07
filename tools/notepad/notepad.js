@@ -43,7 +43,7 @@
     const lines = (content || '').split('\n');
     return lines.slice(1).join(' ').trim() || (lines[0] || '').trim();
   }
-  function fmtDate(ts) {
+  function formatDate(ts) {
     const d = new Date(ts);
     return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   }
@@ -62,7 +62,7 @@
       row.className = 'note-row';
       row.appendChild(div('title', titleOf(n.content)));
       row.appendChild(div('preview', previewOf(n.content)));
-      row.appendChild(div('date', fmtDate(n.updatedAt)));
+      row.appendChild(div('date', formatDate(n.updatedAt)));
       row.addEventListener('click', () => {
         log('一覧のメモを押下しました');
         openNote(n.id);
@@ -88,7 +88,7 @@
     }
     currentId = id;
     noteText.value = n.content;
-    savedLabel.textContent = `保存済み ${fmtDate(n.updatedAt)}`;
+    savedLabel.textContent = `保存済み ${formatDate(n.updatedAt)}`;
     listView.hidden = true;
     editorView.hidden = false;
     noteText.focus();
@@ -117,7 +117,7 @@
     n.content = noteText.value;
     n.updatedAt = Date.now();
     if (persist()) {
-      savedLabel.textContent = `保存済み ${fmtDate(n.updatedAt)}`;
+      savedLabel.textContent = `保存済み ${formatDate(n.updatedAt)}`;
       log.debug(`メモを保存しました(${n.content.length}文字)`);
     }
   }
@@ -147,7 +147,7 @@
   });
   deleteBtn.addEventListener('click', deleteNote);
   noteText.addEventListener('input', scheduleSave);
-  window.addEventListener('pagehide', saveNow);
+  ToolKit.addSave(saveNow); // 画面が隠れた時とページを離れる時に保存する(払って閉じた時も残すため)
 
   load();
   showList();

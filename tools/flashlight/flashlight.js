@@ -1,4 +1,5 @@
-/* 懐中電灯。背面カメラのライト(トーチ)を点ける。点いたカメラを覚えて次回は直接使う */
+/* 懐中電灯。背面カメラのライト(トーチ)を点ける。点いたカメラを覚えて次回は直接使う。
+   カメラは ToolKit.media で開く(ページを離れる時は ToolKit.media が自動で止める) */
 (function () {
   const powerBtn = document.getElementById('powerBtn');
   const statusText = document.getElementById('statusText');
@@ -13,18 +14,14 @@
   /* 指定した条件でカメラを取得し、torchが使えるか試す。使えればストリームを返し、
    使えなければストリームを閉じてnullを返す(呼び出し側で後片付けを気にしなくてよい)。 */
   async function tryGetTorch(videoConstraints, label) {
-    let stream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints });
-    } catch (e) {
-      log.warn(`カメラを取得できませんでした${label ? '(' + label + ')' : ''}`, e);
-      return null;
-    }
+    const r = await ToolKit.media.open({ video: videoConstraints }, 'カメラ');
+    if (!r.stream) return null;
+    const stream = r.stream;
     const track = stream.getVideoTracks()[0];
     const caps = track.getCapabilities ? track.getCapabilities() : null;
     if (!caps || !('torch' in caps)) {
       log(`ライトの制御に対応していないカメラでした${label ? '(' + label + ')' : ''}`);
-      stream.getTracks().forEach((t) => t.stop());
+      ToolKit.media.stop(stream);
       return null;
     }
     try {
@@ -45,7 +42,7 @@
     } catch (e) {
       log.warn(`ライトをオンにできませんでした${label ? '(' + label + ')' : ''}`, e);
     }
-    stream.getTracks().forEach((t) => t.stop());
+    ToolKit.media.stop(stream);
     return null;
   }
 
@@ -119,7 +116,7 @@
           log.warn('ライトのオフに失敗しました(カメラを閉じて消灯します)', e);
         }
       }
-      if (torchStream) torchStream.getTracks().forEach((t) => t.stop());
+      ToolKit.media.stop(torchStream);
       torchStream = null;
       torchTrack = null;
       torchOn = false;
@@ -155,11 +152,5 @@
   powerBtn.addEventListener('click', () => {
     ToolKit.vibrate();
     toggleTorch().catch((e) => log.error('ライトの切り替えでエラーが発生しました', e));
-  });
-  window.addEventListener('pagehide', () => {
-    if (torchStream) {
-      torchStream.getTracks().forEach((t) => t.stop());
-      log('ページを離れるためライトを消灯しました');
-    }
   });
 })();

@@ -1,4 +1,4 @@
-/* ページを離れる時の終了処理の試験(設計: docs/design/page-exit.md の T-01〜T-06)。
+/* ページを離れる時の終了処理の試験(設計: docs/design/page-exit.md の T-01〜T-06、T-08、T-09)。
    カメラは Chromium の偽のカメラ、ZXing は tests/stubs/fake-zxing.js。使い方: node tests/scenarios/page-exit.js */
 const { launch, report, splitErrors } = require('../lib/harness');
 
@@ -100,6 +100,42 @@ async function reloadedByPageshow(page) {
     const { real } = splitErrors(qr.logs);
     if (real.length) p6.push('エラー: ' + real.join(' / '));
     ok = report('T-06 QR 読み取りのカメラの停止', p6) && ok;
+
+    /* T-08: 懐中電灯は、ライトの無い偽のカメラを試した後、開いたカメラを残さない */
+    const fl = await site.open('tools/flashlight/flashlight.html', { permissions: ['camera'] });
+    const p8 = [];
+    await fl.page.evaluate(() => {
+      window.__streams = [];
+      const original = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+      navigator.mediaDevices.getUserMedia = (c) =>
+        original(c).then((s) => (window.__streams.push(s), s));
+    });
+    await fl.page.click('#powerBtn');
+    await fl.page.waitForFunction(
+      () => !/試しています/.test(document.getElementById('statusText').textContent),
+      null,
+      { timeout: 8000 },
+    );
+    const flash = await fl.page.evaluate(() => ({
+      opened: window.__streams.length,
+      live: window.__streams.filter((s) => s.getTracks().some((t) => t.readyState === 'live'))
+        .length,
+      status: document.getElementById('statusText').textContent,
+    }));
+    if (!flash.opened) p8.push('カメラを開いていない');
+    if (flash.live) p8.push(`点かなかったカメラが ${flash.live} 台開いたまま`);
+    if (!/対応していません/.test(flash.status)) p8.push(`画面の文: ${flash.status}`);
+    ok = report('T-08 懐中電灯のカメラの後片付け', p8) && ok;
+
+    /* T-09: メモ帳は、入力してすぐ画面が隠れても保存される(0.4 秒の待ちを待たない) */
+    const note = await site.open('tools/notepad/notepad.html');
+    const p9 = [];
+    await note.page.click('#newBtn');
+    await note.page.fill('#noteText', '払って閉じる前のメモ');
+    await fire(note.page, 'hidden');
+    const saved = await note.page.evaluate(() => localStorage.getItem('notepad-notes') || '');
+    if (!saved.includes('払って閉じる前のメモ')) p9.push('画面が隠れた時に保存されていない');
+    ok = report('T-09 メモ帳の画面が隠れた時の保存', p9) && ok;
   } finally {
     await site.close();
   }
