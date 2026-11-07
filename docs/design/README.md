@@ -16,6 +16,7 @@
 | [device.md](./device.md) | 端末の機能(`common/device.js`。`tool-kit.js` が読む) |
 | [page-base.md](./page-base.md) | ページの土台: ヘッダのボタンと読み込み確認(`common/site.js`・各ページの HTML) |
 | [launcher-3d.md](./launcher-3d.md) | 3Dランチャー(本棚・美術館): ES モジュール化と共通部品への組み直し(段 1a まで実装。前の型) |
+| [launcher-3d-bookshelf.md](./launcher-3d-bookshelf.md) | 3D本棚ランチャー(下書き。新しい型の最初の見本) |
 | [dj-turntable-pro.md](./dj-turntable-pro.md) | DJターンテーブル Pro 2台+ミキサー(`tools/dj-turntable-pro`。1台の通常版 `tools/dj-turntable` は別に残す) |
 | [file-transfer.md](./file-transfer.md) | ファイル転送(`tools/file-transfer`) |
 | [novel-reader.md](./novel-reader.md) | 小説読み上げ(`tools/novel-reader`、検証用の試作) |
