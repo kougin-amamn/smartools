@@ -38,12 +38,17 @@
 - 対応の確認は `'audioWorklet' in AudioContext.prototype && typeof AudioWorkletNode !== 'undefined'`。`hasOwnProperty` だと BaseAudioContext にあるため見落とし、ツールが黙って動かなくなる(画面で動かすまで気付かなかった)。
 - AudioContext はタップの中で作って `resume()`。`decodeAudioData` は AudioContext の周波数に合わせ直す。絵は worklet が知らせる再生位置(約30回/秒と止まった時)で動かし、音とずれないようにする。
 - Playwright で音を確かめる時は、`createGain` を包んで AnalyserNode につなぎ、RMS を読む。
+- 2台を鳴らす時は AudioWorkletNode を1つにして出力を2つ持たせる(`numberOfOutputs: 2`, `outputChannelCount: [2, 2]`)。2台の時刻が同じ処理の中でそろう。曲は Int16 にして渡すと記憶領域が半分になる。
+- 指で盤を回すスクラッチは、速さではなく角度(位置)を送り、worklet がばねで追う。速さを送る形は指と音のずれがたまる。押さえている間は指が止まっていても毎フレーム送る。
 
 ## 描画・操作
 
 - **お絵かき**(ペイント参照): canvas に `touch-action: none` と pointer capture。点の中点を `quadraticCurveTo` でつなぎ、`getCoalescedEvents()` で細かく拾う。座標は `getBoundingClientRect()` から換算(見た目と中の画素数が違う)。中の大きさは長い辺 2048px まで。塗りつぶしは色の許容(約40)が無いと縁が残る。元に戻すの履歴は ImageData を持ち、件数ではなく合計のバイト数で制限する。
 - 指で回す SVG(レコード盤)は、SVG に `touch-action: none`、当たり判定に pointer capture、角度の差は ±180° に直す(横の軸を越えた時に跳ばないように)。
 - 何周も回る回転は CSS の transition では遠回りしない。`requestAnimationFrame` で `transform` を書く。
+- 回る盤は先に canvas へ1回描き、毎フレームは `transform: rotate` だけにする(描き直さない)。光の反射は別の層にして回さない。
+- 縦のフェーダーは横の range を `rotate(-90deg)` で回す(縦の range は端末の差が大きい)。
+- 画面の大きさを JS で CSS 変数に入れる時は、同じ変数を子の要素の CSS で初期値として決めない(子の値が勝ち、JS の値が効かない)。
 
 ## 文字
 
