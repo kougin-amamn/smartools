@@ -16,6 +16,7 @@
 | [device.md](./device.md) | 端末の機能(`common/device.js`。`tool-kit.js` が読む) |
 | [page-base.md](./page-base.md) | ページの土台: ヘッダのボタンと読み込み確認(`common/site.js`・各ページの HTML) |
 | [file-transfer.md](./file-transfer.md) | ファイル転送(`tools/file-transfer`) |
+| [novel-reader.md](./novel-reader.md) | 小説読み上げ(`tools/novel-reader`、検証用の試作) |
 
 ## 型
 
