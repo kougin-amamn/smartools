@@ -20,8 +20,7 @@ const U = {
   chromeOs:
     'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36',
 };
-const name = (ua, platform, touch) =>
-  E.deviceNameFrom(E.osFrom(ua, platform, touch), E.browserFrom(ua));
+const name = (ua, platform, touch) => E.deviceNameOf(E.osOf(ua, platform, touch), E.browserOf(ua));
 a.equal(name(U.androidChrome, 'Android'), 'Android Chrome');
 a.equal(name(U.desktopMode, 'Android'), 'Android Chrome');
 a.equal(name(U.desktopMode, 'Linux'), 'Linux Chrome');

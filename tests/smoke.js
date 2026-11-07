@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { launch, report, splitErrors, ROOT } = require('./lib/harness');
 
-function pagesFrom(args) {
+function pagesOf(args) {
   const list = args.filter((a) => !a.startsWith('--'));
   if (list.includes('all')) {
     const tools = fs
@@ -23,7 +23,7 @@ function pagesFrom(args) {
 
 (async () => {
   const args = process.argv.slice(2);
-  const pages = pagesFrom(args);
+  const pages = pagesOf(args);
   if (!pages.length) {
     console.log('使い方: node tests/smoke.js tools/<slug> … | all [--logs]');
     return;

@@ -18,7 +18,7 @@
     Windows: 'Windows',
     macOS: 'macOS',
   };
-  function osFrom(ua, platform, touchPoints) {
+  function osOf(ua, platform, touchPoints) {
     ua = ua || '';
     if (platform && PLATFORM[platform]) return PLATFORM[platform];
     if (/iPhone|iPod/.test(ua)) return 'iOS';
@@ -31,7 +31,7 @@
     return '不明';
   }
   /* Chrome 系の UA は Safari の文字も含み、Edge・Samsung Internet は Chrome の文字も含むため、この順に見る */
-  function browserFrom(ua) {
+  function browserOf(ua) {
     ua = ua || '';
     if (/EdgA?\/|EdgiOS\//.test(ua)) return 'Edge';
     if (/SamsungBrowser\//.test(ua)) return 'Samsung Internet';
@@ -41,12 +41,12 @@
     return '不明';
   }
   /* 相手に見せる大まかな端末名(機種名など個人に近い情報は使わない) */
-  function deviceNameFrom(os, browser) {
+  function deviceNameOf(os, browser) {
     var device = os === 'iOS' ? 'iPhone' : os === 'iPadOS' ? 'iPad' : os === '不明' ? '端末' : os;
     return browser && browser !== '不明' ? device + ' ' + browser : device;
   }
 
-  var core = { MSG: MSG, osFrom: osFrom, browserFrom: browserFrom, deviceNameFrom: deviceNameFrom };
+  var core = { MSG: MSG, osOf: osOf, browserOf: browserOf, deviceNameOf: deviceNameOf };
   if (typeof module !== 'undefined' && module.exports) module.exports = core;
   if (typeof window === 'undefined') return;
 
@@ -65,8 +65,8 @@
     };
   var nav = navigator,
     uad = nav.userAgentData,
-    os = osFrom(nav.userAgent, uad && uad.platform, nav.maxTouchPoints || 0),
-    browser = browserFrom(nav.userAgent),
+    os = osOf(nav.userAgent, uad && uad.platform, nav.maxTouchPoints || 0),
+    browser = browserOf(nav.userAgent),
     osVersion = '';
   /* OS の版番号は Chromium 系だけが後から教えてくれる。Windows の版番号は表示と対応しないため Android だけ使う */
   var ready =
@@ -118,7 +118,7 @@
       return browser;
     },
     deviceName: function () {
-      return deviceNameFrom(os, browser);
+      return deviceNameOf(os, browser);
     },
     isSecure: isSecure,
     /* https なら ''。違えば画面に出す文を返し、警告のログを残す */
