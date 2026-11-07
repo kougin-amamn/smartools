@@ -42,6 +42,11 @@ function pagesFrom(args) {
         if (w[0] > w[1]) problems.push('横にはみ出しています(' + w[0] + 'px)');
         const ids = await page.$$eval('.site-bar > button', (b) => b.map((e) => e.id).join(' '));
         if (!/infoBtn colorBtn themeBtn dbgBtn$/.test(ids)) problems.push('ヘッダのボタンの並びが ' + ids);
+        /* ヘッダを隠しているツール(つまみで引き出す)は、先に出す */
+        if (await page.$('.bar-handle')) {
+          await page.click('.bar-handle');
+          await page.waitForTimeout(300);
+        }
         await page.click('#themeBtn');
         if ((await page.getAttribute('html', 'data-theme')) !== 'dark')
           problems.push('テーマボタンで切り替わりません');

@@ -129,6 +129,22 @@
     request();
   });
 
+  /* ヘッダ: 右上のつまみで出し入れする。盤やミキサーに触ると隠す */
+  var bar = document.querySelector('.site-bar'),
+    handle = $('barHandle');
+  function setBar(open) {
+    if (open === document.documentElement.classList.contains('bar-open')) return;
+    document.documentElement.classList.toggle('bar-open', open);
+    handle.setAttribute('aria-expanded', String(open));
+    handle.style.top = open ? bar.offsetHeight + 'px' : '';
+  }
+  handle.addEventListener('click', function () {
+    setBar(!document.documentElement.classList.contains('bar-open'));
+  });
+  document.querySelector('.app').addEventListener('pointerdown', function () {
+    setBar(false);
+  });
+
   /* 曲の保存(キュー・ホットキュー・BPM。曲の中身は保存しない) */
   function saveTrack(deck) {
     var t = deck.track;
@@ -157,7 +173,10 @@
     if (e.target === sheet) closeLibrary();
   });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeLibrary();
+    if (e.key === 'Escape') {
+      closeLibrary();
+      setBar(false);
+    }
   });
 
   $('fileInput').addEventListener('change', function () {
