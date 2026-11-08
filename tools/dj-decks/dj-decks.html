@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ja" class="bar-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>DJデッキ | 2台のレコードとミキサー</title>
+    <meta
+      name="description"
+      content="2台のレコードとミキサーで曲をつなぐ DJ。PLAY・CUE・LOOP・ホットキュー・ピッチ・EQ・クロスフェーダー・フィルター・エコー。"
+    />
+    <meta property="og:title" content="DJデッキ | 2台のレコードとミキサー" />
+    <meta
+      property="og:description"
+      content="2台のレコードとミキサーで曲をつなぐ DJ。PLAY・CUE・LOOP・ホットキュー・ピッチ・EQ・クロスフェーダー・フィルター・エコー。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-dj-decks.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./dj-decks.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "DJデッキ",
+        "alternateName": ["DJ Decks"],
+        "description": "2台のレコードとミキサーで曲をつなぐ DJ。PLAY・CUE・LOOP・ホットキュー・ピッチ・EQ・クロスフェーダー・フィルター・エコー。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-dj-decks.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">DJデッキ<span class="en">DJ Decks</span></h1>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="toolbar">
+          <button type="button" id="stopAll" data-log="すべて停止">■ STOP ALL</button>
+          <button type="button" id="resetMix" data-log="ミキサーを戻す">↺ RESET MIXER</button>
+        </div>
+        <p class="status" id="status" role="status"></p>
+        <div class="studio">
+          <section class="deck deck-a" id="deckA" data-log-group="デッキA">
+            <div class="deck-head">
+              <span class="deck-name">01 / DECK A</span>
+              <span class="track" id="titleA">NO TRACK LOADED</span>
+            </div>
+            <div class="record-area">
+              <div class="platter-wrap" id="platterWrapA">
+                <div class="platter" id="platterA">
+                  <div class="label">
+                    <div><b>VINYL</b><span>A · 33⅓</span></div>
+                  </div>
+                </div>
+                <div class="tonearm"></div>
+                <div class="platter-tip">TOUCH / DRAG TO SCRATCH</div>
+              </div>
+              <div class="readouts">
+                <div class="readout"><small>TIME</small><strong id="clockA">00:00</strong></div>
+                <div class="readout"><small>PITCH</small><strong id="pitchReadA">0.0%</strong></div>
+                <div class="readout"><small>RATE</small><strong id="rateA">1.00×</strong></div>
+              </div>
+            </div>
+            <canvas class="wave" id="waveA" aria-label="デッキAの波形"></canvas>
+            <div class="trackline">
+              <input
+                id="seekA"
+                type="range"
+                min="0"
+                max="1000"
+                value="0"
+                aria-label="デッキAの再生位置"
+              />
+              <span class="time" id="durationA">00:00 / 00:00</span>
+            </div>
+            <div class="file-row">
+              <button type="button" class="file-btn" id="loadA" data-log="曲を選ぶ">
+                ＋ LOAD TRACK
+              </button>
+              <input id="fileA" type="file" accept="audio/*" hidden />
+              <span class="file-name" id="fileNameA">Local audio file</span>
+            </div>
+            <div class="controls">
+              <button type="button" class="play" id="playA" data-log="再生">▶ PLAY</button>
+              <button type="button" id="cueA" data-log="キュー">CUE</button>
+              <button type="button" id="backA" data-log="頭へ戻す">↶ RESET</button>
+              <button type="button" id="loopA" data-log="ループ" aria-pressed="false">
+                LOOP OFF
+              </button>
+              <button type="button" id="hotA" data-log="ホットキュー">HOT CUE</button>
+            </div>
+            <div class="pitch">
+              <label for="pitchA">PITCH</label>
+              <input id="pitchA" type="range" min="-16" max="16" value="0" step="0.1" />
+              <output id="pitchValueA">0.0%</output>
+            </div>
+          </section>
+          <section class="mixer" data-log-group="ミキサー">
+            <h2>◈ MIXER CONSOLE</h2>
+            <div class="master">
+              <label for="master">MASTER OUTPUT</label>
+              <input id="master" type="range" min="0" max="1" step="0.01" value="0.85" />
+            </div>
+            <div class="channels">
+              <div class="channel channel-a">
+                <b>CH A</b>
+                <input
+                  id="gainA"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value="0.85"
+                  aria-label="CH A の音量"
+                />
+                <small>LEVEL</small>
+              </div>
+              <div class="channel channel-b">
+                <b>CH B</b>
+                <input
+                  id="gainB"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value="0.85"
+                  aria-label="CH B の音量"
+                />
+                <small>LEVEL</small>
+              </div>
+            </div>
+            <div class="eq">
+              <div>
+                <label for="hi">HI</label
+                ><input id="hi" type="range" min="-24" max="12" value="0" /><small id="hiValue"
+                  >0 dB</small
+                >
+              </div>
+              <div>
+                <label for="mid">MID</label
+                ><input id="mid" type="range" min="-24" max="12" value="0" /><small id="midValue"
+                  >0 dB</small
+                >
+              </div>
+              <div>
+                <label for="low">LOW</label
+                ><input id="low" type="range" min="-24" max="12" value="0" /><small id="lowValue"
+                  >0 dB</small
+                >
+              </div>
+            </div>
+            <div class="cross-wrap">
+              <div class="cross-head">
+                <span>DECK A</span><span>CROSSFADER</span><span>DECK B</span>
+              </div>
+              <input
+                id="cross"
+                type="range"
+                min="0"
+                max="100"
+                value="50"
+                aria-label="クロスフェーダー"
+              />
+            </div>
+            <div class="fx">
+              <button type="button" id="filter" data-log="フィルター" aria-pressed="false">
+                FILTER OFF
+              </button>
+              <button type="button" id="echo" data-log="エコー" aria-pressed="false">
+                ECHO OFF
+              </button>
+            </div>
+            <p class="hint">
+              Load one audio file on each deck.<br />Slide the crossfader to mix.<br />Best
+              experienced in landscape orientation.
+            </p>
+          </section>
+          <section class="deck deck-b" id="deckB" data-log-group="デッキB">
+            <div class="deck-head">
+              <span class="deck-name">02 / DECK B</span>
+              <span class="track" id="titleB">NO TRACK LOADED</span>
+            </div>
+            <div class="record-area">
+              <div class="platter-wrap" id="platterWrapB">
+                <div class="platter" id="platterB">
+                  <div class="label">
+                    <div><b>VINYL</b><span>B · 33⅓</span></div>
+                  </div>
+                </div>
+                <div class="tonearm"></div>
+                <div class="platter-tip">TOUCH / DRAG TO SCRATCH</div>
+              </div>
+              <div class="readouts">
+                <div class="readout"><small>TIME</small><strong id="clockB">00:00</strong></div>
+                <div class="readout"><small>PITCH</small><strong id="pitchReadB">0.0%</strong></div>
+                <div class="readout"><small>RATE</small><strong id="rateB">1.00×</strong></div>
+              </div>
+            </div>
+            <canvas class="wave" id="waveB" aria-label="デッキBの波形"></canvas>
+            <div class="trackline">
+              <input
+                id="seekB"
+                type="range"
+                min="0"
+                max="1000"
+                value="0"
+                aria-label="デッキBの再生位置"
+              />
+              <span class="time" id="durationB">00:00 / 00:00</span>
+            </div>
+            <div class="file-row">
+              <button type="button" class="file-btn" id="loadB" data-log="曲を選ぶ">
+                ＋ LOAD TRACK
+              </button>
+              <input id="fileB" type="file" accept="audio/*" hidden />
+              <span class="file-name" id="fileNameB">Local audio file</span>
+            </div>
+            <div class="controls">
+              <button type="button" class="play" id="playB" data-log="再生">▶ PLAY</button>
+              <button type="button" id="cueB" data-log="キュー">CUE</button>
+              <button type="button" id="backB" data-log="頭へ戻す">↶ RESET</button>
+              <button type="button" id="loopB" data-log="ループ" aria-pressed="false">
+                LOOP OFF
+              </button>
+              <button type="button" id="hotB" data-log="ホットキュー">HOT CUE</button>
+            </div>
+            <div class="pitch">
+              <label for="pitchB">PITCH</label>
+              <input id="pitchB" type="range" min="-16" max="16" value="0" step="0.1" />
+              <output id="pitchValueB">0.0%</output>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <script src="../../common/log.js"></script>
+    <script src="../../common/env.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.ToolKit && window.ToolKit.media) ||
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
+        );
+    </script>
+    <script src="./dj-decks-core.js"></script>
+    <script src="./dj-decks.js"></script>
+  </body>
+</html>
