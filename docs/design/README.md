@@ -19,6 +19,7 @@
 | [support-check.md](./support-check.md) | ブラウザの対応と許可の確認(`common/env.js`。確認中) |
 | [launcher-3d.md](./launcher-3d.md) | 3Dランチャー(本棚・美術館): ES モジュール化と共通部品への組み直し(段 1a まで実装。前の型) |
 | [launcher-3d-bookshelf.md](./launcher-3d-bookshelf.md) | 3D本棚ランチャー(下書き。新しい型の最初の見本) |
+| [dj-decks.md](./dj-decks.md) | DJデッキ: 2台+ミキサーの分かりやすい版(`tools/dj-decks`。確認中) |
 | [dj-turntable-pro.md](./dj-turntable-pro.md) | DJターンテーブル Pro 2台+ミキサー(`tools/dj-turntable-pro`。1台の通常版 `tools/dj-turntable` は別に残す) |
 | [file-transfer.md](./file-transfer.md) | ファイル転送(`tools/file-transfer`) |
 | [novel-reader.md](./novel-reader.md) | 小説読み上げ(`tools/novel-reader`、検証用の試作) |
