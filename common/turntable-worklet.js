@@ -1,4 +1,4 @@
-/* 2台の盤から音を読む部分。AudioWorklet から読み込まれ(出力2つ)、Node でも試せる。
+/* 2台の盤から音を読む部分(DJターンテーブル Pro と DJデッキが共有)。AudioWorklet から読み込まれ(出力2つ)、Node でも試せる。
    モーター(一定の加速度)・指(位置を追うばね)・スリップマット・4点補間・針を落とした時のつなぎを受け持つ */
 (function () {
   'use strict';
@@ -245,6 +245,6 @@
         return true;
       }
     }
-    registerProcessor('dj-turntable-pro-decks', TurntableDecks);
+    registerProcessor('turntable-decks', TurntableDecks);
   }
 })();

@@ -22,10 +22,17 @@ near(C.rateOf(0), 1);
 near(C.rateOf(16), 1.16);
 near(C.rateOf(-8), 0.92);
 
-/* 角度 → 秒(1周 1.8 秒、半周を超える差は反対回り) */
-near(C.secondsOfAngle(Math.PI / 2), 0.45);
-near(C.secondsOfAngle(-Math.PI / 2), -0.45);
-near(C.secondsOfAngle(Math.PI * 1.5), -0.45);
+/* 角度: 差は -180〜180 に、盤の絵は 1 秒 = 200 度 */
+near(C.unwrapDegrees(90), 90);
+near(C.unwrapDegrees(350), -10);
+near(C.unwrapDegrees(-350), 10);
+near(C.platterAngleOf(0), 0);
+near(C.platterAngleOf(1.8), 0);
+near(C.platterAngleOf(0.9), 180);
+near(C.platterAngleOf(-0.45), 270);
+
+/* Int16 への変換: 端を切り、0 は 0 */
+a.deepEqual(Array.from(C.int16Of([0, 1, -1, 2, 0.5])), [0, 32767, -32767, 32767, 16383]);
 
 /* 波形の山: 本数、0〜1、いちばん大きい所が 1 */
 const left = new Float32Array(1000),

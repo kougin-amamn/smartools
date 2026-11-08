@@ -1,4 +1,4 @@
-/* DJデッキの通し試験(設計: docs/design/dj-decks.md の T-02・T-03)。作った WAV を2台に読み込み、
+/* DJデッキの通し試験(設計: docs/design/dj-decks.md の T-02・T-03)。作った WAV を2台に読み込み、スクラッチ・
    波形・PLAY・CUE・LOOP・HOT CUE・STOP ALL・RESET MIXER と、読めない曲の案内、ログにファイル名が無いことを確かめる。
    使い方: node tests/scenarios/dj-decks.js */
 const fs = require('fs');
@@ -66,26 +66,63 @@ function makeWav(seconds) {
     if (waveDrawn < 0.1)
       problems.push(`波形がほとんど描かれていない(${(waveDrawn * 100).toFixed(1)}%)`);
 
-    /* PLAY・CUE(R-02・R-03) */
+    /* PLAY・CUE(R-02・R-03)。回転は約 0.7 秒で立ち上がる */
     await page.click('#playA');
-    await page.waitForTimeout(700);
-    const playing = await page.evaluate(() => ({
-      spinning: document.getElementById('platterA').classList.contains('spinning'),
-      label: document.getElementById('playA').textContent,
-      clock: document.getElementById('clockA').textContent,
-    }));
-    if (!playing.spinning || !/PAUSE/.test(playing.label)) problems.push('PLAY で再生にならない');
+    await page.waitForTimeout(2000);
+    if (!/PAUSE/.test(await text('playA')) || (await text('clockA')) === '00:00')
+      problems.push(`PLAY で再生にならない(${await text('playA')} / ${await text('clockA')})`);
     await page.click('#hotA');
     await page.click('#cueA');
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(300);
     if ((await text('clockA')) !== '00:00' || /PAUSE/.test(await text('playA')))
       problems.push('CUE で止まって頭に戻らない');
+    if ((await text('hotA')) !== 'CUE SET') problems.push('HOT CUE を覚えていない');
 
-    /* LOOP・HOT CUE(R-04・R-05) */
+    /* LOOP(R-04): 3 秒の曲を 4 秒鳴らしても、頭に戻って鳴り続ける */
     await page.click('#loopA');
     if ((await page.getAttribute('#loopA', 'aria-pressed')) !== 'true')
       problems.push('LOOP が ON にならない');
-    if ((await text('hotA')) !== 'CUE SET') problems.push('HOT CUE を覚えていない');
+    await page.click('#playA');
+    await page.waitForTimeout(4000);
+    if (!/PAUSE/.test(await text('playA'))) problems.push('LOOP で曲の終わりから続かない');
+    await page.click('#stopAll');
+    await page.waitForTimeout(1000);
+    if (/PAUSE/.test(await text('playA'))) problems.push('STOP ALL で止まらない');
+
+    /* スクラッチ(R-07): 止めた盤を時計回りに1周なぞると約 1.8 秒進み、反時計回りに半周で戻る */
+    await page.click('#cueA');
+    await page.waitForTimeout(300);
+    const box = await page.locator('#platterWrapA').boundingBox();
+    const cx = box.x + box.width / 2,
+      cy = box.y + box.height / 2,
+      radius = box.width * 0.35;
+    const seekOf = () =>
+      page.evaluate(() => (Number(document.getElementById('seekA').value) / 1000) * 3);
+    async function drag(fromDegrees, toDegrees) {
+      const point = (deg) => [
+        cx + radius * Math.cos((deg * Math.PI) / 180),
+        cy + radius * Math.sin((deg * Math.PI) / 180),
+      ];
+      await page.mouse.move(...point(fromDegrees));
+      await page.mouse.down();
+      const steps = 40;
+      for (let i = 1; i <= steps; i++) {
+        await page.mouse.move(...point(fromDegrees + ((toDegrees - fromDegrees) * i) / steps));
+        await page.waitForTimeout(16);
+      }
+      await page.waitForTimeout(250);
+      await page.mouse.up();
+      await page.waitForTimeout(250);
+    }
+    await drag(-90, 270);
+    const forward = await seekOf();
+    if (forward < 1.4 || forward > 2.2)
+      problems.push(`時計回り1周で ${forward.toFixed(2)} 秒(約 1.8 秒のはず)`);
+    await drag(270, 90);
+    const back = await seekOf();
+    if (!(back < forward - 0.6))
+      problems.push(`反時計回りで戻らない(${forward.toFixed(2)} → ${back.toFixed(2)} 秒)`);
+    if (/PAUSE/.test(await text('playA'))) problems.push('止めた盤が、なぞった後に回り出した');
 
     /* 読めない曲(R-12 / T-03) */
     await page.setInputFiles('#fileB', broken);
@@ -99,12 +136,7 @@ function makeWav(seconds) {
     if ((await text('titleB')) !== 'この曲は読み込めませんでした')
       problems.push(`読めない曲: ${await text('titleB')}`);
 
-    /* STOP ALL・RESET MIXER・FILTER(R-10・R-11) */
-    await page.click('#playA');
-    await page.waitForTimeout(300);
-    await page.click('#stopAll');
-    await page.waitForTimeout(200);
-    if (/PAUSE/.test(await text('playA'))) problems.push('STOP ALL で止まらない');
+    /* RESET MIXER・FILTER(R-10・R-11) */
     await page.click('#filter');
     await page.fill('#cross', '0');
     await page.click('#resetMix');

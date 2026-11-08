@@ -1,9 +1,9 @@
-/* DJデッキの計算(時間の文字・クロスフェーダー・ピッチ・スクラッチの角度・波形の山)。DOM を使わず Node で試せる */
+/* DJデッキの計算(時間の文字・クロスフェーダー・ピッチ・盤の角度・波形の山・Int16 への変換)。DOM を使わず Node で試せる */
 (function (root) {
   'use strict';
 
-  /* 33⅓回転/分は 1周 1.8 秒。盤をなぞった角度を、この割合で再生位置の秒に直す */
-  var SECONDS_PER_TURN = 1.8;
+  /* 33⅓回転/分は 1秒に 200度(1周 1.8 秒)。worklet(common/turntable-worklet.js)も同じ割合で角度を曲の位置に直す */
+  var DEGREES_PER_SECOND = 200;
 
   function pad(n) {
     return String(n).padStart(2, '0');
@@ -27,11 +27,24 @@
     return 1 + pitchPercent / 100;
   }
 
-  /* なぞった角度の差(ラジアン)→ 秒。半周を超える差は反対回りとして扱う */
-  function secondsOfAngle(delta) {
-    if (delta > Math.PI) delta -= Math.PI * 2;
-    if (delta < -Math.PI) delta += Math.PI * 2;
-    return (delta / (Math.PI * 2)) * SECONDS_PER_TURN;
+  /* 角度の差(度)を -180〜180 に直す。指が真上や真下を横切っても、反対回りの1周と取り違えないため */
+  function unwrapDegrees(delta) {
+    return ((((delta + 180) % 360) + 360) % 360) - 180;
+  }
+
+  /* 再生位置(秒)→ 盤の絵の角度(度、0〜360) */
+  function platterAngleOf(seconds) {
+    return (((seconds * DEGREES_PER_SECOND) % 360) + 360) % 360;
+  }
+
+  /* -1〜1 の音 → Int16(worklet へ渡す時、記憶領域を半分にするため) */
+  function int16Of(samples) {
+    var out = new Int16Array(samples.length);
+    for (var i = 0; i < samples.length; i++) {
+      var v = samples[i];
+      out[i] = (v > 1 ? 1 : v < -1 ? -1 : v) * 32767;
+    }
+    return out;
   }
 
   /* 音のチャンネルの配列(Float32Array など)→ count 本の山の高さ(0〜1)。各区間の最大の振れ幅を、全体の最大で割る */
@@ -59,11 +72,13 @@
   }
 
   var api = {
-    SECONDS_PER_TURN: SECONDS_PER_TURN,
+    DEGREES_PER_SECOND: DEGREES_PER_SECOND,
     formatTime: formatTime,
     crossfadeGainsOf: crossfadeGainsOf,
     rateOf: rateOf,
-    secondsOfAngle: secondsOfAngle,
+    unwrapDegrees: unwrapDegrees,
+    platterAngleOf: platterAngleOf,
+    int16Of: int16Of,
     peaksOf: peaksOf,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

@@ -1,5 +1,5 @@
-/* DJデッキの画面と音。2台の <audio> を Web Audio のミキサーにつなぐ。計算は dj-decks-core.js(DjDecksCore)、
-   ログ・Env・ToolKit は共通の物を使う。設計: docs/design/dj-decks.md */
+/* DJデッキの画面と音。音は common/turntable-worklet.js(Pro と共有。モーター・指のばね・スリップマット)が2台分を鳴らし、
+   ここで Web Audio のミキサーにつなぐ。計算は dj-decks-core.js(DjDecksCore)。設計: docs/design/dj-decks.md */
 (function () {
   'use strict';
   var C = window.DjDecksCore;
@@ -11,18 +11,53 @@
   var PEAK_COUNT = 800;
 
   var audioContext = null,
-    mixer = null; /* { bus, eq: [low, mid, hi], filter, delay, feedback, master } */
+    node = null,
+    ready = null,
+    queue = [],
+    mixer = null; /* { channels: [A, B], eq: [low, mid, hi], filter, wet, master } */
   var effects = { filter: false, echo: false };
-  var decks = {};
+  var decks = [];
 
-  /* 音のつながり
-     デッキ → チャンネル(音量×クロスフェーダー)→ 混ぜる → LOW → MID → HI → FILTER → MASTER → スピーカー
-                                                                        └→ ECHO(遅れ⇄戻り)→ MASTER */
+  function isSupported() {
+    return (
+      !!AudioContextClass &&
+      'audioWorklet' in AudioContextClass.prototype &&
+      typeof AudioWorkletNode !== 'undefined'
+    );
+  }
+
+  /* 音の処理を始める(押した時の中で呼ぶ。AudioContext は利用者の操作の中で作る決まり)。
+     worklet の出力 A・B → チャンネル(音量×クロスフェーダー)→ 混ぜる → LOW → MID → HI → FILTER → MASTER → スピーカー
+                                                                              └→ ECHO(遅れ⇄戻り)→ MASTER */
   function startAudio() {
-    if (audioContext) return audioContext;
-    audioContext = new AudioContextClass();
+    if (ready) return ready;
+    audioContext = new AudioContextClass({ latencyHint: 'interactive' });
+    ready = audioContext.audioWorklet
+      .addModule('../../common/turntable-worklet.js')
+      .then(build)
+      .catch(function (err) {
+        statusEl.textContent = '音の処理を始められませんでした。ページを読み込み直してください。';
+        log.error('音の処理の開始でエラーが発生しました', err);
+        throw err;
+      });
+    return ready;
+  }
+  function build() {
     var c = audioContext;
+    node = new AudioWorkletNode(c, 'turntable-decks', {
+      numberOfInputs: 0,
+      numberOfOutputs: 2,
+      outputChannelCount: [2, 2],
+    });
+    node.port.onmessage = function (e) {
+      receive(e.data);
+    };
     var bus = c.createGain();
+    var channels = [c.createGain(), c.createGain()];
+    channels.forEach(function (g, i) {
+      node.connect(g, i, 0);
+      g.connect(bus);
+    });
     var low = c.createBiquadFilter(),
       mid = c.createBiquadFilter(),
       hi = c.createBiquadFilter();
@@ -54,27 +89,44 @@
     delay.connect(wet);
     wet.connect(master);
     master.connect(c.destination);
-    mixer = { bus: bus, eq: [low, mid, hi], filter: filter, wet: wet, master: master };
-    Object.keys(decks).forEach(function (k) {
-      connectDeck(decks[k]);
-    });
+    mixer = { channels: channels, eq: [low, mid, hi], filter: filter, wet: wet, master: master };
     applyMixer();
-    return c;
+    queue.forEach(function (q) {
+      node.port.postMessage(q.message, q.transfer);
+    });
+    queue = [];
   }
-  function connectDeck(d) {
-    if (d.channel || !audioContext) return;
-    d.source = audioContext.createMediaElementSource(d.audio);
-    d.channel = audioContext.createGain();
-    d.source.connect(d.channel);
-    d.channel.connect(mixer.bus);
+  /* worklet へ送る。まだ準備中なら、できた時に順に送る */
+  function send(message, transfer) {
+    if (node) node.port.postMessage(message, transfer || []);
+    else queue.push({ message: message, transfer: transfer || [] });
+  }
+  /* worklet から: state(約 30 回/秒の位置・速さ・モーター)と ended(曲の終わり) */
+  function receive(m) {
+    var d = decks[m.deck];
+    if (!d) return;
+    if (m.type === 'state') {
+      d.pos = m.pos;
+      d.speed = m.speed;
+      d.motor = m.motor;
+      d.posAt = performance.now();
+      showPlay(d);
+      animate();
+    } else if (m.type === 'ended') {
+      if (d.loop) send({ type: 'seek', deck: d.index, pos: 0, mode: 'start' });
+      else {
+        d.motor = false;
+        showPlay(d);
+      }
+    }
   }
 
   /* ミキサーのつまみを音に当てる */
   function applyMixer() {
     if (!mixer) return;
     var x = C.crossfadeGainsOf(Number($('cross').value) / 100);
-    if (decks.A.channel) decks.A.channel.gain.value = Number($('gainA').value) * x.a;
-    if (decks.B.channel) decks.B.channel.gain.value = Number($('gainB').value) * x.b;
+    mixer.channels[0].gain.value = Number($('gainA').value) * x.a;
+    mixer.channels[1].gain.value = Number($('gainB').value) * x.b;
     mixer.master.gain.value = Number($('master').value);
     ['low', 'mid', 'hi'].forEach(function (id, i) {
       mixer.eq[i].gain.value = Number($(id).value);
@@ -84,51 +136,29 @@
   }
 
   /* デッキ */
-  function makeDeck(key) {
-    var audio = new Audio();
-    audio.preload = 'metadata';
-    audio.preservesPitch = audio.webkitPreservesPitch = audio.mozPreservesPitch = false;
+  function makeDeck(key, index) {
     var d = {
       key: key,
-      audio: audio,
-      url: '',
+      index: index,
+      loaded: false,
+      duration: 0,
+      pos: 0,
+      speed: 0,
+      motor: false,
+      posAt: 0,
       peaks: null,
       hot: null,
-      scratching: false,
-      wasPlaying: false,
-      lastAngle: 0,
+      loop: false,
+      grab: null,
     };
     var el = function (name) {
       return $(name + key);
     };
     d.el = el;
-    decks[key] = d;
-
-    audio.addEventListener('loadedmetadata', function () {
-      showTime(d);
-      log(`曲を読み込みました(デッキ${key} / ${C.formatTime(audio.duration)})`);
-    });
-    audio.addEventListener('timeupdate', function () {
-      showTime(d);
-      if (!isPlaying(d)) drawWave(d);
-    });
-    audio.addEventListener('play', function () {
-      showPlay(d);
-      animate();
-    });
-    audio.addEventListener('pause', function () {
-      showPlay(d);
-    });
-    audio.addEventListener('ended', function () {
-      showPlay(d);
-    });
-    audio.addEventListener('error', function () {
-      if (!d.url) return;
-      el('title').textContent = 'この曲は読み込めませんでした';
-      log.warn(`曲を読み込めませんでした(デッキ${key})`);
-    });
+    decks.push(d);
 
     el('load').addEventListener('click', function () {
+      startAudio();
       el('file').click();
     });
     el('file').addEventListener('change', function (e) {
@@ -137,53 +167,63 @@
       if (file) load(d, file);
     });
     el('play').addEventListener('click', function () {
-      if (!d.url) {
+      if (!d.loaded) {
+        startAudio();
         el('file').click();
         return;
       }
-      startAudio();
-      if (audioContext.state === 'suspended') audioContext.resume();
-      if (isPlaying(d)) audio.pause();
-      else
-        audio.play().catch(function (err) {
-          log.warn(`再生できませんでした(デッキ${key})`, err);
-        });
+      audioContext.resume();
+      d.motor = !d.motor;
+      send({ type: 'motor', deck: index, on: d.motor });
+      showPlay(d);
+      animate();
     });
     el('cue').addEventListener('click', function () {
-      if (!d.url) return;
-      audio.pause();
-      audio.currentTime = 0;
+      if (d.loaded) seek(d, 0, 'stop');
     });
     el('back').addEventListener('click', function () {
-      if (d.url) audio.currentTime = 0;
+      if (d.loaded) seek(d, 0, 'keep');
     });
     el('loop').addEventListener('click', function () {
-      audio.loop = !audio.loop;
-      setToggle(el('loop'), audio.loop, 'LOOP ON', 'LOOP OFF');
+      d.loop = !d.loop;
+      setToggle(el('loop'), d.loop, 'LOOP ON', 'LOOP OFF');
     });
     el('hot').addEventListener('click', function () {
-      if (!d.url) return;
+      if (!d.loaded) return;
       if (d.hot === null) {
-        d.hot = audio.currentTime;
+        d.hot = positionOf(d);
         setToggle(el('hot'), true, 'CUE SET', 'HOT CUE');
         log(`ホットキューを覚えました(デッキ${key} / ${C.formatTime(d.hot)})`);
-      } else audio.currentTime = d.hot;
+      } else seek(d, d.hot, 'keep');
     });
     el('seek').addEventListener('input', function (e) {
-      if (audio.duration) audio.currentTime = (Number(e.target.value) / 1000) * audio.duration;
+      if (d.duration) seek(d, (Number(e.target.value) / 1000) * d.duration, 'keep');
     });
     el('pitch').addEventListener('input', function (e) {
       var p = Number(e.target.value);
-      audio.playbackRate = C.rateOf(p);
+      send({ type: 'speed', deck: index, rpmRatio: 1, pitch: p / 100 });
       el('pitchValue').textContent = el('pitchRead').textContent = p.toFixed(1) + '%';
-      el('rate').textContent = audio.playbackRate.toFixed(2) + '×';
+      el('rate').textContent = C.rateOf(p).toFixed(2) + '×';
     });
     bindScratch(d);
     return d;
   }
 
-  function isPlaying(d) {
-    return !d.audio.paused && !d.audio.ended;
+  function seek(d, seconds, mode) {
+    d.pos = seconds;
+    d.posAt = performance.now();
+    if (mode === 'stop') d.motor = false;
+    send({ type: 'seek', deck: d.index, pos: seconds, mode: mode });
+    showPlay(d);
+    draw(d);
+  }
+  /* 今の位置(秒)。worklet の知らせ(約 30 回/秒)の間は、速さから延ばして滑らかにする */
+  function positionOf(d) {
+    var p = d.pos + (d.speed * (performance.now() - d.posAt)) / 1000;
+    return Math.max(0, Math.min(d.duration, p));
+  }
+  function isMoving(d) {
+    return d.motor || Math.abs(d.speed) > 0.001 || !!d.grab;
   }
   function setToggle(button, on, onText, offText) {
     button.textContent = on ? onText : offText;
@@ -191,46 +231,54 @@
     if (button.hasAttribute('aria-pressed')) button.setAttribute('aria-pressed', String(on));
   }
   function showPlay(d) {
-    var playing = isPlaying(d) || (d.scratching && d.wasPlaying);
-    d.el('play').textContent = playing ? 'Ⅱ PAUSE' : '▶ PLAY';
-    d.el('play').classList.toggle('active', playing);
-    d.el('platter').classList.toggle('spinning', isPlaying(d));
-  }
-  function showTime(d) {
-    var a = d.audio;
-    d.el('clock').textContent = C.formatTime(a.currentTime);
-    d.el('duration').textContent = C.formatTime(a.currentTime) + ' / ' + C.formatTime(a.duration);
-    if (!d.scratching) d.el('seek').value = a.duration ? (a.currentTime / a.duration) * 1000 : 0;
+    d.el('play').textContent = d.motor ? 'Ⅱ PAUSE' : '▶ PLAY';
+    d.el('play').classList.toggle('active', d.motor);
   }
 
-  /* 曲を読み込む。前の曲の URL は解放する。波形は曲を一度だけ解析して作る */
+  /* 曲を読み込む。展開して波形の山を作り、Int16 にして worklet へ所有ごと渡す */
   function load(d, file) {
-    startAudio();
-    var a = d.audio;
-    a.pause();
-    if (d.url) URL.revokeObjectURL(d.url);
-    d.url = URL.createObjectURL(file);
+    d.loaded = false;
     d.peaks = null;
     d.hot = null;
-    a.loop = false;
+    d.loop = false;
+    d.duration = d.pos = d.speed = 0;
+    d.motor = false;
     setToggle(d.el('loop'), false, 'LOOP ON', 'LOOP OFF');
     setToggle(d.el('hot'), false, 'CUE SET', 'HOT CUE');
+    showPlay(d);
     d.el('title').textContent = 'LOADING…';
     d.el('fileName').textContent = file.name;
-    a.src = d.url;
-    a.playbackRate = C.rateOf(Number(d.el('pitch').value));
-    drawWave(d);
-    file
-      .arrayBuffer()
+    draw(d);
+    startAudio()
+      .then(function () {
+        return file.arrayBuffer();
+      })
       .then(function (buffer) {
         return audioContext.decodeAudioData(buffer);
       })
       .then(function (decoded) {
         var channels = [];
-        for (var i = 0; i < decoded.numberOfChannels; i++) channels.push(decoded.getChannelData(i));
+        for (var i = 0; i < Math.min(2, decoded.numberOfChannels); i++)
+          channels.push(decoded.getChannelData(i));
         d.peaks = C.peaksOf(channels, PEAK_COUNT);
+        var left = C.int16Of(channels[0]),
+          right = channels[1] ? C.int16Of(channels[1]) : null;
+        send({ type: 'motor', deck: d.index, on: false });
+        send(
+          { type: 'load', deck: d.index, left: left, right: right, sampleRate: decoded.sampleRate },
+          right ? [left.buffer, right.buffer] : [left.buffer],
+        );
+        send({
+          type: 'speed',
+          deck: d.index,
+          rpmRatio: 1,
+          pitch: Number(d.el('pitch').value) / 100,
+        });
+        d.duration = decoded.duration;
+        d.loaded = true;
         d.el('title').textContent = file.name;
-        drawWave(d);
+        draw(d);
+        log(`曲を読み込みました(デッキ${d.key} / ${C.formatTime(d.duration)})`);
       })
       .catch(function (err) {
         d.el('title').textContent = 'この曲は読み込めませんでした';
@@ -238,8 +286,17 @@
       });
   }
 
+  /* 1 デッキ分の絵: 盤の角度、時間、シーク、波形 */
+  function draw(d) {
+    var p = positionOf(d);
+    d.el('platter').style.transform = `rotate(${C.platterAngleOf(p)}deg)`;
+    d.el('clock').textContent = C.formatTime(p);
+    d.el('duration').textContent = C.formatTime(p) + ' / ' + C.formatTime(d.duration);
+    d.el('seek').value = d.duration ? (p / d.duration) * 1000 : 0;
+    drawWave(d, p);
+  }
   /* 波形: 山の高さを中央から上下に描き、再生した所はデッキの色、まだの所は薄く。今の位置に白い線 */
-  function drawWave(d) {
+  function drawWave(d, position) {
     var canvas = d.el('wave'),
       ratio = window.devicePixelRatio || 1,
       w = Math.round(canvas.clientWidth * ratio),
@@ -252,34 +309,41 @@
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, w, h);
     var color = getComputedStyle(d.el('deck')).getPropertyValue('--deck').trim();
-    var a = d.audio,
-      played = a.duration ? (a.currentTime / a.duration) * w : 0;
+    var played = d.duration ? (position / d.duration) * w : 0;
     ctx.fillStyle = 'rgba(255,255,255,0.13)';
     ctx.fillRect(0, h / 2, w, Math.max(1, ratio / 2));
     if (d.peaks) {
       for (var x = 0; x < w; x++) {
-        var p = d.peaks[Math.floor((x / w) * d.peaks.length)] * h * 0.45;
+        var peak = d.peaks[Math.floor((x / w) * d.peaks.length)] * h * 0.45;
         ctx.fillStyle = x < played ? color : 'rgba(255,255,255,0.28)';
-        ctx.fillRect(x, h / 2 - p, 1, p * 2 || 1);
+        ctx.fillRect(x, h / 2 - peak, 1, peak * 2 || 1);
       }
     }
-    if (a.duration) {
+    if (d.duration) {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(Math.min(w - 2 * ratio, played), 0, 2 * ratio, h);
     }
   }
-  /* 再生中・スクラッチ中だけ、画面の更新に合わせて波形を描き直す */
+  /* 動いている間だけ、画面の更新に合わせて描き直す。押さえている盤は、指の角度を毎フレーム送る */
   var animating = false;
   function animate() {
     if (animating) return;
     animating = true;
     (function frame() {
-      var busy = false;
-      Object.keys(decks).forEach(function (k) {
-        var d = decks[k];
-        if (isPlaying(d) || d.scratching) {
+      var busy = false,
+        now = performance.now();
+      decks.forEach(function (d) {
+        if (d.grab)
+          send({
+            type: 'touch',
+            deck: d.index,
+            down: true,
+            angle: d.grab.total,
+            stamp: now / 1000,
+          });
+        if (isMoving(d)) {
           busy = true;
-          drawWave(d);
+          draw(d);
         }
       });
       if (busy) requestAnimationFrame(frame);
@@ -287,38 +351,48 @@
     })();
   }
 
-  /* スクラッチ: なぞった角度を秒に直して再生位置を前後させ、離すと元の状態(再生・停止)に戻す */
+  /* スクラッチ: なぞった角度を何周目も数えて worklet へ送る。worklet がばねで追い、音がこすれる */
   function bindScratch(d) {
     var wrap = d.el('platterWrap');
     function angleOf(e) {
       var r = wrap.getBoundingClientRect();
-      return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2));
+      return (
+        (Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180) /
+        Math.PI
+      );
     }
     wrap.addEventListener('pointerdown', function (e) {
-      if (!d.url) return;
+      if (!d.loaded || d.grab) return;
       wrap.setPointerCapture(e.pointerId);
-      d.scratching = true;
-      d.wasPlaying = isPlaying(d);
-      d.lastAngle = angleOf(e);
-      d.audio.pause();
+      audioContext.resume();
+      d.grab = { id: e.pointerId, raw: angleOf(e), total: 0 };
+      send({ type: 'touch', deck: d.index, down: true, angle: 0, stamp: performance.now() / 1000 });
       animate();
     });
     wrap.addEventListener('pointermove', function (e) {
-      if (!d.scratching) return;
-      var angle = angleOf(e),
-        a = d.audio;
-      var next = a.currentTime + C.secondsOfAngle(angle - d.lastAngle);
-      d.lastAngle = angle;
-      a.currentTime = Math.max(0, Math.min(a.duration || 0, next));
+      var g = d.grab;
+      if (!g || e.pointerId !== g.id) return;
+      var list = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+      (list.length ? list : [e]).forEach(function (p) {
+        var raw = angleOf(p);
+        g.total += C.unwrapDegrees(raw - g.raw);
+        g.raw = raw;
+      });
     });
-    function end() {
-      if (!d.scratching) return;
-      d.scratching = false;
-      if (d.wasPlaying) d.audio.play().catch(function () {});
-      showPlay(d);
+    function release(e) {
+      var g = d.grab;
+      if (!g || e.pointerId !== g.id) return;
+      send({
+        type: 'touch',
+        deck: d.index,
+        down: false,
+        angle: g.total,
+        stamp: performance.now() / 1000,
+      });
+      d.grab = null;
     }
-    wrap.addEventListener('pointerup', end);
-    wrap.addEventListener('pointercancel', end);
+    wrap.addEventListener('pointerup', release);
+    wrap.addEventListener('pointercancel', release);
   }
 
   /* ミキサー */
@@ -343,8 +417,10 @@
       applyMixer();
     });
     $('stopAll').addEventListener('click', function () {
-      Object.keys(decks).forEach(function (k) {
-        decks[k].audio.pause();
+      decks.forEach(function (d) {
+        d.motor = false;
+        send({ type: 'motor', deck: d.index, on: false });
+        showPlay(d);
       });
     });
     $('resetMix').addEventListener('click', function () {
@@ -364,11 +440,13 @@
   }
 
   /* 始める */
-  makeDeck('A');
-  makeDeck('B');
-  if (!AudioContextClass) {
-    statusEl.textContent = 'このブラウザは音の処理に対応していません。';
-    log.warn('このブラウザは音の処理(Web Audio)に対応していません');
+  makeDeck('A', 0);
+  makeDeck('B', 1);
+  var needHttps = Env.requireSecure('音の処理');
+  if (needHttps || !isSupported()) {
+    statusEl.textContent =
+      needHttps || 'このブラウザは、この DJ に必要な音の処理に対応していません。';
+    if (!needHttps) log.warn('このブラウザは AudioWorklet に対応していません');
     document.querySelectorAll('.app button, .app input').forEach(function (el) {
       el.disabled = true;
     });
@@ -376,23 +454,12 @@
   }
   bindMixer();
   window.addEventListener('resize', function () {
-    Object.keys(decks).forEach(function (k) {
-      drawWave(decks[k]);
-    });
+    decks.forEach(draw);
   });
-  Object.keys(decks).forEach(function (k) {
-    drawWave(decks[k]);
-  });
-  /* ページを離れる時: 曲の URL を解放し、音の処理を閉じる。鳴っていた時は停止のログ */
+  decks.forEach(draw);
+  /* ページを離れる時: 音の処理を閉じる。鳴っていた時は停止のログ */
   ToolKit.addCleanup(function () {
-    var playing = false;
-    Object.keys(decks).forEach(function (k) {
-      var d = decks[k];
-      if (isPlaying(d)) playing = true;
-      d.audio.pause();
-      if (d.url) URL.revokeObjectURL(d.url);
-      d.url = '';
-    });
+    var playing = decks.some(isMoving);
     if (audioContext) audioContext.close();
     audioContext = null;
     return playing;

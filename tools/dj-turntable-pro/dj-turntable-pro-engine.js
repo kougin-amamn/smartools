@@ -28,7 +28,7 @@
     var ctx = (this.context = new AC({ latencyHint: 'interactive' }));
     ctx.resume();
     var self = this;
-    this.ready = ctx.audioWorklet.addModule('./dj-turntable-pro-worklet.js').then(function () {
+    this.ready = ctx.audioWorklet.addModule('../../common/turntable-worklet.js').then(function () {
       self.build();
       return self;
     });
@@ -38,7 +38,7 @@
   DJEngine.prototype.build = function () {
     var ctx = this.context,
       self = this;
-    this.node = new AudioWorkletNode(ctx, 'dj-turntable-pro-decks', {
+    this.node = new AudioWorkletNode(ctx, 'turntable-decks', {
       numberOfInputs: 0,
       numberOfOutputs: 2,
       outputChannelCount: [2, 2],

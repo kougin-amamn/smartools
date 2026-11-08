@@ -181,7 +181,7 @@ djay の評判で良かった点は、すっきりして平らな見た目、な
 | `dj-turntable-pro.js` | 起動・各部のつなぎ・設定・キーボード・保存 | scenario |
 | `dj-turntable-pro-core.js` | DOM を使わない計算: 本体の寸法(130×110 単位)、アームの角度と針の位置、ピッチ、クロスフェーダー・アイソレーター・フィルターの曲線、ストロボの見かけの流れ、拍の位置、時刻の表示、曲の鍵 | core |
 | `dj-turntable-pro-engine.js` | 音の部品をつなぐ(AudioContext・worklet・ミキサー・メーター)。画面から呼ぶ命令をまとめる | scenario |
-| `dj-turntable-pro-worklet.js` | 盤から音を読む(2台分)。モーター・手・ばね・補間・キュー | Node で core と同じように試す |
+| `common/turntable-worklet.js`(2026-11-08 に tools から移した。DJデッキと共有) | 盤から音を読む(2台分)。モーター・手・ばね・補間・キュー | Node で core と同じように試す |
 | `dj-turntable-pro-analysis.js` | Web Worker: 波形の山と色、BPM と拍の位置 | Node で試す |
 | `dj-turntable-pro-textures.js` | 先に描いておく絵: 盤・レコード・ラベル・ストロボ・反射・つまみ | — |
 | `dj-turntable-pro-deck-view.js` | デッキ1台分の画面: 盤・アーム・ピッチ・ボタン・指の扱い | scenario |

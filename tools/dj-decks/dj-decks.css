@@ -171,10 +171,7 @@
     inset 0 0 0 2px #080a0b,
     0 9px 20px rgba(0, 0, 0, 0.55);
   cursor: grab;
-  animation: spin 1.8s linear infinite paused;
-}
-.platter.spinning {
-  animation-play-state: running;
+  will-change: transform;
 }
 .platter::before {
   content: '';
@@ -199,11 +196,6 @@
   background: #b7c0c4;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 0 4px #111;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 .label {
   position: absolute;

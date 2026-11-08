@@ -1,6 +1,6 @@
 /* tools/dj-turntable-pro の計算・盤の音(worklet)・解析(BPM) */
 const C = require('../../tools/dj-turntable-pro/dj-turntable-pro-core.js');
-const { Deck } = require('../../tools/dj-turntable-pro/dj-turntable-pro-worklet.js');
+const { Deck } = require('../../common/turntable-worklet.js');
 const { analyze } = require('../../tools/dj-turntable-pro/dj-turntable-pro-analysis.js');
 const a = require('assert');
 const near = (x, y, e, what) => a.ok(Math.abs(x - y) <= e, what + ': ' + x + ' (期待 ' + y + ')');
