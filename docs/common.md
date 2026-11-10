@@ -9,7 +9,7 @@
 | `site.css` / `site.js` / `themes.json` | 全ページ | 配色のトークン、ヘッダ、テーマ、カラーテーマ、環境情報、デバッグ画面、埋め込み表示 |
 | `tool.css` / `tool-kit.js` | ツールだけ | ページの土台、`window.ToolKit`(`esc`)、設定シート、ランチャーへ戻るボタン |
 | `device.js` | ツールだけ(`tool-kit.js` が読む。HTML に書かない) | 端末の機能を `ToolKit` に足す: 振動・コピー・カメラとマイク・ライト・センサー([design/device.md](./design/device.md)) |
-| `turntable-worklet.js` | DJ のツールだけ(`audioWorklet.addModule('../../common/turntable-worklet.js')` で読む。HTML に書かない) | 2台の盤から音を読む AudioWorklet(処理の名前 `turntable-decks`)。モーター・指のばね・スリップマット。DJターンテーブル Pro と DJデッキが共有([design/dj-turntable-pro.md](./design/dj-turntable-pro.md) の 5.3) |
+| `turntable-worklet.js` | DJ のツールだけ(`audioWorklet.addModule('../../common/turntable-worklet.js')` で読む。HTML に書かない) | 2台の盤から音を読む AudioWorklet(処理の名前 `turntable-decks`)。モーター・指のばね・スリップマット。DJデッキが使う。DJターンテーブル Pro から来た部品で、Pro は 2026-11-11 に Toolbox Pro へ移した(設計は Toolbox Pro の `docs/design/dj-turntable-pro.md` の 5.3) |
 
 ## ToolKit(ツールだけ)
 

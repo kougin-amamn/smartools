@@ -9,11 +9,11 @@
 - 位置づけ:
   - `dj-turntable`(通常版): 1台。いちばん軽い。
   - `dj-decks`(このツール): 2台とミキサー。文字のボタンとスライダーで、迷わず使える。スクラッチの音は Pro と同じ。
-  - `dj-turntable-pro`: 2台とミキサー。実機に似せた見た目、BPM、細かいミキサー。
+  - DJターンテーブル Pro: 2台とミキサー。実機に似せた見た目、BPM、細かいミキサー。2026-11-11 に [Toolbox Pro](https://github.com/kougin-amamn/toolbox-pro) へ移した。
 - うまくいったと言える目安: 初めて開いた人が、説明を読まずに2曲を読み込み、クロスフェーダーでつなげる。
 - 前提: https(AudioWorklet に必要)。AudioWorklet がある、今のスマホとパソコンのブラウザ。外部のライブラリは使わない。
 - やらないこと:
-  - BPM の自動検出と、テンポを揃える機能(SYNC)。Pro に任せる。
+  - BPM の自動検出と、テンポを揃える機能(SYNC)。Toolbox Pro の DJターンテーブル Pro に任せる。
   - 曲の保存(次に開いた時に残すこと)。
 
 ## 2. 基本設計
@@ -161,7 +161,7 @@
 | `dj-decks.css` | 見た目(色のトークン、横・縦の並び) | 200 |
 | `dj-decks-core.js` | 計算: 時間の文字、クロスフェーダーの音量、ピッチ→速さ、角度→秒、波形の山 | 60 |
 | `dj-decks.js` | 画面と音: デッキ、ミキサー、波形の描画、スクラッチ、worklet とのやり取り | 380 |
-| `common/turntable-worklet.js` | 盤から音を読む(Pro と共有。DJデッキでは変えない) | 250 |
+| `common/turntable-worklet.js` | 盤から音を読む(Pro から来た部品。Toolbox Pro にも同じ物がある。DJデッキでは変えない) | 250 |
 
 ### 3.2 部品の仕様(`window.DjDecksCore`)
 

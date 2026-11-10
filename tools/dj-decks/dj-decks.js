@@ -1,4 +1,4 @@
-/* DJデッキの画面と音。音は common/turntable-worklet.js(Pro と共有。モーター・指のばね・スリップマット)が2台分を鳴らし、
+/* DJデッキの画面と音。音は common/turntable-worklet.js(Toolbox Pro の DJターンテーブル Pro と同じ部品。モーター・指のばね・スリップマット)が2台分を鳴らし、
    ここで Web Audio のミキサーにつなぐ。計算は dj-decks-core.js(DjDecksCore)。設計: docs/design/dj-decks.md */
 (function () {
   'use strict';

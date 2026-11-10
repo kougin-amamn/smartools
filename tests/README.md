@@ -11,7 +11,6 @@
 | `node tests/smoke.js tools/<slug> --logs` | 上に加えて、各ページのログを出す | — |
 | `node tests/scenarios/file-transfer.js` | ファイル転送の通し試験(2つのタブ・確認番号・圧縮・切断からの再開) | 10秒 |
 | `node tests/scenarios/novel-reader.js` | 小説読み上げの通し試験(偽のカクヨムでブックマークレット・別タブへ受け渡し・1文ずつの読み上げ) | 5秒 |
-| `node tests/scenarios/dj-turntable-pro.js` | DJターンテーブル Pro の通し試験(作った曲を2台に読み込み、BPM・START・メーター・クロスフェーダー・スクラッチ・ホットキュー) | 10秒 |
 | `node tests/scenarios/dj-decks.js` | DJデッキの通し試験(作った WAV を2台に読み込み、波形・スクラッチ(1周で 1.8 秒)・PLAY・CUE・LOOP・HOT CUE・STOP ALL・RESET MIXER、読めない曲、ログにファイル名が無い) | 5秒 |
 | `node tests/scenarios/page-exit.js` | ページを離れる時の終了処理と保存、カメラの自動停止、QR 読み取り・懐中電灯のカメラの停止、メモ帳の保存(偽のカメラと ZXing の偽物) | 5秒 |
 | `THREE_JS_DIR=… node tests/scenarios/launcher-3d.js` | 3Dランチャー(本棚・美術館)の起動・本のタップ・three.js が無い時の 2D の一覧 | 20秒 |

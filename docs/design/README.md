@@ -20,7 +20,6 @@
 | [launcher-3d.md](./launcher-3d.md) | 3Dランチャー(本棚・美術館): ES モジュール化と共通部品への組み直し(段 1a まで実装。前の型) |
 | [launcher-3d-bookshelf.md](./launcher-3d-bookshelf.md) | 3D本棚ランチャー(下書き。新しい型の最初の見本) |
 | [dj-decks.md](./dj-decks.md) | DJデッキ: 2台+ミキサーの分かりやすい版(`tools/dj-decks`) |
-| [dj-turntable-pro.md](./dj-turntable-pro.md) | DJターンテーブル Pro 2台+ミキサー(`tools/dj-turntable-pro`。1台の通常版 `tools/dj-turntable` は別に残す) |
 | [file-transfer.md](./file-transfer.md) | ファイル転送(`tools/file-transfer`) |
 | [novel-reader.md](./novel-reader.md) | 小説読み上げ(`tools/novel-reader`、検証用の試作) |
 
@@ -153,3 +152,5 @@
 - 設計と違った事: 何を・なぜ・どの節を直したか。
 - AI が決めた事: 人に聞かずに決めた事と理由。
 ```
+
+ほかのリポジトリへ移した設計書: `dj-turntable-pro.md`(DJターンテーブル Pro)は 2026-11-11 に [Toolbox Pro](https://github.com/kougin-amamn/toolbox-pro/blob/main/docs/design/dj-turntable-pro.md) へ移した。
