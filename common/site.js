@@ -124,7 +124,9 @@
       '#' +
       x
         .map(function (v, i) {
-          return p(Math.round(v * t + y[i] * (1 - t)).toString(16));
+          return Math.round(v * t + y[i] * (1 - t))
+            .toString(16)
+            .padStart(2, '0');
         })
         .join('')
     );
