@@ -1,0 +1,522 @@
+/* DJデッキの画面。DJ の機械の画面なので、サイトの配色の代わりに暗い地と A ミント・B 琥珀を使う(docs/ui.md の例外) */
+:root {
+  --dj-bg: #101316;
+  --dj-panel-top: #20272c;
+  --dj-panel-bottom: #151a1e;
+  --dj-well: #0d1113;
+  --dj-inset: #141a1e;
+  --dj-line: #303a40;
+  --dj-line-soft: #2b353a;
+  --dj-button: #293238;
+  --dj-button-line: #3b484f;
+  --dj-text: #edf2f3;
+  --dj-muted: #91a0a8;
+  --dj-a: #7fe0d2;
+  --dj-b: #e7b66b;
+}
+
+.content {
+  display: block;
+  min-height: 100%;
+  padding: 0 0 calc(env(safe-area-inset-bottom, 0px) + 22px);
+  background: radial-gradient(ellipse at 50% -20%, #26353b 0, var(--dj-bg) 55%) var(--dj-bg);
+  color: var(--dj-text);
+  overflow-y: auto;
+}
+.app {
+  max-width: 1400px;
+  margin: auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) 18px 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ヘッダは画面の上に隠す(common の bar-hidden)。つまみだけ地の色に合わせる */
+.bar-handle {
+  background: linear-gradient(180deg, #2c353b, #1b2125);
+  box-shadow:
+    0 0 0 1px #080a0b,
+    0 3px 8px rgba(0, 0, 0, 0.6);
+}
+.bar-handle span {
+  background: var(--dj-muted);
+  opacity: 1;
+}
+
+/* ボタンとスライダー */
+.app button {
+  color: inherit;
+  background: var(--dj-button);
+  border: 1px solid var(--dj-button-line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.app button:active {
+  transform: translateY(1px);
+}
+.app button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.app input[type='range'] {
+  accent-color: var(--dj-a);
+}
+.deck-b input[type='range'] {
+  accent-color: var(--dj-b);
+}
+.deck .active {
+  border-color: var(--deck);
+  color: var(--deck);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--deck) 25%, transparent);
+}
+.mixer .active {
+  border-color: var(--dj-a);
+  color: var(--dj-a);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 14px;
+}
+.status {
+  margin: 0 0 12px;
+  text-align: center;
+  color: #ffb4a8;
+  font-size: 13px;
+}
+.status:empty {
+  display: none;
+}
+
+/* 並び: デッキ・ミキサー・デッキ */
+.studio {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+.deck,
+.mixer {
+  background: linear-gradient(145deg, var(--dj-panel-top), var(--dj-panel-bottom));
+  border: 1px solid var(--dj-line);
+  border-radius: 15px;
+  padding: 14px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.32);
+  min-width: 0;
+}
+.deck-a {
+  --deck: var(--dj-a);
+}
+.deck-b {
+  --deck: var(--dj-b);
+}
+
+/* デッキ */
+.deck-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.deck-name {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  font-weight: 900;
+  color: var(--deck);
+  white-space: nowrap;
+}
+.track {
+  font-size: 12px;
+  color: var(--dj-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.record-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 88px;
+  gap: 12px;
+  align-items: center;
+}
+.platter-wrap {
+  aspect-ratio: 1;
+  max-width: 390px;
+  width: 100%;
+  margin: auto;
+  position: relative;
+  display: grid;
+  place-items: center;
+  touch-action: none;
+}
+.platter {
+  width: 94%;
+  height: 94%;
+  border-radius: 50%;
+  position: relative;
+  background: repeating-radial-gradient(
+    circle at center,
+    #141719 0 2px,
+    #24292c 3px 4px,
+    #111416 5px 7px
+  );
+  border: 7px solid #30383d;
+  box-shadow:
+    inset 0 0 0 2px #080a0b,
+    0 9px 20px rgba(0, 0, 0, 0.55);
+  cursor: grab;
+  will-change: transform;
+}
+.platter::before {
+  content: '';
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  border: 1px solid rgba(104, 116, 122, 0.33);
+  background: repeating-radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.035) 0 1px,
+    transparent 1px 5px
+  );
+}
+.platter::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #b7c0c4;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 4px #111;
+}
+.label {
+  position: absolute;
+  width: 39%;
+  height: 39%;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 35% 30%, #52656a, #26383d 60%, #11191d);
+  border: 2px solid rgba(128, 144, 149, 0.33);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: #dce5e5;
+  pointer-events: none;
+}
+/* 文字は中心の軸をよけて、上に VINYL、下に面と回転数 */
+.label div {
+  display: grid;
+  gap: 24px;
+  line-height: 1.2;
+}
+.label b {
+  font-size: 12px;
+  display: block;
+  color: var(--deck);
+}
+.tonearm {
+  position: absolute;
+  right: 1%;
+  top: 2%;
+  width: 29%;
+  height: 29%;
+  border-top: 5px solid #aeb8ba;
+  border-right: 5px solid #aeb8ba;
+  border-radius: 0 90% 0 0;
+  transform: rotate(8deg);
+  filter: drop-shadow(1px 2px 2px #000);
+  pointer-events: none;
+}
+.tonearm::after {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 8px;
+  background: #c4cdcf;
+  right: -9px;
+  top: 3px;
+  transform: rotate(40deg);
+  border-radius: 2px;
+}
+.platter-tip {
+  position: absolute;
+  bottom: -2px;
+  color: #89979d;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+.readouts {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.readout {
+  background: var(--dj-well);
+  border: 1px solid var(--dj-line-soft);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+}
+.readout small {
+  display: block;
+  color: var(--dj-muted);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+.readout strong {
+  font-variant-numeric: tabular-nums;
+  font-size: 17px;
+}
+.wave {
+  width: 100%;
+  height: 55px;
+  background: var(--dj-well);
+  border: 1px solid var(--dj-line-soft);
+  border-radius: 7px;
+  margin: 13px 0 8px;
+  display: block;
+}
+.trackline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.trackline input {
+  flex: 1;
+  min-width: 0;
+}
+.time {
+  font-size: 10px;
+  color: var(--dj-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 76px;
+  text-align: right;
+}
+.file-row {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  margin: 10px 0;
+}
+.app .file-btn {
+  font-size: 11px;
+  white-space: nowrap;
+}
+.file-name {
+  font-size: 10px;
+  color: var(--dj-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.controls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+  margin-top: 10px;
+}
+.app .controls button {
+  white-space: nowrap;
+  padding: 9px 4px;
+  font-size: 11px;
+}
+.app .controls .play {
+  grid-column: span 2;
+  font-size: 13px;
+}
+.pitch {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+}
+.pitch label {
+  font-size: 10px;
+  color: var(--dj-muted);
+}
+.pitch input {
+  flex: 1;
+  min-width: 0;
+}
+.pitch output {
+  font-size: 11px;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ミキサー */
+.mixer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mixer h2 {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-align: center;
+  margin: 2px 0 0;
+  color: #dce4e6;
+}
+.master {
+  background: var(--dj-well);
+  border: 1px solid var(--dj-line-soft);
+  border-radius: 9px;
+  padding: 10px;
+}
+.master label,
+.eq label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--dj-muted);
+  display: block;
+  margin-bottom: 6px;
+}
+.master input {
+  width: 100%;
+}
+.channels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.channel {
+  background: var(--dj-inset);
+  border: 1px solid var(--dj-line-soft);
+  border-radius: 9px;
+  padding: 9px;
+  text-align: center;
+}
+.channel b {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.channel-a b {
+  color: var(--dj-a);
+}
+.channel-b b {
+  color: var(--dj-b);
+}
+.channel-b input {
+  accent-color: var(--dj-b);
+}
+.channel input {
+  width: 100%;
+  margin: 9px 0;
+}
+.channel small,
+.eq small {
+  color: var(--dj-muted);
+  font-size: 9px;
+}
+.eq {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+.eq div {
+  background: var(--dj-inset);
+  border: 1px solid var(--dj-line-soft);
+  border-radius: 8px;
+  padding: 7px;
+  text-align: center;
+}
+.eq input {
+  width: 100%;
+}
+.cross-wrap {
+  padding: 7px 2px;
+}
+.cross-head {
+  display: flex;
+  justify-content: space-between;
+  color: var(--dj-muted);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  margin-bottom: 7px;
+}
+.cross-wrap input {
+  width: 100%;
+}
+.fx {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+.app .fx button {
+  font-size: 10px;
+  padding: 8px 3px;
+}
+.hint {
+  color: #84939a;
+  font-size: 10px;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 幅に合わせた並び */
+@media (max-width: 900px) {
+  .studio {
+    grid-template-columns: minmax(0, 1fr) 190px minmax(0, 1fr);
+    gap: 8px;
+  }
+  .deck,
+  .mixer {
+    padding: 10px;
+  }
+  .record-area {
+    grid-template-columns: minmax(0, 1fr) 65px;
+    gap: 7px;
+  }
+  .readout {
+    padding: 6px;
+  }
+  .readout strong {
+    font-size: 14px;
+  }
+}
+@media (max-width: 680px) {
+  .app {
+    padding: calc(env(safe-area-inset-top, 0px) + 14px) 9px 0;
+  }
+  .studio {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .deck {
+    padding: 12px;
+  }
+  .record-area {
+    grid-template-columns: minmax(0, 1fr) 78px;
+    max-width: 520px;
+    margin: auto;
+  }
+  .platter-wrap {
+    max-width: 330px;
+  }
+  .mixer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .mixer > * {
+    grid-column: 1 / -1;
+  }
+  .toolbar {
+    margin-bottom: 10px;
+  }
+}
