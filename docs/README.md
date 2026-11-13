@@ -5,6 +5,7 @@
 | 文書 | いつ読むか |
 | --- | --- |
 | [design-philosophy.md](./design-philosophy.md) | **いちばん上の考え方**(使いやすさを、美しく。)。ツールを設計・見直す時に最初に読む。ほかの文書と食い違ったら、こちらを優先する |
+| [concept-review.md](./concept-review.md) | コンセプトに照らした点検の結果と、直す順番(2026-11-14) |
 | [site.md](./site.md) | フォルダ・読み込み順・一覧(index-data.json)・ランチャー・公開の仕組みを知りたい時 |
 | [common.md](./common.md) | 共通部品(ToolKit・site.js がすること)を使う・直す時 |
 | [ui.md](./ui.md) | 配色・ヘッダ・設定シート・ボタン・アイコンを作る時 |
