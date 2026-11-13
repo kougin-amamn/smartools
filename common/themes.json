@@ -1,17 +1,8 @@
 [
-  { "no": "00", "id": "standard", "name": "紺紫×ミント(標準)", "main": "#4a4e7a", "sub": "#5cc4b6" },
-  { "no": "01", "id": "blue", "name": "ブルー", "main": "#2563EB", "sub": "#93C5FD" },
-  { "no": "02", "id": "purple", "name": "パープル", "main": "#7C3AED", "sub": "#C4B5FD" },
-  { "no": "03", "id": "green", "name": "グリーン", "main": "#16865B", "sub": "#86D6AE" },
-  { "no": "04", "id": "orange", "name": "オレンジ", "main": "#EA7A24", "sub": "#FDBA74" },
-  { "no": "05", "id": "red", "name": "レッド", "main": "#DC3F4F", "sub": "#FCA5A5" },
-  { "no": "06", "id": "cyan", "name": "シアン", "main": "#0891B2", "sub": "#67E8F9" },
-  { "no": "07", "id": "teal", "name": "ティール", "main": "#0F766E", "sub": "#5EEAD4" },
-  { "no": "08", "id": "pink", "name": "ピンク", "main": "#DB2777", "sub": "#F9A8D4" },
-  { "no": "09", "id": "magenta", "name": "マゼンタ", "main": "#C026D3", "sub": "#E879F9" },
-  { "no": "10", "id": "yellow", "name": "イエロー", "main": "#CA8A04", "sub": "#FDE047" },
-  { "no": "11", "id": "lime", "name": "ライム", "main": "#65A30D", "sub": "#BEF264" },
-  { "no": "12", "id": "brown", "name": "ブラウン", "main": "#92400E", "sub": "#D6A77A" },
-  { "no": "13", "id": "gray", "name": "グレー", "main": "#64748B", "sub": "#CBD5E1" },
-  { "no": "14", "id": "indigo", "name": "インディゴ", "main": "#4338CA", "sub": "#A5B4FC" }
+  {"no": "01", "id": "ocean-coral", "name": "Ocean × Coral", "desc": "ネイビー × コーラル × ターコイズ", "light": {"bg": "#eff5f8", "card": "#ffffff", "text": "#172b3d", "button": "#17637c", "buttonText": "#ffffff", "accent": "#f9a38d", "accentInk": "#342018", "accentText": "#9d422c", "border": "#c8d7e1"}, "dark": {"bg": "#101d30", "card": "#1c344b", "text": "#f3f5f4", "button": "#267c94", "buttonText": "#ffffff", "accent": "#ff8066", "accentInk": "#24120e", "accentText": "#ffad9a", "border": "#466075"}},
+  {"no": "02", "id": "violet-lime", "name": "Violet × Lime", "desc": "ディープパープル × ライム", "light": {"bg": "#f5f1f8", "card": "#ffffff", "text": "#28223b", "button": "#674393", "buttonText": "#ffffff", "accent": "#d3e99a", "accentInk": "#26330d", "accentText": "#496c14", "border": "#d9cde5"}, "dark": {"bg": "#211735", "card": "#392653", "text": "#f5f1f8", "button": "#7653a8", "buttonText": "#ffffff", "accent": "#a7d94a", "accentInk": "#1a2608", "accentText": "#c3ed76", "border": "#604b77"}},
+  {"no": "03", "id": "forest-rose", "name": "Forest × Rose", "desc": "フォレストグリーン × ローズ", "light": {"bg": "#f2f6f0", "card": "#ffffff", "text": "#20372b", "button": "#32664d", "buttonText": "#ffffff", "accent": "#e8b3bf", "accentInk": "#4a1d29", "accentText": "#9c4058", "border": "#c9d9ce"}, "dark": {"bg": "#172b25", "card": "#29463a", "text": "#f5f3ed", "button": "#427c62", "buttonText": "#ffffff", "accent": "#d98a9b", "accentInk": "#35151e", "accentText": "#f1b2c1", "border": "#4d6d5e"}},
+  {"no": "04", "id": "sunset-pop", "name": "Sunset Pop", "desc": "オレンジ × コバルト × マゼンタ", "light": {"bg": "#fff5e9", "card": "#ffffff", "text": "#39283b", "button": "#315ca3", "buttonText": "#ffffff", "accent": "#f5b27f", "accentInk": "#47220b", "accentText": "#a74d16", "border": "#e6d4cb"}, "dark": {"bg": "#251c2b", "card": "#493047", "text": "#fff5e9", "button": "#3869b5", "buttonText": "#ffffff", "accent": "#f28b45", "accentInk": "#2c1607", "accentText": "#ffb77f", "border": "#745469"}},
+  {"no": "05", "id": "cyber-yellow", "name": "Cyber Yellow", "desc": "チャコール × イエロー × シアン", "light": {"bg": "#f3f5f7", "card": "#ffffff", "text": "#202b36", "button": "#b58c08", "buttonText": "#171707", "accent": "#a6e7ec", "accentInk": "#14383b", "accentText": "#176f7c", "border": "#ced9e0"}, "dark": {"bg": "#171c24", "card": "#29313e", "text": "#f3f5f7", "button": "#f4d33f", "buttonText": "#25200a", "accent": "#39bfd0", "accentInk": "#062b30", "accentText": "#7be0eb", "border": "#48576a"}},
+  {"no": "06", "id": "burgundy-mint", "name": "Burgundy × Mint", "desc": "バーガンディ × ミント", "light": {"bg": "#faf2e9", "card": "#ffffff", "text": "#3c2531", "button": "#823d60", "buttonText": "#ffffff", "accent": "#a5ddce", "accentInk": "#183c33", "accentText": "#23745f", "border": "#e3d2d9"}, "dark": {"bg": "#301a28", "card": "#512a40", "text": "#faf2e9", "button": "#9d4d73", "buttonText": "#ffffff", "accent": "#65bfa9", "accentInk": "#12362e", "accentText": "#91e3cd", "border": "#78516a"}}
 ]

@@ -1,28 +1,32 @@
-/* 全ページ共通の配色(標準は案A 紺紫×ミント。カラーテーマは site.js が上書き)・ヘッダ・埋め込み表示。ページ側で編集しない */
+/* 全ページ共通の配色(何も選んでいない時は 01 Ocean × Coral。ほかのカラーテーマは site.js が上書き。値の作り方は docs/design/color-theme.md の 3.2)・ヘッダ・埋め込み表示。ページ側で編集しない */
 :root {
-  --bg: #f5f5f7;
+  --bg: #eff5f8;
   --panel: #ffffff;
-  --text: #1c1d22;
-  --sub: #7a7d8a;
-  --fn-bg: #e3e5f3;
-  --fn-fg: #1c1d22;
-  --func: #5cc4b6;
-  --func-fg: #0b2b27;
-  --accent: #4a4e7a;
+  --text: #172b3d;
+  --sub: #6d7c88;
+  --fn-bg: #dfe9ed;
+  --fn-fg: #172b3d;
+  --func: #f9a38d;
+  --func-fg: #342018;
+  --accent: #17637c;
   --accent-fg: #ffffff;
+  --accent-text: #9d422c;
+  --border: #c8d7e1;
   --danger: #c93a3a;
 }
 :root[data-theme='dark'] {
-  --bg: #15161c;
-  --panel: #1e2029;
-  --text: #f0f0f4;
-  --sub: #8b8ea0;
-  --fn-bg: #2c3040;
-  --fn-fg: #f0f0f4;
-  --func: #7fe0d2;
-  --func-fg: #0b2b27;
-  --accent: #8086c9;
-  --accent-fg: #14151c;
+  --bg: #101d30;
+  --panel: #1c344b;
+  --text: #f3f5f4;
+  --sub: #989fa6;
+  --fn-bg: #1e455d;
+  --fn-fg: #f3f5f4;
+  --func: #ff8066;
+  --func-fg: #24120e;
+  --accent: #267c94;
+  --accent-fg: #ffffff;
+  --accent-text: #ffad9a;
+  --border: #466075;
   --danger: #ff7a7a;
 }
 * {

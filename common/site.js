@@ -93,7 +93,7 @@
      選んだ色はこの端末に保存し、同じサイトの全ページで共有する(保存がない時は site.css の標準の配色)。
      1テーマは濃い色 main と淡い色 sub の2色。ライトはヘッダ main・ボタン sub、ダークはその逆にして両方の色を使う */
   var COLOR_KEY = 'site-color',
-    STANDARD = 'standard',
+    DEFAULT_THEME = 'ocean-coral',
     colorStyle = null,
     themes = null;
   /* themes.json は site.js と同じフォルダ。ページの深さ(tools/〜、launchers/)によらず site.js の場所から求める */
@@ -104,18 +104,6 @@
   function rgb(h) {
     var n = parseInt(h.slice(1), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  }
-  /* WCAG の相対輝度。文字色を白と黒のどちらにすると読みやすいかの判定に使う */
-  function lum(h) {
-    var w = [0.2126, 0.7152, 0.0722];
-    return rgb(h).reduce(function (s, v, i) {
-      v /= 255;
-      return s + w[i] * (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
-    }, 0);
-  }
-  function textOn(h) {
-    var L = lum(h);
-    return 1.05 / (L + 0.05) >= (L + 0.05) / (lum('#14151c') + 0.05) ? '#ffffff' : '#14151c';
   }
   function mix(a, b, t) {
     var x = rgb(a),
@@ -131,23 +119,31 @@
         .join('')
     );
   }
-  function tokens(acc, fn, tint) {
-    return (
-      '--accent:' +
-      acc +
-      ';--accent-fg:' +
-      textOn(acc) +
-      ';--func:' +
-      fn +
-      ';--func-fg:' +
-      textOn(fn) +
-      ';--fn-bg:' +
-      tint +
-      ';'
-    );
+  /* テーマの見本の値(bg・card・button など)→ サイトのトークン。対応は docs/design/color-theme.md の 3.2 */
+  function tokensOf(c, dark) {
+    var list = [
+      ['--bg', c.bg],
+      ['--panel', c.card],
+      ['--text', c.text],
+      ['--sub', mix(c.text, c.bg, 0.6)],
+      ['--fn-bg', mix(c.button, c.card, dark ? 0.24 : 0.14)],
+      ['--fn-fg', c.text],
+      ['--func', c.accent],
+      ['--func-fg', c.accentInk],
+      ['--accent', c.button],
+      ['--accent-fg', c.buttonText],
+      ['--accent-text', c.accentText],
+      ['--border', c.border],
+    ];
+    return list
+      .map(function (p) {
+        return p[0] + ':' + p[1] + ';';
+      })
+      .join('');
   }
+  /* 何も選んでいない時(01 Ocean × Coral)は site.css の色のまま。今までのテーマ(light・dark の無い物)も同じ扱い */
   function applyColor(c) {
-    if (!c || c.id === STANDARD || !c.main || !c.sub) {
+    if (!c || c.id === DEFAULT_THEME || !c.light || !c.dark) {
       if (colorStyle) colorStyle.remove();
       colorStyle = null;
       return;
@@ -159,9 +155,9 @@
     }
     colorStyle.textContent =
       ':root{' +
-      tokens(c.main, c.sub, mix(c.main, '#ffffff', 0.13)) +
+      tokensOf(c.light, false) +
       '}:root[data-theme="dark"]{' +
-      tokens(c.sub, c.main, mix(c.sub, '#15161c', 0.18)) +
+      tokensOf(c.dark, true) +
       '}';
   }
   function savedColor() {
@@ -204,10 +200,10 @@
   }
   function choose(t) {
     log('「カラーテーマ」の「' + t.name + '」ボタンを押下しました');
-    color = { id: t.id, name: t.name, main: t.main, sub: t.sub };
+    color = { id: t.id, name: t.name, light: t.light, dark: t.dark };
     applyColor(color);
     try {
-      if (t.id === STANDARD) localStorage.removeItem(COLOR_KEY);
+      if (t.id === DEFAULT_THEME) localStorage.removeItem(COLOR_KEY);
       else localStorage.setItem(COLOR_KEY, JSON.stringify(color));
     } catch (e) {
       log.warn('カラーテーマの保存に失敗しました(このページだけ切り替えます)', e);
@@ -219,7 +215,7 @@
   }
   function buildMenu(list) {
     var box = menu.querySelector('.color-list'),
-      now = color ? color.id : STANDARD;
+      now = color && color.light ? color.id : DEFAULT_THEME;
     box.textContent = '';
     list.forEach(function (t) {
       var b = document.createElement('button'),
@@ -230,7 +226,9 @@
       b.dataset.id = t.id;
       b.setAttribute('aria-pressed', String(t.id === now));
       chip.className = 'color-chip';
-      chip.style.background = 'linear-gradient(135deg,' + t.main + ' 50%,' + t.sub + ' 50%)';
+      var shown = document.documentElement.dataset.theme === 'dark' ? t.dark : t.light;
+      chip.style.background =
+        'linear-gradient(135deg,' + shown.button + ' 50%,' + shown.accent + ' 50%)';
       name.textContent = t.no + ' ' + t.name;
       b.append(chip, name);
       b.onclick = function () {
@@ -244,7 +242,8 @@
       list.filter(function (t) {
         return t.id === color.id;
       })[0];
-    if (cur && (cur.main !== color.main || cur.sub !== color.sub)) choose(cur);
+    if (cur && JSON.stringify([cur.light, cur.dark]) !== JSON.stringify([color.light, color.dark]))
+      choose(cur);
   }
   function closeMenu(why) {
     if (!menu || menu.hidden) return;
