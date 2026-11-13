@@ -47,7 +47,14 @@ body {
   font-size: 13px;
   text-decoration: none;
 }
-.view[aria-current='page'] {
+button.view {
+  border: 0;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.view[aria-current='page'],
+.view[aria-pressed='true'] {
   background: var(--func);
   color: var(--func-fg);
   font-weight: 600;
@@ -172,4 +179,14 @@ body {
   .card {
     transition: none;
   }
+}
+
+/* 並べ替えた時の、最後に開いた日時・回数(カードの右上) */
+.use {
+  flex: none;
+  align-self: flex-start;
+  margin-left: auto;
+  color: var(--sub);
+  font-size: 12px;
+  white-space: nowrap;
 }

@@ -9,6 +9,7 @@
 | `site.css` / `site.js` / `themes.json` | 全ページ | 配色のトークン、ヘッダ、テーマ、カラーテーマ、環境情報、デバッグ画面、埋め込み表示 |
 | `tool.css` / `tool-kit.js` | ツールだけ | ページの土台、`window.ToolKit`(`esc`)、設定シート、ランチャーへ戻るボタン |
 | `device.js` | ツールだけ(`tool-kit.js` が読む。HTML に書かない) | 端末の機能を `ToolKit` に足す: 振動・コピー・カメラとマイク・ライト・センサー([design/device.md](./design/device.md)) |
+| `tool-usage.js` | ツール(tool-kit.js が読む)と一覧(index.html) | ツールを開いた日時と回数の記録(この端末だけ)と、一覧の並べ替え(`window.ToolUsage`)。設計は [design/tool-sort.md](./design/tool-sort.md) |
 
 ## ToolKit(ツールだけ)
 

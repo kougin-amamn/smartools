@@ -1,9 +1,13 @@
-/* 一覧ページ。index-data.json のツールを分類ごとに並べる。common/site.js(ログ・テーマ)の後に読み込む */
+/* 一覧ページ。index-data.json のツールを、選んだ並び(分類・最近・よく使う・名前)で並べる。
+   common/site.js(ログ・テーマ)と common/tool-usage.js(開いた記録と並べ替え)の後に読み込む。設計: docs/design/tool-sort.md */
 (function () {
   'use strict';
   log.started.later(); // 一覧を読んで並べ終えた時に出す
   var listEl = document.getElementById('list'),
-    statusEl = document.getElementById('status');
+    statusEl = document.getElementById('status'),
+    sortsEl = document.getElementById('sorts');
+  var SORT_KEY = 'index-sort',
+    allTools = [];
 
   /* href / icon は省略時 tools/<slug>/ の中を指す。書いてあればサイトのルートからの相対パス(または絶対URL) */
   function fromRoot(path) {
@@ -33,7 +37,16 @@
     return img;
   }
 
-  function cardEl(t) {
+  /* 並べ替えた時だけ、カードに最後に開いた日時か回数を添える */
+  function noteOf(t, mode, data) {
+    var use = data[t.slug];
+    if (!use) return '';
+    if (mode === 'recent') return ToolUsage.agoText(use.last, Date.now());
+    if (mode === 'frequent') return use.count + '回';
+    return '';
+  }
+
+  function cardEl(t, note) {
     var a = document.createElement('a'),
       body = document.createElement('div'),
       title = document.createElement('p'),
@@ -64,12 +77,54 @@
       });
       body.appendChild(tags);
     }
-    a.append(iconEl(t), body);
+    if (note) {
+      var u = document.createElement('span');
+      u.className = 'use';
+      u.textContent = note;
+      a.append(iconEl(t), body, u);
+    } else a.append(iconEl(t), body);
     a.setAttribute('data-log', t.title);
     var li = document.createElement('li');
     li.appendChild(a);
     return li;
   }
+
+  /* 分類以外の並び: 見出しを外して1列にする */
+  function renderFlat(tools, mode) {
+    var data = ToolUsage.usage(),
+      ul = document.createElement('ul');
+    ul.className = 'grid';
+    ToolUsage.sortTools(tools, mode, data).forEach(function (t) {
+      ul.appendChild(cardEl(t, noteOf(t, mode, data)));
+    });
+    listEl.textContent = '';
+    listEl.appendChild(ul);
+  }
+  function sortModeOf() {
+    try {
+      var m = localStorage.getItem(SORT_KEY);
+      return window.ToolUsage && ToolUsage.MODES.indexOf(m) >= 0 ? m : 'category';
+    } catch (e) {
+      return 'category';
+    }
+  }
+  function show(mode) {
+    sortsEl.querySelectorAll('[data-sort]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.sort === mode));
+    });
+    if (mode === 'category') render(allTools);
+    else renderFlat(allTools, mode);
+  }
+  sortsEl.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-sort]');
+    if (!b) return;
+    try {
+      localStorage.setItem(SORT_KEY, b.dataset.sort);
+    } catch (err) {
+      log.warn('並びの保存に失敗しました(このページだけ並べ替えます)', err);
+    }
+    show(b.dataset.sort);
+  });
 
   /* 分類は index-data.json に出てきた順に並べる */
   function render(tools) {
@@ -143,9 +198,13 @@
       return r.json();
     })
     .then(function (tools) {
-      var cats = render(tools);
+      allTools = tools;
+      var cats = render(tools),
+        mode = sortModeOf();
+      sortsEl.hidden = !window.ToolUsage; // 記録の部品が読めない時は、分類の順だけ
+      if (window.ToolUsage) show(mode);
       statusEl.hidden = true;
-      log.started(tools.length + '件 / ' + cats + '分類');
+      log.started(tools.length + '件 / ' + cats + '分類 / 並び ' + mode);
     })
     .catch(function (e) {
       statusEl.textContent =

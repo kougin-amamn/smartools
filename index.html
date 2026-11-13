@@ -42,12 +42,22 @@
         <span class="views-label">表示</span>
         <a class="view" aria-current="page" href="./index.html">一覧</a>
       </nav>
+      <nav class="views" id="sorts" aria-label="並び" hidden>
+        <span class="views-label">並び</span>
+        <button type="button" class="view" data-sort="category" data-log="分類">分類</button>
+        <button type="button" class="view" data-sort="recent" data-log="最近">最近</button>
+        <button type="button" class="view" data-sort="frequent" data-log="よく使う">
+          よく使う
+        </button>
+        <button type="button" class="view" data-sort="name" data-log="名前">名前</button>
+      </nav>
       <p class="status" id="status" role="status">ツールの一覧を読み込んでいます…</p>
       <div id="list"></div>
     </main>
     <script src="./common/log.js"></script>
     <script src="./common/env.js"></script>
     <script src="./common/site.js"></script>
+    <script src="./common/tool-usage.js"></script>
     <script>
       window.log ||
         document.body.insertAdjacentHTML(
