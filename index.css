@@ -23,14 +23,44 @@ body {
   color: var(--sub);
   font-size: 14px;
 }
-/* 一覧とランチャーの切り替え */
+/* 一覧とランチャーの切り替え(左)と並び(右)を1行に置く。上の行を増やさないため */
+.list-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+}
 .views {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 6px;
-  margin: 0 0 12px;
   overflow-x: auto;
   scrollbar-width: none;
+}
+.sort {
+  flex: none;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--sub);
+  font-size: 13px;
+}
+/* 文字は 16px(iPhone で選ぶ時に画面が拡大されないため) */
+.sort select {
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font: inherit;
+  font-size: 16px;
+}
+.sort select:focus-visible {
+  outline: 2px solid var(--func);
+  outline-offset: 2px;
 }
 .views-label {
   flex: none;
@@ -47,14 +77,7 @@ body {
   font-size: 13px;
   text-decoration: none;
 }
-button.view {
-  border: 0;
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-}
-.view[aria-current='page'],
-.view[aria-pressed='true'] {
+.view[aria-current='page'] {
   background: var(--func);
   color: var(--func-fg);
   font-weight: 600;

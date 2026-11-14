@@ -15,7 +15,7 @@ const FIRST_TOOL = require('../../index-data.json')[0];
     expect((await page.getAttribute('html', 'lang')) === 'en', 'html の lang が en でない');
     expect((await page.textContent('.lead')) === en.site.tagline, '説明の文が英語でない');
     expect(
-      (await page.textContent('[data-sort="recent"]')).trim() === 'Recent',
+      (await page.textContent('#sortSelect option[value="recent"]')).trim() === 'Recent',
       '並びのボタンが英語でない',
     );
     const head = await page.textContent('#list .cat-head');
@@ -66,7 +66,7 @@ const FIRST_TOOL = require('../../index-data.json')[0];
     await Promise.all([page.waitForEvent('load'), page.click('#languageBtn')]);
     await page.waitForSelector('#sorts:not([hidden])', { timeout: 3000 });
     expect(
-      (await page.textContent('[data-sort="recent"]')).trim() === '最近',
+      (await page.textContent('#sortSelect option[value="recent"]')).trim() === '最近',
       '切り替えた後に一覧が日本語にならない',
     );
     await page.goto(site.base + '/tools/calculator/calculator.html');
@@ -124,7 +124,7 @@ const FIRST_TOOL = require('../../index-data.json')[0];
     const ja = await site.open('index.html');
     await ja.page.waitForSelector('#sorts:not([hidden])', { timeout: 3000 });
     expect(
-      (await ja.page.textContent('[data-sort="recent"]')).trim() === '最近',
+      (await ja.page.textContent('#sortSelect option[value="recent"]')).trim() === '最近',
       '日本語の端末で並びのボタンが変わった',
     );
     expect(

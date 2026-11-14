@@ -5,7 +5,8 @@
   log.started.later(); // 一覧を読んで並べ終えた時に出す
   var listEl = document.getElementById('list'),
     statusEl = document.getElementById('status'),
-    sortsEl = document.getElementById('sorts');
+    sortsEl = document.getElementById('sorts'),
+    sortSelect = document.getElementById('sortSelect');
   var SORT_KEY = 'index-sort',
     allTools = [];
 
@@ -123,21 +124,17 @@
     }
   }
   function show(mode) {
-    sortsEl.querySelectorAll('[data-sort]').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b.dataset.sort === mode));
-    });
+    sortSelect.value = mode;
     if (mode === 'category') render(allTools);
     else renderFlat(allTools, mode);
   }
-  sortsEl.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-sort]');
-    if (!b) return;
+  sortSelect.addEventListener('change', function () {
     try {
-      localStorage.setItem(SORT_KEY, b.dataset.sort);
+      localStorage.setItem(SORT_KEY, sortSelect.value);
     } catch (err) {
       log.warn('並びの保存に失敗しました(このページだけ並べ替えます)', err);
     }
-    show(b.dataset.sort);
+    show(sortSelect.value);
   });
 
   /* 分類は index-data.json に出てきた順に並べる */

@@ -30,19 +30,19 @@ const TOOL_COUNT = require('../../index-data.json').length;
         n,
       );
 
-    await page.click('[data-sort="recent"]');
+    await page.selectOption('#sortSelect', 'recent');
     let cards = await firstCards(2);
     if (!/^方位磁石 たった今$/.test(cards[0]) || !/^メモ帳/.test(cards[1]))
       problems.push(`最近の順が違う(${cards.join(' / ')})`);
     if (await page.locator('#list .cat-head').count())
       problems.push('最近の時に分類の見出しが残っている');
 
-    await page.click('[data-sort="frequent"]');
+    await page.selectOption('#sortSelect', 'frequent');
     cards = await firstCards(2);
     if (cards[0] !== 'メモ帳 3回' || cards[1] !== '方位磁石 1回')
       problems.push(`よく使う順が違う(${cards.join(' / ')})`);
 
-    await page.click('[data-sort="name"]');
+    await page.selectOption('#sortSelect', 'name');
     cards = await firstCards(TOOL_COUNT);
     if (cards.some((c) => / \d+回|前$|たった今$/.test(c)))
       problems.push('名前の時に日時・回数が出ている');
@@ -50,15 +50,15 @@ const TOOL_COUNT = require('../../index-data.json').length;
       problems.push(`名前の時の件数 ${cards.length}(${TOOL_COUNT} のはず)`);
 
     /* 選んだ並びが残る */
-    await page.click('[data-sort="frequent"]');
+    await page.selectOption('#sortSelect', 'frequent');
     await page.reload();
     await page.waitForSelector('#sorts:not([hidden])', { timeout: 3000 });
-    if ((await page.getAttribute('[data-sort="frequent"]', 'aria-pressed')) !== 'true')
+    if ((await page.inputValue('#sortSelect')) !== 'frequent')
       problems.push('読み込み直すと並びが戻る');
     if ((await firstCards(1))[0] !== 'メモ帳 3回') problems.push('読み込み直した後の並びが違う');
 
     /* 分類に戻すと見出しが戻る */
-    await page.click('[data-sort="category"]');
+    await page.selectOption('#sortSelect', 'category');
     if (!(await page.locator('#list .cat-head').count()))
       problems.push('分類に戻しても見出しが無い');
 

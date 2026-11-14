@@ -40,55 +40,27 @@
       <p class="lead" data-i18n="site.tagline">
         ブラウザだけで使える小さなツール集です。インストールは不要です。
       </p>
-      <nav
-        class="views"
-        id="views"
-        aria-label="表示の切り替え"
-        data-i18n-label="list.viewSwitch"
-        hidden
-      >
-        <span class="views-label" data-i18n="list.view">表示</span>
-        <a class="view" aria-current="page" href="./index.html" data-i18n="list.viewList">一覧</a>
-      </nav>
-      <nav class="views" id="sorts" aria-label="並び" data-i18n-label="list.sort" hidden>
-        <span class="views-label" data-i18n="list.sort">並び</span>
-        <button
-          type="button"
-          class="view"
-          data-sort="category"
-          data-log="分類"
-          data-i18n="list.sortCategory"
+      <div class="list-bar">
+        <nav
+          class="views"
+          id="views"
+          aria-label="表示の切り替え"
+          data-i18n-label="list.viewSwitch"
+          hidden
         >
-          分類
-        </button>
-        <button
-          type="button"
-          class="view"
-          data-sort="recent"
-          data-log="最近"
-          data-i18n="list.sortRecent"
-        >
-          最近
-        </button>
-        <button
-          type="button"
-          class="view"
-          data-sort="frequent"
-          data-log="よく使う"
-          data-i18n="list.sortFrequent"
-        >
-          よく使う
-        </button>
-        <button
-          type="button"
-          class="view"
-          data-sort="name"
-          data-log="名前"
-          data-i18n="list.sortName"
-        >
-          名前
-        </button>
-      </nav>
+          <span class="views-label" data-i18n="list.view">表示</span>
+          <a class="view" aria-current="page" href="./index.html" data-i18n="list.viewList">一覧</a>
+        </nav>
+        <label class="sort" id="sorts" hidden>
+          <span data-i18n="list.sort">並び</span>
+          <select id="sortSelect" data-log="並び">
+            <option value="category" data-i18n="list.sortCategory">分類</option>
+            <option value="recent" data-i18n="list.sortRecent">最近</option>
+            <option value="frequent" data-i18n="list.sortFrequent">よく使う</option>
+            <option value="name" data-i18n="list.sortName">名前</option>
+          </select>
+        </label>
+      </div>
       <p class="status" id="status" role="status" data-i18n="list.loading">
         ツールの一覧を読み込んでいます…
       </p>
