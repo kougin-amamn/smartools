@@ -20,7 +20,7 @@
 }
 .calc {
   width: 100%;
-  max-width: 380px;
+  max-width: 760px; /* タブレットでも横に広く使う(キーは低く、横長にする) */
   background: var(--panel);
   border-radius: 28px;
   padding: 22px 16px 20px;
@@ -33,6 +33,8 @@
   margin-bottom: 8px;
 }
 .history-list {
+  display: flex;
+  flex-direction: column; /* 行が少ない時も、窓に近い下に寄せる(最初の行の上を自動の余白にする) */
   list-style: none;
   margin: 0;
   padding: 0 16px 0 52px;
@@ -40,6 +42,9 @@
   overflow-y: auto;
   scrollbar-width: none;
   text-align: right;
+}
+.history-list > li:first-child {
+  margin-top: auto;
 }
 .history-item {
   display: block;
@@ -126,9 +131,9 @@
   border: none;
   cursor: pointer;
   font-size: 21px;
-  border-radius: var(--radius);
+  border-radius: 999px; /* 丸みのある横長のキー */
   padding: 0;
-  aspect-ratio: 1/0.82;
+  height: clamp(54px, 8.5vh, 76px);
   background: var(--key-bg);
   color: var(--key-fg);
   box-shadow: 0 2px 0 var(--key-shadow);
@@ -140,7 +145,12 @@
     opacity 0.06s ease;
   -webkit-tap-highlight-color: transparent;
 }
-.pad button:active {
+.pad .zero {
+  grid-column: span 2;
+}
+/* 押した時と、対応するキーボードのキーを押した時(.pressed)の見た目 */
+.pad button:active,
+.pad button.pressed {
   transform: scale(0.94);
   opacity: 0.85;
 }
@@ -162,26 +172,38 @@
   height: 20px;
   display: block;
 }
-/* 横向き: 表示を左、キーを右に並べ、キーの高さを画面の高さから決めて全部が収まるようにする(キーは5段) */
+/* 横向き: 履歴と表示を左、キーを右に並べ、キーの高さを画面の高さから決めて全部が収まるようにする(キーは5段) */
 @media (orientation: landscape) and (max-height: 600px) {
   .calc {
     max-width: 760px;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    grid-template-areas:
+      'history pad'
+      'display pad';
+    grid-template-rows: 1fr auto;
     column-gap: 18px;
     align-items: end;
     padding: 12px 14px;
     border-radius: 22px;
   }
+  .history {
+    grid-area: history;
+    align-self: stretch;
+    height: auto;
+    min-height: 60px;
+  }
   .display {
-    padding: 8px 6px;
+    grid-area: display;
+    padding: 8px 12px;
+    margin-bottom: 0;
   }
   .pad {
+    grid-area: pad;
     margin-top: 0;
     gap: 8px;
   }
   .pad button {
-    aspect-ratio: auto;
     height: calc((var(--land-h) - 24px - 32px) / 5);
   }
 }

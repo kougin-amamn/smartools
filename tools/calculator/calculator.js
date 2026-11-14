@@ -124,22 +124,41 @@ function onTap(container, selector, handler) {
     log('履歴を消しました(' + count + '件)');
   });
 
+  /* キーボード: 画面のキーと同じ働き。押したキーに対応する画面のキーも、押した見た目にする */
   var KEYS = {
     '.': ['dot'],
+    ',': ['dot'],
     '+': ['op', '+'],
     '-': ['op', '−'],
     '*': ['op', '×'],
+    x: ['op', '×'],
     '/': ['op', '÷'],
+    '%': ['percent'],
     Enter: ['equals'],
     '=': ['equals'],
     Escape: ['clear'],
+    Delete: ['clear'],
+    c: ['clear'],
     Backspace: ['back'],
   };
+  function buttonOf(act, val) {
+    return pad.querySelector('[data-act="' + act + '"]' + (val ? '[data-val="' + val + '"]' : ''));
+  }
+  function flash(button) {
+    if (!button) return;
+    button.classList.add('pressed');
+    setTimeout(function () {
+      button.classList.remove('pressed');
+    }, 120);
+  }
   window.addEventListener('keydown', function (e) {
-    var k = e.key >= '0' && e.key <= '9' && e.key.length === 1 ? ['num', e.key] : KEYS[e.key];
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    var k = key >= '0' && key <= '9' && key.length === 1 ? ['num', key] : KEYS[key];
     if (!k) return;
-    if (e.key === 'Enter' || e.key === '/') e.preventDefault();
+    e.preventDefault();
     log('キーボードの「' + e.key + '」を押下しました');
+    flash(buttonOf(k[0], k[1]));
     run(k[0], k[1]);
   });
 
