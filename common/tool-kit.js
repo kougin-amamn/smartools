@@ -94,9 +94,11 @@
 
   root.ToolKit = { esc: esc };
 
-  /* 端末の機能: HTML の読み込みを増やさないよう、同じフォルダの device.js をここから読む。
+  /* 端末の機能(device.js)と、開いた記録(tool-usage.js。一覧の並べ替え用): HTML の読み込みを増やさないよう、同じフォルダからここで読む。
      document.write で書いた script は、この後の HTML(読み込み確認・ツールの js)より先に読まれて動く */
   var self = document.currentScript;
   if (self && document.readyState === 'loading')
-    document.write('<script src="' + new URL('device.js', self.src).href + '"></' + 'script>');
+    ['device.js', 'tool-usage.js'].forEach(function (file) {
+      document.write('<script src="' + new URL(file, self.src).href + '"></' + 'script>');
+    });
 })(this);
