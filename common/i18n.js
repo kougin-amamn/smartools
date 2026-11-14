@@ -63,6 +63,112 @@
     document.title = tool.title + ' | ' + tool.desc;
   }
 
+  /* ツールの中の文(段 3): en.json の tools.<slug>.text に「日本語の文 → その言語の文」。キーの {名前} は差し込み */
+  var toolSlug = (/\/tools\/([^/]+)\//.exec(location.pathname) || [])[1],
+    texts = null,
+    patterns = [];
+  function fill(text, vars) {
+    Object.keys(vars || {}).forEach(function (k) {
+      text = text.split('{' + k + '}').join(vars[k]);
+    });
+    return text;
+  }
+  function escapeRegExp(text) {
+    return text.replace(/[.*+?^$()|[\]\\]/g, '\\$&');
+  }
+  function prepareTexts() {
+    var tool = words && words.tools && words.tools[toolSlug];
+    texts = (tool && tool.text) || null;
+    patterns = Object.keys(texts || {})
+      .filter(function (k) {
+        return /\{[^}]+\}/.test(k);
+      })
+      .map(function (k) {
+        var names = [],
+          source = k.split(/(\{[^}]+\})/).map(function (part) {
+            var m = /^\{([^}]+)\}$/.exec(part);
+            if (!m) return escapeRegExp(part);
+            names.push(m[1]);
+            return '(.+?)';
+          });
+        return { regexp: new RegExp('^' + source.join('') + '$'), names: names, key: k };
+      })
+      .sort(function (a, b) {
+        return b.key.length - a.key.length; // 長い形(年まである日付など)を先に試す
+      });
+  }
+  /* 日本語の文を、今の言語の文にする。対応表に無ければ日本語のまま(差し込みは埋める) */
+  function say(japanese, vars) {
+    var text =
+      texts && Object.prototype.hasOwnProperty.call(texts, japanese) ? texts[japanese] : japanese;
+    return fill(text, vars);
+  }
+  /* 画面に出た文の置き換え。まるごと一致した時と、差し込みの形に合った時だけ */
+  function translated(text) {
+    var trimmed = text.trim();
+    if (!trimmed || !texts) return null;
+    if (Object.prototype.hasOwnProperty.call(texts, trimmed))
+      return text.replace(trimmed, texts[trimmed]);
+    for (var i = 0; i < patterns.length; i++) {
+      var m = patterns[i].regexp.exec(trimmed);
+      if (!m) continue;
+      var vars = {};
+      patterns[i].names.forEach(function (name, n) {
+        var part = m[n + 1],
+          inner = part.length < trimmed.length ? translated(part) : null; // 差し込まれた値も、形が合えば訳す
+        vars[name] = inner !== null ? inner : say(part);
+      });
+      return text.replace(trimmed, fill(texts[patterns[i].key], vars));
+    }
+    return null;
+  }
+  /* 文を置き換えない所(入力欄の中身・ログ)。名前(aria-label など)は、入力欄でも置き換える */
+  var SKIP = 'script,style,textarea,[contenteditable],[data-i18n-skip],#eruda',
+    SKIP_NAMES = '[data-i18n-skip],#eruda',
+    ATTRIBUTES = ['aria-label', 'title', 'placeholder'];
+  function translateElement(el) {
+    if (el.closest(SKIP_NAMES)) return;
+    ATTRIBUTES.forEach(function (name) {
+      var v = el.getAttribute(name),
+        t = v && translated(v);
+      if (t !== null && t !== undefined && t !== v) el.setAttribute(name, t);
+    });
+  }
+  function translateNode(node) {
+    if (node.nodeType === 3) {
+      if (!node.parentElement || node.parentElement.closest(SKIP)) return;
+      var t = translated(node.nodeValue);
+      if (t !== null && t !== node.nodeValue) node.nodeValue = t;
+      return;
+    }
+    if (node.nodeType !== 1) return;
+    translateElement(node);
+    if (node.closest(SKIP)) return;
+    var walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      var n = walker.currentNode;
+      if (n.nodeType === 3) translateNode(n);
+      else translateElement(n);
+    }
+  }
+  function watchTexts() {
+    if (!texts || !document.body) return;
+    translateNode(document.body);
+    new MutationObserver(function (records) {
+      records.forEach(function (r) {
+        if (r.type === 'characterData') translateNode(r.target);
+        else if (r.type === 'attributes') translateElement(r.target);
+        else r.addedNodes.forEach(translateNode);
+      });
+    }).observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ATTRIBUTES,
+    });
+  }
+
   function setLanguage(next) {
     if (LANGUAGES.indexOf(next) < 0 || next === language) return;
     try {
@@ -82,6 +188,10 @@
       words = data;
       apply();
       applyToolTitle();
+      if (language !== 'ja') {
+        prepareTexts();
+        watchTexts();
+      }
       document.dispatchEvent(new CustomEvent('i18n-ready', { detail: { language: language } }));
       return language;
     })
@@ -94,6 +204,7 @@
     LANGUAGES: LANGUAGES,
     language: language,
     t: t,
+    say: say,
     apply: apply,
     ready: ready,
     setLanguage: setLanguage,

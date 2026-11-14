@@ -87,6 +87,39 @@ const FIRST_TOOL = require('../../index-data.json')[0];
     if (real.length) problems.push('エラー(英語): ' + real.join(' / '));
     await context.close();
 
+    /* 段 3: 英語の端末で、訳したツールの画面に日本語が残っていない(日本でしか使わない物を除く) */
+    const KEEP_JAPANESE =
+      /13時05分09秒|壱弐参|子丑寅|赤口|先勝|友引|先負|仏滅|大安|令和\d+年|一粒万倍日|天赦日|[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]|\S*の日|\S*休日|元日|天皇誕生日|[立小大][春夏秋冬雪暑寒満]|[春秋]分|[夏冬]至|清明|穀雨|芒種|処暑|白露|寒露|霜降|雨水|啓蟄/g;
+    for (const slug of Object.keys(en.tools).filter((s) => en.tools[s].text)) {
+      const tool = await site.open(`tools/${slug}/${slug}.html`, { locale: 'en-US' });
+      await tool.page.waitForFunction(() => window.I18n && I18n.isReady());
+      await tool.page.waitForTimeout(300);
+      const left = await tool.page.evaluate(() => {
+        const skip = 'script,style,textarea,#eruda,.color-menu,.info-menu';
+        const out = [],
+          walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
+          );
+        while (walker.nextNode()) {
+          const n = walker.currentNode;
+          if (n.nodeType === 3) {
+            if (!n.parentElement.closest(skip)) out.push(n.nodeValue);
+          } else if (!n.closest(skip))
+            ['aria-label', 'title', 'placeholder'].forEach(
+              (a) => n.getAttribute(a) && out.push(n.getAttribute(a)),
+            );
+        }
+        return out;
+      });
+      const japanese = left
+        .map((t) => t.replace(KEEP_JAPANESE, '').trim())
+        .filter((t) => /[ぁ-んァ-ヶ一-龥]/.test(t));
+      if (japanese.length)
+        problems.push(`${slug} に日本語が残っている(${japanese.slice(0, 3).join(' / ')})`);
+      await tool.context.close();
+    }
+
     /* 日本語の端末: 今までどおり */
     const ja = await site.open('index.html');
     await ja.page.waitForSelector('#sorts:not([hidden])', { timeout: 3000 });
@@ -109,5 +142,5 @@ const FIRST_TOOL = require('../../index-data.json')[0];
   } finally {
     await site.close();
   }
-  process.exit(report('多言語化(段 2)', problems) ? 0 : 1);
+  process.exit(report('多言語化(段 2・段 3)', problems) ? 0 : 1);
 })();
