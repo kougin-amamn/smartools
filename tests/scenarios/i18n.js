@@ -58,8 +58,18 @@ const FIRST_TOOL = require('../../index-data.json')[0];
       '戻るボタンの名前が英語でない',
     );
 
-    /* 言語のボタンで日本語に。読み込み直した後も残る */
+    expect(!(await page.locator('#languageBtn').count()), 'ツールのページに言語のボタンがある');
+
+    /* 一覧の言語のボタンで日本語に。ツールのページにも効き、読み込み直した後も残る */
+    await page.goto(site.base + '/index.html');
+    await page.waitForFunction(() => window.I18n && I18n.isReady());
     await Promise.all([page.waitForEvent('load'), page.click('#languageBtn')]);
+    await page.waitForSelector('#sorts:not([hidden])', { timeout: 3000 });
+    expect(
+      (await page.textContent('[data-sort="recent"]')).trim() === '最近',
+      '切り替えた後に一覧が日本語にならない',
+    );
+    await page.goto(site.base + '/tools/calculator/calculator.html');
     await page.waitForFunction(() => window.I18n && I18n.isReady());
     expect(
       (await page.textContent('.site-bar h1')).trim().startsWith('電卓'),

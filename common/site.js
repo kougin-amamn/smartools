@@ -475,17 +475,21 @@
 
   /* 言語
      i18n.js(lang/<言語>.json を読み、data-i18n の付いた文を置き換える)を、HTML の読み込みを増やさないよう同じフォルダから読む。
-     ヘッダの先頭に切り替えのボタンを足し、押すと保存して読み込み直す。設計: docs/design/i18n.md */
+     一覧のヘッダに切り替えのボタンを足し、押すと保存して読み込み直す(選んだ言語は全ページで使う)。設計: docs/design/i18n.md */
   var self = document.currentScript;
   if (self && document.readyState === 'loading')
     document.write('<script src="' + new URL('i18n.js', self.src).href + '"><\/script>');
   var LANGUAGE_NAMES = { ja: '日本語', en: 'English' };
-  var lbtn = addHeaderButton(
-    'languageBtn',
-    '言語',
-    '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
-    bar && bar.querySelector('.dbg-btn:not(.back-btn)'),
-  );
+  /* 言語のボタンは、ヘッダに data-language-switch の付いたページ(一覧)だけに出す。ツールのヘッダを狭くしないため */
+  var lbtn =
+    bar &&
+    bar.hasAttribute('data-language-switch') &&
+    addHeaderButton(
+      'languageBtn',
+      '言語',
+      '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+      bar && bar.querySelector('.dbg-btn:not(.back-btn)'),
+    );
   function otherLanguageOf(language) {
     return language === 'ja' ? 'en' : 'ja';
   }
