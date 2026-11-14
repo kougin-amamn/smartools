@@ -26,6 +26,69 @@
   padding: 22px 16px 20px;
   box-shadow: 0 20px 60px rgba(20, 24, 34, 0.1);
 }
+/* 計算の履歴(窓の外の上)。小さく弱い文字で、3 行分の高さ。押すとその答えを使う */
+.history {
+  position: relative;
+  height: 72px;
+  margin-bottom: 8px;
+}
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 16px 0 52px;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  text-align: right;
+}
+.history-item {
+  display: block;
+  width: 100%;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: var(--sub);
+  font: inherit;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.history-item:focus {
+  outline: none;
+}
+.history-item:focus-visible {
+  outline: 2px solid var(--func);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+.history-item:active {
+  color: var(--text);
+}
+.history-empty {
+  position: absolute;
+  right: 16px;
+  bottom: 2px;
+  margin: 0;
+  color: var(--sub);
+  font-size: 13px;
+}
+.history-clear {
+  position: absolute;
+  left: 4px;
+  bottom: 0;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--fn-bg);
+  color: var(--fn-fg);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
 .display {
   padding: 14px 16px 12px;
   margin-bottom: 14px;

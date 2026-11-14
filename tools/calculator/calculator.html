@@ -45,6 +45,19 @@
     </header>
     <main class="content">
       <div class="calc" role="group" aria-label="電卓">
+        <section class="history" aria-label="計算の履歴">
+          <ol class="history-list" id="historyList"></ol>
+          <p class="history-empty" id="historyEmpty">計算の履歴</p>
+          <button
+            type="button"
+            class="history-clear"
+            id="historyClear"
+            data-log="履歴を消す"
+            hidden
+          >
+            消す
+          </button>
+        </section>
         <div class="display">
           <div class="expr" id="expr">&nbsp;</div>
           <div class="result" id="result">0</div>

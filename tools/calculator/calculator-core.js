@@ -95,13 +95,30 @@
       back: function () {
         st.current = st.current.length > 1 ? st.current.slice(0, -1) : '0';
       },
+      /* 履歴の答えを、今の入力にする(= の後なら新しい計算、計算の途中なら 2 つ目の数) */
+      use: function (value) {
+        resetIfDone();
+        st.current = String(value);
+        st.expr = api.pending();
+      },
       pending: function () {
         return st.a !== null && st.op ? formatNumber(st.a) + ' ' + st.op : '';
       },
     };
     return api;
   }
-  var api = { formatNumber: formatNumber, group: group, calc: calc, create: create };
+  /* 履歴に 1 件足した新しい配列(古い順)。max 件を超えたら古い物から消す */
+  function addHistory(list, item, max) {
+    var next = (list || []).concat([item]);
+    return next.slice(Math.max(0, next.length - (max || 20)));
+  }
+  var api = {
+    formatNumber: formatNumber,
+    group: group,
+    calc: calc,
+    create: create,
+    addHistory: addHistory,
+  };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (typeof window !== 'undefined') window.CalculatorCore = api;
 })(this);
