@@ -26,7 +26,6 @@
     copy.tags = (t.tags || []).map(function (g) {
       return say('tags.' + g, null, g);
     });
-    copy.en = ''; // 名前が英語なので、英名の添え字は出さない
     return copy;
   }
 
@@ -80,12 +79,6 @@
     desc.textContent = t.desc || '';
     body.className = 'body';
     body.append(title);
-    if (t.en) {
-      var en = document.createElement('p');
-      en.className = 'en';
-      en.textContent = t.en;
-      body.append(en);
-    }
     body.append(desc);
     if (t.tags && t.tags.length) {
       var tags = document.createElement('div');

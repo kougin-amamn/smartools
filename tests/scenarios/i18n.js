@@ -22,7 +22,7 @@ const FIRST_TOOL = require('../../index-data.json')[0];
     expect(/^Essentials\d+ tools$/.test(head), `分類の見出しが英語でない(${head})`);
     const card = await page.textContent('#list .card .title');
     expect(card === en.tools[FIRST_TOOL.slug].title, `ツール名が英語でない(${card})`);
-    expect(!(await page.locator('#list .card .en').count()), '英語の時に英名の添え字が残っている');
+    expect(!(await page.locator('#list .card .en').count()), '一覧に英名が出ている');
     expect(
       /^Debug$/.test(await page.getAttribute('#dbgBtn', 'aria-label')),
       'デバッグのボタンの名前が英語でない',
@@ -51,7 +51,7 @@ const FIRST_TOOL = require('../../index-data.json')[0];
       (await page.textContent('.site-bar h1')).trim().startsWith('Calculator'),
       '電卓の見出しが英語でない',
     );
-    expect(await page.locator('.site-bar h1 .en').isHidden(), '英語の時に英名の添え字が残っている');
+    expect(await page.locator('.site-bar h1 .en').isHidden(), '一覧に英名が出ている');
     expect(/^Calculator \| /.test(await page.title()), '電卓の題名が英語でない');
     expect(
       (await page.getAttribute('#backBtn', 'aria-label')) === 'Back to All tools',
@@ -130,6 +130,10 @@ const FIRST_TOOL = require('../../index-data.json')[0];
     expect(
       /件$/.test(await ja.page.textContent('#list .cat-head')),
       '日本語の端末で分類の件数が変わった',
+    );
+    expect(
+      !(await ja.page.locator('#list .card .en').count()),
+      '日本語の端末で一覧に英名が出ている',
     );
     expect(
       (await ja.page.getAttribute('#languageBtn', 'aria-label')) ===
