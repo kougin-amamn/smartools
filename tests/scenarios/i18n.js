@@ -16,7 +16,7 @@ const FIRST_TOOL = require('../../index-data.json')[0];
     expect((await page.textContent('.lead')) === en.site.tagline, '説明の文が英語でない');
     expect(
       (await page.textContent('#sortSelect option[value="recent"]')).trim() === 'Recent',
-      '並びのボタンが英語でない',
+      '並び順の選択肢が英語でない',
     );
     const head = await page.textContent('#list .cat-head');
     expect(/^Essentials\d+ tools$/.test(head), `分類の見出しが英語でない(${head})`);
@@ -125,7 +125,7 @@ const FIRST_TOOL = require('../../index-data.json')[0];
     await ja.page.waitForSelector('#sorts:not([hidden])', { timeout: 3000 });
     expect(
       (await ja.page.textContent('#sortSelect option[value="recent"]')).trim() === '最近',
-      '日本語の端末で並びのボタンが変わった',
+      '日本語の端末で並び順の選択肢が変わった',
     );
     expect(
       /件$/.test(await ja.page.textContent('#list .cat-head')),
