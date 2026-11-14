@@ -164,3 +164,10 @@ body.ringing {
   height: 34px;
   color: var(--accent-fg);
 }
+/* 動きを減らす設定では、点滅の代わりに知らせの色のままにする(時間切れが分かるように) */
+@media (prefers-reduced-motion: reduce) {
+  body.ringing {
+    animation: none;
+    background: var(--alert);
+  }
+}
