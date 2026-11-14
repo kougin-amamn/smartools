@@ -510,6 +510,14 @@
   }
   function chInfo() {
     var c = chordSel();
+    /* 英語などの画面では、ドレミの名前を添えない */
+    if (window.I18n && I18n.language !== 'ja') {
+      $('chInfo').textContent =
+        P.label(c.root, c.kind, 'en') +
+        ' = ' +
+        P.noteList(c.root, c.kind, 'en').split('・').join(' · ');
+      return;
+    }
     $('chInfo').textContent =
       P.label(c.root, c.kind, 'en') +
       '(' +
