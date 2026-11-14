@@ -48,12 +48,22 @@
     });
   }
 
-  /* ツールのページ: 見出しと題名をその言語の名前にする */
+  /* このページの訳の場所。ツール(tools/<slug>/)は tools.<slug>、ランチャー(launchers/<id>.html)は launchers.<id> */
+  var toolSlug = (/\/tools\/([^/]+)\//.exec(location.pathname) || [])[1],
+    launcherId = (/\/launchers\/([^/]+)\.html/.exec(location.pathname) || [])[1];
+  function pageWords() {
+    if (!words) return null;
+    if (toolSlug) return words.tools && words.tools[toolSlug];
+    if (launcherId) return words.launchers && words.launchers[launcherId];
+    return null;
+  }
+  /* ツールとランチャーのページ: 見出しと題名をその言語の名前にする(ランチャーの英名の添え字は隠す) */
   function applyToolTitle() {
-    var m = /\/tools\/([^/]+)\//.exec(location.pathname),
-      tool = m && words && words.tools && words.tools[m[1]];
+    var tool = pageWords();
     var h1 = document.querySelector('.site-bar h1');
     if (!tool || !h1 || language === 'ja') return;
+    var en = h1.querySelector('.en');
+    if (en) en.hidden = true;
     var textNode = Array.prototype.find.call(h1.childNodes, function (n) {
       return n.nodeType === 3 && n.textContent.trim();
     });
@@ -62,8 +72,7 @@
   }
 
   /* ツールの中の文(段 3): en.json の tools.<slug>.text に「日本語の文 → その言語の文」。キーの {名前} は差し込み */
-  var toolSlug = (/\/tools\/([^/]+)\//.exec(location.pathname) || [])[1],
-    texts = null,
+  var texts = null,
     patterns = [];
   function fill(text, vars) {
     Object.keys(vars || {}).forEach(function (k) {
@@ -76,7 +85,7 @@
   }
   function prepareTexts() {
     /* 共通の部品(device.js・env.js)が出す文は words.text。ツールの表に同じ文があれば、ツールの方を使う */
-    var tool = words && words.tools && words.tools[toolSlug];
+    var tool = pageWords();
     if (!tool || !tool.text) return; // 訳をまだ書いていないツールは日本語のまま
     texts = Object.assign({}, words.text, tool.text);
     patterns = Object.keys(texts || {})

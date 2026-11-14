@@ -336,14 +336,45 @@
   var ibtn = null,
     imenu = null,
     Env = window.Env;
+  /* 表の見出しと値の言葉は env.js が日本語で返す。その言語の文(lang の environment)に置き換える */
+  var ENVIRONMENT_KEYS = {
+    ブラウザ: 'browser',
+    '画面(縦×横)': 'screen',
+    画面の倍率: 'pixelRatio',
+    '表示領域(縦×横)': 'viewport',
+    向き: 'orientation',
+    通信: 'network',
+    言語: 'language',
+    タイムゾーン: 'timeZone',
+    振動: 'vibration',
+    保存領域: 'storage',
+    縦向き: 'portrait',
+    横向き: 'landscape',
+    オンライン: 'online',
+    オフライン: 'offline',
+    使える: 'available',
+    使えない: 'unavailable',
+    あり: 'yes',
+    なし: 'no',
+    不明: 'unknown',
+  };
+  function environmentText(text) {
+    return String(text).replace(
+      /縦向き|横向き|オンライン|オフライン|使えない|使える|あり|なし|不明|^.+$/,
+      function (word) {
+        var key = ENVIRONMENT_KEYS[word];
+        return key ? say('environment.' + key, null, word) : word;
+      },
+    );
+  }
   function fillInfo() {
     var dl = imenu.querySelector('.info-list');
     dl.textContent = '';
     Env.rows().forEach(function (r) {
       var dt = document.createElement('dt'),
         dd = document.createElement('dd');
-      dt.textContent = r[0];
-      dd.textContent = r[1];
+      dt.textContent = environmentText(r[0]);
+      dd.textContent = environmentText(r[1]);
       dl.append(dt, dd);
     });
   }

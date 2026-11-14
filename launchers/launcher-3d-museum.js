@@ -224,7 +224,7 @@ function main(list, source, loadMsg, loadErr) {
       counts = [L.length, back.length, R.length];
     return {
       id: HALL_ID,
-      title: 'エントランスホール',
+      title: window.I18n ? I18n.say('エントランスホール') : 'エントランスホール',
       entries: entries,
       counts: counts,
       dims: core.roomDims(counts, 18, 23),

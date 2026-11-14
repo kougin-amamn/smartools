@@ -1,6 +1,10 @@
 /* ミュージアムの展示室を組み立てる(壁・開口部と通路・ベンチ・額縁・照明器具・解説カード)。
    MuseumScene.create({THREE, core, M(=MuseumTextures), scene, 定数, 関数, roomWalls/roomSpots/badgesBySlug(本体と共有する一覧)}).buildRoom(def) */
 function create(o) {
+  /* 部屋の札の文字は画面の言語で(i18n.js が無い時は日本語のまま) */
+  function say(text) {
+    return window.I18n ? I18n.say(text) : text;
+  }
   var BANNER = { w: 2.6, h: 5.0, bottom: 1.7 }; /* 入口のバナーの大きさ・下端の高さ */
   var THREE = o.THREE,
     core = o.core,
@@ -374,7 +378,7 @@ function create(o) {
       fx.position.set(0, OPEN.h / 2, D / 2);
       fx.rotation.y = Math.PI;
       group.add(fx);
-      plaque(fx, '出口', 'エントランスホール', 'ホールへ戻る →');
+      plaque(fx, say('出口'), say('エントランスホール'), say('ホールへ戻る →'));
       exitMesh = new THREE.Mesh(new THREE.PlaneGeometry(OPEN.w, OPEN.h), pickMat);
       exitMesh.position.set(0, OPEN.h / 2, D / 2 - 0.02);
       exitMesh.rotation.y = Math.PI;

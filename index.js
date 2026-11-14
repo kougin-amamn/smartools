@@ -189,12 +189,18 @@
       return r.json();
     })
     .then(function (list) {
+      return (window.I18n ? I18n.ready : Promise.resolve()).then(function () {
+        return list;
+      });
+    })
+    .then(function (list) {
       var nav = document.getElementById('views');
       list.forEach(function (l) {
         var a = document.createElement('a');
         a.className = 'view';
         a.href = fromRoot(l.href);
-        a.textContent = l.title;
+        a.textContent = say('launchers.' + l.id + '.chip', null, l.title);
+        a.dataset.log = l.title;
         nav.appendChild(a);
       });
       nav.hidden = list.length === 0;

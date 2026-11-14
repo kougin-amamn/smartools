@@ -32,7 +32,8 @@
   /* 一覧を読む。成功 → {list, src}。失敗 → reject(Error)。読めなかった時の説明は loadErrorMessage() */
   function loadTools() {
     var t0 = performance.now();
-    return loadList(ROOT + DATA).then(function (list) {
+    return Promise.all([loadList(ROOT + DATA), window.I18n ? I18n.ready : null]).then(function (r) {
+      var list = r[0].map(translated);
       log(
         '一覧データを読み込みました(' +
           DATA +
@@ -44,6 +45,18 @@
       );
       return { list: list, src: DATA };
     });
+  }
+  /* 英語などの画面では、ツールの名前・説明・分類・注意の札をその言語にする(lang の tools・categories・tags) */
+  function translated(t) {
+    if (!window.I18n || I18n.language === 'ja') return t;
+    var copy = Object.assign({}, t);
+    copy.title = I18n.t('tools.' + t.slug + '.title', null, t.title);
+    copy.desc = I18n.t('tools.' + t.slug + '.desc', null, t.desc || '');
+    if (t.cat) copy.cat = I18n.t('categories.' + t.cat, null, t.cat);
+    copy.tags = (t.tags || []).map(function (g) {
+      return I18n.t('tags.' + g, null, g);
+    });
+    return copy;
   }
   function loadErrorMessage() {
     return location.protocol === 'file:'

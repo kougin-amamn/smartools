@@ -120,6 +120,31 @@ const FIRST_TOOL = require('../../index-data.json')[0];
       await tool.context.close();
     }
 
+    /* 英語の端末で、ランチャー(3D は three.js が読めないため代わりの一覧)と、一覧の環境情報の表に日本語が残っていない */
+    for (const pagePath of [
+      'index.html',
+      'launchers/launcher-desktop.html',
+      'launchers/launcher-3d-bookshelf.html',
+      'launchers/launcher-3d-museum.html',
+    ]) {
+      const other = await site.open(pagePath, { locale: 'en-US' });
+      await other.page.waitForFunction(() => window.I18n && I18n.isReady());
+      await other.page.waitForTimeout(1500);
+      if (pagePath === 'index.html') await other.page.click('#infoBtn');
+      const left = await other.page.evaluate(() => {
+        const out = [],
+          walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+          const n = walker.currentNode;
+          if (!n.parentElement.closest('script,style,#eruda')) out.push(n.nodeValue.trim());
+        }
+        return out.filter((t) => /[ぁ-んァ-ヶ一-龥]/.test(t));
+      });
+      if (left.length)
+        problems.push(`${pagePath} に日本語が残っている(${left.slice(0, 3).join(' / ')})`);
+      await other.context.close();
+    }
+
     /* 日本語の端末: 今までどおり */
     const ja = await site.open('index.html');
     await ja.page.waitForSelector('#sorts:not([hidden])', { timeout: 3000 });

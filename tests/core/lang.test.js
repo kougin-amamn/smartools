@@ -14,7 +14,7 @@ function keysOf(o, prefix = '') {
 const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json'));
 a.ok(files.includes('ja.json') && files.includes('en.json'), 'ja.json と en.json がある');
 const ja = JSON.parse(fs.readFileSync(path.join(dir, 'ja.json'), 'utf8'));
-const isText = (k) => /^(tools\.[^.]+\.)?text\./.test(k);
+const isText = (k) => /^((tools|launchers)\.[^.]+\.)?text\./.test(k);
 const jaKeys = keysOf(ja).sort();
 
 for (const f of files) {
@@ -47,15 +47,30 @@ for (const f of files) {
         ),
       ),
   );
-  Object.keys(lang.tools).forEach((slug) => {
-    const text = lang.tools[slug].text;
+  /* ツールは tools/<slug>/ の中、ランチャーは launchers/ の中(共通の部品と 3D の部品も)に、訳の元の文がある */
+  const pages = Object.keys(lang.tools)
+    .map((slug) => [slug, lang.tools[slug].text, [path.join(__dirname, '../../tools', slug)]])
+    .concat(
+      Object.keys(lang.launchers).map((id) => [
+        id,
+        lang.launchers[id].text,
+        [
+          path.join(__dirname, '../../launchers'),
+          path.join(__dirname, '../../launchers/launcher-3d'),
+        ],
+      ]),
+    );
+  pages.forEach(([slug, text, folders]) => {
     if (!text) return;
-    const folder = path.join(__dirname, '../../tools', slug);
     const source =
-      fs
-        .readdirSync(folder)
-        .filter((n) => /\.(html|js)$/.test(n))
-        .map((n) => fs.readFileSync(path.join(folder, n), 'utf8'))
+      folders
+        .flatMap((folder) =>
+          fs
+            .readdirSync(folder)
+            .filter((n) => /\.(html|js)$/.test(n))
+            .map((n) => path.join(folder, n)),
+        )
+        .map((n) => fs.readFileSync(n, 'utf8'))
         .join('\n')
         .replace(/\s+/g, ' ') +
       /* 共通の部品が出す文(例 https が必要な時の案内)もツールの画面に出る */
@@ -77,6 +92,9 @@ for (const f of files) {
         );
     });
   });
+  require('../../launchers/launchers.json').forEach((l) =>
+    a.ok(lang.launchers[l.id], `${f} にランチャー ${l.id} がある`),
+  );
   tools.forEach((t) => {
     a.ok(lang.tools[t.slug], `${f} にツール ${t.slug} がある`);
     a.ok(t.cat in lang.categories, `${f} に分類 ${t.cat} がある`);
