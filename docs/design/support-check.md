@@ -86,7 +86,7 @@
 
 | 名前 | 確かめ方 | 今使っているツール(例) |
 | --- | --- | --- |
-| 音声合成 | `'speechSynthesis' in window` かつ `'SpeechSynthesisUtterance' in window` | 読み上げ・小説読み上げ・OCR |
+| 音声合成 | `'speechSynthesis' in window` かつ `'SpeechSynthesisUtterance' in window` | 読み上げ・OCR |
 | 音声の処理 | `window.AudioContext` か `window.webkitAudioContext` | メトロノーム・ピアノ・DJ |
 | AudioWorklet | `typeof AudioWorkletNode !== 'undefined'` | DJターンテーブル・ボイスチェンジャー |
 | 録音 | `typeof MediaRecorder !== 'undefined'` | ボイスメモ |

@@ -1,6 +1,7 @@
 /* ツールの並べ替えの試験(docs/design/tool-sort.md)。ツールを開くと記録され、一覧の 最近・よく使う・名前 の順になり、
    選んだ並びが読み込み直しても残る。使い方: node tests/scenarios/tool-sort.js */
 const { launch, report, splitErrors } = require('../lib/harness');
+const TOOL_COUNT = require('../../index-data.json').length;
 
 (async () => {
   const site = await launch();
@@ -42,10 +43,11 @@ const { launch, report, splitErrors } = require('../lib/harness');
       problems.push(`よく使う順が違う(${cards.join(' / ')})`);
 
     await page.click('[data-sort="name"]');
-    cards = await firstCards(46);
+    cards = await firstCards(TOOL_COUNT);
     if (cards.some((c) => / \d+回|前$|たった今$/.test(c)))
       problems.push('名前の時に日時・回数が出ている');
-    if (cards.length !== 46) problems.push(`名前の時の件数 ${cards.length}`);
+    if (cards.length !== TOOL_COUNT)
+      problems.push(`名前の時の件数 ${cards.length}(${TOOL_COUNT} のはず)`);
 
     /* 選んだ並びが残る */
     await page.click('[data-sort="frequent"]');

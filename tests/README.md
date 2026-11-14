@@ -10,7 +10,6 @@
 | `node tests/smoke.js all` | 一覧・ランチャー・全ツールで同じ確認 | 2〜3分 |
 | `node tests/smoke.js tools/<slug> --logs` | 上に加えて、各ページのログを出す | — |
 | `node tests/scenarios/file-transfer.js` | ファイル転送の通し試験(2つのタブ・確認番号・圧縮・切断からの再開) | 10秒 |
-| `node tests/scenarios/novel-reader.js` | 小説読み上げの通し試験(偽のカクヨムでブックマークレット・別タブへ受け渡し・1文ずつの読み上げ) | 5秒 |
 | `node tests/scenarios/concept-basics.js` | コンセプトの基本: 弱い文字のコントラスト 4.5 以上(ライト・ダーク)、ヘッダのボタンの大きさ、動きを減らす設定 | 3秒 |
 | `node tests/scenarios/calculator.js` | 電卓: キーボードの入力(小数点・%・クリア・Backspace)、対応する画面のキーの見た目、00 が無い、履歴に入る | 2秒 |
 | `node tests/scenarios/tool-sort.js` | ツールの並べ替え: 開くと記録され、一覧が 最近・よく使う・名前 の順になる、選んだ並びが残る | 4秒 |

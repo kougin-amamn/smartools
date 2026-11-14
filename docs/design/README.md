@@ -23,7 +23,6 @@
 | [launcher-3d.md](./launcher-3d.md) | 3Dランチャー(本棚・美術館): ES モジュール化と共通部品への組み直し(段 1a まで実装。前の型) |
 | [launcher-3d-bookshelf.md](./launcher-3d-bookshelf.md) | 3D本棚ランチャー(下書き。新しい型の最初の見本) |
 | [file-transfer.md](./file-transfer.md) | ファイル転送(`tools/file-transfer`) |
-| [novel-reader.md](./novel-reader.md) | 小説読み上げ(`tools/novel-reader`、検証用の試作) |
 
 ## 書き方の決まり
 
@@ -159,3 +158,5 @@
 
 - `dj-turntable-pro.md`(DJターンテーブル Pro): 2026-11-11 に移した。
 - `dj-decks.md`(DJデッキ): 2026-11-12 に移した。
+
+消したツールの設計書: `novel-reader.md`(小説読み上げ)は、2026-11-14 にツールを消した時に一緒に消した(git の履歴に残っている)。
