@@ -51,7 +51,7 @@ const FIRST_TOOL = require('../../index-data.json')[0];
       (await page.textContent('.site-bar h1')).trim().startsWith('Calculator'),
       '電卓の見出しが英語でない',
     );
-    expect(await page.locator('.site-bar h1 .en').isHidden(), '一覧に英名が出ている');
+    expect(!(await page.locator('.site-bar h1 .en').count()), 'ツールの見出しに英名が出ている');
     expect(/^Calculator \| /.test(await page.title()), '電卓の題名が英語でない');
     expect(
       (await page.getAttribute('#backBtn', 'aria-label')) === 'Back to All tools',

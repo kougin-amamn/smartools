@@ -51,7 +51,7 @@ log('カメラを開始しました(背面 / ' + ToolKit.media.size(stream.getVi
 - **デバッグ画面:** ボタンを押した時に eruda を読み、それまでの履歴を出し直す。
 - **埋め込み表示**(`?embed=1`): ヘッダを隠し、テーマは親に合わせる(今は使うページが無い)。
 - **ヘッダのボタン:** 環境情報・カラーテーマ・テーマ・デバッグの4つは `site.js` が `addHeaderButton` で足す(HTML に書かない)。名前は固定の `data-log`。全ページに足すボタンも同じ関数で足す(中の表だけ `data-log="off"`、外を押すか Escape で閉じる、ほかの吹き出しを閉じる)。
-- `site.css`: トークン、`box-sizing`、`[hidden]{display:none!important}`、ヘッダ(英名を小さく重ねる `.site-bar h1 .en`)、吹き出し、埋め込み表示。
+- `site.css`: トークン、`box-sizing`、`[hidden]{display:none!important}`、ヘッダ(ランチャーの英名を小さく重ねる `.site-bar h1 .en`)、吹き出し、埋め込み表示。
 
 ## tool-kit.js のほか
 

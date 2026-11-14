@@ -48,14 +48,12 @@
     });
   }
 
-  /* ツールのページ: 見出しと題名をその言語の名前にする(英語では英名の小さな添え字を隠す) */
+  /* ツールのページ: 見出しと題名をその言語の名前にする */
   function applyToolTitle() {
     var m = /\/tools\/([^/]+)\//.exec(location.pathname),
       tool = m && words && words.tools && words.tools[m[1]];
     var h1 = document.querySelector('.site-bar h1');
     if (!tool || !h1 || language === 'ja') return;
-    var en = h1.querySelector('.en');
-    if (en) en.hidden = true;
     var textNode = Array.prototype.find.call(h1.childNodes, function (n) {
       return n.nodeType === 3 && n.textContent.trim();
     });
