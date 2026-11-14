@@ -1,3 +1,12 @@
+---
+type: Design
+title: "3D本棚ランチャー"
+description: "3D本棚ランチャー(新しい型の最初の見本)。確認中"
+tags: ["ランチャー", "3D"]
+status: draft
+resource: "launchers/launcher-3d-bookshelf.html"
+---
+
 # 3D本棚ランチャー 設計書
 
 状態: 確認中(基本設計の問いはすべて決定)。作成 2026-11-07、更新 2026-11-07。

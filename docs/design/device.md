@@ -1,3 +1,12 @@
+---
+type: Design
+title: "端末の機能"
+description: "振動・コピー・カメラ・センサーなどの部品(common/device.js)"
+tags: ["共通部品"]
+status: stable
+resource: "common/device.js"
+---
+
 # 端末の機能(common/device.js) 設計書
 
 2026-11-07 作成

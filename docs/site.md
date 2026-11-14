@@ -1,3 +1,12 @@
+---
+type: Guide
+title: "サイトの構成"
+description: "フォルダ・読み込み順・一覧(index-data.json)・ランチャー・公開の仕組み"
+tags: ["構成", "公開"]
+status: stable
+resource: "index-data.json"
+---
+
 # サイトの構成(フォルダ・読み込み順・一覧・ランチャー・公開)
 
 ## フォルダ

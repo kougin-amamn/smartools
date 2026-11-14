@@ -1,3 +1,12 @@
+---
+type: Guide
+title: "共通部品の使い方"
+description: "common/ の部品(ToolKit・site.js がすること)を使う・直す時"
+tags: ["共通部品"]
+status: stable
+resource: "common/"
+---
+
 # 共通部品の使い方(common/)
 
 共通部品は `common/` にだけ置き、ツールにコピーしません。全体を変える時はここのファイルだけを直します。ログは [logging.md](./logging.md)、環境の判定は [design/env.md](./design/env.md) に詳しく書いてあります。

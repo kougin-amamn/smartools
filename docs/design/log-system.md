@@ -1,3 +1,12 @@
+---
+type: Design
+title: "ログの仕組み"
+description: "ログの仕組み(common/log.js・autolog.js)"
+tags: ["ログ", "共通部品"]
+status: stable
+resource: "common/log.js"
+---
+
 # ログの仕組み 設計書
 
 2026-11-07 作成(実装済みの `common/log.js` から起こしたもの)。同日、自動の操作ログを `common/autolog.js` に分け、値の変更・選択のログをやめた。2026-11-08、起動のログ(`log.started`)を足し、`autolog.js` を `log.js` に戻して1ファイルにした(下の「1ファイルに戻した理由」)

@@ -1,3 +1,12 @@
+---
+type: Guide
+title: "画面の決まり"
+description: "配色・ヘッダ・設定シート・ボタン・アイコンを作る時"
+tags: ["見た目", "配色"]
+status: stable
+resource: "common/site.css"
+---
+
 # 画面の決まり(配色・ヘッダ・設定シート・ボタン・アイコン)
 
 新しいツールは `node scripts/new-tool.js` でひな形を作ると、ヘッダや読み込み順はこの決まりどおりになります。
