@@ -77,8 +77,10 @@
     return text.replace(/[.*+?^$()|[\]\\]/g, '\\$&');
   }
   function prepareTexts() {
+    /* 共通の部品(device.js・env.js)が出す文は words.text。ツールの表に同じ文があれば、ツールの方を使う */
     var tool = words && words.tools && words.tools[toolSlug];
-    texts = (tool && tool.text) || null;
+    if (!tool || !tool.text) return; // 訳をまだ書いていないツールは日本語のまま
+    texts = Object.assign({}, words.text, tool.text);
     patterns = Object.keys(texts || {})
       .filter(function (k) {
         return /\{[^}]+\}/.test(k);
@@ -89,7 +91,7 @@
             var m = /^\{([^}]+)\}$/.exec(part);
             if (!m) return escapeRegExp(part);
             names.push(m[1]);
-            return '(.+?)';
+            return '(.*?)'; // 空のこともある(例「物を{範囲}大きく…」)
           });
         return { regexp: new RegExp('^' + source.join('') + '$'), names: names, key: k };
       })
@@ -105,17 +107,17 @@
   }
   /* 画面に出た文の置き換え。まるごと一致した時と、差し込みの形に合った時だけ */
   function translated(text) {
-    var trimmed = text.trim();
+    var trimmed = text.trim(),
+      key = trimmed.replace(/\s+/g, ' '); // HTML の中で折り返した文も、空白1つにそろえて引く
     if (!trimmed || !texts) return null;
-    if (Object.prototype.hasOwnProperty.call(texts, trimmed))
-      return text.replace(trimmed, texts[trimmed]);
+    if (Object.prototype.hasOwnProperty.call(texts, key)) return text.replace(trimmed, texts[key]);
     for (var i = 0; i < patterns.length; i++) {
-      var m = patterns[i].regexp.exec(trimmed);
+      var m = patterns[i].regexp.exec(key);
       if (!m) continue;
       var vars = {};
       patterns[i].names.forEach(function (name, n) {
         var part = m[n + 1],
-          inner = part.length < trimmed.length ? translated(part) : null; // 差し込まれた値も、形が合えば訳す
+          inner = part.length < key.length ? translated(part) : null; // 差し込まれた値も、形が合えば訳す
         vars[name] = inner !== null ? inner : say(part);
       });
       return text.replace(trimmed, fill(texts[patterns[i].key], vars));

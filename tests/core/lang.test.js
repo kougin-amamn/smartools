@@ -14,7 +14,7 @@ function keysOf(o, prefix = '') {
 const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json'));
 a.ok(files.includes('ja.json') && files.includes('en.json'), 'ja.json と en.json がある');
 const ja = JSON.parse(fs.readFileSync(path.join(dir, 'ja.json'), 'utf8'));
-const isText = (k) => /^tools\.[^.]+\.text\./.test(k);
+const isText = (k) => /^(tools\.[^.]+\.)?text\./.test(k);
 const jaKeys = keysOf(ja).sort();
 
 for (const f of files) {
@@ -31,6 +31,22 @@ for (const f of files) {
       const v = k.split('.').reduce((o, p) => o[p], lang);
       a.ok(typeof v === 'string' && v.trim(), `${f} の ${k} が空でない`);
     });
+  /* 共通の文(text)は、共通の部品の中にある */
+  const commonSource = ['env.js', 'device.js']
+    .map((n) => fs.readFileSync(path.join(__dirname, '../../common', n), 'utf8'))
+    .join('\n');
+  Object.keys(lang.text || {}).forEach((japanese) =>
+    japanese
+      .split(/\{[^}]+\}/)
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .forEach((part) =>
+        a.ok(
+          commonSource.includes(part),
+          `${f} の共通の文「${japanese}」が共通の部品に無い(${part})`,
+        ),
+      ),
+  );
   Object.keys(lang.tools).forEach((slug) => {
     const text = lang.tools[slug].text;
     if (!text) return;
@@ -40,7 +56,8 @@ for (const f of files) {
         .readdirSync(folder)
         .filter((n) => /\.(html|js)$/.test(n))
         .map((n) => fs.readFileSync(path.join(folder, n), 'utf8'))
-        .join('\n') +
+        .join('\n')
+        .replace(/\s+/g, ' ') +
       /* 共通の部品が出す文(例 https が必要な時の案内)もツールの画面に出る */
       ['env.js', 'device.js']
         .map((n) => fs.readFileSync(path.join(__dirname, '../../common', n), 'utf8'))

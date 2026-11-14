@@ -384,7 +384,11 @@
     resultEl.hidden = false;
     resultEl.className = 'result ' + level;
     topName.textContent = level === 'low' ? 'はっきりしません' : C.name(labels, first.index);
-    topEn.textContent = level === 'low' ? '' : C.name(labels, first.index, 'en');
+    /* 英語などの画面では、名前がすでに英語なので添え字を出さない */
+    topEn.textContent =
+      level === 'low' || (window.I18n && I18n.language !== 'ja')
+        ? ''
+        : C.name(labels, first.index, 'en');
     topPct.textContent = level === 'low' ? '' : C.pct(first.p);
     hintEl.textContent =
       level === 'low'
@@ -669,9 +673,9 @@
     if (this.open && !p.textContent)
       p.textContent = labels
         .map(function (e) {
-          return e[1];
+          return e[1] || e[0];
         })
-        .join('、');
+        .join(window.I18n && I18n.language !== 'ja' ? ', ' : '、');
   });
 
   /* 起動 */
@@ -681,7 +685,13 @@
       return r.json();
     })
     .then(function (j) {
-      labels = j;
+      /* 英語などの画面では、日本語の名前を使わず元の英語名にする */
+      labels =
+        window.I18n && I18n.language !== 'ja'
+          ? j.map(function (e) {
+              return [e[0]];
+            })
+          : j;
       render();
     })
     .catch(function (e) {

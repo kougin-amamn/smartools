@@ -562,12 +562,14 @@
       return r.json();
     })
     .then(function (j) {
-      labels = j;
+      /* 英語などの画面では、日本語の名前を使わず元の英語名にする */
+      var english = window.I18n && I18n.language !== 'ja';
+      labels = english ? {} : j;
       $('classList').textContent = Object.keys(j)
         .map(function (k) {
-          return j[k];
+          return english ? k : j[k];
         })
-        .join('、');
+        .join(english ? ', ' : '、');
     })
     .catch(function (e) {
       log.warn('日本語の名前の表を読み込めませんでした(英語の名前で表示します)', e);
