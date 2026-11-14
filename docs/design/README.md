@@ -18,6 +18,7 @@
 | [color-theme.md](./color-theme.md) | カラーテーマ(6つのテーマ。`common/themes.json`・`site.css`・`site.js`。確認中) |
 | [tool-sort.md](./tool-sort.md) | ツールの並べ替え(一覧の 分類・最近・よく使う・名前。`common/tool-usage.js`) |
 | [calculator.md](./calculator.md) | 電卓(計算の履歴、表示の窓) |
+| [i18n.md](./i18n.md) | 多言語化(日本語・英語。`lang/*.json`。段 1 まで) |
 | [page-exit.md](./page-exit.md) | ページを離れる時の終了処理(`common/device.js`。段 2 まで実装) |
 | [support-check.md](./support-check.md) | ブラウザの対応と許可の確認(`common/env.js`。確認中) |
 | [launcher-3d.md](./launcher-3d.md) | 3Dランチャー(本棚・美術館): ES モジュール化と共通部品への組み直し(段 1a まで実装。前の型) |

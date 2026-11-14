@@ -1,0 +1,280 @@
+{
+  "_": {
+    "language": "ja",
+    "name": "日本語",
+    "note": "smartools の画面の文。キーはどの言語でも同じ。設計: docs/design/i18n.md"
+  },
+  "site": {
+    "menu": "メニュー",
+    "showMenu": "メニュー(ヘッダ)を出す",
+    "environment": "環境情報",
+    "colorTheme": "カラーテーマ",
+    "theme": "テーマ",
+    "themeLabel": "テーマ: {名前}",
+    "light": "ライト",
+    "dark": "ダーク",
+    "debug": "デバッグ",
+    "back": "戻る",
+    "backToLauncher": "ランチャーへ戻る",
+    "settings": "設定",
+    "close": "閉じる",
+    "siteName": "スマートツール",
+    "tagline": "ブラウザだけで使える小さなツール集です。インストールは不要です。"
+  },
+  "list": {
+    "title": "ツール一覧",
+    "loading": "ツールの一覧を読み込んでいます…",
+    "view": "表示",
+    "viewSwitch": "表示の切り替え",
+    "viewList": "一覧",
+    "sort": "並び",
+    "sortCategory": "分類",
+    "sortRecent": "最近",
+    "sortFrequent": "よく使う",
+    "sortName": "名前",
+    "count": "{件数}件",
+    "times": "{回数}回",
+    "justNow": "たった今",
+    "minutesAgo": "{数}分前",
+    "hoursAgo": "{数}時間前",
+    "daysAgo": "{数}日前",
+    "monthDay": "{月}月{日}日",
+    "metaTitle": "smartools | ブラウザで使える無料ツール集",
+    "metaDescription": "電卓やタイマー、時計、カメラ、QRコード、センサー表示など、ブラウザだけで使える小さなツールを集めたサイトです。インストール不要・無料で、スマホでもパソコンでも使えます。"
+  },
+  "categories": {
+    "定番ツール": "定番ツール",
+    "センサー・カメラ活用": "センサー・カメラ活用",
+    "QR・共有": "QR・共有",
+    "メディア": "メディア",
+    "情報・言語・テキスト": "情報・言語・テキスト",
+    "デザイン": "デザイン",
+    "診断・開発": "診断・開発"
+  },
+  "tags": {
+    "要 https": "要 https",
+    "要 カメラ": "要 カメラ",
+    "要 センサー": "要 センサー",
+    "要 マイク": "要 マイク",
+    "要 位置情報": "要 位置情報",
+    "要 外部通信": "要 外部通信"
+  },
+  "tools": {
+    "calculator": {
+      "title": "電卓",
+      "desc": "四則演算とパーセントの電卓"
+    },
+    "notepad": {
+      "title": "メモ帳",
+      "desc": "自動保存のメモ帳"
+    },
+    "weather": {
+      "title": "天気予報",
+      "desc": "現在地や地名の天気と週間予報"
+    },
+    "flashlight": {
+      "title": "懐中電灯",
+      "desc": "スマホのライトを点灯"
+    },
+    "stopwatch": {
+      "title": "ストップウォッチ",
+      "desc": "1/100秒とラップのストップウォッチ"
+    },
+    "kitchen-timer": {
+      "title": "キッチンタイマー",
+      "desc": "ボタンで合わせるキッチンタイマー"
+    },
+    "pomodoro-timer": {
+      "title": "ポモドーロタイマー",
+      "desc": "作業と休憩を切り替えるタイマー"
+    },
+    "world-clock": {
+      "title": "世界時計",
+      "desc": "世界の都市の現在時刻"
+    },
+    "analog-clock": {
+      "title": "アナログ時計",
+      "desc": "文字やフレームを選べるアナログ時計"
+    },
+    "digital-clock": {
+      "title": "デジタル時計",
+      "desc": "色やフォントを選べるデジタル時計"
+    },
+    "tally-counter": {
+      "title": "数取器",
+      "desc": "タップで数える数取器"
+    },
+    "calendar": {
+      "title": "カレンダー",
+      "desc": "六曜・祝日・旧暦が分かる暦"
+    },
+    "hand-mirror": {
+      "title": "手鏡",
+      "desc": "前面カメラの鏡"
+    },
+    "multi-camera": {
+      "title": "多機能カメラ",
+      "desc": "フィルターや連写のカメラ"
+    },
+    "night-camera": {
+      "title": "ナイトカメラ",
+      "desc": "暗い場所を明るく映すカメラ"
+    },
+    "effect-camera": {
+      "title": "エフェクトカメラ",
+      "desc": "サーモ風・チルト・VHS・ブラウン管・グリッチなど"
+    },
+    "lens-camera": {
+      "title": "レンズカメラ",
+      "desc": "魚眼・広角・望遠・マクロなど13のレンズ"
+    },
+    "compass": {
+      "title": "方位磁石",
+      "desc": "回る文字盤で方角・水平・目標の方位"
+    },
+    "cycle-meter": {
+      "title": "サイクルメーター",
+      "desc": "GPSで速度と距離を計測"
+    },
+    "level": {
+      "title": "水平器",
+      "desc": "傾きを確認する水平器"
+    },
+    "light-meter": {
+      "title": "照度計",
+      "desc": "周りの明るさを測る"
+    },
+    "noise-meter": {
+      "title": "騒音計",
+      "desc": "音の大きさの目安を測る"
+    },
+    "heart-rate": {
+      "title": "心拍数計",
+      "desc": "カメラに指を当てて脈拍を測る"
+    },
+    "step-counter": {
+      "title": "万歩計",
+      "desc": "歩数を数える万歩計"
+    },
+    "object-detector": {
+      "title": "物体検出",
+      "desc": "カメラや写真に写った物をAIで見つけて日本語で表示"
+    },
+    "image-classifier": {
+      "title": "画像分類",
+      "desc": "カメラや写真に写った物が何かをAIが1000種類から判定"
+    },
+    "qr-reader": {
+      "title": "QRコードリーダー",
+      "desc": "カメラでQRコードを読み取り"
+    },
+    "qr-generator": {
+      "title": "QRコード生成",
+      "desc": "文字やURLからQRコードを作成"
+    },
+    "file-transfer": {
+      "title": "ファイル転送",
+      "desc": "番号かQRでつないで、スマホどうしでファイルを直接送る"
+    },
+    "exif-viewer": {
+      "title": "写真情報(Exif)ビューア",
+      "desc": "写真のExif情報を一覧表示"
+    },
+    "image-converter": {
+      "title": "画像変換",
+      "desc": "画像の形式を一括変換"
+    },
+    "image-editor": {
+      "title": "画像編集",
+      "desc": "写真を絵画風・ドット絵・印刷風・モザイクなどに"
+    },
+    "image-viewer": {
+      "title": "画像ビューア",
+      "desc": "写真をまとめて表示"
+    },
+    "music-player": {
+      "title": "音楽プレイヤー",
+      "desc": "端末の曲をプレイリストで再生"
+    },
+    "video-player": {
+      "title": "動画プレイヤー",
+      "desc": "端末の動画を再生"
+    },
+    "voice-changer": {
+      "title": "ボイスチェンジャー",
+      "desc": "声をリアルタイムで加工"
+    },
+    "voice-memo": {
+      "title": "ボイスメモ",
+      "desc": "ワンタップで録音"
+    },
+    "metronome": {
+      "title": "メトロノーム",
+      "desc": "テンポと拍子のメトロノーム"
+    },
+    "piano": {
+      "title": "ピアノ",
+      "desc": "音色・録音・練習のピアノ"
+    },
+    "ocr": {
+      "title": "文字認識(OCR)",
+      "desc": "画像の文字をテキストに"
+    },
+    "text-to-speech": {
+      "title": "音声読み上げ",
+      "desc": "文章を声で読み上げ"
+    },
+    "paint": {
+      "title": "ペイント",
+      "desc": "指やペンで描く・塗りつぶし・写真に書き込み・PNG保存"
+    },
+    "color-picker": {
+      "title": "カラーピッカー",
+      "desc": "色を選ぶ・カメラで判定・色名を調べる"
+    },
+    "speed-test": {
+      "title": "回線速度テスト",
+      "desc": "回線の速度を測る"
+    },
+    "dj-turntable": {
+      "title": "DJターンテーブル",
+      "desc": "レコード盤で鳴らす音楽プレーヤー。指でスクラッチ、ピッチ調整もできる"
+    }
+  },
+  "environment": {
+    "browser": "ブラウザ",
+    "device": "端末",
+    "language": "言語",
+    "timeZone": "タイムゾーン",
+    "network": "通信",
+    "online": "オンライン",
+    "offline": "オフライン",
+    "screen": "画面(縦×横)",
+    "viewport": "表示領域(縦×横)",
+    "pixelRatio": "画面の倍率",
+    "orientation": "向き",
+    "portrait": "縦向き",
+    "landscape": "横向き",
+    "vibration": "振動",
+    "storage": "保存領域",
+    "available": "使える",
+    "unavailable": "使えない",
+    "yes": "あり",
+    "no": "なし",
+    "unknown": "不明"
+  },
+  "device": {
+    "needHttps": "{名前}の利用には https 接続が必要です",
+    "notSupported": "このブラウザは{名前}に対応していません。",
+    "notAllowed": "{名前}へのアクセスが許可されませんでした。",
+    "notFound": "使える{名前}が見つかりませんでした。",
+    "inUse": "{名前}を開けませんでした(ほかのアプリが使用中の可能性があります)。",
+    "cannotOpen": "{名前}を開けませんでした。",
+    "torchNotSupported": "この端末・カメラはライトの制御に対応していません。",
+    "camera": "カメラ",
+    "microphone": "マイク",
+    "sensor": "センサー",
+    "motionSensor": "モーションセンサー",
+    "orientationSensor": "傾き・方位センサー"
+  }
+}

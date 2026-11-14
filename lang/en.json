@@ -1,0 +1,280 @@
+{
+  "_": {
+    "language": "en",
+    "name": "English",
+    "note": "smartools の画面の文。キーはどの言語でも同じ。設計: docs/design/i18n.md"
+  },
+  "site": {
+    "menu": "Menu",
+    "showMenu": "Show menu (header)",
+    "environment": "Environment",
+    "colorTheme": "Color theme",
+    "theme": "Theme",
+    "themeLabel": "Theme: {名前}",
+    "light": "Light",
+    "dark": "Dark",
+    "debug": "Debug",
+    "back": "Back",
+    "backToLauncher": "Back to launcher",
+    "settings": "Settings",
+    "close": "Close",
+    "siteName": "Smart Tools",
+    "tagline": "Small tools that work right in your browser. No installation needed."
+  },
+  "list": {
+    "title": "All tools",
+    "loading": "Loading the tool list…",
+    "view": "View",
+    "viewSwitch": "Switch view",
+    "viewList": "List",
+    "sort": "Sort",
+    "sortCategory": "Category",
+    "sortRecent": "Recent",
+    "sortFrequent": "Most used",
+    "sortName": "Name",
+    "count": "{件数} tools",
+    "times": "{回数} times",
+    "justNow": "Just now",
+    "minutesAgo": "{数} min ago",
+    "hoursAgo": "{数} h ago",
+    "daysAgo": "{数} days ago",
+    "monthDay": "{月}/{日}",
+    "metaTitle": "smartools | Free tools in your browser",
+    "metaDescription": "Calculators, timers, clocks, cameras, QR codes, sensor readouts and more — small tools that run right in your browser. Free, no installation, on phones and computers."
+  },
+  "categories": {
+    "定番ツール": "Essentials",
+    "センサー・カメラ活用": "Sensors & Camera",
+    "QR・共有": "QR & Sharing",
+    "メディア": "Media",
+    "情報・言語・テキスト": "Info, Language & Text",
+    "デザイン": "Design",
+    "診断・開発": "Diagnostics & Dev"
+  },
+  "tags": {
+    "要 https": "Needs https",
+    "要 カメラ": "Needs camera",
+    "要 センサー": "Needs sensors",
+    "要 マイク": "Needs microphone",
+    "要 位置情報": "Needs location",
+    "要 外部通信": "Needs internet"
+  },
+  "tools": {
+    "calculator": {
+      "title": "Calculator",
+      "desc": "Calculator for the four basic operations and percent"
+    },
+    "notepad": {
+      "title": "Notepad",
+      "desc": "Notepad that saves automatically"
+    },
+    "weather": {
+      "title": "Weather",
+      "desc": "Weather now and for the week, for your location or a place name"
+    },
+    "flashlight": {
+      "title": "Flashlight",
+      "desc": "Turn on your phone’s light"
+    },
+    "stopwatch": {
+      "title": "Stopwatch",
+      "desc": "Stopwatch with 1/100 s and laps"
+    },
+    "kitchen-timer": {
+      "title": "Kitchen Timer",
+      "desc": "Kitchen timer you set with buttons"
+    },
+    "pomodoro-timer": {
+      "title": "Pomodoro Timer",
+      "desc": "Timer that switches between work and breaks"
+    },
+    "world-clock": {
+      "title": "World Clock",
+      "desc": "Current time in cities around the world"
+    },
+    "analog-clock": {
+      "title": "Analog Clock",
+      "desc": "Analog clock with selectable numerals and frames"
+    },
+    "digital-clock": {
+      "title": "Digital Clock",
+      "desc": "Digital clock with selectable colors and fonts"
+    },
+    "tally-counter": {
+      "title": "Tally Counter",
+      "desc": "Tally counter you tap to count"
+    },
+    "calendar": {
+      "title": "Calendar",
+      "desc": "Calendar with Rokuyō, Japanese holidays and the old lunar calendar"
+    },
+    "hand-mirror": {
+      "title": "Hand Mirror",
+      "desc": "Mirror using the front camera"
+    },
+    "multi-camera": {
+      "title": "Multi Camera",
+      "desc": "Camera with filters and burst shots"
+    },
+    "night-camera": {
+      "title": "Night Camera",
+      "desc": "Camera that brightens dark scenes"
+    },
+    "effect-camera": {
+      "title": "Effect Camera",
+      "desc": "Thermal look, tilt-shift, VHS, CRT, glitch and more"
+    },
+    "lens-camera": {
+      "title": "Lens Camera",
+      "desc": "13 lenses: fisheye, wide, telephoto, macro and more"
+    },
+    "compass": {
+      "title": "Compass",
+      "desc": "Rotating dial for direction, level and target bearing"
+    },
+    "cycle-meter": {
+      "title": "Cycle Meter",
+      "desc": "Speed and distance by GPS"
+    },
+    "level": {
+      "title": "Level",
+      "desc": "Level to check tilt"
+    },
+    "light-meter": {
+      "title": "Light Meter",
+      "desc": "Measure how bright it is around you"
+    },
+    "noise-meter": {
+      "title": "Noise Meter",
+      "desc": "Rough measure of how loud it is"
+    },
+    "heart-rate": {
+      "title": "Heart Rate Monitor",
+      "desc": "Measure your pulse with a finger on the camera"
+    },
+    "step-counter": {
+      "title": "Step Counter",
+      "desc": "Pedometer that counts your steps"
+    },
+    "object-detector": {
+      "title": "Object Detector",
+      "desc": "AI finds objects in camera or photos and names them"
+    },
+    "image-classifier": {
+      "title": "Image Classifier",
+      "desc": "AI tells what is in camera or photos, out of 1,000 kinds"
+    },
+    "qr-reader": {
+      "title": "QR Code Reader",
+      "desc": "Read QR codes with the camera"
+    },
+    "qr-generator": {
+      "title": "QR Code Generator",
+      "desc": "Make QR codes from text or URLs"
+    },
+    "file-transfer": {
+      "title": "File Transfer",
+      "desc": "Send files directly between phones, connected by number or QR"
+    },
+    "exif-viewer": {
+      "title": "Exif Viewer",
+      "desc": "List a photo’s Exif information"
+    },
+    "image-converter": {
+      "title": "Image Converter",
+      "desc": "Convert image formats in bulk"
+    },
+    "image-editor": {
+      "title": "Image Editor",
+      "desc": "Turn photos into paintings, pixel art, print look, mosaic and more"
+    },
+    "image-viewer": {
+      "title": "Image Viewer",
+      "desc": "View photos together"
+    },
+    "music-player": {
+      "title": "Music Player",
+      "desc": "Play songs on your device with playlists"
+    },
+    "video-player": {
+      "title": "Video Player",
+      "desc": "Play videos on your device"
+    },
+    "voice-changer": {
+      "title": "Voice Changer",
+      "desc": "Change your voice in real time"
+    },
+    "voice-memo": {
+      "title": "Voice Memo",
+      "desc": "Record with one tap"
+    },
+    "metronome": {
+      "title": "Metronome",
+      "desc": "Metronome with tempo and time signature"
+    },
+    "piano": {
+      "title": "Piano",
+      "desc": "Piano with sounds, recording and practice"
+    },
+    "ocr": {
+      "title": "OCR",
+      "desc": "Turn text in images into text"
+    },
+    "text-to-speech": {
+      "title": "Text to Speech",
+      "desc": "Read text aloud"
+    },
+    "paint": {
+      "title": "Paint",
+      "desc": "Draw with finger or pen, fill, write on photos, save as PNG"
+    },
+    "color-picker": {
+      "title": "Color Picker",
+      "desc": "Pick colors, detect them with the camera, look up color names"
+    },
+    "speed-test": {
+      "title": "Speed Test",
+      "desc": "Measure your connection speed"
+    },
+    "dj-turntable": {
+      "title": "DJ Turntable",
+      "desc": "Music player on a record: scratch with your finger and adjust pitch"
+    }
+  },
+  "environment": {
+    "browser": "Browser",
+    "device": "Device",
+    "language": "Language",
+    "timeZone": "Time zone",
+    "network": "Network",
+    "online": "Online",
+    "offline": "Offline",
+    "screen": "Screen (H×W)",
+    "viewport": "Viewport (H×W)",
+    "pixelRatio": "Pixel ratio",
+    "orientation": "Orientation",
+    "portrait": "Portrait",
+    "landscape": "Landscape",
+    "vibration": "Vibration",
+    "storage": "Storage",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "yes": "Yes",
+    "no": "No",
+    "unknown": "Unknown"
+  },
+  "device": {
+    "needHttps": "{名前} requires an https connection",
+    "notSupported": "This browser does not support {名前}.",
+    "notAllowed": "Access to {名前} was not allowed.",
+    "notFound": "No usable {名前} was found.",
+    "inUse": "Could not open {名前} (another app may be using it).",
+    "cannotOpen": "Could not open {名前}.",
+    "torchNotSupported": "This device or camera cannot control the light.",
+    "camera": "camera",
+    "microphone": "microphone",
+    "sensor": "sensors",
+    "motionSensor": "motion sensors",
+    "orientationSensor": "tilt and direction sensors"
+  }
+}
