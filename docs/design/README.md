@@ -16,7 +16,7 @@
 | [device.md](./device.md) | 端末の機能(`common/device.js`。`tool-kit.js` が読む) |
 | [page-base.md](./page-base.md) | ページの土台: ヘッダのボタンと読み込み確認(`common/site.js`・各ページの HTML) |
 | [color-theme.md](./color-theme.md) | カラーテーマ(6つのテーマ。`common/themes.json`・`site.css`・`site.js`。確認中) |
-| [tool-sort.md](./tool-sort.md) | ツールの並べ替え(一覧の 分類・最近・よく使う・名前。`common/tool-usage.js`。確認中) |
+| [tool-sort.md](./tool-sort.md) | ツールの並べ替え(一覧の 分類・最近・よく使う・名前。`common/tool-usage.js`) |
 | [page-exit.md](./page-exit.md) | ページを離れる時の終了処理(`common/device.js`。段 2 まで実装) |
 | [support-check.md](./support-check.md) | ブラウザの対応と許可の確認(`common/env.js`。確認中) |
 | [launcher-3d.md](./launcher-3d.md) | 3Dランチャー(本棚・美術館): ES モジュール化と共通部品への組み直し(段 1a まで実装。前の型) |
