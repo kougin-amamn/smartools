@@ -80,7 +80,10 @@
     else log('カウントしました(' + n + ')');
   };
   document.getElementById('reset').onclick = function () {
-    if (n === 0 || confirm('カウントを0に戻しますか?')) {
+    if (
+      n === 0 ||
+      confirm(window.I18n ? I18n.say('カウントを0に戻しますか?') : 'カウントを0に戻しますか?')
+    ) {
       var was = n;
       n = 0;
       draw();

@@ -128,7 +128,7 @@
 
   function deleteNote() {
     ToolKit.vibrate();
-    if (!confirm('このメモを削除しますか?')) {
+    if (!confirm(window.I18n ? I18n.say('このメモを削除しますか?') : 'このメモを削除しますか?')) {
       log('削除をやめました');
       return;
     }
