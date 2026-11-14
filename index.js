@@ -9,6 +9,27 @@
   var SORT_KEY = 'index-sort',
     allTools = [];
 
+  /* 画面の文の言語(common/i18n.js)。読めない時は日本語の文 fallback */
+  function say(key, vars, fallback) {
+    if (window.I18n) return I18n.t(key, vars, fallback);
+    return Object.keys(vars || {}).reduce(function (text, k) {
+      return text.split('{' + k + '}').join(vars[k]);
+    }, fallback);
+  }
+  /* その言語のツールの名前・説明・分類・注意の札にする。ログの名前(data-log)には日本語の名前 jaTitle を使う */
+  function translated(t) {
+    var copy = Object.assign({}, t, { jaTitle: t.title });
+    if (!window.I18n || I18n.language === 'ja') return copy;
+    copy.title = say('tools.' + t.slug + '.title', null, t.title);
+    copy.desc = say('tools.' + t.slug + '.desc', null, t.desc || '');
+    copy.cat = say('categories.' + t.cat, null, t.cat);
+    copy.tags = (t.tags || []).map(function (g) {
+      return say('tags.' + g, null, g);
+    });
+    copy.en = ''; // 名前が英語なので、英名の添え字は出さない
+    return copy;
+  }
+
   /* href / icon は省略時 tools/<slug>/ の中を指す。書いてあればサイトのルートからの相対パス(または絶対URL) */
   function fromRoot(path) {
     return /^(https?:|data:)/.test(path) ? path : './' + path.replace(/^\.?\//, '');
@@ -41,8 +62,8 @@
   function noteOf(t, mode, data) {
     var use = data[t.slug];
     if (!use) return '';
-    if (mode === 'recent') return ToolUsage.agoText(use.last, Date.now());
-    if (mode === 'frequent') return use.count + '回';
+    if (mode === 'recent') return ToolUsage.agoText(use.last, Date.now(), say);
+    if (mode === 'frequent') return say('list.times', { 回数: use.count }, '{回数}回');
     return '';
   }
 
@@ -83,7 +104,7 @@
       u.textContent = note;
       a.append(iconEl(t), body, u);
     } else a.append(iconEl(t), body);
-    a.setAttribute('data-log', t.title);
+    a.setAttribute('data-log', t.jaTitle || t.title);
     var li = document.createElement('li');
     li.appendChild(a);
     return li;
@@ -149,7 +170,7 @@
       h.id = 'cat' + i;
       h.textContent = c;
       n.className = 'cat-count';
-      n.textContent = by[c].length + '件';
+      n.textContent = say('list.count', { 件数: by[c].length }, '{件数}件');
       h.appendChild(n);
       ul.className = 'grid';
       by[c].forEach(function (t) {
@@ -165,7 +186,7 @@
   try {
     localStorage.setItem(
       'launcher-return',
-      JSON.stringify({ href: location.href, title: 'ツール一覧' }),
+      JSON.stringify({ href: location.href, title: 'ツール一覧', titleKey: 'list.title' }),
     );
   } catch (e) {
     log.warn('戻り先の保存に失敗しました', e);
@@ -192,13 +213,16 @@
       log.warn('ランチャーの一覧を読み込めませんでした(切り替えを出さずに表示します)', e);
     });
 
-  fetch('./index-data.json')
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function (tools) {
+  var toolsLoaded = fetch('./index-data.json').then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  });
+  Promise.all([toolsLoaded, window.I18n ? I18n.ready : null])
+    .then(function (results) {
+      var tools = results[0].map(translated);
       allTools = tools;
+      if (window.I18n && I18n.language !== 'ja')
+        document.title = say('list.metaTitle', null, document.title);
       var cats = render(tools),
         mode = sortModeOf();
       sortsEl.hidden = !window.ToolUsage; // 記録の部品が読めない時は、分類の順だけ
@@ -207,8 +231,11 @@
       log.started(tools.length + '件 / ' + cats + '分類 / 並び ' + mode);
     })
     .catch(function (e) {
-      statusEl.textContent =
-        'ツールの一覧を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。';
+      statusEl.textContent = say(
+        'list.loadFailed',
+        null,
+        'ツールの一覧を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。',
+      );
       statusEl.classList.add('error');
       log.error('ツールの一覧の読み込みでエラーが発生しました', e);
     });

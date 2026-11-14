@@ -75,8 +75,16 @@
     var b = document.createElement('button');
     b.className = 'dbg-btn back-btn';
     b.id = 'backBtn';
-    b.setAttribute('aria-label', (ret.title || 'ランチャー') + 'へ戻る');
-    b.title = b.getAttribute('aria-label');
+    function labelBack() {
+      var say = window.I18n ? I18n.t : null,
+        place =
+          say && ret.titleKey ? say(ret.titleKey, null, ret.title) : ret.title || 'ランチャー',
+        text = say ? say('site.backTo', { 名前: place }, '{名前}へ戻る') : place + 'へ戻る';
+      b.setAttribute('aria-label', text);
+      b.title = text;
+    }
+    labelBack();
+    document.addEventListener('i18n-ready', labelBack);
     b.innerHTML =
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
     bar.insertBefore(b, bar.firstChild);

@@ -19,7 +19,11 @@
     "settings": "Settings",
     "close": "Close",
     "siteName": "Smart Tools",
-    "tagline": "Small tools that work right in your browser. No installation needed."
+    "tagline": "Small tools that work right in your browser. No installation needed.",
+    "language": "Language",
+    "languageTip": "Language: {名前} (tap for {次})",
+    "themeTip": "Theme: {名前} (tap for {次})",
+    "backTo": "Back to {名前}"
   },
   "list": {
     "title": "All tools",
@@ -33,14 +37,15 @@
     "sortFrequent": "Most used",
     "sortName": "Name",
     "count": "{件数} tools",
-    "times": "{回数} times",
+    "times": "{回数}×",
     "justNow": "Just now",
     "minutesAgo": "{数} min ago",
     "hoursAgo": "{数} h ago",
     "daysAgo": "{数} days ago",
     "monthDay": "{月}/{日}",
     "metaTitle": "smartools | Free tools in your browser",
-    "metaDescription": "Calculators, timers, clocks, cameras, QR codes, sensor readouts and more — small tools that run right in your browser. Free, no installation, on phones and computers."
+    "metaDescription": "Calculators, timers, clocks, cameras, QR codes, sensor readouts and more — small tools that run right in your browser. Free, no installation, on phones and computers.",
+    "loadFailed": "Could not load the tool list. Open the page over https (or a local server at http://127.0.0.1)."
   },
   "categories": {
     "定番ツール": "Essentials",

@@ -74,7 +74,7 @@ function splitErrors(logs) {
 /* launch() → { open(urlPath, opts), close() }
    opts.stubs: { 'URL の一部': 'stubs のファイル名' }(一致した読み込みを差し替える。ほかの CDN は止める)
    opts.hour: 時刻を固定する時(テーマの確認)  opts.insecure: https でないことにする
-   opts.width: 画面の幅(初期 390)。launch(args) の args は Chromium の起動オプション */
+   opts.width: 画面の幅(初期 390)。opts.locale: 端末の言語(初期 ja-JP。サイトの主な利用者に合わせる)。launch(args) の args は Chromium の起動オプション */
 async function launch(args) {
   const server = await serve();
   const browser = await playwright.chromium.launch({ args: args || [] });
@@ -83,6 +83,7 @@ async function launch(args) {
     const context = await browser.newContext({
       viewport: { width: opts.width || 390, height: 844 },
       permissions: opts.permissions || [],
+      locale: opts.locale || 'ja-JP',
     });
     const stubs = opts.stubs || {};
     await context.route(

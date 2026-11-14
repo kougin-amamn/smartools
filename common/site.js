@@ -13,13 +13,23 @@
      テーマ・カラーテーマ・環境情報・デバッグの4つは HTML に書かず、ここで足す(並びは 環境情報・カラー・テーマ・デバッグ)。
      押下は log.js の自動ログに任せ、名前を data-log に固定する(テーマの文字は状態で変わるため) */
   var bar = document.querySelector('.site-bar');
-  function addHeaderButton(id, name, icon, before, hasPopup) {
+
+  /* 画面の文の言語(i18n.js。この後に読む)。読み終わる前と読めない時は、日本語の文 fallback を使う */
+  function say(key, vars, fallback) {
+    if (window.I18n) return I18n.t(key, vars, fallback);
+    Object.keys(vars || {}).forEach(function (k) {
+      fallback = fallback.split('{' + k + '}').join(vars[k]);
+    });
+    return fallback;
+  }
+  function addHeaderButton(id, name, icon, before, hasPopup, key) {
     if (!bar) return null;
     var b = document.createElement('button');
     b.className = 'dbg-btn';
     b.id = id;
     b.type = 'button';
     b.dataset.log = name;
+    if (key) b.dataset.i18nLabel = key;
     b.title = name;
     b.setAttribute('aria-label', name);
     if (hasPopup) {
@@ -42,6 +52,9 @@
       'dbgBtn',
       'デバッグ',
       '<path d="M8 8h8v8a4 4 0 0 1-8 0zM9 3l1.5 2M15 3l-1.5 2M4 12h4M16 12h4M5 19l3-2M19 19l-3-2"/>',
+      null,
+      false,
+      'site.debug',
     );
   var I = {
     light:
@@ -49,12 +62,19 @@
     dark: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
   };
   var N = { light: 'ライト', dark: 'ダーク' };
+  function themeNameOf(t) {
+    return say('site.' + t, null, N[t]);
+  }
   function night() {
     var h = new Date().getHours();
     return h >= 18 || h < 6;
   }
   function apply(t) {
-    var tip = 'テーマ: ' + N[t] + '(押すと' + N[t === 'dark' ? 'light' : 'dark'] + ')';
+    var tip = say(
+      'site.themeTip',
+      { 名前: themeNameOf(t), 次: themeNameOf(t === 'dark' ? 'light' : 'dark') },
+      'テーマ: {名前}(押すと{次})',
+    );
     root.setAttribute('data-theme', t);
     if (tbtn) {
       tbtn.firstElementChild.innerHTML = I[t];
@@ -279,6 +299,7 @@
       '<path d="M12 3a9 9 0 1 0 0 18c1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2a1.7 1.7 0 0 1 1.3-2.9H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11.5" r=".6"/><circle cx="10" cy="7.5" r=".6"/><circle cx="15" cy="7.5" r=".6"/>',
       tbtn,
       true,
+      'site.colorTheme',
     );
 
     menu = document.createElement('div');
@@ -288,7 +309,9 @@
     menu.dataset.log = 'off';
     menu.setAttribute('role', 'dialog');
     menu.setAttribute('aria-label', 'カラーテーマ');
-    menu.innerHTML = '<p class="color-menu-title">カラーテーマ</p><div class="color-list"></div>';
+    menu.dataset.i18nLabel = 'site.colorTheme';
+    menu.innerHTML =
+      '<p class="color-menu-title" data-i18n="site.colorTheme">カラーテーマ</p><div class="color-list"></div>';
     document.body.appendChild(menu);
     cbtn.setAttribute('aria-controls', menu.id);
 
@@ -356,6 +379,7 @@
       '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.6" r=".7"/>',
       cbtn || tbtn,
       true,
+      'site.environment',
     );
 
     imenu = document.createElement('div');
@@ -365,7 +389,9 @@
     imenu.dataset.log = 'off';
     imenu.setAttribute('role', 'dialog');
     imenu.setAttribute('aria-label', '環境情報');
-    imenu.innerHTML = '<p class="color-menu-title">環境情報</p><dl class="info-list"></dl>';
+    imenu.dataset.i18nLabel = 'site.environment';
+    imenu.innerHTML =
+      '<p class="color-menu-title" data-i18n="site.environment">環境情報</p><dl class="info-list"></dl>';
     document.body.appendChild(imenu);
     ibtn.setAttribute('aria-controls', imenu.id);
 
@@ -426,6 +452,7 @@
     handle.className = 'bar-handle';
     handle.dataset.log = 'メニュー';
     handle.setAttribute('aria-label', 'メニュー(ヘッダ)を出す');
+    handle.dataset.i18nLabel = 'site.showMenu';
     handle.setAttribute('aria-expanded', 'false');
     handle.innerHTML = '<span></span>';
     bar.parentNode.insertBefore(handle, bar.nextSibling);
@@ -445,4 +472,43 @@
       if (e.key === 'Escape') setBar(false);
     });
   }
+
+  /* 言語
+     i18n.js(lang/<言語>.json を読み、data-i18n の付いた文を置き換える)を、HTML の読み込みを増やさないよう同じフォルダから読む。
+     ヘッダの先頭に切り替えのボタンを足し、押すと保存して読み込み直す。設計: docs/design/i18n.md */
+  var self = document.currentScript;
+  if (self && document.readyState === 'loading')
+    document.write('<script src="' + new URL('i18n.js', self.src).href + '"><\/script>');
+  var LANGUAGE_NAMES = { ja: '日本語', en: 'English' };
+  var lbtn = addHeaderButton(
+    'languageBtn',
+    '言語',
+    '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+    bar && bar.querySelector('.dbg-btn:not(.back-btn)'),
+  );
+  function otherLanguageOf(language) {
+    return language === 'ja' ? 'en' : 'ja';
+  }
+  function labelLanguage() {
+    if (!lbtn || !window.I18n) return;
+    var tip = say(
+      'site.languageTip',
+      { 名前: LANGUAGE_NAMES[I18n.language], 次: LANGUAGE_NAMES[otherLanguageOf(I18n.language)] },
+      '表示の言語: {名前}(押すと{次})',
+    );
+    lbtn.title = tip;
+    lbtn.setAttribute('aria-label', tip);
+  }
+  if (lbtn)
+    lbtn.onclick = function () {
+      if (!window.I18n) return log.warn('言語の部品を読み込めていないため、切り替えられません');
+      var next = otherLanguageOf(I18n.language);
+      log('表示の言語を「' + LANGUAGE_NAMES[next] + '」に切り替えます');
+      I18n.setLanguage(next);
+    };
+  /* 言語のファイルを読み終えたら、状態で変わる文(テーマのボタン・言語のボタン)を付け直す */
+  document.addEventListener('i18n-ready', function () {
+    apply(root.getAttribute('data-theme'));
+    labelLanguage();
+  });
 })();

@@ -76,14 +76,24 @@
   }
 
   /* 最後に開いてからの時間の文 */
-  function agoText(last, now) {
+  /* say(キー, 差し込み, 日本語の文) を渡すと、その言語の文にする(i18n.js の I18n.t)。無ければ日本語 */
+  function agoText(last, now, say) {
+    say =
+      say ||
+      function (key, vars, fallback) {
+        return Object.keys(vars || {}).reduce(function (text, k) {
+          return text.split('{' + k + '}').join(vars[k]);
+        }, fallback);
+      };
     var minutes = Math.floor((now - last) / 60000);
-    if (minutes < 1) return 'たった今';
-    if (minutes < 60) return minutes + '分前';
-    if (minutes < 60 * 24) return Math.floor(minutes / 60) + '時間前';
-    if (minutes < 60 * 24 * 7) return Math.floor(minutes / 60 / 24) + '日前';
+    if (minutes < 1) return say('list.justNow', null, 'たった今');
+    if (minutes < 60) return say('list.minutesAgo', { 数: minutes }, '{数}分前');
+    if (minutes < 60 * 24)
+      return say('list.hoursAgo', { 数: Math.floor(minutes / 60) }, '{数}時間前');
+    if (minutes < 60 * 24 * 7)
+      return say('list.daysAgo', { 数: Math.floor(minutes / 60 / 24) }, '{数}日前');
     var d = new Date(last);
-    return d.getMonth() + 1 + '月' + d.getDate() + '日';
+    return say('list.monthDay', { 月: d.getMonth() + 1, 日: d.getDate() }, '{月}月{日}日');
   }
 
   var api = {
