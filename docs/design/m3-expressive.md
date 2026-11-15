@@ -129,3 +129,10 @@ resource: "common/site.css"
 | T-02 | 全部 | `node tests/smoke.js all`(全ページが開ける) |
 | T-03 | R-04・R-05 | 画面の写真(一覧・3ツール、ライトとダーク、押した時) |
 | T-04 | R-07 | 実機: 動きを減らす設定で、押しても形が変わらない |
+
+## 6. 実装の記録
+
+### 段 2a: 部品を試す(2026-11-15)
+
+- キッチンタイマーの「−1分・−10秒・+10秒・+1分」を、ボタンのまとまり(connected button group)にした。押したボタンが広がり(`flex-grow`)、角がまるくなり、隣が縮む。
+- 押すと文字が変わるボタンの幅を、`data-texts` でいちばん長い文にそろえた(`tool-kit.js` の `keepButtonWidths`。15 ツール)。試験: `node tests/scenarios/button-width.js`。

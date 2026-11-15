@@ -86,7 +86,7 @@
               aria-label="範囲の大きさ"
             />
           </div>
-          <button class="pill" id="freezeBtn" disabled>一時停止</button>
+          <button class="pill" id="freezeBtn" data-texts="一時停止|再開" disabled>一時停止</button>
           <canvas id="workCanvas" hidden></canvas>
         </div>
 
@@ -97,7 +97,9 @@
             <div class="sub" id="rgbText">RGB(124, 58, 237)</div>
             <div class="sub" id="hslText">HSL(263, 83%, 58%)</div>
           </div>
-          <button class="pill small" id="copyHexBtn">コピー</button>
+          <button class="pill small" id="copyHexBtn" data-texts="コピー|コピーしました">
+            コピー
+          </button>
         </div>
 
         <div class="nearest-card" id="nearestCard">

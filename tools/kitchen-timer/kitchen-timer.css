@@ -69,24 +69,41 @@ body.ringing {
   color: var(--sub);
 }
 .adjust-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  display: flex;
+  gap: 2px;
   width: 100%;
 }
+/* ボタンのまとまり(M3 Expressive の connected button group): つながった4つのボタン。外側の角はまる(高さの半分の 24px。
+   999px にすると、同じ辺の小さな角まで縮められて四角になるため)、内側は小さく丸める。
+   押したボタンは少し広がって角がまるくなり、隣が縮む(ばねの動き)。どれを押したか手応えで分かるように */
 .adjust-row button {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 48px;
   border: none;
   cursor: pointer;
-  padding: 12px 4px;
-  border-radius: var(--shape-full);
+  padding: 0 4px;
+  border-radius: var(--shape-small);
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  transition: border-radius var(--motion-spatial-fast);
   font-size: 14px;
+  font-weight: 500;
   -webkit-tap-highlight-color: transparent;
+  transition:
+    flex-grow var(--motion-spatial-fast),
+    border-radius var(--motion-spatial-fast),
+    background-color var(--motion-effects-fast);
+}
+.adjust-row button:first-child {
+  border-radius: 24px var(--shape-small) var(--shape-small) 24px;
+}
+.adjust-row button:last-child {
+  border-radius: var(--shape-small) 24px 24px var(--shape-small);
 }
 .adjust-row button:active:not(:disabled) {
-  border-radius: var(--shape-small);
+  flex-grow: 1.45;
+  border-radius: var(--shape-full);
+  background: color-mix(in srgb, var(--on-secondary-container) 10%, var(--secondary-container));
 }
 .adjust-row button:disabled {
   opacity: 0.4;

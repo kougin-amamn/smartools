@@ -88,13 +88,17 @@
             <input type="number" id="maxSideInput" value="1600" min="64" max="8000" step="10" />
             <span class="unit">px</span>
           </div>
-          <button class="pill primary" id="convertBtn">すべて変換</button>
+          <button class="pill primary" id="convertBtn" data-texts="すべて変換|変換中…">
+            すべて変換
+          </button>
         </div>
 
         <div class="list" id="list"></div>
 
         <div class="batch-row" id="batchRow" hidden>
-          <button class="pill" id="zipBtn">まとめてZIPでダウンロード</button>
+          <button class="pill" id="zipBtn" data-texts="まとめてZIPでダウンロード|作成中…">
+            まとめてZIPでダウンロード
+          </button>
         </div>
         <p class="note">
           すべて端末内で処理されます(画像はサーバーに送信されません)。PNG/JPEG/WebPはブラウザ標準機能で、BMP/GIF/ICOは自前の変換処理で書き出しています。<br />

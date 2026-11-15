@@ -80,9 +80,13 @@
           <video id="video" playsinline muted></video>
         </div>
         <div class="row">
-          <button class="pill primary" type="button" id="camBtn">カメラ開始</button>
+          <button class="pill primary" type="button" id="camBtn" data-texts="カメラ開始|カメラ停止">
+            カメラ開始
+          </button>
           <button class="pill" type="button" id="flipBtn" hidden>カメラ切替</button>
-          <button class="pill" type="button" id="pauseBtn" hidden>一時停止</button>
+          <button class="pill" type="button" id="pauseBtn" data-texts="一時停止|再開" hidden>
+            一時停止
+          </button>
           <button class="pill" type="button" id="openBtn">写真を開く</button>
           <input type="file" id="file" accept="image/*" aria-label="写真を開く" hidden />
         </div>

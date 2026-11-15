@@ -72,7 +72,9 @@
         <div class="status" id="statusText">開始ボタンを押して、端末を水平に持ってください</div>
         <div class="buttons">
           <button class="pill primary" id="startBtn">コンパスを開始</button>
-          <button class="pill" id="targetBtn" hidden>この方位を目標にする</button>
+          <button class="pill" id="targetBtn" data-texts="この方位を目標にする|目標を解除" hidden>
+            この方位を目標にする
+          </button>
         </div>
         <p class="note">
           磁気センサーの値なので、近くの磁石・金属・電化製品や端末によって誤差が出ます。表示は磁北(地図の北から日本ではおよそ7〜9°西)です。
