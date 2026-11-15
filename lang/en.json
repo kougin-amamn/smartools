@@ -755,30 +755,6 @@
         "計測中…": "Measuring…"
       }
     },
-    "heart-rate": {
-      "title": "Heart Rate Monitor",
-      "desc": "Measure your pulse with a finger on the camera",
-      "text": {
-        "脈の波形": "Pulse waveform",
-        "医療機器ではありません。目安としてお使いください。指を強く押し付けると血の流れが止まって測れません。体調が気になる時は医療機関で測ってください。": "This is not a medical device; use it as a rough guide. Pressing your finger hard stops the blood flow and prevents measuring. If you are worried about your health, get measured at a medical facility.",
-        "測った記録": "History",
-        "測定を始める": "Start measuring",
-        "測定をやめる": "Stop measuring",
-        "背面のカメラとライトを、人差し指の腹でそっとふさいでください": "Gently cover the back camera and light with the pad of your index finger",
-        "記録を消す": "Clear history",
-        "まだありません": "Nothing yet",
-        "うまく測れませんでした。指の力をゆるめ、明るい所でもう一度お試しください": "Could not measure well. Relax your finger and try again in a bright place",
-        "この端末はライトが使えません。明るい所で、指先をカメラにそっと当ててください": "This device cannot use the light. In a bright place, gently place your fingertip on the camera",
-        "ふつう": "Normal",
-        "ゆっくり": "Slow",
-        "速め": "Fast",
-        "波形が乱れています。指の力を少しゆるめてください": "The waveform is unstable. Relax your finger a little",
-        "測っています…そのまま動かさないでください(あと {秒}秒)": "Measuring… keep still ({秒} s left)",
-        "測り終えました:{数} bpm({区分})": "Done: {数} bpm ({区分})",
-        "測定をやめました": "Stopped measuring",
-        "脈を探しています…": "Looking for a pulse…"
-      }
-    },
     "step-counter": {
       "title": "Step Counter",
       "desc": "Pedometer that counts your steps",
