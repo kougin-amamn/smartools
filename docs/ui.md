@@ -11,22 +11,34 @@ resource: "common/site.css"
 
 新しいツールは `node scripts/new-tool.js` でひな形を作ると、ヘッダや読み込み順はこの決まりどおりになります。
 
-## 配色(案A「紺紫 × ミント」)
+## 配色(Material 3 の標準の色、2026-11-15)
 
-全ツールで同じ色の名前(トークン)を使い、ツールごとの色は作りません。利用者がカラーテーマを選ぶと、トークンの中身だけが入れ替わります。
+全ツールで同じ色の名前(トークン)を使い、ツールごとの色は作りません。色は M3 の役割の名前で書きます。値の一覧は [design/m3-expressive.md](./design/m3-expressive.md) の 3.2 です。
 
-| 役割 | トークン | ライト | ダーク | 使う所 |
-| --- | --- | --- | --- | --- |
-| ブランド | `--accent`(文字 `--accent-fg`) | `#4a4e7a`(文字 `#ffffff`) | `#8086c9`(文字 `#14151c`) | ヘッダ、アイコンの地、ブランド色のボタン |
-| アクセント | `--func`(文字 `--func-fg`) | `#5cc4b6`(文字 `#0b2b27`) | `#7fe0d2`(文字 `#0b2b27`) | 主なボタン、進み具合、選択中 |
-| ティント | `--fn-bg` | `#e3e5f3` | `#2c3040` | 補助のボタン、区切り |
-| 弱い文字 | `--sub` | `#62656f` | `#9598a9` | 英名・説明・件数など。地・面・ティントの上で 4.5 以上(2026-11-14) |
-| 地 / 面 | `--bg` / `--panel` | `#f5f5f7` / `#ffffff` | `#15161c` / `#1e2029` | 背景 / カード |
-| 警告 | `--danger` | `#c93a3a` | `#ff7a7a` | 危ない操作だけ |
+| 役割 | トークン | 使う所 |
+| --- | --- | --- |
+| 主 | `--primary` / `--on-primary` | 主なボタン、進み具合、選択中 |
+| 主の容器 | `--primary-container` / `--on-primary-container` | 目立たせたい面(知らせ・時間切れ)、浮かぶボタン |
+| 第二の容器 | `--secondary-container` / `--on-secondary-container` | 補助のボタン、選んだ札、タグ |
+| 第三 | `--tertiary` / `--on-tertiary` | もう一方の状態(止める・休憩) |
+| 面 | `--surface` / `--on-surface` | 地と文字 |
+| 容器 | `--surface-container-low` / `--surface-container` / `--surface-container-high` | シート / カード・ヘッダ / メニュー・キー |
+| 弱い文字 | `--on-surface-variant` | 説明・件数など。面と容器の上で 4.5 以上 |
+| 輪郭 | `--outline` / `--outline-variant` | 枠線 / 区切り |
+| エラー | `--error` / `--on-error` | 危ない操作だけ |
 
-- ヘッダの色をツールごとに変えない。ダークの値を固定色で置き換えない。オレンジと鮮やかな赤は使わない(時間切れの点滅はやわらかいミント: ライト `#8fdcd1`、ダーク `#2d7a72`)。
-- ツール独自のトークン(`--progress` など)は `<slug>.css` の `:root{}` と `:root[data-theme="dark"]{}` に書き、トークンから作る(`color-mix(in srgb, var(--func) …)`)。固定の色にするとカラーテーマに追従しない。
-- 2つの状態があるツール(ポモドーロの作業と休憩)は、動いている方に `--func`、もう一方に `--accent`。
+- 古い名前(`--func` `--accent` `--fn-bg` `--panel` `--bg` `--text` `--sub` `--danger`)は、M3 の役割の別名として残っている(`--func` = 主、`--accent` = 第三、`--fn-bg` = 第二の容器、`--panel` = 容器(低))。新しく書く css は M3 の名前を使い、古い名前のツールは手を入れる時に移す。
+- ヘッダは容器の色(`--surface-container`)で、ツールごとに変えない。ダークの値を固定色で置き換えない。
+- ツール独自のトークン(`--progress` など)は `<slug>.css` の `:root{}` に、M3 のトークンから作る(固定の色にしない)。
+- 2つの状態があるツール(ポモドーロの作業と休憩)は、動いている方に `--primary`、もう一方に `--tertiary`。
+
+## 形と動き(Material 3 Expressive、2026-11-15)
+
+- 角の丸さは段階のトークンだけを使う: `--shape-extra-small` 4px・`--shape-small` 8px・`--shape-medium` 12px・`--shape-large` 16px・`--shape-large-increased` 20px・`--shape-extra-large` 28px・`--shape-extra-large-increased` 32px・`--shape-extra-extra-large` 48px・`--shape-full`。
+- 目安: ボタンと札は `--shape-full`(札は `--shape-small` も可)、カード `--shape-large`、大きな容器とシート `--shape-extra-large`、メニュー `--shape-large`。
+- ボタンは押している間 角を小さくし(まる → `--shape-medium` くらい)、`transition: border-radius var(--motion-spatial-fast)` でばねのように戻す。`transform: scale()` で縮める押し方はやめる。
+- 動きのトークン: `--motion-spatial-fast`(押した時の形)、`--motion-spatial-default`(シート・位置)、`--motion-effects-fast`(色)。
+- 主なボタンは大きくする(高さ 56px 以上、いちばん大事な1つは 96px くらい)。
 - 利用者が選ぶ色(時計の文字色、お絵かきの色)は中身なので、テーマに合わせない。
 - ライトは `:root`、ダークは `:root[data-theme="dark"]`。`prefers-color-scheme` は使わない(テーマは `site.js` が時刻で決める)。
 
@@ -83,7 +95,7 @@ HTML に書くのは アイコン・名称だけ(ひな形どおり)。ツール
 
 ## アイコン
 
-64×64、角丸 `rx="16"` の地を `#4a4e7a`(ライトもダークも同じ)にし、**平らな色付きの絵**を 24×24 の枠に描く。白い線画にはしない。**右下のミントの丸(バッジ)は付けない。**
+64×64、角丸 `rx="16"` の地を `#4a4e7a`(ライトもダークも同じ。M3 の色に合わせるかは [design/m3-expressive.md](./design/m3-expressive.md) の段 2 で決める)にし、**平らな色付きの絵**を 24×24 の枠に描く。白い線画にはしない。**右下のミントの丸(バッジ)は付けない。**
 
 ```svg
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
