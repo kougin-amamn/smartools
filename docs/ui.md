@@ -36,7 +36,7 @@ resource: "common/site.css"
 
 - 角の丸さは段階のトークンだけを使う: `--shape-extra-small` 4px・`--shape-small` 8px・`--shape-medium` 12px・`--shape-large` 16px・`--shape-large-increased` 20px・`--shape-extra-large` 28px・`--shape-extra-large-increased` 32px・`--shape-extra-extra-large` 48px・`--shape-full`。
 - 目安: ボタンと札は `--shape-full`(札は `--shape-small` も可)、カード `--shape-large`、大きな容器とシート `--shape-extra-large`、メニュー `--shape-large`。
-- ボタンは押している間 角を小さくし(まる → `--shape-medium` くらい)、`transition: border-radius var(--motion-spatial-fast)` でばねのように戻す。`transform: scale()` で縮める押し方はやめる。
+- ボタンは押している間、形を変えずに薄い色を重ねる(`box-shadow: var(--press-layer)`。M3 の状態の層)。角が四角くなる動きは使わない(2026-11-15、見た目が良くないため)。`transform: scale()` で縮める押し方もやめる。
 - 動きのトークン: `--motion-spatial-fast`(押した時の形)、`--motion-spatial-default`(シート・位置)、`--motion-effects-fast`(色)。
 - 主なボタンは大きくする(2026-11-15、全ツール)。`.pill.primary` は `tool.css` が高さ 56px 以上・文字 16px にする(`.small` は除く)。丸い主なボタンは、開始・録音などいちばん大事な1つが 96px、撮影(シャッター)が 80px、再生が 72〜80px。描く場所を広く取るツール(お絵かきの道具の列)は、ツールの css で外してよい。
 - 利用者が選ぶ色(時計の文字色、お絵かきの色)は中身なので、テーマに合わせない。
