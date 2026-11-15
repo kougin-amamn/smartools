@@ -119,11 +119,14 @@
   top: 0;
   z-index: 40;
   transform: translateY(-100%);
-  transition: transform 0.2s ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  transition:
+    transform var(--motion-spatial-default),
+    box-shadow var(--motion-effects-fast);
 }
+/* 影は出した時だけ(隠れている時に、上の端に影がはみ出さないように) */
 .bar-hidden.bar-open .site-bar {
   transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
 .bar-handle {
   position: fixed;
@@ -134,11 +137,11 @@
   height: 18px;
   padding: 0;
   border: 0;
-  border-radius: 0 0 8px 8px;
-  background: rgba(20, 21, 28, 0.55);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 0 0 var(--shape-small) var(--shape-small);
+  background: var(--surface-container-high);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  transition: top 0.2s ease;
+  transition: top var(--motion-spatial-default);
 }
 .bar-handle span {
   display: block;
@@ -146,8 +149,7 @@
   height: 3px;
   margin: 6px auto 0;
   border-radius: 2px;
-  background: #ffffff;
-  opacity: 0.8;
+  background: var(--on-surface-variant);
 }
 .embed .content {
   justify-content: flex-start;
