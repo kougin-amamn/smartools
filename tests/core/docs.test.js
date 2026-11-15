@@ -1,6 +1,7 @@
 /* 文書(docs/)が OKF(Open Knowledge Format)の形に合っているか(docs/log.md 2026-11-15)。
    index.md 以外の .md は先頭に YAML があり type が空でない、index.md は YAML が無い(一番上だけ okf_version)、
-   どの文書もいずれかの index.md から辿れる、文書の中の相対リンクの先がある */
+   どの文書もいずれかの index.md から辿れる、文書の中の相対リンクの先がある。
+   README.md は GitHub でフォルダを開いた時の入口で、束の外(index.md へ案内するだけ) */
 const a = require('assert');
 const fs = require('fs');
 const path = require('path');
@@ -9,7 +10,7 @@ const root = path.join(__dirname, '../../docs');
 function filesOf(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     const p = path.join(dir, e.name);
-    return e.isDirectory() ? filesOf(p) : e.name.endsWith('.md') ? [p] : [];
+    return e.isDirectory() ? filesOf(p) : e.name.endsWith('.md') && e.name !== 'README.md' ? [p] : [];
   });
 }
 function frontMatterOf(text) {
