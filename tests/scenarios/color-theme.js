@@ -2,9 +2,10 @@
    使い方: node tests/scenarios/color-theme.js */
 const { launch, report, splitErrors } = require('../lib/harness');
 
+/* 主の色(M3 の --primary)。テーマを選ぶと、ライトではテーマの main になる */
 const accentOf = (page) =>
   page.evaluate(() =>
-    getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
+    getComputedStyle(document.documentElement).getPropertyValue('--primary').trim(),
   );
 
 (async () => {

@@ -1,5 +1,5 @@
 [
-  { "no": "00", "id": "standard", "name": "紺紫×ミント(標準)", "main": "#4a4e7a", "sub": "#5cc4b6" },
+  { "no": "00", "id": "standard", "name": "標準(Material 3)", "main": "#6750a4", "sub": "#7d5260" },
   { "no": "01", "id": "blue", "name": "ブルー", "main": "#2563EB", "sub": "#93C5FD" },
   { "no": "02", "id": "purple", "name": "パープル", "main": "#7C3AED", "sub": "#C4B5FD" },
   { "no": "03", "id": "green", "name": "グリーン", "main": "#16865B", "sub": "#86D6AE" },

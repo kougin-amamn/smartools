@@ -151,20 +151,28 @@
         .join('')
     );
   }
-  function tokens(acc, fn, tint) {
-    return (
-      '--accent:' +
-      acc +
-      ';--accent-fg:' +
-      textOn(acc) +
-      ';--func:' +
-      fn +
-      ';--func-fg:' +
-      textOn(fn) +
-      ';--fn-bg:' +
-      tint +
-      ';'
-    );
+  /* テーマの色から、M3 の役割のトークンを作る(主・容器・第三・面の薄い色づけ)。
+     ライトは main を主に、ダークは明るい sub を主にする(暗い地の上で見えるように) */
+  function tokens(primary, other, surface, ink) {
+    var list = {
+      '--primary': primary,
+      '--on-primary': textOn(primary),
+      '--primary-container': mix(primary, surface, 0.28),
+      '--on-primary-container': textOn(mix(primary, surface, 0.28)),
+      '--secondary-container': mix(primary, surface, 0.16),
+      '--on-secondary-container': ink,
+      '--tertiary': other,
+      '--on-tertiary': textOn(other),
+      '--surface': mix(primary, surface, 0.03),
+      '--surface-container-low': mix(primary, surface, 0.05),
+      '--surface-container': mix(primary, surface, 0.08),
+      '--surface-container-high': mix(primary, surface, 0.11),
+    };
+    return Object.keys(list)
+      .map(function (k) {
+        return k + ':' + list[k] + ';';
+      })
+      .join('');
   }
   function applyColor(c) {
     if (!c || c.id === STANDARD || !c.main || !c.sub) {
@@ -179,9 +187,9 @@
     }
     colorStyle.textContent =
       ':root{' +
-      tokens(c.main, c.sub, mix(c.main, '#ffffff', 0.13)) +
+      tokens(c.main, c.sub, '#ffffff', '#1d1b20') +
       '}:root[data-theme="dark"]{' +
-      tokens(c.sub, c.main, mix(c.sub, '#15161c', 0.18)) +
+      tokens(c.sub, c.main, '#141218', '#e6e0e9') +
       '}';
   }
   function savedColor() {
