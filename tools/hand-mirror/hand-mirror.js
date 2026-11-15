@@ -8,6 +8,9 @@
   const torchBtn = document.getElementById('torchBtn');
   const zoomSlider = document.getElementById('zoomSlider');
   const brightnessSlider = document.getElementById('brightnessSlider');
+  const mirrorWrap = document.getElementById('mirrorWrap');
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  const exitFsBtn = document.getElementById('exitFsBtn');
 
   let stream = null;
   let track = null;
@@ -66,6 +69,42 @@
     }
     torchOn = !torchOn;
     torchBtn.classList.toggle('active', torchOn);
+  });
+
+  /* 全画面: 鏡を画面いっぱいに広げる。端末の全画面表示が使える時は、ブラウザの帯も隠す(iPhone の Safari などは画面いっぱいだけ) */
+  function isFullscreen() {
+    return mirrorWrap.classList.contains('is-fullscreen');
+  }
+  function setFullscreen(on) {
+    if (isFullscreen() === on) return;
+    mirrorWrap.classList.toggle('is-fullscreen', on);
+    exitFsBtn.hidden = !on;
+    log(on ? '全画面表示にしました' : '全画面表示を終了しました');
+    if (on && mirrorWrap.requestFullscreen && !document.fullscreenElement) {
+      mirrorWrap
+        .requestFullscreen()
+        .catch((e) =>
+          log.warn('端末の全画面表示にできなかったため、画面いっぱいの表示にします', e),
+        );
+    }
+    if (!on && document.fullscreenElement) {
+      document.exitFullscreen().catch((e) => log.warn('端末の全画面表示を終了できませんでした', e));
+    }
+  }
+  fullscreenBtn.addEventListener('click', () => {
+    ToolKit.vibrate();
+    setFullscreen(true);
+  });
+  exitFsBtn.addEventListener('click', () => {
+    ToolKit.vibrate();
+    setFullscreen(false);
+  });
+  /* 端末の戻る操作などで全画面表示が終わった時も、画面いっぱいの表示を戻す */
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) setFullscreen(false);
+  });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setFullscreen(false);
   });
 
   zoomSlider.addEventListener('input', applyStyle);

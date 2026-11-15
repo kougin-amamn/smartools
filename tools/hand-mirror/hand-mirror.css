@@ -26,6 +26,35 @@ video {
   display: block;
   transform: scaleX(-1);
 }
+/* 全画面: 鏡を画面いっぱいに */
+.mirror-wrap.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+.exit-fs-btn {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  left: calc(env(safe-area-inset-left, 0px) + 12px);
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: var(--shape-full);
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
 .empty-state {
   position: absolute;
   inset: 0;

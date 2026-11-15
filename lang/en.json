@@ -479,7 +479,9 @@
         "ライト": "Light",
         "カメラを起動しています…": "Starting the camera…",
         "明るさ": "Brightness",
-        "拡大": "Zoom"
+        "拡大": "Zoom",
+        "全画面": "Full screen",
+        "全画面解除": "Exit full screen"
       }
     },
     "multi-camera": {
