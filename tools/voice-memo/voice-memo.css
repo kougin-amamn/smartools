@@ -22,9 +22,6 @@
   transition: transform 0.1s ease;
   -webkit-tap-highlight-color: transparent;
 }
-.rec-btn:active {
-  transform: scale(0.95);
-}
 .rec-btn .dot {
   width: 32px;
   height: 32px;

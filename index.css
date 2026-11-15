@@ -113,10 +113,6 @@ body {
 .card:hover {
   border-color: var(--outline-variant);
 }
-/* 押している間は薄い色を重ねる(形は変えない) */
-.card:active {
-  box-shadow: var(--press-layer);
-}
 .card:focus-visible {
   outline: 2px solid var(--func);
   outline-offset: 2px;

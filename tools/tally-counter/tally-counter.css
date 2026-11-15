@@ -54,9 +54,6 @@ body {
   color: var(--accent-fg);
   touch-action: manipulation;
 }
-#plus:active {
-  filter: brightness(0.85);
-}
 #reset {
   height: 48px;
   border: 0;
@@ -67,9 +64,6 @@ body {
   background: #e2e3e9;
   color: #c93a3a;
   touch-action: manipulation;
-}
-#reset:active {
-  filter: brightness(0.85);
 }
 .opt {
   display: flex;

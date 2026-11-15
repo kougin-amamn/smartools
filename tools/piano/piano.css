@@ -138,9 +138,6 @@
   background: var(--accent);
   color: var(--accent-fg);
 }
-.pill:active {
-  filter: brightness(0.9);
-}
 .pill:disabled {
   opacity: 0.4;
 }

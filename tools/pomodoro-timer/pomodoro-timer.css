@@ -106,9 +106,6 @@ body {
   -webkit-tap-highlight-color: transparent;
   transition: transform 0.08s ease;
 }
-.icon-btn:active {
-  transform: scale(0.92);
-}
 .icon-btn.primary {
   width: 96px; /* 主なボタンは大きく(M3 Expressive) */
   height: 96px;
@@ -169,9 +166,6 @@ body {
   color: var(--fn-fg);
   font-size: 16px;
   -webkit-tap-highlight-color: transparent;
-}
-.stepper:active {
-  transform: scale(0.9);
 }
 .setting-row span:first-child {
   flex: 1;

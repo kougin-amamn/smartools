@@ -38,6 +38,20 @@
   /* 押している間に重ねる薄い色(M3 の状態の層)。形は変えず、文字の色を 12% だけ重ねて押した事を伝える */
   --press-layer: inset 0 0 0 999px color-mix(in srgb, currentColor 12%, transparent);
 }
+/* 押した時の波紋(common/press.js が足す)。押した要素と同じ角の丸さの入れ物の中で広がる */
+.ripple-box {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  pointer-events: none;
+}
 :root[data-theme='dark'] {
   --primary: #d0bcff;
   --on-primary: #381e72;
@@ -104,6 +118,7 @@
   margin: -7px -4px;
   cursor: pointer;
   display: flex;
+  border-radius: var(--shape-full);
   opacity: 0.85;
 }
 .dbg-btn svg {

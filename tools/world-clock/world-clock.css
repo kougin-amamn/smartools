@@ -123,9 +123,6 @@
   width: 16px;
   height: 16px;
 }
-.city .del:active {
-  background: var(--fn-bg);
-}
 .empty {
   text-align: center;
   color: var(--sub);
@@ -155,9 +152,6 @@
   font-family: inherit;
   background: var(--fn-bg);
   color: var(--fn-fg);
-}
-.pill:active {
-  filter: brightness(0.9);
 }
 .chk {
   display: flex;

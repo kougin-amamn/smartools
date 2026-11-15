@@ -32,9 +32,6 @@
   color: var(--func-fg);
   box-shadow: 0 10px 40px rgba(92, 196, 182, 0.55);
 }
-.power:active {
-  transform: scale(0.96);
-}
 .status {
   font-size: 14px;
   min-height: 18px;

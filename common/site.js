@@ -518,7 +518,13 @@
      一覧のヘッダに切り替えのボタンを足し、押すと保存して読み込み直す(選んだ言語は全ページで使う)。設計: docs/design/i18n.md */
   var self = document.currentScript;
   if (self && document.readyState === 'loading')
-    document.write('<script src="' + new URL('i18n.js', self.src).href + '"><\/script>');
+    document.write(
+      '<script src="' +
+        new URL('i18n.js', self.src).href +
+        '"><\/script><script src="' +
+        new URL('press.js', self.src).href +
+        '"><\/script>',
+    );
   var LANGUAGE_NAMES = { ja: '日本語', en: 'English' };
   /* 言語のボタンは、ヘッダに data-language-switch の付いたページ(一覧)だけに出す。ツールのヘッダを狭くしないため */
   var lbtn =

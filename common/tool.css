@@ -38,7 +38,7 @@ body {
   color: var(--sub);
   text-align: center;
 }
-/* ボタン: まるい形。押している間は形を変えず、薄い色を重ねる(2026-11-15。角が四角くなる動きはやめた) */
+/* ボタン: まるい形。押した時は common/press.js の波紋。キーボードで押した時だけ薄い色を重ねる(形は変えない) */
 .pill {
   border: none;
   border-radius: var(--shape-full);
@@ -47,7 +47,7 @@ body {
     box-shadow var(--motion-effects-fast),
     background-color var(--motion-effects-fast);
 }
-.pill:active:not(:disabled) {
+.pill:active:focus-visible:not(:disabled) {
   box-shadow: var(--press-layer);
 }
 .pill.primary {
@@ -76,7 +76,7 @@ body {
     box-shadow var(--motion-effects-fast),
     background-color var(--motion-effects-fast);
 }
-.round:active:not(:disabled) {
+.round:active:focus-visible:not(:disabled) {
   box-shadow: var(--press-layer);
 }
 .round:focus-visible {

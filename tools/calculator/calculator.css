@@ -138,8 +138,7 @@
 .pad .zero {
   grid-column: span 2;
 }
-/* 押した時と、対応するキーボードのキーを押した時(.pressed)の見た目 */
-.pad button:active,
+/* キーボードのキーを押した時(.pressed)の見た目。画面を押した時は共通の波紋(common/press.js) */
 .pad button.pressed {
   box-shadow: var(--press-layer);
 }

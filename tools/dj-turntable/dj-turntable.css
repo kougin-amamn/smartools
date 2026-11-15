@@ -136,9 +136,6 @@ body {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-.round:active {
-  transform: scale(0.95);
-}
 .round:disabled {
   opacity: 0.45;
   cursor: default;
