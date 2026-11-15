@@ -100,6 +100,33 @@
   }
   initBack();
 
+  /* 文字が変わるボタン(開始 → 停止 → 再開 など)の幅をそろえる。data-texts="開始|停止|再開" の中でいちばん長い文の幅を
+     最小の幅にし、押して文字が変わってもボタンが伸び縮みしないようにする。言語を読み終えた時・画面の大きさが変わった時に測り直す */
+  function keepButtonWidths() {
+    document.querySelectorAll('[data-texts]').forEach(function (button) {
+      if (!button.parentNode) return;
+      var probe = button.cloneNode(false);
+      probe.removeAttribute('id');
+      probe.removeAttribute('hidden');
+      probe.setAttribute('aria-hidden', 'true');
+      probe.style.cssText =
+        'position:absolute;visibility:hidden;pointer-events:none;min-width:0;width:auto;';
+      button.parentNode.appendChild(probe);
+      var widest = 0;
+      button.dataset.texts.split('|').forEach(function (text) {
+        probe.textContent = window.I18n ? I18n.say(text) : text;
+        widest = Math.max(widest, Math.ceil(probe.getBoundingClientRect().width));
+      });
+      probe.remove();
+      if (widest) button.style.minWidth = widest + 'px';
+    });
+  }
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', keepButtonWidths);
+  else keepButtonWidths();
+  document.addEventListener('i18n-ready', keepButtonWidths);
+  window.addEventListener('resize', keepButtonWidths);
+
   root.ToolKit = { esc: esc };
 
   /* 端末の機能(device.js)と、開いた記録(tool-usage.js。一覧の並べ替え用): HTML の読み込みを増やさないよう、同じフォルダからここで読む。

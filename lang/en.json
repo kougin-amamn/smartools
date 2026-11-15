@@ -197,7 +197,8 @@
         "実行中": "Running",
         "再開": "Resume",
         "一時停止": "Paused",
-        "時間です": "Time’s up"
+        "時間です": "Time’s up",
+        "時間の調整": "Adjust time"
       }
     },
     "pomodoro-timer": {

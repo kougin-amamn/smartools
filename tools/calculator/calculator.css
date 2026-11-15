@@ -122,7 +122,7 @@
   border: none;
   cursor: pointer;
   font-size: 21px;
-  border-radius: var(--shape-full); /* 丸みのある横長のキー。押すと角が四角くなる(M3 Expressive) */
+  border-radius: var(--shape-full); /* 丸みのある横長のキー */
   padding: 0;
   height: clamp(54px, 8.5vh, 76px);
   background: var(--key-bg);
@@ -131,7 +131,7 @@
   align-items: center;
   justify-content: center;
   transition:
-    border-radius var(--motion-spatial-fast),
+    box-shadow var(--motion-effects-fast),
     background-color var(--motion-effects-fast);
   -webkit-tap-highlight-color: transparent;
 }
@@ -141,7 +141,7 @@
 /* 押した時と、対応するキーボードのキーを押した時(.pressed)の見た目 */
 .pad button:active,
 .pad button.pressed {
-  border-radius: var(--shape-medium);
+  box-shadow: var(--press-layer);
 }
 .pad button:focus-visible {
   outline: 2px solid var(--primary);

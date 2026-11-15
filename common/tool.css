@@ -38,17 +38,17 @@ body {
   color: var(--sub);
   text-align: center;
 }
-/* ボタン: まるい形で、押している間は角が少し四角くなり、離すとばねのように戻る(M3 Expressive の形の変化) */
+/* ボタン: まるい形。押している間は形を変えず、薄い色を重ねる(2026-11-15。角が四角くなる動きはやめた) */
 .pill {
   border: none;
   border-radius: var(--shape-full);
   cursor: pointer;
   transition:
-    border-radius var(--motion-spatial-fast),
+    box-shadow var(--motion-effects-fast),
     background-color var(--motion-effects-fast);
 }
 .pill:active:not(:disabled) {
-  border-radius: var(--shape-medium);
+  box-shadow: var(--press-layer);
 }
 .pill.primary {
   background: var(--primary);
@@ -73,11 +73,11 @@ body {
   color: var(--on-secondary-container);
   cursor: pointer;
   transition:
-    border-radius var(--motion-spatial-fast),
+    box-shadow var(--motion-effects-fast),
     background-color var(--motion-effects-fast);
 }
 .round:active:not(:disabled) {
-  border-radius: var(--shape-large);
+  box-shadow: var(--press-layer);
 }
 .round:focus-visible {
   outline: 2px solid var(--primary);

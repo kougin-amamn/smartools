@@ -108,14 +108,14 @@ body {
   border: 1px solid transparent;
   transition:
     border-color var(--motion-effects-fast),
-    border-radius var(--motion-spatial-fast);
+    box-shadow var(--motion-effects-fast);
 }
 .card:hover {
   border-color: var(--outline-variant);
 }
-/* 押した時は角が丸くなる(M3 Expressive の形の変化) */
+/* 押している間は薄い色を重ねる(形は変えない) */
 .card:active {
-  border-radius: var(--shape-extra-large);
+  box-shadow: var(--press-layer);
 }
 .card:focus-visible {
   outline: 2px solid var(--func);

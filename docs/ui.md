@@ -36,7 +36,7 @@ resource: "common/site.css"
 
 - 角の丸さは段階のトークンだけを使う: `--shape-extra-small` 4px・`--shape-small` 8px・`--shape-medium` 12px・`--shape-large` 16px・`--shape-large-increased` 20px・`--shape-extra-large` 28px・`--shape-extra-large-increased` 32px・`--shape-extra-extra-large` 48px・`--shape-full`。
 - 目安: ボタンと札は `--shape-full`(札は `--shape-small` も可)、カード `--shape-large`、大きな容器とシート `--shape-extra-large`、メニュー `--shape-large`。
-- ボタンは押している間 角を小さくし(まる → `--shape-medium` くらい)、`transition: border-radius var(--motion-spatial-fast)` でばねのように戻す。`transform: scale()` で縮める押し方はやめる。
+- ボタンは押している間、形を変えずに薄い色を重ねる(`box-shadow: var(--press-layer)`。M3 の状態の層)。角が四角くなる動きは使わない(2026-11-15、見た目が良くないため)。`transform: scale()` で縮める押し方もやめる。
 - 動きのトークン: `--motion-spatial-fast`(押した時の形)、`--motion-spatial-default`(シート・位置)、`--motion-effects-fast`(色)。
 - 主なボタンは大きくする(2026-11-15、全ツール)。`.pill.primary` は `tool.css` が高さ 56px 以上・文字 16px にする(`.small` は除く)。丸い主なボタンは、開始・録音などいちばん大事な1つが 96px、撮影(シャッター)が 80px、再生が 72〜80px。描く場所を広く取るツール(お絵かきの道具の列)は、ツールの css で外してよい。
 - 利用者が選ぶ色(時計の文字色、お絵かきの色)は中身なので、テーマに合わせない。
@@ -93,6 +93,8 @@ HTML に書くのは アイコン・名称だけ(ひな形どおり)。ツール
 
 - 分かりやすい文字があれば文字。無い時や頼まれた時は SVG(`currentColor`)。タイマーの開始・一時停止・停止・リセット、カウンター、元に戻す・やり直しは SVG の絵が好み。オンオフの切り替え(ライト)は電源の絵。
 - 絵だけのボタンには `aria-label` を付ける(自動ログの名前にもなる)。
+- 押すと文字が変わるボタン(開始 → 停止 → 再開 など)には、出る文をすべて `data-texts="開始|停止|再開"` に書く。`tool-kit.js` がいちばん長い文(英語の画面では英語の文)の幅を最小の幅にし、ボタンが伸び縮みしない(2026-11-15)。
+- 関係するボタンが並ぶ所(キッチンタイマーの −1分〜+1分)は、M3 Expressive のボタンのまとまり(connected button group)にする: すき間 2px、外側の角はまる・内側は `--shape-small`、押したボタンは少し広がって角がまるくなる。外側の角は高さの半分の値で書く(`--shape-full` だと同じ辺の小さな角まで縮んで四角になる)。
 
 ## アイコン
 
