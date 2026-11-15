@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>頭痛予報 | 気圧の下がり方から頭痛に注意したい時間がわかる</title>
+    <meta
+      name="description"
+      content="現在地や地名の気圧の予報(Open-Meteo の無料API)から、気圧が大きく下がる時間を注意・警戒で知らせます。気圧のグラフ、頭痛の記録、感じやすさの調整つき。目安で、医療の診断ではありません。"
+    />
+    <meta property="og:title" content="頭痛予報 | 気圧の下がり方から頭痛に注意したい時間がわかる" />
+    <meta
+      property="og:description"
+      content="現在地や地名の気圧の予報(Open-Meteo の無料API)から、気圧が大きく下がる時間を注意・警戒で知らせます。気圧のグラフ、頭痛の記録、感じやすさの調整つき。目安で、医療の診断ではありません。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-headache-forecast.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./headache-forecast.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "頭痛予報",
+        "alternateName": ["Headache Forecast", "気圧", "気圧予報", "頭痛"],
+        "description": "現在地や地名の気圧の予報(Open-Meteo の無料API)から、気圧が大きく下がる時間を注意・警戒で知らせます。気圧のグラフ、頭痛の記録、感じやすさの調整つき。目安で、医療の診断ではありません。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-headache-forecast.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">頭痛予報</h1>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="search-row">
+          <input type="text" id="cityInput" placeholder="地名で検索" />
+          <button class="pill small" id="searchBtn">検索</button>
+          <button
+            class="round"
+            id="useLocationBtn"
+            aria-label="現在地から取得"
+            title="現在地から取得"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path
+                d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <circle cx="12" cy="10" r="2.4" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
+        <div class="search-results" id="searchResults" hidden></div>
+
+        <section class="card outlook" id="outlookCard" hidden>
+          <div class="place-name" id="placeName"></div>
+          <div class="level-row">
+            <span class="level-badge" id="levelBadge"></span>
+            <span class="outlook-text" id="outlookText"></span>
+          </div>
+          <div class="now-pressure" id="nowPressure"></div>
+        </section>
+
+        <section class="card" id="chartCard" hidden>
+          <h2>気圧の変化</h2>
+          <div class="chart" id="chart"></div>
+          <div class="chart-tip" id="chartTip" aria-live="polite"></div>
+          <div class="legend">
+            <span><i class="swatch level-1"></i>注意</span>
+            <span><i class="swatch level-2"></i>警戒</span>
+            <span><i class="swatch now"></i>今</span>
+          </div>
+          <ul class="periods" id="periodList"></ul>
+        </section>
+
+        <section class="card" id="recordCard">
+          <h2>頭痛の記録</h2>
+          <button class="pill primary" id="recordBtn" data-log="頭痛を記録">頭痛を記録</button>
+          <p class="record-summary" id="recordSummary"></p>
+          <ul class="records" id="recordList"></ul>
+          <div class="sensitivity">
+            <span>感じやすさ</span>
+            <div class="seg" id="sensitivity" role="radiogroup" aria-label="感じやすさ">
+              <button data-value="high" role="radio" data-log="感じやすさ 敏感">敏感</button>
+              <button data-value="normal" role="radio" data-log="感じやすさ ふつう">ふつう</button>
+              <button data-value="low" role="radio" data-log="感じやすさ 鈍感">鈍感</button>
+            </div>
+          </div>
+        </section>
+
+        <p class="note">
+          気圧の下がり方から出した目安で、医療の診断ではありません。頭痛がひどい時や続く時は医師に相談してください。気圧のデータは
+          Open-Meteo の予報です。
+        </p>
+        <p class="status" id="status">現在地を取得中…</p>
+      </div>
+    </main>
+    <script src="../../common/log.js"></script>
+    <script src="../../common/env.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.ToolKit && window.ToolKit.media) ||
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
+        );
+    </script>
+    <script src="./headache-forecast-core.js"></script>
+    <script src="./headache-forecast.js"></script>
+  </body>
+</html>

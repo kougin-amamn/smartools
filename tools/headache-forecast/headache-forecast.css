@@ -1,0 +1,287 @@
+/* 頭痛予報の画面。段階の色は --tertiary の濃さだけで分ける(注意は薄く、警戒は濃く) */
+.content {
+  flex-direction: column;
+  padding: 16px 18px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  gap: 12px;
+  overflow-y: auto;
+}
+.app {
+  max-width: 480px;
+  align-items: stretch;
+  gap: 12px;
+}
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.search-row input {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  border: none;
+  border-radius: var(--shape-full);
+  padding: 0 16px;
+  font-size: 16px; /* iPhone で入力する時に画面が拡大されないため */
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+}
+.search-row .pill {
+  height: 48px;
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.round {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.search-results .item {
+  text-align: left;
+  border: none;
+  background: var(--surface-container);
+  color: var(--on-surface);
+  border-radius: var(--shape-medium);
+  padding: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.card {
+  background: var(--surface-container);
+  color: var(--on-surface);
+  border-radius: var(--shape-large);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.card h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.place-name {
+  font-size: 13px;
+  color: var(--on-surface-variant);
+}
+.level-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.level-badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: var(--shape-full);
+  font-size: 20px;
+  font-weight: 700;
+}
+.level-badge.small {
+  min-width: 48px;
+  height: 26px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+.level-0 {
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+}
+.level-1 {
+  background: color-mix(in srgb, var(--tertiary) 35%, var(--surface-container));
+  color: var(--on-surface);
+}
+.level-2 {
+  background: var(--tertiary);
+  color: var(--on-tertiary);
+}
+.outlook-text {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.now-pressure {
+  font-size: 13px;
+  color: var(--on-surface-variant);
+}
+.chart {
+  touch-action: pan-y;
+}
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.chart .band.level-1 {
+  fill: color-mix(in srgb, var(--tertiary) 30%, transparent);
+}
+.chart .band.level-2 {
+  fill: color-mix(in srgb, var(--tertiary) 60%, transparent);
+}
+.chart .grid {
+  stroke: var(--outline-variant);
+  stroke-width: 1;
+}
+.chart .axis {
+  fill: var(--on-surface-variant);
+  font-size: 10px;
+}
+.chart .axis.day {
+  font-weight: 700;
+  fill: var(--on-surface);
+}
+.chart .line {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.chart .now {
+  stroke: var(--on-surface);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+.chart .cursor {
+  stroke: var(--on-surface-variant);
+  stroke-width: 1;
+}
+.chart .dot {
+  fill: var(--primary);
+  stroke: var(--surface-container);
+  stroke-width: 2;
+}
+.chart-tip {
+  min-height: 1.4em;
+  font-size: 13px;
+  color: var(--on-surface-variant);
+}
+.legend {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--on-surface-variant);
+}
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  border-radius: 2px;
+}
+.swatch.level-1 {
+  background: color-mix(in srgb, var(--tertiary) 30%, transparent);
+}
+.swatch.level-2 {
+  background: color-mix(in srgb, var(--tertiary) 60%, transparent);
+}
+.swatch.now {
+  width: 0;
+  height: 12px;
+  border-left: 1.5px dashed var(--on-surface);
+  border-radius: 0;
+}
+.periods,
+.records {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.periods li,
+.records li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+.periods small,
+.records small {
+  color: var(--on-surface-variant);
+  font-size: 12px;
+}
+.periods .empty {
+  color: var(--on-surface-variant);
+}
+.records li {
+  flex-wrap: nowrap;
+  padding: 4px 0;
+  border-top: 1px solid var(--outline-variant);
+}
+.records .time {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+.records small {
+  flex: 1;
+}
+.records .remove {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--shape-full);
+  background: transparent;
+  color: var(--on-surface-variant);
+  font-size: 18px;
+  cursor: pointer;
+}
+.record-summary {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--on-surface-variant);
+}
+.sensitivity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.seg {
+  display: flex;
+  flex: 1;
+  border-radius: var(--shape-full);
+  overflow: hidden;
+  border: 1px solid var(--outline);
+}
+.seg button {
+  flex: 1;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: var(--on-surface);
+  font-size: 14px;
+  cursor: pointer;
+}
+.seg button + button {
+  border-left: 1px solid var(--outline);
+}
+.seg button.on {
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+  font-weight: 600;
+}
+.note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--on-surface-variant);
+}

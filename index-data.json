@@ -2,6 +2,7 @@
   {"cat": "定番ツール", "slug": "calculator", "title": "電卓", "en": "Calculator", "desc": "四則演算とパーセントの電卓"},
   {"cat": "定番ツール", "slug": "notepad", "title": "メモ帳", "en": "Notepad", "desc": "自動保存のメモ帳"},
   {"cat": "定番ツール", "slug": "weather", "title": "天気予報", "en": "Weather", "desc": "現在地や地名の天気と週間予報", "tags": ["要 外部通信", "要 位置情報"]},
+  {"cat": "定番ツール", "slug": "headache-forecast", "title": "頭痛予報", "en": "Headache Forecast", "desc": "気圧の下がり方から頭痛に注意したい時間を予報", "tags": ["要 外部通信", "要 位置情報"]},
   {"cat": "定番ツール", "slug": "flashlight", "title": "懐中電灯", "en": "Flashlight", "desc": "スマホのライトを点灯", "tags": ["要 カメラ", "要 https"]},
   {"cat": "定番ツール", "slug": "stopwatch", "title": "ストップウォッチ", "en": "Stopwatch", "desc": "1/100秒とラップのストップウォッチ"},
   {"cat": "定番ツール", "slug": "kitchen-timer", "title": "キッチンタイマー", "en": "Kitchen Timer", "desc": "ボタンで合わせるキッチンタイマー"},
