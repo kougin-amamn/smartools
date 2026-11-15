@@ -38,20 +38,16 @@
     </header>
     <main class="content">
       <p class="lead" data-i18n="site.tagline">
-        ブラウザだけで使える小さなツール集です。インストールは不要です。
+        ブラウザだけで使えるツール集です。インストールは不要です。
       </p>
       <div class="list-bar">
-        <nav
-          class="views"
-          id="views"
-          aria-label="表示の切り替え"
-          data-i18n-label="list.viewSwitch"
-          hidden
-        >
-          <span class="views-label" data-i18n="list.view">表示</span>
-          <a class="view" aria-current="page" href="./index.html" data-i18n="list.viewList">一覧</a>
-        </nav>
-        <label class="sort" id="sorts" hidden>
+        <label class="choice" id="views" hidden>
+          <span data-i18n="list.view">表示</span>
+          <select id="viewSelect" aria-label="表示の切り替え" data-i18n-label="list.viewSwitch">
+            <option value="./index.html" selected data-i18n="list.viewList">一覧</option>
+          </select>
+        </label>
+        <label class="choice" id="sorts" hidden>
           <span data-i18n="list.sort">並び順</span>
           <select id="sortSelect" data-log="並び順">
             <option value="category" data-i18n="list.sortCategory">分類</option>

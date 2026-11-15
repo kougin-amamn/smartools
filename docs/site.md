@@ -65,6 +65,7 @@ resource: "index-data.json"
 
 ## ランチャー
 
+- 一覧の上の「表示」の選ぶ欄(プルダウン)に、`launchers/launchers.json` のランチャーが並び、選ぶとそのランチャーを開く(小さな画面でも1行に収めるため。2026-11-15)。
 - `launcher-common.js` だけが一覧とツールの場所を知っている(`ROOT='../'`)。一覧のアイコンは `Launcher.markEl(tool)`(SVG、読めない時は文字)を使い、自分で描かない。3D の質感とデスクトップのアイコン名は日本語名だけ(`nameOf`)。
 - 各ランチャーは開いた時に `localStorage['launcher-return'] = {href, title}` を保存し、ツールの戻るボタン(tool-kit.js)がそこへ戻る。title は h1 の日本語の部分だけ。ツールに個別の戻るボタンやリンクを足さない。
 - 操作ログは自動(一覧のパネルは `data-log-group="一覧"`、一覧のリンクは `data-log=<名前>`)。手で書くのはキー操作・3D のタップ・デスクトップのメニュー項目だけ。h1 にも英名(3D Bookshelf Launcher / 3D Museum Launcher / Desktop-style Launcher)。

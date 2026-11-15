@@ -62,6 +62,16 @@ const TOOL_COUNT = require('../../index-data.json').length;
     if (!(await page.locator('#list .cat-head').count()))
       problems.push('分類に戻しても見出しが無い');
 
+    /* 表示の選ぶ欄でランチャーを選ぶと、そのランチャーを開く */
+    await page.waitForFunction(() => document.querySelectorAll('#viewSelect option').length > 1);
+    const launcher = await page.evaluate(
+      () => document.querySelectorAll('#viewSelect option')[1].value,
+    );
+    await Promise.all([
+      page.waitForURL('**/launchers/**'),
+      page.selectOption('#viewSelect', launcher),
+    ]);
+
     const { real } = splitErrors(logs);
     if (real.length) problems.push('エラー: ' + real.join(' / '));
     await context.close();

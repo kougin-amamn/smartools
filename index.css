@@ -27,29 +27,26 @@ body {
 .list-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   margin: 0 0 12px;
 }
-.views {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.sort {
-  flex: none;
-  margin-left: auto;
+/* 表示(左)と並び順(右)の選ぶ欄。小さな画面でも1行に収める */
+.choice {
   display: flex;
   align-items: center;
   gap: 4px;
+  min-width: 0;
   color: var(--sub);
   font-size: 13px;
 }
+.choice span {
+  flex: none;
+}
 /* 文字は 16px(iPhone で選ぶ時に画面が拡大されないため) */
-.sort select {
+.choice select {
+  min-width: 0;
+  max-width: 100%;
   padding: 5px 10px;
   border: 0;
   border-radius: var(--shape-medium);
@@ -58,32 +55,8 @@ body {
   font: inherit;
   font-size: 16px;
 }
-.sort select:focus-visible {
-  outline: 2px solid var(--func);
-  outline-offset: 2px;
-}
-.views-label {
-  flex: none;
-  margin-right: 2px;
-  color: var(--sub);
-  font-size: 13px;
-}
-.view {
-  flex: none;
-  padding: 6px 14px;
-  border-radius: var(--shape-small);
-  background: var(--surface-container-high);
-  color: var(--on-surface-variant);
-  font-size: 13px;
-  text-decoration: none;
-}
-.view[aria-current='page'] {
-  background: var(--secondary-container);
-  color: var(--on-secondary-container);
-  font-weight: 500;
-}
-.view:focus-visible {
-  outline: 2px solid var(--func);
+.choice select:focus-visible {
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 .status {

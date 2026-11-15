@@ -194,16 +194,26 @@
       });
     })
     .then(function (list) {
-      var nav = document.getElementById('views');
+      /* 小さな画面でも1行に収まるよう、選ぶ欄(プルダウン)にする。選ぶとそのランチャーを開く */
+      var views = document.getElementById('views'),
+        viewSelect = document.getElementById('viewSelect');
       list.forEach(function (l) {
-        var a = document.createElement('a');
-        a.className = 'view';
-        a.href = fromRoot(l.href);
-        a.textContent = say('launchers.' + l.id + '.chip', null, l.title);
-        a.dataset.log = l.title;
-        nav.appendChild(a);
+        var o = document.createElement('option');
+        o.value = fromRoot(l.href);
+        o.textContent = say('launchers.' + l.id + '.chip', null, l.title);
+        o.dataset.log = l.title;
+        viewSelect.appendChild(o);
       });
-      nav.hidden = list.length === 0;
+      viewSelect.addEventListener('change', function () {
+        var o = viewSelect.selectedOptions[0];
+        log('表示を「' + (o.dataset.log || '一覧') + '」に切り替えます');
+        location.href = viewSelect.value;
+      });
+      /* 戻るで一覧に戻った時、前に選んだランチャーが残らないようにする */
+      window.addEventListener('pageshow', function () {
+        viewSelect.selectedIndex = 0;
+      });
+      views.hidden = list.length === 0;
     })
     .catch(function (e) {
       log.warn('ランチャーの一覧を読み込めませんでした(切り替えを出さずに表示します)', e);
