@@ -54,6 +54,16 @@
   width: 20px;
   height: 20px;
 }
+/* 道具の列の「選んでいる道具」と保存は、描く場所を広く取るため、主なボタンを大きくする決まりから外す */
+.bar .pill.primary:not(.small) {
+  min-height: 0;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-weight: inherit;
+}
+.bar .pill.icon.primary:not(.small) {
+  padding: 9px 10px;
+}
 .pill:disabled {
   opacity: 0.4;
   cursor: default;

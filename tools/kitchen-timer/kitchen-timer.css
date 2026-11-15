@@ -1,12 +1,7 @@
 :root {
-  --track: #e6e7ec;
-  --progress: #5cc4b6;
-  --alert: #8fdcd1;
-}
-:root[data-theme='dark'] {
-  --track: #2b2d38;
-  --progress: #7fe0d2;
-  --alert: #2d7a72;
+  --track: var(--secondary-container);
+  --progress: var(--primary);
+  --alert: var(--primary-container);
 }
 body {
   transition: background-color 0.3s ease;
@@ -83,14 +78,15 @@ body.ringing {
   border: none;
   cursor: pointer;
   padding: 12px 4px;
-  border-radius: 14px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  border-radius: var(--shape-full);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+  transition: border-radius var(--motion-spatial-fast);
   font-size: 14px;
   -webkit-tap-highlight-color: transparent;
 }
-.adjust-row button:active {
-  transform: scale(0.95);
+.adjust-row button:active:not(:disabled) {
+  border-radius: var(--shape-small);
 }
 .adjust-row button:disabled {
   opacity: 0.4;
@@ -105,39 +101,37 @@ body.ringing {
 .icon-btn {
   border: none;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: var(--shape-full);
   display: flex;
   align-items: center;
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
   transition:
-    transform 0.08s ease,
-    opacity 0.2s ease;
+    border-radius var(--motion-spatial-fast),
+    opacity var(--motion-effects-fast);
 }
-.icon-btn:active {
-  transform: scale(0.92);
+/* 押すと角が四角くなり、ばねのように戻る(M3 Expressive の形の変化) */
+.icon-btn:active:not(:disabled) {
+  border-radius: var(--shape-large);
 }
 .icon-btn:focus-visible,
 .adjust-row button:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 .icon-btn:disabled {
   opacity: 0.35;
   cursor: default;
 }
-.icon-btn:disabled:active {
-  transform: none;
-}
 .icon-btn.primary {
-  width: 76px;
-  height: 76px;
-  background: var(--accent);
-  color: var(--accent-fg);
+  width: 96px;
+  height: 96px;
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .icon-btn.primary .glyph {
   font-size: 26px;
-  color: var(--accent-fg);
+  color: var(--on-primary);
   line-height: 1;
 }
 #playIcon {
@@ -149,10 +143,10 @@ body.ringing {
   line-height: 1;
 }
 .icon-btn.secondary {
-  width: 52px;
-  height: 52px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  width: 56px;
+  height: 56px;
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
 }
 .icon-btn .ico {
   width: 22px;
@@ -162,7 +156,7 @@ body.ringing {
 .icon-btn.primary .ico {
   width: 34px;
   height: 34px;
-  color: var(--accent-fg);
+  color: var(--on-primary);
 }
 /* 動きを減らす設定では、点滅の代わりに知らせの色のままにする(時間切れが分かるように) */
 @media (prefers-reduced-motion: reduce) {

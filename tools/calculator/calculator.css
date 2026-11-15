@@ -1,18 +1,10 @@
 :root {
-  --key-fg: #1c1d22;
-  --key-bg: #eceef2;
-  --key-shadow: rgba(20, 24, 34, 0.06);
+  --key-fg: var(--on-surface);
+  --key-bg: var(--surface-container-high);
   --radius: 18px;
   /* 表示の窓: カードより一段沈んだ面にして、ボタンの並びと分ける */
-  --screen-bg: #eef0f6;
-  --screen-line: #d9dce6;
-}
-:root[data-theme='dark'] {
-  --key-fg: #f0f0f4;
-  --key-bg: #272a35;
-  --key-shadow: rgba(0, 0, 0, 0.35);
-  --screen-bg: #14161d;
-  --screen-line: #33374a;
+  --screen-bg: var(--surface);
+  --screen-line: var(--outline-variant);
 }
 .content {
   justify-content: center;
@@ -21,10 +13,9 @@
 .calc {
   width: 100%;
   max-width: 760px; /* タブレットでも横に広く使う(キーは低く、横長にする) */
-  background: var(--panel);
-  border-radius: 28px;
+  background: var(--surface-container);
+  border-radius: var(--shape-extra-large);
   padding: 22px 16px 20px;
-  box-shadow: 0 20px 60px rgba(20, 24, 34, 0.1);
 }
 /* 計算の履歴(窓の外の上)。小さく弱い文字で、3 行分の高さ。押すとその答えを使う */
 .history {
@@ -131,18 +122,17 @@
   border: none;
   cursor: pointer;
   font-size: 21px;
-  border-radius: 999px; /* 丸みのある横長のキー */
+  border-radius: var(--shape-full); /* 丸みのある横長のキー。押すと角が四角くなる(M3 Expressive) */
   padding: 0;
   height: clamp(54px, 8.5vh, 76px);
   background: var(--key-bg);
   color: var(--key-fg);
-  box-shadow: 0 2px 0 var(--key-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
   transition:
-    transform 0.06s ease,
-    opacity 0.06s ease;
+    border-radius var(--motion-spatial-fast),
+    background-color var(--motion-effects-fast);
   -webkit-tap-highlight-color: transparent;
 }
 .pad .zero {
@@ -151,21 +141,20 @@
 /* 押した時と、対応するキーボードのキーを押した時(.pressed)の見た目 */
 .pad button:active,
 .pad button.pressed {
-  transform: scale(0.94);
-  opacity: 0.85;
+  border-radius: var(--shape-medium);
 }
 .pad button:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 .pad .fn {
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 18px;
 }
 .pad .op {
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .pad .icon {
   width: 20px;
@@ -185,7 +174,7 @@
     column-gap: 18px;
     align-items: end;
     padding: 12px 14px;
-    border-radius: 22px;
+    border-radius: var(--shape-extra-large);
   }
   .history {
     grid-area: history;

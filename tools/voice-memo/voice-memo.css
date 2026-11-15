@@ -10,8 +10,8 @@
   gap: 12px;
 }
 .rec-btn {
-  width: 88px;
-  height: 88px;
+  width: 96px; /* 主なボタンは大きく(M3 Expressive) */
+  height: 96px;
   border-radius: 50%;
   border: none;
   cursor: pointer;

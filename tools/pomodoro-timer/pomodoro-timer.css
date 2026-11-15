@@ -110,10 +110,14 @@ body {
   transform: scale(0.92);
 }
 .icon-btn.primary {
-  width: 72px;
-  height: 72px;
+  width: 96px; /* 主なボタンは大きく(M3 Expressive) */
+  height: 96px;
   background: var(--work);
   color: var(--work-fg);
+}
+.icon-btn.primary svg {
+  width: 36px;
+  height: 36px;
 }
 .icon-btn.primary.break {
   background: var(--break);

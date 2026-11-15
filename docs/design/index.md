@@ -9,6 +9,7 @@
 * [端末の機能](./device.md) - 振動・コピー・カメラ・センサーなどの部品(common/device.js)
 * [ページの土台](./page-base.md) - ヘッダのボタンと読み込み確認(common/site.js・各ページの HTML)
 * [カラーテーマ(6つのテーマ)](./color-theme.md) - 6つのカラーテーマ(common/themes.json・site.css・site.js)。確認中
+* [Material 3 Expressive に合わせた見た目](./m3-expressive.md) - 色・形・動き・文字の共通トークン(common/site.css・tool.css)。段 1 は確認中
 * [ツールの並べ替え](./tool-sort.md) - 一覧の並び順(分類・最近・よく使う・名前。common/tool-usage.js)
 * [多言語化(日本語・英語)](./i18n.md) - 画面の文の言語(lang/*.json・common/i18n.js)
 * [ページを離れる時の終了処理](./page-exit.md) - 画面を離れる時の保存と後片付け(common/device.js)。段 2 まで実装

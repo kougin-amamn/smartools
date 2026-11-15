@@ -148,8 +148,8 @@ body {
   height: 24px;
 }
 .round.big {
-  width: 68px;
-  height: 68px;
+  width: 80px; /* 主なボタンは大きく(M3 Expressive) */
+  height: 80px;
   background: var(--func);
   color: var(--func-fg);
 }

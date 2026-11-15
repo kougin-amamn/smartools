@@ -475,8 +475,9 @@
       document.head.appendChild(sc);
     };
 
-  /* ヘッダを隠すページ(<html class="bar-hidden">)
-     ヘッダを画面の上に隠し、右上のつまみで出し入れする。本文(main)に触るか Escape で隠す。画面いっぱいに使うページのため */
+  /* ヘッダを隠すページ(<html class="bar-hidden">。ツールのページはすべて。2026-11-15)
+     ヘッダを画面の上に隠し、右上のつまみで出し入れする。本文(main)に触るか Escape で隠す。画面を広く使うため */
+  if (/\/tools\/[^/]+\//.test(location.pathname)) root.classList.add('bar-hidden');
   if (bar && !embed && root.classList.contains('bar-hidden')) {
     var handle = document.createElement('button');
     handle.type = 'button';

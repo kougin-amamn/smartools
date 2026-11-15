@@ -15,6 +15,7 @@ const accentOf = (page) =>
     const standard = await accentOf(page);
 
     /* 一覧から「ブルー」を選ぶ */
+    await page.click('.bar-handle'); // ツールのページはヘッダが隠れているので、つまみで出す
     await page.click('#colorBtn');
     await page.waitForSelector('.color-item[data-id="blue"]', { timeout: 3000 });
     await page.click('.color-item[data-id="blue"]');
@@ -30,6 +31,7 @@ const accentOf = (page) =>
       problems.push('色を保存した後、ヘッダのボタンが出ない');
 
     /* 標準に戻す */
+    await page.click('.bar-handle'); // ツールのページはヘッダが隠れているので、つまみで出す
     await page.click('#colorBtn');
     await page.waitForSelector('.color-item[data-id="standard"]', { timeout: 3000 });
     await page.click('.color-item[data-id="standard"]');
