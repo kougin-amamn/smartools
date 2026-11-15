@@ -38,7 +38,7 @@ resource: "common/site.css"
 - 目安: ボタンと札は `--shape-full`(札は `--shape-small` も可)、カード `--shape-large`、大きな容器とシート `--shape-extra-large`、メニュー `--shape-large`。
 - ボタンは押している間 角を小さくし(まる → `--shape-medium` くらい)、`transition: border-radius var(--motion-spatial-fast)` でばねのように戻す。`transform: scale()` で縮める押し方はやめる。
 - 動きのトークン: `--motion-spatial-fast`(押した時の形)、`--motion-spatial-default`(シート・位置)、`--motion-effects-fast`(色)。
-- 主なボタンは大きくする(高さ 56px 以上、いちばん大事な1つは 96px くらい)。
+- 主なボタンは大きくする(2026-11-15、全ツール)。`.pill.primary` は `tool.css` が高さ 56px 以上・文字 16px にする(`.small` は除く)。丸い主なボタンは、開始・録音などいちばん大事な1つが 96px、撮影(シャッター)が 80px、再生が 72〜80px。描く場所を広く取るツール(お絵かきの道具の列)は、ツールの css で外してよい。
 - 利用者が選ぶ色(時計の文字色、お絵かきの色)は中身なので、テーマに合わせない。
 - ライトは `:root`、ダークは `:root[data-theme="dark"]`。`prefers-color-scheme` は使わない(テーマは `site.js` が時刻で決める)。
 

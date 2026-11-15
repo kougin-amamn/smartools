@@ -98,8 +98,8 @@
   -webkit-tap-highlight-color: transparent;
 }
 .round.big {
-  width: 58px;
-  height: 58px;
+  width: 72px; /* 主なボタンは大きく(M3 Expressive) */
+  height: 72px;
   background: var(--func);
   color: var(--func-fg);
 }

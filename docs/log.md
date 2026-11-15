@@ -10,6 +10,7 @@ description: "サイト全体に関わる決定を日付順に。今の決まり
 
 ## 2026-11-15
 
+- 全ツールの主なボタンを大きくした(M3 Expressive。`.pill.primary` は高さ 56px 以上、開始・録音 96px、撮影 80px、再生 72〜80px)。
 - ツールのページのヘッダを、初めは隠して右上のつまみで出す形にした(画面を広く使うため)。一覧とランチャーは今のまま。
 - デザイン言語を Material 3 Expressive にした。色は M3 の標準の色(紺紫×ミントはやめる)、表現の強さは中くらい、文字は端末の文字のまま。考え方 → 共通部品 → 数ツールで試す順に進める([design/m3-expressive.md](./design/m3-expressive.md))。
 - 文書を [OKF](https://github.com/GoogleCloudPlatform/open-knowledge-format) の形にした(各文書の先頭に `type` などの YAML、一覧は `index.md`、履歴はこの `log.md`)。サイトの決まり・設計・決定はこの文書の束を唯一の正とし、AI のメモリには、人と進め方の好みだけを残す。 GitHub でフォルダを開いた時の入口として、`README.md` だけは束の外に残す(`index.md` へ案内するだけ)。

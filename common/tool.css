@@ -12,6 +12,13 @@ body {
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
 }
+/* ヘッダを隠した時は、右上のつまみ(高さ 18px)と本文が重ならないよう、上を空ける */
+.bar-hidden body {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 18px);
+}
+.embed body {
+  padding-top: 0;
+}
 body {
   display: flex;
   flex-direction: column;
@@ -44,8 +51,16 @@ body {
   border-radius: var(--shape-medium);
 }
 .pill.primary {
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
+}
+/* 主なボタンは大きく(M3 Expressive。高さ 56px 以上)。小さいボタン(.small)は除く */
+.pill.primary:not(.small) {
+  min-height: 56px;
+  padding-left: 24px;
+  padding-right: 24px;
+  font-size: 16px;
+  font-weight: 500;
 }
 .pill:focus-visible {
   outline: 2px solid var(--primary);
