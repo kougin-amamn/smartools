@@ -118,7 +118,6 @@
         "木": "Thu",
         "金": "Fri",
         "土": "Sat",
-        "地名で検索(例:大阪)": "Search by place name (e.g. Osaka)",
         "検索": "Search",
         "現在地から取得": "Use my location",
         "現在地を取得中…": "Getting your location…",
@@ -153,7 +152,10 @@
         "位置情報を取得できませんでした。地名で検索してください。": "Could not get your location. Search by place name.",
         "体感 {体感} / 湿度 {湿度} / 風 {風}": "Feels like {体感} / Humidity {湿度} / Wind {風}",
         "{理由}。地名で検索してください。": "{理由}. Search by place name.",
-        "{名前}の利用には https 接続が必要です": "{名前} needs an https connection"
+        "{名前}の利用には https 接続が必要です": "{名前} needs an https connection",
+        "📍 {場所}": "📍 {場所}",
+        "最高 {最高}° / 最低 {最低}° / 降水 {降水}%": "High {最高}° / Low {最低}° / Rain {降水}%",
+        "地名で検索": "Search places"
       }
     },
     "flashlight": {

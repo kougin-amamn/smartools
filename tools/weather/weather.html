@@ -46,11 +46,27 @@
     <main class="content">
       <div class="app">
         <div class="search-row">
-          <input type="text" id="cityInput" placeholder="地名で検索(例:大阪)" />
+          <input type="text" id="cityInput" placeholder="地名で検索" />
           <button class="pill small" id="searchBtn">検索</button>
+          <button
+            class="round"
+            id="useLocationBtn"
+            aria-label="現在地から取得"
+            title="現在地から取得"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path
+                d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <circle cx="12" cy="10" r="2.4" fill="currentColor" />
+            </svg>
+          </button>
         </div>
         <div class="search-results" id="searchResults" hidden></div>
-        <button class="pill small ghost" id="useLocationBtn">現在地から取得</button>
 
         <div class="current-card" id="currentCard" hidden>
           <div class="place-name" id="placeName"></div>
@@ -59,6 +75,7 @@
             <div class="current-temp" id="currentTemp"></div>
           </div>
           <div class="current-desc" id="currentDesc"></div>
+          <div class="today-range" id="todayRange"></div>
           <div class="current-sub" id="currentSub"></div>
         </div>
 

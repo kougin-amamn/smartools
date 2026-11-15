@@ -1,4 +1,4 @@
-/* 天気予報の画面。起動時は現在地、地名でも探せる(データは Open-Meteo) */
+/* 天気予報の画面。起動時は現在地、地名でも探せる(天気と地名の検索は Open-Meteo、現在地の住所は OpenStreetMap の Nominatim) */
 (function () {
   const cityInput = document.getElementById('cityInput');
   const searchBtn = document.getElementById('searchBtn');
@@ -10,6 +10,7 @@
   const currentTemp = document.getElementById('currentTemp');
   const currentDesc = document.getElementById('currentDesc');
   const currentSub = document.getElementById('currentSub');
+  const todayRange = document.getElementById('todayRange');
   const dailyList = document.getElementById('dailyList');
   const statusText = document.getElementById('statusText');
 
@@ -48,8 +49,42 @@
   function weatherInfo(code) {
     return WEATHER_MAP[code] || ['-', '❓'];
   }
+  /* 画面の言語の文(common/i18n.js)。英語の画面では en.json の対応表で訳す */
+  function say(text, vars) {
+    return window.I18n ? I18n.say(text, vars) : text.replace(/\{(\S+?)\}/g, (m, k) => vars[k]);
+  }
 
-  async function fetchForecast(lat, lon, label) {
+  /* 現在地の住所(都道府県・市区町村・町名まで)。Nominatim は1秒に1回までの約束なので、現在地を取った時だけ聞く。
+     住所は画面にだけ出し、ログには書かない */
+  async function addressOf(lat, lon) {
+    const language = window.I18n ? I18n.language : 'ja';
+    const url =
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}` +
+      `&zoom=16&addressdetails=1&accept-language=${language}`;
+    const t0 = performance.now();
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const a = (await res.json()).address || {};
+      const parts = [
+        a.province || a.state,
+        a.city || a.town || a.village || a.county,
+        a.city_district || a.ward,
+        a.suburb || a.quarter || a.neighbourhood,
+      ].filter((part, i, list) => part && list.indexOf(part) === i);
+      log(`現在地の住所を取得しました(${Math.round(performance.now() - t0)}ms)`);
+      return parts.length
+        ? language === 'ja'
+          ? parts.join('')
+          : parts.reverse().join(', ')
+        : null;
+    } catch (e) {
+      log.warn('現在地の住所を取得できませんでした(「現在地」と表示します)', e);
+      return null;
+    }
+  }
+
+  async function fetchForecast(lat, lon, label, addressPromise) {
     statusText.textContent = '取得中…';
     const t0 = performance.now();
     try {
@@ -61,8 +96,14 @@
       const res = await fetch(url);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
-      renderCurrent(label, data.current);
+      renderCurrent(label, data.current, data.daily);
       renderDaily(data.daily);
+      /* 住所が届いたら、場所の名前を住所にする(先に「現在地」で天気を出しておく) */
+      if (addressPromise) {
+        const address = await addressPromise;
+        if (address && placeName.dataset.seq === String(addressPromise.seq))
+          placeName.textContent = '📍 ' + address;
+      }
       statusText.textContent = '';
       log(
         `天気を取得しました(${label} / ${weatherInfo(data.current.weather_code)[0]} ${Math.round(data.current.temperature_2m)}° / ${data.daily.time.length}日分 / ${Math.round(performance.now() - t0)}ms)`,
@@ -73,9 +114,15 @@
     }
   }
 
-  function renderCurrent(label, cur) {
+  function renderCurrent(label, cur, daily) {
     const [desc, icon] = weatherInfo(cur.weather_code);
     placeName.textContent = label;
+    placeName.dataset.seq = String(locateSeq);
+    todayRange.textContent = say('最高 {最高}° / 最低 {最低}° / 降水 {降水}%', {
+      最高: Math.round(daily.temperature_2m_max[0]),
+      最低: Math.round(daily.temperature_2m_min[0]),
+      降水: daily.precipitation_probability_max[0],
+    });
     currentIcon.textContent = icon;
     currentTemp.textContent = `${Math.round(cur.temperature_2m)}°`;
     currentDesc.textContent = desc;
@@ -83,21 +130,22 @@
     currentCard.hidden = false;
   }
 
+  /* 週間: 1日1行(曜日と日付・絵・天気・降水・最高と最低) */
   function renderDaily(daily) {
     dailyList.innerHTML = '';
     daily.time.forEach((dateStr, i) => {
       const [desc, icon] = weatherInfo(daily.weather_code[i]);
-      const dow = DOW[new Date(dateStr).getDay()];
-      const card = document.createElement('div');
-      card.className = 'day-card';
-      card.innerHTML = `
-        <div class="dow">${i === 0 ? '今日' : dow}</div>
-        <div class="icon" title="${desc}">${icon}</div>
-        <div class="hi">${Math.round(daily.temperature_2m_max[i])}°</div>
-        <div class="lo">${Math.round(daily.temperature_2m_min[i])}°</div>
+      const date = new Date(dateStr + 'T00:00');
+      const row = document.createElement('div');
+      row.className = 'day-row';
+      row.innerHTML = `
+        <div class="dow">${i === 0 ? '今日' : DOW[date.getDay()]}<small>${date.getMonth() + 1}/${date.getDate()}</small></div>
+        <div class="icon" aria-hidden="true">${icon}</div>
+        <div class="desc">${desc}</div>
         <div class="pop">☂${daily.precipitation_probability_max[i]}%</div>
+        <div class="temps">${Math.round(daily.temperature_2m_max[i])}° <span class="lo">/ ${Math.round(daily.temperature_2m_min[i])}°</span></div>
       `;
-      dailyList.appendChild(card);
+      dailyList.appendChild(row);
     });
   }
 
@@ -177,7 +225,9 @@
           return;
         }
         log(`現在地を取得しました(精度 約${Math.round(pos.coords.accuracy)}m)`);
-        fetchForecast(pos.coords.latitude, pos.coords.longitude, '現在地');
+        const address = addressOf(pos.coords.latitude, pos.coords.longitude);
+        address.seq = seq;
+        fetchForecast(pos.coords.latitude, pos.coords.longitude, '📍 現在地', address);
       },
       (e) => {
         if (seq !== locateSeq) return;

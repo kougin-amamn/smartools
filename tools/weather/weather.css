@@ -5,39 +5,43 @@
   overflow-y: auto;
 }
 .app {
-  max-width: 380px;
+  max-width: 480px;
   align-items: center;
   gap: 12px;
 }
 .search-row {
   width: 100%;
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 .search-row input {
   flex: 1;
+  min-width: 0;
+  height: 48px;
   border: none;
-  border-radius: 999px;
-  padding: 10px 14px;
-  font-size: 14px;
-  background: var(--panel);
-  color: var(--text);
-  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+  border-radius: var(--shape-full);
+  padding: 0 16px;
+  font-size: 16px; /* iPhone で入力する時に画面が拡大されないため */
+  background: var(--surface-container-high);
+  color: var(--on-surface);
 }
 .pill {
-  padding: 10px 16px;
-  background: var(--func);
-  color: var(--func-fg);
-  font-size: 13px;
+  height: 48px;
+  padding: 0 16px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 14px;
+  font-weight: 500;
   -webkit-tap-highlight-color: transparent;
 }
-.pill.small {
-  padding: 10px 16px;
-}
-.pill.ghost {
-  background: var(--fn-bg);
-  color: var(--fn-fg);
-  width: 100%;
+.round {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .search-results {
   width: 100%;
@@ -54,20 +58,24 @@
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(20, 20, 30, 0.06);
 }
+/* 今の天気: いちばん大きく見せる(M3 Expressive の主役の容器) */
 .current-card {
   width: 100%;
-  background: var(--panel);
-  border-radius: 20px;
-  padding: 20px;
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  border-radius: var(--shape-extra-large);
+  padding: 20px 20px 22px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.1);
+  gap: 4px;
 }
 .place-name {
+  max-width: 100%;
   font-size: 15px;
-  color: var(--sub);
+  font-weight: 500;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 .current-main {
   display: flex;
@@ -75,61 +83,88 @@
   gap: 12px;
 }
 .current-icon {
-  font-size: 52px;
+  font-size: 72px;
   line-height: 1;
 }
 .current-temp {
-  font-size: 48px;
-  font-weight: 700;
-  color: var(--text);
+  font-size: 72px;
+  line-height: 1.1;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 .current-desc {
-  font-size: 14px;
-  color: var(--text);
+  font-size: 20px;
+  font-weight: 500;
+}
+.today-range {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
 }
 .current-sub {
-  font-size: 12px;
-  color: var(--sub);
+  font-size: 13px;
+  opacity: 0.85;
 }
+/* 週間: 縦に1日1行(横に並べると切れるため) */
 .daily-list {
   width: 100%;
   display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-.day-card {
-  flex: 0 0 auto;
-  width: 78px;
-  background: var(--panel);
-  border-radius: 14px;
-  padding: 10px 6px;
-  display: flex;
   flex-direction: column;
+  border-radius: var(--shape-large);
+  overflow: hidden;
+  gap: 2px;
+}
+.day-row {
+  display: grid;
+  grid-template-columns: 4.2em 2em 1fr auto 6.4em;
   align-items: center;
-  gap: 4px;
-  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
+  gap: 8px;
+  min-height: 52px;
+  padding: 6px 14px;
+  background: var(--surface-container);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
 }
-.day-card .dow {
-  font-size: 12px;
-  color: var(--sub);
+.day-row .dow {
+  font-weight: 500;
 }
-.day-card .icon {
-  font-size: 24px;
-}
-.day-card .hi {
-  font-size: 13px;
-  color: var(--text);
-  font-weight: 600;
-}
-.day-card .lo {
-  font-size: 12px;
-  color: var(--sub);
-}
-.day-card .pop {
+.day-row .dow small {
+  display: block;
   font-size: 11px;
-  color: var(--func);
+  font-weight: 400;
+  color: var(--sub);
+}
+.day-row .icon {
+  font-size: 24px;
+  text-align: center;
+}
+.day-row .desc {
+  min-width: 0;
+  font-size: 13px;
+  color: var(--sub);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.day-row .pop {
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--primary);
+}
+/* 幅の狭い画面では、天気の文字を隠して絵だけにする(降水と気温を切らないため) */
+@media (max-width: 359px) {
+  .day-row {
+    grid-template-columns: 3.4em 2em 1fr auto;
+    padding: 6px 12px;
+  }
+  .day-row .desc {
+    display: none;
+  }
+}
+.day-row .temps {
+  text-align: right;
+}
+.day-row .lo {
+  color: var(--sub);
 }
 .status {
   font-size: 12px;
