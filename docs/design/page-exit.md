@@ -1,3 +1,12 @@
+---
+type: Design
+title: "ページを離れる時の終了処理"
+description: "画面を離れる時の保存と後片付け(common/device.js)。段 2 まで実装"
+tags: ["共通部品"]
+status: stable
+resource: "common/device.js"
+---
+
 # ページを離れる時の終了処理 設計書
 
 状態: 段 2 まで実装。作成 2026-11-08、更新 2026-11-08。

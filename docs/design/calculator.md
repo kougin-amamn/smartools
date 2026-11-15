@@ -1,3 +1,12 @@
+---
+type: Design
+title: "電卓"
+description: "電卓の計算の履歴と表示の窓"
+tags: ["ツール"]
+status: stable
+resource: "tools/calculator/"
+---
+
 # 電卓 設計書
 
 状態: 実装済み(計算の履歴。2026-11-14。実機は要確認)。作成 2026-11-14。前からある部分は、ここには書いていない(四則演算・%・±・桁区切り。`calculator-core.js`)。

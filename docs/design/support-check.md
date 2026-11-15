@@ -1,3 +1,12 @@
+---
+type: Design
+title: "ブラウザの対応と許可の確認"
+description: "Env.supports・Env.permissionOf(common/env.js)。確認中"
+tags: ["共通部品"]
+status: draft
+resource: "common/env.js"
+---
+
 # ブラウザの対応と許可の確認 設計書
 
 状態: 確認中(5章の答えを入れた。3章と4章の確認を待つ)。作成 2026-11-08。

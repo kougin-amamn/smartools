@@ -1,3 +1,11 @@
+---
+type: Concept
+title: "デザインコンセプト「使いやすさを、美しく。」"
+description: "サービスとデザインの一番上の考え方。ほかの文書と食い違ったらこちらを優先する"
+tags: ["コンセプト", "デザイン"]
+status: stable
+---
+
 # Smartools — サービス・デザインコンセプト
 
 ## 1. ブランドコンセプト
@@ -215,7 +223,7 @@ AIがSmartoolsの新規ツールを設計・改善する際は、この文書を
 | --- | --- |
 | `docs/design-philosophy.md` | サービス・デザインの上位原則（本書） |
 | `docs/ui.md` | UI実装規約・共通スタイル |
-| `docs/design/README.md` | 設計ワークフロー |
+| `docs/design/template.md` | 設計書の型と書き方 |
 | `.claude/skills/purposeful-ui-design/SKILL.md` | AIがデザイン原則を適用するためのスキル（導入候補） |
 
 

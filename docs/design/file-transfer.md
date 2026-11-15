@@ -1,3 +1,12 @@
+---
+type: Design
+title: "ファイル転送"
+description: "端末どうしのファイル転送(tools/file-transfer)"
+tags: ["ツール"]
+status: stable
+resource: "tools/file-transfer/"
+---
+
 # ファイル転送 設計書
 
 2026-11-06 作成(Claude Docs の設計書から書き出し。以後はこのファイルを正とする)

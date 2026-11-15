@@ -1,3 +1,12 @@
+---
+type: Design
+title: "カラーテーマ(6つのテーマ)"
+description: "6つのカラーテーマ(common/themes.json・site.css・site.js)。確認中"
+tags: ["見た目", "配色"]
+status: draft
+resource: "common/themes.json"
+---
+
 # カラーテーマ(6つのテーマ) 設計書
 
 状態: 確認中(基本設計は決定。画面の写真の確認を待つ)。作成 2026-11-14。

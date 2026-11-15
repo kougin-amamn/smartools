@@ -1,3 +1,12 @@
+---
+type: Design
+title: "ツールの並べ替え"
+description: "一覧の並び順(分類・最近・よく使う・名前。common/tool-usage.js)"
+tags: ["一覧"]
+status: stable
+resource: "common/tool-usage.js"
+---
+
 # ツールの並べ替え 設計書
 
 状態: 実装済み(2026-11-14 公開。実機は要確認)。作成 2026-11-14。

@@ -1,3 +1,12 @@
+---
+type: Design
+title: "ページの土台"
+description: "ヘッダのボタンと読み込み確認(common/site.js・各ページの HTML)"
+tags: ["共通部品"]
+status: stable
+resource: "common/site.js"
+---
+
 # ページの土台(ヘッダのボタン・読み込み確認) 設計書
 
 2026-11-07 作成、同日 ヘッダを隠すページを追加

@@ -1,3 +1,12 @@
+---
+type: Design
+title: "環境の判定"
+description: "OS・ブラウザ・端末の判定と環境情報の表(common/env.js)"
+tags: ["共通部品"]
+status: stable
+resource: "common/env.js"
+---
+
 # 環境の判定 設計書
 
 2026-11-07 作成・実装

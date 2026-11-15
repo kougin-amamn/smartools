@@ -1,3 +1,12 @@
+---
+type: Guide
+title: "ソースの整形"
+description: "Prettier の設定と、整形しない物"
+tags: ["整形"]
+status: stable
+resource: ".prettierrc.json"
+---
+
 # ソースの整形
 
 js・css・html の見た目(字下げ・引用符・改行)は、整形の道具 Prettier で自動でそろえます。手でそろえません。2026-11-07 決定。
