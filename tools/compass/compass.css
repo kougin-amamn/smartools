@@ -1,16 +1,4 @@
-/* 方位磁石の画面(計器風の文字盤) */
-:root {
-  --dial: #ffffff;
-  --dial-edge: #e3e5f3;
-  --tick: #7a7d8a;
-  --mark: #4a4e7a;
-}
-:root[data-theme='dark'] {
-  --dial: #1e2029;
-  --dial-edge: #2c3040;
-  --tick: #8b8ea0;
-  --mark: #8086c9;
-}
+/* 方位磁石の画面(北を指す針と、大きな方角の名前) */
 .content {
   justify-content: center;
   padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
@@ -18,128 +6,75 @@
 .app {
   max-width: 380px;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 .readout {
   text-align: center;
-  min-height: 92px;
+  min-height: 96px;
 }
-.heading {
-  font-size: var(--type-display-large);
-  font-weight: 600;
-  line-height: 1;
+.direction {
+  font-size: var(--type-display-medium);
+  font-weight: 700;
+  line-height: 1.1;
   color: var(--on-surface);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
 }
-.heading small {
-  font-size: 0.5em;
-  vertical-align: top;
-  margin-left: 2px;
+.degree {
+  margin-top: 4px;
+  font-size: var(--type-title-large);
   color: var(--on-surface-variant);
-}
-.dir-label {
-  margin-top: 6px;
-  font-size: var(--type-title-medium);
-  font-weight: 600;
-  color: var(--on-surface);
+  font-variant-numeric: tabular-nums;
 }
 .target-text {
   margin-top: 4px;
   font-size: var(--type-title-small);
+  font-weight: 500;
   color: var(--tertiary);
-  font-weight: 600;
 }
 .target-text.on {
   color: var(--primary);
 }
-/* 文字盤: 回るのは #dial、上の指標と中央の水準器は固定 */
+/* 文字盤: 回るのは #dial(針・東西南北・目盛り)。上の三角は固定で、端末の上の向き */
 .compass {
-  width: min(86vw, 340px);
+  width: min(84vw, 320px);
   height: auto;
   display: block;
   overflow: visible;
 }
 .compass .face {
-  fill: var(--dial);
-  stroke: var(--dial-edge);
-  stroke-width: 2;
+  fill: var(--surface-container);
 }
-.compass .face-glow {
-  fill: none;
-  stroke: var(--dial-edge);
-  stroke-width: 10;
-  opacity: 0.6;
-}
-.compass .t1 {
-  stroke: var(--tick);
-  stroke-width: 1;
-  opacity: 0.45;
-}
-.compass .t5 {
-  stroke: var(--tick);
-  stroke-width: 1.4;
-  opacity: 0.8;
-}
-.compass .t10 {
-  stroke: var(--on-surface);
-  stroke-width: 2;
-}
-.compass .t10.north {
-  stroke: var(--primary);
+.compass .tick {
+  stroke: var(--outline);
   stroke-width: 3;
-}
-.compass .num {
-  fill: var(--on-surface-variant);
-  font-size: var(--type-title-small);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  stroke-linecap: round;
 }
 .compass .card {
   fill: var(--on-surface);
-  font-size: var(--type-headline-small);
+  font-size: 30px;
   font-weight: 700;
 }
 .compass .card.north {
   fill: var(--primary);
 }
-.compass .inter {
-  fill: var(--tick);
-  font-size: var(--type-label-medium);
-  font-weight: 600;
+.compass .needle-north {
+  fill: var(--primary);
+}
+.compass .needle-south {
+  fill: var(--surface);
+  stroke: var(--outline);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.compass .cap {
+  fill: var(--surface);
+  stroke: var(--outline);
+  stroke-width: 2;
 }
 .compass .target {
   fill: var(--tertiary);
 }
 .compass .lubber {
-  fill: var(--primary);
-}
-.compass .lubber-line {
-  stroke: var(--primary);
-  stroke-width: 2;
-  stroke-linecap: round;
-}
-.compass .cross {
-  stroke: var(--tick);
-  stroke-width: 1;
-  opacity: 0.5;
-}
-.compass .level-ring {
-  fill: none;
-  stroke: var(--tick);
-  stroke-width: 1.2;
-  opacity: 0.6;
-}
-.compass .level-ring.inner {
-  opacity: 0.4;
-}
-.compass .bubble {
-  fill: var(--primary);
-  opacity: 0.85;
-}
-.compass .bubble.off {
-  fill: var(--on-surface-variant);
-  opacity: 0.5;
+  fill: var(--on-surface);
 }
 .status {
   font-size: var(--type-body-medium);
@@ -169,7 +104,7 @@
   color: var(--on-tertiary);
 }
 .note {
-  font-size: var(--type-label-small);
+  font-size: var(--type-body-small);
   line-height: 1.6;
   margin: 0;
   text-align: center;
@@ -185,7 +120,7 @@
   .readout {
     min-height: 0;
   }
-  .heading {
-    font-size: var(--type-display-medium);
+  .direction {
+    font-size: var(--type-display-small);
   }
 }

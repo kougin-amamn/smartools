@@ -1,57 +1,180 @@
 .content {
   flex-direction: column;
   padding: 24px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
-  gap: 20px;
+  gap: 24px;
   overflow-y: auto;
 }
 .app {
-  max-width: 340px;
+  max-width: 360px;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
+}
+.ring-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 1/1;
+}
+.ring {
+  width: 100%;
+  height: 100%;
+}
+.track,
+.pace-track {
+  fill: none;
+  stroke: var(--surface-container-high);
+  stroke-width: 12;
+}
+.pace-track {
+  stroke-width: 6;
+}
+.progress {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+.head {
+  fill: var(--primary);
+  stroke: var(--surface);
+  stroke-width: 3;
+}
+.pace {
+  fill: none;
+  stroke: var(--outline);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+.pace.over {
+  stroke: var(--tertiary);
+}
+.time-display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 .time {
   font-size: var(--type-display-medium);
   font-weight: 600;
   color: var(--on-surface);
-  letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+}
+.time small {
+  font-size: var(--type-headline-small);
+  color: var(--on-surface-variant);
+}
+.pace-text {
+  font-size: var(--type-label-large);
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}
+.pace-text.over {
+  color: var(--tertiary);
 }
 .controls {
   display: flex;
-  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
 }
-.pill {
-  min-height: 56px;
-  padding: 0 28px;
-  background: var(--secondary-container);
-  color: var(--on-secondary-container);
-  font-size: var(--type-title-medium);
-  font-weight: 500;
-  min-width: 104px;
+.icon-btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   -webkit-tap-highlight-color: transparent;
 }
-.pill.stop {
+.icon-btn.primary {
+  width: 96px; /* 主なボタンは大きく(M3 Expressive) */
+  height: 96px;
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.icon-btn.primary svg {
+  width: 36px;
+  height: 36px;
+}
+.icon-btn.primary.running {
   background: var(--tertiary);
   color: var(--on-tertiary);
 }
-.pill:disabled {
-  opacity: 0.4;
+.icon-btn.secondary {
+  width: 64px;
+  height: 64px;
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+}
+.lap-btn {
+  font-size: var(--type-label-large);
+  font-weight: 500;
+}
+.icon-btn:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+.icon-btn:focus-visible {
+  outline: 2px solid var(--tertiary);
+  outline-offset: 2px;
 }
 .laps {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  padding: 12px 16px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large);
 }
-.lap-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 14px;
-  background: var(--surface-container);
-  border-radius: var(--shape-medium);
-  font-size: var(--type-body-medium);
+.laps h2 {
+  margin: 0 0 8px;
+  font-size: var(--type-title-small);
+  font-weight: 500;
   color: var(--on-surface);
+}
+.lap-head,
+.lap-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 8px;
   font-variant-numeric: tabular-nums;
 }
-.lap-row .lap-no {
+.lap-head {
+  padding-bottom: 4px;
+  font-size: var(--type-label-medium);
   color: var(--on-surface-variant);
+}
+.lap-head span:not(:first-child),
+.lap-row span:not(:first-child) {
+  text-align: right;
+}
+.lap-row {
+  min-height: 40px;
+  border-top: 1px solid var(--outline-variant);
+  font-size: var(--type-body-medium);
+  color: var(--on-surface);
+}
+.lap-no {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--on-surface-variant);
+}
+.mark {
+  padding: 2px 6px;
+  border-radius: var(--shape-small);
+  font-size: var(--type-label-small);
+  font-weight: 500;
+}
+.mark.fastest {
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+}
+.mark.slowest {
+  background: var(--surface-container-high);
+  color: var(--tertiary);
 }
