@@ -27,7 +27,7 @@ body {
 .lead {
   margin: 4px 0 8px;
   color: var(--on-surface-variant);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
 }
 /* 一覧とランチャーの切り替え(左)と並び(右)を1行に置く。上の行を増やさないため。
    ヘッダのすぐ下に残す(ヘッダの高さは index.js が --site-bar-height に入れる) */
@@ -50,7 +50,7 @@ body {
   gap: 4px;
   min-width: 0;
   color: var(--on-surface-variant);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
 }
 .choice span {
   flex: none;
@@ -66,7 +66,7 @@ body {
   background: var(--secondary-container);
   color: var(--on-secondary-container);
   font: inherit;
-  font-size: 16px;
+  font-size: var(--type-body-large);
 }
 .choice select:focus-visible {
   outline: 2px solid var(--primary);
@@ -75,7 +75,7 @@ body {
 .status {
   margin: 0 0 8px;
   color: var(--on-surface-variant);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
 }
 .status.error {
   color: var(--error);
@@ -92,11 +92,11 @@ body {
   margin: 0 0 10px;
   padding-bottom: 6px;
   border-bottom: 2px solid var(--secondary-container);
-  font-size: 16px;
+  font-size: var(--type-body-large);
 }
 .cat-count {
   color: var(--on-surface-variant);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   font-weight: 400;
 }
 .grid {
@@ -142,7 +142,7 @@ body {
   place-items: center;
   background: var(--primary-container);
   color: var(--on-primary-container);
-  font-size: 20px;
+  font-size: var(--type-title-large);
   font-weight: 700;
 }
 .body {
@@ -150,14 +150,14 @@ body {
 }
 .title {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--type-title-medium);
   line-height: 24px;
   font-weight: 500;
 }
 .desc {
   margin: 2px 0 0;
   color: var(--on-surface-variant);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   /* 説明が長くてもカードの高さがそろうよう2行で切る */
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -175,7 +175,7 @@ body {
   border-radius: var(--shape-small);
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 11px;
+  font-size: var(--type-label-small);
 }
 @media (prefers-reduced-motion: reduce) {
   .card {
@@ -189,6 +189,6 @@ body {
   align-self: flex-start;
   margin-left: auto;
   color: var(--on-surface-variant);
-  font-size: 12px;
+  font-size: var(--type-body-small);
   white-space: nowrap;
 }

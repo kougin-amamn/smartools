@@ -59,13 +59,13 @@ body.ringing {
   gap: 4px;
 }
 .time {
-  font-size: 44px;
+  font-size: var(--type-display-medium);
   font-weight: 600;
   color: var(--on-surface);
   letter-spacing: 0.5px;
 }
 .state {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .adjust-row {
@@ -86,7 +86,7 @@ body.ringing {
   border-radius: var(--shape-small);
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-title-small);
   font-weight: 500;
   -webkit-tap-highlight-color: transparent;
   transition:
@@ -142,7 +142,7 @@ body.ringing {
   color: var(--on-primary);
 }
 .icon-btn.primary .glyph {
-  font-size: 26px;
+  font-size: var(--type-headline-medium);
   color: var(--on-primary);
   line-height: 1;
 }
@@ -150,7 +150,7 @@ body.ringing {
   margin-left: 3px;
 }
 .icon-btn.secondary .glyph {
-  font-size: 18px;
+  font-size: var(--type-body-large);
   color: var(--on-secondary-container);
   line-height: 1;
 }

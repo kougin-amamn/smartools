@@ -13,7 +13,7 @@
   padding: 10px 18px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   -webkit-tap-highlight-color: transparent;
 }
 .file-label {
@@ -47,7 +47,7 @@
   align-items: center;
   justify-content: center;
   color: #8b8ea0;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
 }
 .nav-btn {
   position: absolute;
@@ -75,7 +75,7 @@
   position: absolute;
   top: 10px;
   right: 12px;
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: #fff;
   background: rgba(0, 0, 0, 0.4);
   padding: 4px 10px;
@@ -166,10 +166,10 @@
   background: rgba(0, 0, 0, 0.55);
   border: none;
   color: #fff;
-  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
+  font-size: var(--type-label-small); /* 読める大きさの下限(M3 の小さなラベル) */
   line-height: 16px;
   padding: 0;
 }
 .status {
-  font-size: 11px;
+  font-size: var(--type-label-small);
 }

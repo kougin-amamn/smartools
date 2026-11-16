@@ -19,7 +19,7 @@
   gap: 12px;
 }
 .info {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
   text-align: center;
   min-height: 1.4em;
@@ -49,7 +49,7 @@
   align-items: flex-end;
   justify-content: center;
   padding-bottom: 6px;
-  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
+  font-size: var(--type-label-small); /* 読める大きさの下限(M3 の小さなラベル) */
   color: #6f7280;
   min-width: 0;
 }
@@ -64,7 +64,7 @@
   align-items: flex-end;
   justify-content: center;
   padding-bottom: 4px;
-  font-size: 8px;
+  font-size: var(--type-label-small);
   color: #aeb1c0;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
 }
@@ -103,7 +103,7 @@
 .round {
   width: 44px;
   height: 44px;
-  font-size: 22px;
+  font-size: var(--type-title-large);
   font-weight: 700;
   touch-action: manipulation;
 }
@@ -111,11 +111,11 @@
   min-width: 92px;
   text-align: center;
   font-weight: 700;
-  font-size: 15px;
+  font-size: var(--type-title-medium);
 }
 .pill {
   padding: 12px 20px;
-  font-size: 15px;
+  font-size: var(--type-title-medium);
   font-weight: 700;
   font-family: inherit;
   background: var(--secondary-container);
@@ -126,12 +126,12 @@
   -webkit-user-select: none;
 }
 .pill small {
-  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
+  font-size: var(--type-label-small); /* 読める大きさの下限(M3 の小さなラベル) */
   font-weight: 500;
   opacity: 0.7;
 }
 .pill.small {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   padding: 9px 14px;
 }
 .pill.on {
@@ -153,7 +153,7 @@
 .sec summary {
   padding: 13px 0;
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--type-title-small);
   cursor: pointer;
   list-style: none;
   display: flex;
@@ -180,11 +180,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .f select {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   padding: 7px 9px;
   border-radius: var(--shape-small);
   border: none;
@@ -202,7 +202,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .btns {
@@ -211,7 +211,7 @@
   flex-wrap: wrap;
 }
 .note {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   min-height: 1.2em;
 }
 .stage {

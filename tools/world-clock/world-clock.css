@@ -23,23 +23,23 @@
   padding: 6px 0 4px;
 }
 .local-label {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 .local-time {
-  font-size: 52px;
+  font-size: var(--type-display-large);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
   margin-top: 2px;
 }
 .local-time small {
-  font-size: 20px;
+  font-size: var(--type-title-large);
   font-weight: 700;
   color: var(--on-surface-variant);
 }
 .local-date {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
   margin-top: 2px;
 }
@@ -76,14 +76,14 @@
   min-width: 0;
 }
 .city .name {
-  font-size: 16px;
+  font-size: var(--type-title-medium);
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .city .meta {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
   margin-top: 2px;
 }
@@ -96,18 +96,18 @@
   font-variant-numeric: tabular-nums;
 }
 .city .hm {
-  font-size: 28px;
+  font-size: var(--type-headline-medium);
   font-weight: 800;
   line-height: 1.1;
 }
 .city .hm small {
-  font-size: 12px;
+  font-size: var(--type-label-medium);
   font-weight: 700;
   color: var(--on-surface-variant);
   margin-right: 2px;
 }
 .city .sc {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 .city .del {
@@ -130,7 +130,7 @@
 .empty {
   text-align: center;
   color: var(--on-surface-variant);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   padding: 12px 0;
 }
 .add-row {
@@ -141,7 +141,7 @@
 .add-row select {
   flex: 1;
   min-width: 0;
-  font-size: 15px;
+  font-size: var(--type-body-large);
   padding: 10px;
   border-radius: var(--shape-medium);
   border: none;
@@ -151,7 +151,7 @@
 }
 .pill {
   padding: 12px 20px;
-  font-size: 15px;
+  font-size: var(--type-title-medium);
   font-weight: 700;
   font-family: inherit;
   background: var(--secondary-container);
@@ -161,6 +161,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }

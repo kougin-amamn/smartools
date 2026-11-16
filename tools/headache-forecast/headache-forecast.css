@@ -22,7 +22,7 @@
   border: none;
   border-radius: var(--shape-full);
   padding: 0 16px;
-  font-size: 16px; /* iPhone で入力する時に画面が拡大されないため */
+  font-size: var(--type-body-large); /* iPhone で入力する時に画面が拡大されないため */
   background: var(--surface-container-high);
   color: var(--on-surface);
 }
@@ -51,7 +51,7 @@
   color: var(--on-surface);
   border-radius: var(--shape-medium);
   padding: 12px;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   cursor: pointer;
 }
 .card {
@@ -65,11 +65,11 @@
 }
 .card h2 {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--type-title-medium);
   font-weight: 600;
 }
 .place-name {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .level-row {
@@ -86,14 +86,14 @@
   height: 44px;
   padding: 0 14px;
   border-radius: var(--shape-full);
-  font-size: 20px;
+  font-size: var(--type-title-large);
   font-weight: 700;
 }
 .level-badge.small {
   min-width: 48px;
   height: 26px;
   padding: 0 10px;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
 }
 .level-0 {
   background: var(--surface-container-high);
@@ -108,11 +108,11 @@
   color: var(--on-tertiary);
 }
 .outlook-text {
-  font-size: 16px;
+  font-size: var(--type-body-large);
   line-height: 1.5;
 }
 .now-pressure {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .chart {
@@ -135,7 +135,7 @@
 }
 .chart .axis {
   fill: var(--on-surface-variant);
-  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
+  font-size: var(--type-label-small); /* 読める大きさの下限(M3 の小さなラベル) */
 }
 .chart .axis.day {
   font-weight: 700;
@@ -163,13 +163,13 @@
 }
 .chart-tip {
   min-height: 1.4em;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .legend {
   display: flex;
   gap: 14px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 .legend span {
@@ -210,12 +210,12 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
 }
 .periods small,
 .records small {
   color: var(--on-surface-variant);
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .periods .empty {
   color: var(--on-surface-variant);
@@ -240,12 +240,12 @@
   border-radius: var(--shape-full);
   background: transparent;
   color: var(--on-surface-variant);
-  font-size: 18px;
+  font-size: var(--type-body-large);
   cursor: pointer;
 }
 .record-summary {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   line-height: 1.5;
   color: var(--on-surface-variant);
 }
@@ -253,7 +253,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
 }
 .seg {
   display: flex;
@@ -268,7 +268,7 @@
   border: none;
   background: transparent;
   color: var(--on-surface);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   cursor: pointer;
 }
 .seg button + button {
@@ -281,7 +281,7 @@
 }
 .note {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   line-height: 1.6;
   color: var(--on-surface-variant);
 }

@@ -8,14 +8,14 @@
   gap: 12px;
 }
 .lux-num {
-  font-size: 56px;
+  font-size: var(--type-display-large);
   font-weight: 700;
   color: var(--primary);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 .lux-unit {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
   margin-top: -4px;
 }
@@ -33,23 +33,23 @@
   transition: width 0.15s ease;
 }
 .label {
-  font-size: 16px;
+  font-size: var(--type-title-medium);
   color: var(--on-surface);
   font-weight: 600;
 }
 .status {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   min-height: 16px;
 }
 .pill {
   padding: 12px 26px;
   background: var(--primary);
   color: var(--on-primary);
-  font-size: 15px;
+  font-size: var(--type-body-large);
   -webkit-tap-highlight-color: transparent;
 }
 .note {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   text-align: center;
   line-height: 1.6;
   margin: 0;
@@ -61,7 +61,7 @@
   padding: 10px 12px;
 }
 .calib label {
-  font-size: 13px;
+  font-size: var(--type-title-small);
   color: var(--on-surface-variant);
   font-weight: 600;
 }
@@ -75,7 +75,7 @@
 .calib input {
   width: 6em;
   padding: 8px;
-  font-size: 15px;
+  font-size: var(--type-body-large);
   border-radius: var(--shape-medium);
   border: 1px solid var(--secondary-container);
   background: var(--surface-container-low);
@@ -85,7 +85,7 @@
   border: none;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   padding: 8px 12px;
   border-radius: var(--shape-full);
   cursor: pointer;

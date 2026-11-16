@@ -42,12 +42,12 @@
   outline-offset: 3px;
 }
 .timer {
-  font-size: 26px;
+  font-size: var(--type-headline-medium);
   font-variant-numeric: tabular-nums;
   color: var(--on-surface);
 }
 .status {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
 }
 .list {
   width: 100%;
@@ -67,7 +67,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .item audio {
@@ -82,7 +82,7 @@
   border: none;
   cursor: pointer;
   text-decoration: none;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   padding: 6px 12px;
   border-radius: var(--shape-full);
   background: var(--secondary-container);

@@ -32,11 +32,11 @@
   box-shadow: 0 0 40px color-mix(in srgb, var(--primary) 55%, transparent); /* 点いている事を光で見せる */
 }
 .status {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   min-height: 18px;
 }
 .note {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   text-align: center;
   line-height: 1.6;
   margin: 0;

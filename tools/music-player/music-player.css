@@ -49,7 +49,7 @@
   color: var(--on-surface-variant);
 }
 .track-title {
-  font-size: 16px;
+  font-size: var(--type-body-large);
   color: var(--on-surface);
   text-align: center;
   overflow: hidden;
@@ -58,7 +58,7 @@
   max-width: 100%;
 }
 .track-artist {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
   text-align: center;
   overflow: hidden;
@@ -78,7 +78,7 @@
   accent-color: var(--primary);
 }
 .time {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   min-width: 34px;
 }
@@ -121,12 +121,12 @@
   padding: 10px 18px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   -webkit-tap-highlight-color: transparent;
 }
 .pill.small {
   padding: 9px 14px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .table-wrap {
   width: 100%;
@@ -137,12 +137,12 @@
   width: 100%;
   border-collapse: collapse;
   background: var(--surface-container-low);
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .playlist-table th {
   text-align: left;
   padding: 8px 8px;
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   font-weight: 500;
   border-bottom: 1px solid var(--secondary-container);
@@ -200,6 +200,6 @@
   padding: 2px;
 }
 .status {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   min-height: 16px;
 }

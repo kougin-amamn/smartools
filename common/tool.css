@@ -60,7 +60,7 @@ body {
   min-height: 56px;
   padding-left: 24px;
   padding-right: 24px;
-  font-size: 16px;
+  font-size: var(--type-title-medium);
   font-weight: 500;
 }
 .pill:focus-visible {
@@ -127,7 +127,7 @@ body {
   justify-content: space-between;
   padding: 16px 0 12px;
   background: var(--surface-container-low);
-  font-size: 22px;
+  font-size: var(--type-title-large);
   line-height: 28px;
   font-weight: 400;
 }
@@ -138,7 +138,7 @@ body {
   border-radius: 50%;
   background: var(--fn-bg);
   color: var(--fn-fg);
-  font-size: 18px;
+  font-size: var(--type-body-large);
   cursor: pointer;
 }
 .sheet-close:focus-visible {

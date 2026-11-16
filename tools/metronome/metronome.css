@@ -36,20 +36,20 @@
 .round {
   width: 44px;
   height: 44px;
-  font-size: 22px;
+  font-size: var(--type-title-large);
   -webkit-tap-highlight-color: transparent;
 }
 .bpm-display {
   text-align: center;
 }
 .bpm-num {
-  font-size: 44px;
+  font-size: var(--type-display-medium);
   font-weight: 600;
   color: var(--on-surface);
   font-variant-numeric: tabular-nums;
 }
 .bpm-label {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 input[type='range'] {
@@ -65,7 +65,7 @@ input[type='range'] {
   padding: 10px 14px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   flex: 1;
   -webkit-tap-highlight-color: transparent;
 }
@@ -75,7 +75,7 @@ select#beatsSelect {
   padding: 10px 14px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
 }
 .pill.primary {
   flex: none;
@@ -83,7 +83,7 @@ select#beatsSelect {
 .pill.big {
   width: 100%;
   padding: 14px;
-  font-size: 16px;
+  font-size: var(--type-body-large);
 }
 .pill:focus-visible,
 .round:focus-visible {

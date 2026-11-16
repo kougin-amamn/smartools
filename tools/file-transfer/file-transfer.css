@@ -25,12 +25,12 @@
 }
 .lead,
 .sub {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
 }
 .sub,
 .label {
   color: var(--on-surface-variant);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
 }
 .row {
   display: flex;
@@ -42,19 +42,19 @@
   padding: 10px 16px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   text-decoration: none;
 }
 .pill.big {
   padding: 14px 20px;
-  font-size: 16px;
+  font-size: var(--type-body-large);
 }
 .pill.small {
   padding: 6px 12px;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
 }
 .code {
-  font-size: 40px;
+  font-size: var(--type-display-small);
   font-weight: 700;
   letter-spacing: 0.08em;
   font-variant-numeric: tabular-nums;
@@ -65,7 +65,7 @@
   border-radius: var(--shape-medium);
   background: #fff;
   color: #333;
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .qr:empty {
   display: none;
@@ -75,7 +75,7 @@
   display: block;
 }
 .wait {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
 }
 .wait:empty {
   display: none;
@@ -96,16 +96,16 @@
   border: 1px solid var(--secondary-container);
   background: var(--surface);
   color: var(--on-surface);
-  font-size: 22px;
+  font-size: var(--type-title-large);
   text-align: center;
   letter-spacing: 0.08em;
   font-variant-numeric: tabular-nums;
 }
 .peer {
-  font-size: 15px;
+  font-size: var(--type-body-large);
 }
 .sas {
-  font-size: 20px;
+  font-size: var(--type-title-large);
   font-weight: 700;
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
@@ -115,7 +115,7 @@
   display: none;
 }
 .link-state {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--primary);
 }
 .link-state.lost {
@@ -123,7 +123,7 @@
 }
 .status {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   text-align: center;
 }
 .status:empty {
@@ -144,7 +144,7 @@
   padding: 10px 12px;
   border-radius: var(--shape-medium);
   background: var(--surface-container-low);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
 }
 .item .head {
   display: flex;
@@ -158,7 +158,7 @@
   border-radius: var(--shape-full);
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .item.in .dir {
   background: var(--primary);
@@ -203,7 +203,7 @@
   flex: 1;
   min-width: 10em;
   color: var(--on-surface-variant);
-  font-size: 12px;
+  font-size: var(--type-body-small);
   font-variant-numeric: tabular-nums;
 }
 .item.failed .state {
@@ -216,10 +216,10 @@
 .empty {
   margin: 0;
   color: var(--on-surface-variant);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   text-align: center;
 }
 .note {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }

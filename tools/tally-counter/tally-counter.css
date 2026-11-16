@@ -46,7 +46,7 @@ body {
   height: 120px;
   border: 0;
   border-radius: var(--shape-large);
-  font-size: 26px;
+  font-size: var(--type-headline-medium);
   font-weight: 700;
   font-family: inherit;
   background: var(--tertiary);
@@ -57,7 +57,7 @@ body {
   height: 48px;
   border: 0;
   border-radius: var(--shape-medium);
-  font-size: 16px;
+  font-size: var(--type-title-medium);
   font-weight: 600;
   font-family: inherit;
   background: var(--secondary-container);
@@ -68,7 +68,7 @@ body {
   display: flex;
   gap: 8px;
   align-items: center;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .opt.na {

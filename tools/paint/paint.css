@@ -44,7 +44,7 @@
   padding: 9px 12px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
 }
 .pill.icon {
   padding: 9px 10px;
@@ -58,7 +58,7 @@
 .bar .pill.primary:not(.small) {
   min-height: 0;
   padding: 9px 12px;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   font-weight: inherit;
 }
 .bar .pill.icon.primary:not(.small) {
@@ -89,7 +89,7 @@
 }
 .size,
 .size-val {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .size-val {
@@ -102,7 +102,7 @@
 }
 .status {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .status:empty {
   display: none;

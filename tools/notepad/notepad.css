@@ -19,7 +19,7 @@
   padding: 12px 18px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,14 +39,14 @@
   cursor: pointer;
 }
 .note-row .title {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .note-row .preview {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -54,12 +54,12 @@
   margin-top: 2px;
 }
 .note-row .date {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   margin-top: 6px;
 }
 .status {
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .editor-view {
   display: flex;
@@ -86,7 +86,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 .saved-label {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 #noteText {
@@ -96,7 +96,7 @@
   border: none;
   border-radius: var(--shape-large);
   padding: 14px;
-  font-size: 15px;
+  font-size: var(--type-body-large);
   line-height: 1.6;
   background: var(--surface-container-low);
   color: var(--on-surface);

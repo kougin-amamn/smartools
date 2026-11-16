@@ -13,7 +13,7 @@
   padding: 11px 20px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   width: 100%;
   text-align: center;
   -webkit-tap-highlight-color: transparent;
@@ -22,7 +22,7 @@
   display: block;
 }
 .status {
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .table-wrap {
   width: 100%;
@@ -33,7 +33,7 @@
 }
 table {
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 th,
 td {
@@ -70,7 +70,7 @@ thead th {
   background: var(--secondary-container);
 }
 .photo-head .fname {
-  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
+  font-size: var(--type-label-small); /* 読める大きさの下限(M3 の小さなラベル) */
   color: var(--on-surface);
   max-width: 70px;
   overflow: hidden;
@@ -90,7 +90,7 @@ td.empty-cell {
   color: var(--on-surface-variant);
 }
 .empty {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   padding: 10px 12px;
 }

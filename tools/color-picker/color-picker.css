@@ -23,7 +23,7 @@
   cursor: pointer;
   padding: 10px 12px;
   border-radius: var(--shape-full);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   background: var(--secondary-container);
   color: var(--on-secondary-container);
   -webkit-tap-highlight-color: transparent;
@@ -102,7 +102,7 @@ video {
   align-items: center;
   justify-content: center;
   color: #9fb6c4;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   text-align: center;
   padding: 0 20px;
   background: rgba(0, 0, 0, 0.35);
@@ -115,7 +115,7 @@ video {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
   background: var(--surface-container-low);
   border-radius: var(--shape-medium);
@@ -153,7 +153,7 @@ video {
   border-radius: var(--shape-small);
   padding: 4px 6px;
   margin: -4px -6px 2px;
-  font-size: 16px;
+  font-size: var(--type-body-large);
   background: transparent;
   color: var(--on-surface);
   font-family: monospace;
@@ -164,7 +164,7 @@ video {
   background: var(--surface);
 }
 .values .sub {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   margin-top: 2px;
 }
@@ -175,7 +175,7 @@ video {
   padding: 12px;
 }
 .nearest-label {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   margin-bottom: 6px;
 }
@@ -191,11 +191,11 @@ video {
   flex: none;
 }
 .nearest-en {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface);
 }
 .nearest-ja {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 
@@ -204,13 +204,13 @@ video {
   width: 100%;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   -webkit-tap-highlight-color: transparent;
 }
 .pill.small {
   width: auto;
   padding: 9px 14px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   flex: none;
 }
 .pill.active {
@@ -231,7 +231,7 @@ video {
   border: none;
   border-radius: var(--shape-medium);
   padding: 10px 12px;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   background: var(--surface-container-low);
   color: var(--on-surface);
 }
@@ -263,25 +263,25 @@ video {
   overflow: hidden;
 }
 .result-row .en {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .result-row .ja {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .result-row .hex {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   font-family: monospace;
 }
 .status {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   line-height: 1.6;
 }

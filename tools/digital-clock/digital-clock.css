@@ -118,14 +118,14 @@
 }
 .opt > label,
 .opt > .lbl {
-  font-size: 13px;
+  font-size: var(--type-title-small);
   color: var(--on-surface-variant);
   font-weight: 600;
 }
 .opt select {
   width: 100%;
   padding: 10px 12px;
-  font-size: 15px;
+  font-size: var(--type-body-large);
   border-radius: var(--shape-medium);
   border: 1px solid var(--secondary-container);
   background: var(--surface-container-low);
@@ -143,7 +143,7 @@
 .size-row span {
   min-width: 3.2em;
   text-align: right;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface);
 }
 .swatches {
@@ -169,7 +169,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .color-free input {
@@ -182,7 +182,7 @@
 }
 .pill {
   padding: 12px 22px;
-  font-size: 15px;
+  font-size: var(--type-title-medium);
   font-weight: 600;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
@@ -192,7 +192,7 @@
   justify-content: center;
 }
 .warn {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--error);
   min-height: 1.2em;
   text-align: center;

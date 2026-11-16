@@ -30,7 +30,7 @@
   align-items: center;
   justify-content: center;
   color: #9fb6c4;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   text-align: center;
   padding: 0 20px;
 }
@@ -99,7 +99,7 @@
   white-space: nowrap;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 12px;
+  font-size: var(--type-body-small);
   -webkit-tap-highlight-color: transparent;
 }
 .chip.active {
@@ -119,7 +119,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
 }
 .slider-row span {
@@ -134,7 +134,7 @@
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
 }
 .toggle-row label {
@@ -171,7 +171,7 @@
   border: none;
   border-radius: var(--shape-full);
   padding: 10px 12px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   background: var(--secondary-container);
   color: var(--on-secondary-container);
 }

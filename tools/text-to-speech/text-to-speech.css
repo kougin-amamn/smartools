@@ -15,7 +15,7 @@ textarea {
   border: none;
   border-radius: var(--shape-large);
   padding: 14px;
-  font-size: 15px;
+  font-size: var(--type-body-large);
   line-height: 1.6;
   background: var(--surface-container-low);
   color: var(--on-surface);
@@ -30,7 +30,7 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .row span:first-child {
@@ -43,7 +43,7 @@ textarea:focus-visible {
   padding: 8px 12px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
 }
 .row input[type='range'] {
   flex: 1;
@@ -64,10 +64,10 @@ textarea:focus-visible {
   padding: 12px 20px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   flex: 1;
   -webkit-tap-highlight-color: transparent;
 }
 .status {
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }

@@ -22,7 +22,7 @@ body {
   gap: 14px;
 }
 .mode-label {
-  font-size: 14px;
+  font-size: var(--type-title-small);
   font-weight: 600;
   color: var(--work);
   letter-spacing: 0.5px;
@@ -67,7 +67,7 @@ body {
   gap: 6px;
 }
 .time {
-  font-size: 40px;
+  font-size: var(--type-display-small);
   font-weight: 600;
   color: var(--on-surface);
 }
@@ -125,7 +125,7 @@ body {
   outline-offset: 2px;
 }
 .stats {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .settings {
@@ -141,7 +141,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface);
 }
 .setting-row .setting-val {
@@ -157,7 +157,7 @@ body {
   cursor: pointer;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 16px;
+  font-size: var(--type-body-large);
   -webkit-tap-highlight-color: transparent;
 }
 .setting-row span:first-child {
@@ -167,6 +167,6 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }

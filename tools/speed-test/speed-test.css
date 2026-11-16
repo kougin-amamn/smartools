@@ -21,19 +21,19 @@
   margin-top: 8px;
 }
 .gauge-val {
-  font-size: 44px;
+  font-size: var(--type-display-medium);
   font-weight: 800;
   color: var(--on-surface);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 .gauge-unit {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
   margin-top: 4px;
 }
 .gauge-phase {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--primary);
   margin-top: 10px;
   text-align: center;
@@ -43,7 +43,7 @@
   padding: 14px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 16px;
+  font-size: var(--type-body-large);
   width: 100%;
   text-align: center;
   -webkit-tap-highlight-color: transparent;
@@ -65,19 +65,19 @@
 }
 .result-box .label {
   display: block;
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
 }
 .result-box .val {
   display: block;
-  font-size: 18px;
+  font-size: var(--type-title-medium);
   font-weight: 700;
   color: var(--on-surface);
   margin-top: 2px;
   font-variant-numeric: tabular-nums;
 }
 .note {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   text-align: center;
   line-height: 1.6;
   margin: 0;

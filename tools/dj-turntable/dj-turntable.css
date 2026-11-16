@@ -71,14 +71,14 @@ body {
   gap: 12px;
 }
 .now .title {
-  font-size: 15px;
+  font-size: var(--type-title-medium);
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .now .time {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -164,7 +164,7 @@ body {
   display: block;
 }
 .cue-txt {
-  font-size: 12px;
+  font-size: var(--type-label-medium);
   font-weight: 700;
 }
 
@@ -186,7 +186,7 @@ body {
 }
 .opt > label,
 .opt > .lbl {
-  font-size: 13px;
+  font-size: var(--type-title-small);
   color: var(--on-surface-variant);
   font-weight: 600;
 }
@@ -202,7 +202,7 @@ body {
 .row output {
   min-width: 4.2em;
   text-align: right;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   font-variant-numeric: tabular-nums;
 }
 .seg {
@@ -218,7 +218,7 @@ body {
   border: none;
   background: none;
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   padding: 9px 8px;
   border-radius: var(--shape-full);
   cursor: pointer;
@@ -232,7 +232,7 @@ body {
   border: none;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   padding: 7px 12px;
   border-radius: var(--shape-full);
   cursor: pointer;
@@ -246,7 +246,7 @@ body {
 }
 .list-head h2 {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
 }
 .pill {
@@ -254,7 +254,7 @@ body {
   cursor: pointer;
   border-radius: var(--shape-full);
   padding: 10px 20px;
-  font-size: 14px;
+  font-size: var(--type-title-small);
   font-weight: 600;
   background: var(--primary);
   color: var(--on-primary);
@@ -282,7 +282,7 @@ body {
   color: var(--on-surface);
   border-radius: var(--shape-medium);
   padding: 10px 12px;
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   cursor: pointer;
   display: flex;
   gap: 10px;
@@ -305,12 +305,12 @@ body {
   color: var(--error);
 }
 .status {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   min-height: 1.4em;
   text-align: center;
 }
 .note {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
   line-height: 1.6;
   text-align: center;

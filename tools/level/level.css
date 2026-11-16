@@ -53,18 +53,18 @@
   background: var(--primary);
 }
 .angles {
-  font-size: 16px;
+  font-size: var(--type-body-large);
   color: var(--on-surface);
   font-variant-numeric: tabular-nums;
 }
 .status {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   min-height: 16px;
 }
 .pill {
   padding: 10px 20px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   -webkit-tap-highlight-color: transparent;
 }

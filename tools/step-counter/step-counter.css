@@ -21,14 +21,14 @@
   margin-top: 8px;
 }
 .count-val {
-  font-size: 48px;
+  font-size: var(--type-display-medium);
   font-weight: 800;
   color: var(--on-surface);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 .count-label {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
   margin-top: 4px;
 }
@@ -46,12 +46,12 @@
 }
 .stat .label {
   display: block;
-  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
+  font-size: var(--type-label-small); /* 読める大きさの下限(M3 の小さなラベル) */
   color: var(--on-surface-variant);
 }
 .stat .val {
   display: block;
-  font-size: 15px;
+  font-size: var(--type-title-medium);
   font-weight: 700;
   color: var(--on-surface);
   margin-top: 2px;
@@ -60,30 +60,30 @@
   padding: 13px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 15px;
+  font-size: var(--type-body-large);
   width: 100%;
   text-align: center;
   -webkit-tap-highlight-color: transparent;
 }
 .pill.small {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   padding: 10px;
 }
 .row.chk {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface-variant);
   width: 100%;
   justify-content: center;
 }
 .status {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   min-height: 14px;
 }
 .note {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   text-align: center;
   line-height: 1.6;
   margin: 0;

@@ -35,7 +35,7 @@ video {
   justify-content: center;
   gap: 10px;
   color: #9fb6c4;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   text-align: center;
   padding: 0 20px;
 }
@@ -76,7 +76,7 @@ video {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 .slider-row span {
@@ -91,7 +91,7 @@ video {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 .captured-list {
@@ -126,7 +126,7 @@ video {
   background: none;
   color: var(--on-surface);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   cursor: pointer;
 }
 .seg button.active {
@@ -181,7 +181,7 @@ video.src {
   background: var(--secondary-container);
   color: var(--on-secondary-container);
   font-family: inherit;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   cursor: pointer;
 }
 .chip.active {
@@ -214,13 +214,13 @@ video.src {
   bottom: 18px;
 }
 .note {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   line-height: 1.6;
   margin: 0;
 }
 .slider-row .seg button {
   padding: 5px 10px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 /* 横向き: 主役の縦横比(幅÷高さ)。並べ方は共通の tool.css */
 @media (orientation: landscape) and (max-height: 600px) {

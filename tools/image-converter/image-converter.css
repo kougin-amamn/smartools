@@ -13,7 +13,7 @@
   padding: 11px 18px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   width: 100%;
   text-align: center;
   -webkit-tap-highlight-color: transparent;
@@ -37,7 +37,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 .row select {
@@ -46,7 +46,7 @@
   padding: 8px 10px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .row input[type='range'] {
   flex: 1;
@@ -59,10 +59,10 @@
   padding: 7px 8px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .row .unit {
-  font-size: 11px;
+  font-size: var(--type-label-small);
 }
 .chk {
   display: flex;
@@ -97,14 +97,14 @@
   min-width: 0;
 }
 .item .name {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .item .sizes {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   margin-top: 2px;
 }
@@ -114,7 +114,7 @@
 }
 .item .dl {
   flex: none;
-  font-size: 11px;
+  font-size: var(--type-label-small);
   text-decoration: none;
   padding: 7px 12px;
   border-radius: var(--shape-full);
@@ -129,7 +129,7 @@
   width: 100%;
 }
 .note {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   text-align: center;
   line-height: 1.6;
   margin: 0;

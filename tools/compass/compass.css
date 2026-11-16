@@ -25,7 +25,7 @@
   min-height: 92px;
 }
 .heading {
-  font-size: 56px;
+  font-size: var(--type-display-large);
   font-weight: 600;
   line-height: 1;
   color: var(--on-surface);
@@ -40,13 +40,13 @@
 }
 .dir-label {
   margin-top: 6px;
-  font-size: 15px;
+  font-size: var(--type-title-medium);
   font-weight: 600;
   color: var(--on-surface);
 }
 .target-text {
   margin-top: 4px;
-  font-size: 13px;
+  font-size: var(--type-title-small);
   color: var(--tertiary);
   font-weight: 600;
 }
@@ -91,13 +91,13 @@
 }
 .compass .num {
   fill: var(--on-surface-variant);
-  font-size: 13px;
+  font-size: var(--type-title-small);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 .compass .card {
   fill: var(--on-surface);
-  font-size: 24px;
+  font-size: var(--type-headline-small);
   font-weight: 700;
 }
 .compass .card.north {
@@ -105,7 +105,7 @@
 }
 .compass .inter {
   fill: var(--tick);
-  font-size: 12px;
+  font-size: var(--type-label-medium);
   font-weight: 600;
 }
 .compass .target {
@@ -142,7 +142,7 @@
   opacity: 0.5;
 }
 .status {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   min-height: 18px;
   text-align: center;
   line-height: 1.5;
@@ -160,7 +160,7 @@
   padding: 10px 20px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   font-family: inherit;
   -webkit-tap-highlight-color: transparent;
 }
@@ -169,7 +169,7 @@
   color: var(--on-tertiary);
 }
 .note {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   line-height: 1.6;
   margin: 0;
   text-align: center;
@@ -186,6 +186,6 @@
     min-height: 0;
   }
   .heading {
-    font-size: 48px;
+    font-size: var(--type-display-medium);
   }
 }

@@ -13,7 +13,7 @@ textarea {
   border: none;
   border-radius: var(--shape-large);
   padding: 12px 14px;
-  font-size: 15px;
+  font-size: var(--type-body-large);
   background: var(--surface-container-low);
   color: var(--on-surface);
   font-family: inherit;
@@ -43,12 +43,12 @@ textarea:focus-visible {
   padding: 10px 20px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   -webkit-tap-highlight-color: transparent;
 }
 .pill:disabled {
   opacity: 0.4;
 }
 .status {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
 }

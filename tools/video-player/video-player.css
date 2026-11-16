@@ -13,7 +13,7 @@
   padding: 10px 18px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   -webkit-tap-highlight-color: transparent;
 }
 .file-label {
@@ -42,12 +42,12 @@ video {
   justify-content: center;
   gap: 8px;
   color: #8b8ea0;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   pointer-events: none;
 }
 .track-title {
   width: 100%;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   color: var(--on-surface);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -65,7 +65,7 @@ video {
   accent-color: var(--primary);
 }
 .time {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
   min-width: 34px;
 }
@@ -106,7 +106,7 @@ video {
   border-radius: var(--shape-full);
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 12px;
+  font-size: var(--type-body-small);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,7 +152,7 @@ video {
 }
 .video-row .name {
   flex: 1;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -166,7 +166,7 @@ video {
   padding: 4px;
 }
 .status {
-  font-size: 11px;
+  font-size: var(--type-label-small);
 }
 
 /* 全画面(要素の全画面表示に対応しないブラウザ用。iOS Safari など) */
@@ -193,7 +193,7 @@ video {
   padding: 8px 14px;
   background: rgba(0, 0, 0, 0.55);
   color: #fff;
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   cursor: pointer;
 }
 /* 横向き: 主役の縦横比(幅÷高さ)。並べ方は共通の tool.css */

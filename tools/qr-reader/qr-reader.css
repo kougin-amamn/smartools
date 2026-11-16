@@ -80,7 +80,7 @@ video {
 /* 結果カードやリンクボタンがdisplay:flex指定と衝突して常時表示されてしまう事故を防ぐ */
 
 .status {
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   min-height: 18px;
 }
 .result-card {
@@ -93,11 +93,11 @@ video {
   gap: 10px;
 }
 .result-label {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
 }
 .result-text {
-  font-size: 15px;
+  font-size: var(--type-body-large);
   color: var(--on-surface);
   word-break: break-all;
   max-height: 80px;
@@ -113,7 +113,7 @@ video {
   padding: 10px 16px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   text-decoration: none;
   display: inline-flex;
   align-items: center;

@@ -14,14 +14,14 @@
   gap: 12px;
 }
 .db-num {
-  font-size: 60px;
+  font-size: var(--type-display-large);
   font-weight: 700;
   color: var(--primary);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 .db-unit {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
   margin-top: -6px;
 }
@@ -51,18 +51,18 @@
   text-align: center;
 }
 .stat-label {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   color: var(--on-surface-variant);
 }
 .stat-val {
-  font-size: 16px;
+  font-size: var(--type-title-medium);
   font-weight: 600;
   color: var(--on-surface);
   font-variant-numeric: tabular-nums;
   margin-top: 2px;
 }
 .status {
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   min-height: 16px;
 }
 .controls {
@@ -73,11 +73,11 @@
   padding: 12px 22px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   -webkit-tap-highlight-color: transparent;
 }
 .note {
-  font-size: 11px;
+  font-size: var(--type-label-small);
   text-align: center;
   line-height: 1.6;
   margin: 0;

@@ -13,7 +13,7 @@
   padding: 12px 22px;
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 14px;
+  font-size: var(--type-body-medium);
   -webkit-tap-highlight-color: transparent;
 }
 .pill.primary {
@@ -24,7 +24,7 @@
   color: var(--on-primary);
 }
 .status {
-  font-size: 12px;
+  font-size: var(--type-body-small);
 }
 .panel {
   width: 100%;
@@ -47,7 +47,7 @@
   border-radius: var(--shape-full);
   background: var(--secondary-container);
   color: var(--on-secondary-container);
-  font-size: 13px;
+  font-size: var(--type-body-medium);
   -webkit-tap-highlight-color: transparent;
 }
 .mode.on {
@@ -58,7 +58,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
   background: var(--surface-container-low);
   border-radius: var(--shape-medium);
@@ -81,7 +81,7 @@
   color: #fff;
 }
 .rec-time {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   color: var(--on-surface-variant);
   font-variant-numeric: tabular-nums;
   min-width: 44px;
@@ -104,7 +104,7 @@
   height: 32px;
 }
 .rec-item a {
-  font-size: 12px;
+  font-size: var(--type-body-small);
   text-decoration: none;
   padding: 6px 10px;
   border-radius: var(--shape-full);
