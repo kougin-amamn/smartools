@@ -16,7 +16,6 @@ textarea {
   font-size: 15px;
   background: var(--surface-container-low);
   color: var(--on-surface);
-  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
   font-family: inherit;
 }
 textarea:focus-visible {
@@ -31,7 +30,6 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.12);
 }
 .qr-box img,
 .qr-box canvas {

@@ -190,7 +190,6 @@
   background: var(--surface-container-low);
   border-radius: var(--shape-large);
   padding: 14px 16px;
-  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
 }
 .detail h2 {
   margin: 0 0 8px;

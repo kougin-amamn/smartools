@@ -37,7 +37,6 @@
   border-radius: var(--shape-large);
   padding: 12px 14px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
 }
 .note-row .title {
   font-size: 14px;
@@ -101,7 +100,6 @@
   line-height: 1.6;
   background: var(--surface-container-low);
   color: var(--on-surface);
-  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
   font-family: inherit;
 }
 #noteText:focus-visible {

@@ -26,7 +26,6 @@
   background: #000;
   border-radius: var(--shape-large);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.15);
 }
 video {
   width: 100%;
@@ -138,7 +137,6 @@ video {
   border-radius: var(--shape-medium);
   padding: 8px 10px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.06);
 }
 .video-row.playing {
   background: var(--primary);

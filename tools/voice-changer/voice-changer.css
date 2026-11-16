@@ -63,7 +63,6 @@
   background: var(--surface-container-low);
   border-radius: var(--shape-medium);
   padding: 10px 12px;
-  box-shadow: 0 3px 12px rgba(20, 20, 30, 0.06);
 }
 .row input[type='range'] {
   flex: 1;
@@ -99,7 +98,6 @@
   background: var(--surface-container-low);
   border-radius: var(--shape-medium);
   padding: 8px 10px;
-  box-shadow: 0 3px 12px rgba(20, 20, 30, 0.06);
 }
 .rec-item audio {
   flex: 1;

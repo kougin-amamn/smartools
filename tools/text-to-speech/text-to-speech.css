@@ -19,7 +19,6 @@ textarea {
   line-height: 1.6;
   background: var(--surface-container-low);
   color: var(--on-surface);
-  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
   font-family: inherit;
 }
 textarea:focus-visible {

@@ -49,7 +49,6 @@
   border-radius: var(--shape-medium);
   padding: 10px;
   text-align: center;
-  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
 }
 .stat-label {
   font-size: 11px;

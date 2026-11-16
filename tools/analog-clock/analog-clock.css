@@ -26,7 +26,6 @@
   background: var(--surface-container-low);
   border-radius: var(--shape-large);
   padding: 6px 14px;
-  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
 }
 .panel-title {
   width: 100%;
@@ -150,7 +149,6 @@
   border-radius: var(--shape-large);
   padding: 10px 12px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(20, 20, 30, 0.08);
   -webkit-tap-highlight-color: transparent;
 }
 .tpl b {

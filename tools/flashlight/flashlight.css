@@ -17,7 +17,6 @@
   cursor: pointer;
   background: var(--surface-container-low);
   color: var(--on-surface-variant);
-  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +29,7 @@
 .power.on {
   background: var(--primary);
   color: var(--on-primary);
-  box-shadow: 0 10px 40px rgba(92, 196, 182, 0.55);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--primary) 55%, transparent); /* 点いている事を光で見せる */
 }
 .status {
   font-size: 14px;

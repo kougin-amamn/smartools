@@ -34,6 +34,8 @@ resource: "common/site.css"
 
 ## 形と動き(Material 3 Expressive、2026-11-15)
 
+- 影は使わない。カード・パネル・入力欄は、地と違う容器の色(`--surface-container-*`)で分ける(2026-11-16)。影を使うのは、ほかの物の上に浮かぶ物(メニュー・設定シート・出したヘッダ)と、意味のある見せ方(ライトの光・ピアノの黒鍵・カメラの上の線・デジタル時計のネオンとベゼルの枠)だけ。
+
 - 角の丸さは段階のトークンだけを使う: `--shape-extra-small` 4px・`--shape-small` 8px・`--shape-medium` 12px・`--shape-large` 16px・`--shape-large-increased` 20px・`--shape-extra-large` 28px・`--shape-extra-large-increased` 32px・`--shape-extra-extra-large` 48px・`--shape-full`。
 - 目安: ボタンと札は `--shape-full`(札は `--shape-small` も可)、カード `--shape-large`、大きな容器とシート `--shape-extra-large`、メニュー `--shape-large`。
 - 押した時の動きは全ページ共通の波紋(M3 の ripple。`common/press.js`、2026-11-15)。ボタン・一覧のカード・押す札(`.chip`)に自動で付き、押した所から丸い波が広がって消える。ツールの css に `:active` の動き(`transform: scale()`・`filter: brightness()`・角を変える)を書かない。押し心地が中身の所(鍵盤・盤・描く場所)は、要素か親に `data-no-ripple` を付けて外す。キーボードで押した時だけ `--press-layer`(薄い色の層)を重ねる。角が四角くなる動きは使わない。

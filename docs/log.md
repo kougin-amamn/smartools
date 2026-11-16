@@ -11,6 +11,7 @@ description: "サイト全体に関わる決定を日付順に。今の決まり
 ## 2026-11-16
 
 - コンセプトを、サービスコンセプト([service-concept.md](./service-concept.md))とデザインコンセプト([design-concept.md](./design-concept.md))に分けた。デザインコンセプトには Material 3 Expressive の受け止め方を書いた。
+- カード・パネルの影をやめ、容器の色で分ける形にした(M3)。浮かぶ物と意味のある見せ方だけ影を残す。
 - 2つのコンセプトで全ページを点検し、色の名前・角の丸さ・押す所・名前・コントラスト・文字の大きさを直した。決めてほしい事は [concept-review.md](./concept-review.md) の3章。
 
 ## 2026-11-15

@@ -13,7 +13,6 @@
   height: 240px;
   border-radius: 50%;
   background: var(--surface-container-low);
-  box-shadow: 0 10px 30px rgba(20, 20, 30, 0.12);
 }
 .crosshair {
   position: absolute;

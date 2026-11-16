@@ -136,7 +136,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
 }
 .setting-row {
   display: flex;

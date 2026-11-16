@@ -105,7 +105,6 @@
   background: var(--surface-container-low);
   border-radius: var(--shape-large);
   padding: 6px 14px;
-  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
 }
 .opt {
   display: flex;

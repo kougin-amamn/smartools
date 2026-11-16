@@ -13,7 +13,6 @@
   background: var(--surface-container-low);
   border-radius: var(--shape-large);
   padding: 12px;
-  box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
 }
 .slider-row {
   display: flex;
@@ -87,7 +86,6 @@
   background: var(--surface-container-low);
   border-radius: var(--shape-large);
   overflow: hidden;
-  box-shadow: 0 6px 20px rgba(20, 20, 30, 0.12);
 }
 #view {
   display: block;

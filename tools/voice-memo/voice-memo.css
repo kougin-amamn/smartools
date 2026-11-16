@@ -62,7 +62,6 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
 }
 .item-head {
   display: flex;

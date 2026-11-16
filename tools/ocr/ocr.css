@@ -68,7 +68,6 @@ video {
   width: 100%;
   border-radius: var(--shape-large);
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.1);
 }
 .preview-wrap img {
   width: 100%;
@@ -150,7 +149,6 @@ video {
   line-height: 1.6;
   background: var(--surface-container-low);
   color: var(--on-surface);
-  box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
   font-family: inherit;
 }
 .result-actions {
