@@ -18,18 +18,30 @@ body {
   padding: 16px max(16px, env(safe-area-inset-right, 0px))
     calc(env(safe-area-inset-bottom, 0px) + 32px) max(16px, env(safe-area-inset-left, 0px));
 }
+/* ヘッダと、表示・並び順の行は、下へ動かしても上に残す(説明の文だけ流れる) */
+.site-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
 .lead {
   margin: 4px 0 8px;
   color: var(--sub);
   font-size: 14px;
 }
-/* 一覧とランチャーの切り替え(左)と並び(右)を1行に置く。上の行を増やさないため */
+/* 一覧とランチャーの切り替え(左)と並び(右)を1行に置く。上の行を増やさないため。
+   ヘッダのすぐ下に残す(ヘッダの高さは index.js が --site-bar-height に入れる) */
 .list-bar {
+  position: sticky;
+  top: var(--site-bar-height, 52px);
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin: 0 0 12px;
+  margin: 0 0 4px;
+  padding: 8px 0;
+  background: var(--bg);
 }
 /* 表示(左)と並び順(右)の選ぶ欄。小さな画面でも1行に収める */
 .choice {

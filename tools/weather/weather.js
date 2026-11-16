@@ -1,4 +1,4 @@
-/* 天気予報の画面。起動時は現在地、地名でも探せる(天気と地名の検索は Open-Meteo、現在地の住所は OpenStreetMap の Nominatim) */
+/* 天気予報の画面。起動時は現在地、地名でも探せる(天気と地名の検索は Open-Meteo、現在地の住所は BigDataCloud か OpenStreetMap の Nominatim) */
 (function () {
   const cityInput = document.getElementById('cityInput');
   const searchBtn = document.getElementById('searchBtn');
@@ -54,34 +54,59 @@
     return window.I18n ? I18n.say(text, vars) : text.replace(/\{(\S+?)\}/g, (m, k) => vars[k]);
   }
 
-  /* 現在地の住所(都道府県・市区町村・町名まで)。Nominatim は1秒に1回までの約束なので、現在地を取った時だけ聞く。
-     住所は画面にだけ出し、ログには書かない */
-  async function addressOf(lat, lon) {
-    const language = window.I18n ? I18n.language : 'ja';
+  /* 現在地の住所(都道府県・市区町村・町名まで)。住所は画面にだけ出し、ログには書かない。
+     まず BigDataCloud(ブラウザから端末の現在地で使う無料の住所検索)、だめなら OpenStreetMap の Nominatim
+     (ブラウザからだと断られる事があり、断られた時は「Failed to fetch」になる)、どちらもだめなら「現在地」のまま */
+  function joinAddress(parts, language) {
+    const list = parts.filter((part, i) => part && parts.indexOf(part) === i);
+    if (!list.length) return null;
+    return language === 'ja' ? list.join('') : list.reverse().join(', ');
+  }
+  async function addressFromBigDataCloud(lat, lon, language) {
+    const url =
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}` +
+      `&localityLanguage=${language}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const a = await res.json();
+    return joinAddress([a.principalSubdivision, a.city, a.locality], language);
+  }
+  async function addressFromNominatim(lat, lon, language) {
     const url =
       `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}` +
       `&zoom=16&addressdetails=1&accept-language=${language}`;
-    const t0 = performance.now();
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const a = (await res.json()).address || {};
-      const parts = [
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const a = (await res.json()).address || {};
+    return joinAddress(
+      [
         a.province || a.state,
         a.city || a.town || a.village || a.county,
         a.city_district || a.ward,
         a.suburb || a.quarter || a.neighbourhood,
-      ].filter((part, i, list) => part && list.indexOf(part) === i);
-      log(`現在地の住所を取得しました(${Math.round(performance.now() - t0)}ms)`);
-      return parts.length
-        ? language === 'ja'
-          ? parts.join('')
-          : parts.reverse().join(', ')
-        : null;
-    } catch (e) {
-      log.warn('現在地の住所を取得できませんでした(「現在地」と表示します)', e);
-      return null;
+      ],
+      language,
+    );
+  }
+  async function addressOf(lat, lon) {
+    const language = window.I18n ? I18n.language : 'ja';
+    const t0 = performance.now();
+    for (const [name, find] of [
+      ['BigDataCloud', addressFromBigDataCloud],
+      ['Nominatim', addressFromNominatim],
+    ]) {
+      try {
+        const address = await find(lat, lon, language);
+        if (address) {
+          log(`現在地の住所を取得しました(${name} / ${Math.round(performance.now() - t0)}ms)`);
+          return address;
+        }
+      } catch (e) {
+        log.warn(`現在地の住所を ${name} から取得できませんでした`, e);
+      }
     }
+    log.warn('現在地の住所を取得できなかったため、「現在地」と表示します');
+    return null;
   }
 
   async function fetchForecast(lat, lon, label, addressPromise) {

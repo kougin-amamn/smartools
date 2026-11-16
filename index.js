@@ -7,6 +7,15 @@
     statusEl = document.getElementById('status'),
     sortsEl = document.getElementById('sorts'),
     sortSelect = document.getElementById('sortSelect');
+  /* ヘッダの高さを CSS に渡す(表示・並び順の行をヘッダのすぐ下に残すため。文字の大きさや折り返しで変わる) */
+  var siteBar = document.querySelector('.site-bar');
+  function setBarHeight() {
+    if (siteBar)
+      document.documentElement.style.setProperty('--site-bar-height', siteBar.offsetHeight + 'px');
+  }
+  setBarHeight();
+  if (siteBar && window.ResizeObserver) new ResizeObserver(setBarHeight).observe(siteBar);
+
   var SORT_KEY = 'index-sort',
     allTools = [];
 
