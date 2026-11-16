@@ -1,4 +1,4 @@
-/* 方位磁石の画面。端末の向きセンサーの方位で計器風の文字盤を回し、水平の気泡と目標の方位を表示する。
+/* 方位磁石の画面。端末の向きセンサーの方位で文字盤と北を指す針を回し、向いている方角を大きな文字で出す。目標の方位も表示する。
    方位の計算は compass-core.js */
 (function () {
   'use strict';
@@ -7,7 +7,6 @@
       return document.getElementById(id);
     };
   var dial = $('dial'),
-    bubbleEl = $('bubble'),
     headingText = $('headingText'),
     dirLabel = $('dirLabel'),
     targetTextEl = $('targetText'),
@@ -27,7 +26,7 @@
     warned = false,
     history = []; /* 直近1秒の方位(ぶれの大きさを見る) */
 
-  /* 文字盤を作る: 1°ごとの目盛り(5°・10°は長く)、30°ごとの数字、東西南北と北東などの文字。目標の印もここに入れる */
+  /* 文字盤を作る: 面、45° ごとの短い線、東西南北の文字、北を指す針。目標の印もここに入れる */
   function el(name, attrs, parent, text) {
     var e = document.createElementNS(NS, name);
     Object.keys(attrs).forEach(function (k) {
@@ -38,59 +37,44 @@
     return e;
   }
   function buildDial() {
-    el('circle', { class: 'face-glow', r: 146 });
-    el('circle', { class: 'face', r: 140 });
-    for (var d = 0; d < 360; d++) {
-      var len = d % 10 === 0 ? 16 : d % 5 === 0 ? 10 : 6,
-        cls = d % 10 === 0 ? 't10' + (d === 0 ? ' north' : '') : d % 5 === 0 ? 't5' : 't1';
+    el('circle', { class: 'face', r: 132 });
+    for (var d = 45; d < 360; d += 90)
       el('line', {
-        class: cls,
+        class: 'tick',
         x1: 0,
-        y1: -136,
+        y1: -126,
         x2: 0,
-        y2: -136 + len,
+        y2: -112,
         transform: 'rotate(' + d + ')',
       });
-    }
-    var CARD = { 0: 'N', 90: 'E', 180: 'S', 270: 'W' },
-      INTER = { 45: 'NE', 135: 'SE', 225: 'SW', 315: 'NW' };
-    for (var a = 0; a < 360; a += 15) {
+    var CARD = { 0: '北', 90: '東', 180: '南', 270: '西' };
+    Object.keys(CARD).forEach(function (a) {
       var g = el('g', { transform: 'rotate(' + a + ')' });
-      if (CARD[a] !== undefined)
-        el(
-          'text',
-          {
-            class: 'card' + (a === 0 ? ' north' : ''),
-            x: 0,
-            y: -96,
-            'text-anchor': 'middle',
-            'dominant-baseline': 'central',
-          },
-          g,
-          CARD[a],
-        );
-      else if (INTER[a] !== undefined)
-        el(
-          'text',
-          { class: 'inter', x: 0, y: -98, 'text-anchor': 'middle', 'dominant-baseline': 'central' },
-          g,
-          INTER[a],
-        );
-      else if (a % 30 === 0)
-        el(
-          'text',
-          { class: 'num', x: 0, y: -106, 'text-anchor': 'middle', 'dominant-baseline': 'central' },
-          g,
-          String(a),
-        );
-    }
+      cards[a] = el(
+        'text',
+        {
+          class: 'card' + (a === '0' ? ' north' : ''),
+          x: 0,
+          y: -104,
+          'text-anchor': 'middle',
+          'dominant-baseline': 'central',
+          transform: 'rotate(' + -a + ' 0 -104)',
+        },
+        g,
+        CARD[a],
+      );
+    });
+    el('path', { class: 'needle-north', d: 'M0 -80 L16 0 L-16 0 Z' });
+    el('path', { class: 'needle-south', d: 'M0 80 L16 0 L-16 0 Z' });
+    el('circle', { class: 'cap', r: 7 });
     targetMark = el('path', {
       class: 'target',
-      d: 'M0 -138 L7 -150 L-7 -150 Z',
+      d: 'M0 -134 L9 -150 L-9 -150 Z',
       visibility: 'hidden',
     });
   }
-  var targetMark = null;
+  var targetMark = null,
+    cards = {}; /* 東西南北の文字(文字盤が回っても、文字は立てたままにする) */
 
   /* センサーの値を受け取る */
   function screenAngle() {
@@ -162,7 +146,7 @@
     } else if (statusText.classList.contains('warn') || statusText.textContent) {
       statusText.classList.remove('warn');
       statusText.textContent =
-        level.tilt > 20 ? '端末を水平に近づけると、方位が正確になります' : '';
+        level.tilt > 15 ? '端末を水平に近づけると、方位が正確になります' : '';
     }
   }
 
@@ -174,14 +158,14 @@
     lastFrame = now;
     shown = C.follow(shown, raw, dt, 0.12, 0.2);
     dial.setAttribute('transform', 'rotate(' + -shown.toFixed(2) + ')');
-    bubbleEl.setAttribute('cx', (level.x * 26).toFixed(1));
-    bubbleEl.setAttribute('cy', (level.y * 26).toFixed(1));
-    bubbleEl.classList.toggle('off', level.tilt > 3);
+    Object.keys(cards).forEach(function (a) {
+      cards[a].setAttribute('transform', 'rotate(' + (shown - a).toFixed(2) + ' 0 -104)');
+    });
     if (now - lastText > 120) {
       lastText = now;
       var h = Math.round(shown) % 360;
-      headingText.textContent = String(h);
-      dirLabel.textContent = C.dirLabel(shown);
+      headingText.textContent = h + '°';
+      dirLabel.textContent = C.eightDirectionOf(shown);
       if (target !== null) {
         var t = C.targetText(shown, target, 2);
         targetTextEl.textContent = '目標 ' + Math.round(target) + '° ・ ' + t;

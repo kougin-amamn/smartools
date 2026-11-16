@@ -20,6 +20,8 @@
 * [電卓](./calculator.md) - 電卓の計算の履歴と表示の窓
 * [ファイル転送](./file-transfer.md) - 端末どうしのファイル転送(tools/file-transfer)
 * [頭痛予報](./headache-forecast.md) - 気圧の下がり方から頭痛に注意したい時間を知らせる(tools/headache-forecast)
+* [ストップウォッチ](./stopwatch.md) - 輪で時間の経過を見せる(tools/stopwatch)。確認中
+* [方位磁石](./compass.md) - 向いている方角と北を一目で見せる(tools/compass)。確認中
 
 ## ランチャー
 

@@ -31,6 +31,11 @@
     var d = norm(b - a);
     return d > 180 ? d - 360 : d;
   }
+  /* 8方位の名前(画面の大きな文字) */
+  var EIGHT = ['北', '北東', '東', '南東', '南', '南西', '西', '北西'];
+  function eightDirectionOf(h) {
+    return EIGHT[Math.round(norm(h) / 45) % 8];
+  }
   /* 16方位の名前 */
   function dirLabel(h) {
     return DIRS[Math.round(norm(h) / 22.5) % 16];
@@ -100,6 +105,7 @@
     norm: norm,
     diff: diff,
     dirLabel: dirLabel,
+    eightDirectionOf: eightDirectionOf,
     headingOf: headingOf,
     follow: follow,
     bubble: bubble,

@@ -233,7 +233,14 @@
         "開始": "Start",
         "停止": "Stop",
         "再開": "Resume",
-        "リセット": "Reset"
+        "リセット": "Reset",
+        "一時停止": "Pause",
+        "番号": "No.",
+        "区間": "Split",
+        "合計": "Total",
+        "最速": "Fastest",
+        "最遅": "Slowest",
+        "前のラップより {差}": "{差} vs last lap"
       }
     },
     "kitchen-timer": {
@@ -699,8 +706,7 @@
         "この方位を目標にする": "Set this heading as the target",
         "コンパスを開始": "Start compass",
         "磁気センサーの値なので、近くの磁石・金属・電化製品や端末によって誤差が出ます。表示は磁北(地図の北から日本ではおよそ7〜9°西)です。": "It uses the magnetic sensor, so nearby magnets, metal, appliances or the device itself can cause errors. It shows magnetic north (about 7–9° west of map north in Japan).",
-        "開始すると方位を表示します": "Start to show the heading",
-        "開始ボタンを押して、端末を水平に持ってください": "Press start and hold the device flat",
+        "端末を水平に持って、開始を押してください": "Hold the device flat and press start",
         "この端末では北の向きが正確に分かりません。端末を8の字にゆっくり振ると良くなることがあります": "This device cannot tell north accurately. Slowly waving it in a figure 8 may help",
         "北": "N",
         "北北東": "NNE",

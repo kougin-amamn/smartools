@@ -46,8 +46,8 @@
     <main class="content">
       <div class="app" data-land="split">
         <div class="readout">
-          <div class="heading"><span id="headingText">--</span><small>°</small></div>
-          <div class="dir-label" id="dirLabel">開始すると方位を表示します</div>
+          <div class="direction" id="dirLabel">– –</div>
+          <div class="degree" id="headingText"></div>
           <div class="target-text" id="targetText" hidden></div>
         </div>
         <svg
@@ -59,17 +59,9 @@
           aria-label="方位の文字盤"
         >
           <g id="dial"></g>
-          <g class="fixed">
-            <path class="lubber" d="M0 -158 L9 -144 L-9 -144 Z" />
-            <line class="lubber-line" x1="0" y1="-142" x2="0" y2="-96" />
-            <line class="cross" x1="-24" y1="0" x2="24" y2="0" />
-            <line class="cross" x1="0" y1="-24" x2="0" y2="24" />
-            <circle class="level-ring" r="34" />
-            <circle class="level-ring inner" r="7" />
-            <circle class="bubble" id="bubble" r="8" />
-          </g>
+          <path class="lubber" d="M0 -136 L12 -156 L-12 -156 Z" />
         </svg>
-        <div class="status" id="statusText">開始ボタンを押して、端末を水平に持ってください</div>
+        <div class="status" id="statusText">端末を水平に持って、開始を押してください</div>
         <div class="buttons">
           <button class="pill primary" id="startBtn">コンパスを開始</button>
           <button class="pill" id="targetBtn" data-texts="この方位を目標にする|目標を解除" hidden>
