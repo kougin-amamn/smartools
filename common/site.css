@@ -165,11 +165,11 @@
 }
 .bar-handle {
   position: fixed;
-  top: env(safe-area-inset-top, 0px);
+  top: var(--bar-offset, env(safe-area-inset-top, 0px));
   right: calc(env(safe-area-inset-right, 0px) + 12px);
   z-index: 41;
   width: 46px;
-  height: 18px;
+  height: 24px;
   padding: 0;
   border: 0;
   border-radius: 0 0 var(--shape-small) var(--shape-small);
@@ -178,17 +178,17 @@
   cursor: pointer;
   transition: top var(--motion-spatial-default);
 }
-/* つまみは見た目 18px のまま、押せる所を下へ広げる(44px 以上) */
+/* つまみは見た目 24px のまま、押せる所を下へ広げる(44px 以上) */
 .bar-handle::before {
   content: '';
   position: absolute;
-  inset: 0 -4px -26px;
+  inset: 0 -4px -20px;
 }
 .bar-handle span {
   display: block;
   width: 18px;
   height: 3px;
-  margin: 6px auto 0;
+  margin: 10px auto 0;
   border-radius: 2px;
   background: var(--on-surface-variant);
 }

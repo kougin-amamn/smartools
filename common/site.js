@@ -500,7 +500,9 @@
       if (open === root.classList.contains('bar-open')) return;
       root.classList.toggle('bar-open', open);
       handle.setAttribute('aria-expanded', String(open));
-      handle.style.top = open ? bar.offsetHeight + 'px' : '';
+      // つまみと設定の札は、ヘッダを出した時はヘッダの下へ下がる
+      if (open) root.style.setProperty('--bar-offset', bar.offsetHeight + 'px');
+      else root.style.removeProperty('--bar-offset');
     };
     handle.addEventListener('click', function () {
       setBar(!root.classList.contains('bar-open'));

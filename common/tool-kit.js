@@ -14,26 +14,23 @@
     });
   }
 
-  /* 設定シート: ヘッダの #setBtn で #settings を開く。閉じるボタン・背景・Escape で閉じる */
+  /* 設定シート: #setBtn で #settings を開く。閉じるボタン・背景・Escape で閉じる */
   function initSettings() {
     var btn = document.getElementById('setBtn'),
       sheet = document.getElementById('settings');
     if (!btn || !sheet) return;
     var close = document.getElementById('settingsClose');
-    // ヘッダが隠れる時(埋め込み表示・ツールのページ)は、同じボタンを画面の右上に複製して出す。
-    // ツールのページでは、ヘッダを出すつまみの左に、同じ形の小さな札として置く(2026-11-16。設定を1回で開くため)
+    // ツールのページと埋め込み表示では、歯車をヘッダから出して画面の右上に置く(2026-11-17。ヘッダに設定を置かず、
+    // どのツールも同じ並びにする)。ツールのページは、ヘッダを出すつまみの左に同じ形の札として下げる
     var html = document.documentElement;
     if (
       html.classList.contains('embed') ||
       html.classList.contains('bar-hidden') ||
       /\/tools\/[^/]+\//.test(location.pathname)
     ) {
-      var f = btn.cloneNode(true);
-      f.id = 'setBtnFloat';
-      f.classList.add(html.classList.contains('embed') ? 'set-float' : 'set-tab');
-      f.classList.remove('dbg-btn');
-      document.body.appendChild(f);
-      f.addEventListener('click', toggle);
+      btn.classList.remove('dbg-btn');
+      btn.classList.add(html.classList.contains('embed') ? 'set-float' : 'set-tab');
+      document.body.appendChild(btn);
     }
     function show() {
       sheet.hidden = false;
