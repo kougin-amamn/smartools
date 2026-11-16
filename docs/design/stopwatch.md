@@ -3,7 +3,7 @@ type: Design
 title: "ストップウォッチ"
 description: "時間の経過を輪で見せるストップウォッチの画面と計時"
 tags: ["ツール", "時間"]
-status: draft
+status: stable
 resource: "tools/stopwatch/"
 ---
 

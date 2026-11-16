@@ -3,7 +3,7 @@ type: Design
 title: "方位磁石"
 description: "向いている方角を大きな文字と北を指す針で見せる方位磁石の画面"
 tags: ["ツール", "センサー"]
-status: draft
+status: stable
 resource: "tools/compass/"
 ---
 
