@@ -20,11 +20,18 @@
       sheet = document.getElementById('settings');
     if (!btn || !sheet) return;
     var close = document.getElementById('settingsClose');
-    // 埋め込み表示はヘッダが隠れるため、同じボタンを画面の右上に複製して出す
-    if (document.documentElement.classList.contains('embed')) {
+    // ヘッダが隠れる時(埋め込み表示・ツールのページ)は、同じボタンを画面の右上に複製して出す。
+    // ツールのページでは、ヘッダを出すつまみの左に、同じ形の小さな札として置く(2026-11-16。設定を1回で開くため)
+    var html = document.documentElement;
+    if (
+      html.classList.contains('embed') ||
+      html.classList.contains('bar-hidden') ||
+      /\/tools\/[^/]+\//.test(location.pathname)
+    ) {
       var f = btn.cloneNode(true);
       f.id = 'setBtnFloat';
-      f.classList.add('set-float');
+      f.classList.add(html.classList.contains('embed') ? 'set-float' : 'set-tab');
+      f.classList.remove('dbg-btn');
       document.body.appendChild(f);
       f.addEventListener('click', toggle);
     }

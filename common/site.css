@@ -160,6 +160,12 @@
   cursor: pointer;
   transition: top var(--motion-spatial-default);
 }
+/* つまみは見た目 18px のまま、押せる所を下へ広げる(44px 以上) */
+.bar-handle::before {
+  content: '';
+  position: absolute;
+  inset: 0 -4px -26px;
+}
 .bar-handle span {
   display: block;
   width: 18px;

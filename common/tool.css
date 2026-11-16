@@ -175,6 +175,42 @@ body {
   color: var(--on-primary-container);
 }
 
+/* ツールのページの設定の札: ヘッダを出すつまみ(site.css の .bar-handle)の左に、同じ形で下がる。
+   見た目は小さく、押せる所は ::before で 44px 以上に広げる。ヘッダを出した時は、ヘッダの歯車があるので隠す */
+.set-tab {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  right: calc(env(safe-area-inset-right, 0px) + 66px);
+  z-index: 41;
+  width: 46px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 0 0 var(--shape-small) var(--shape-small);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.set-tab svg {
+  width: 18px;
+  height: 18px;
+}
+.set-tab::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -16px;
+}
+.bar-open .set-tab {
+  display: none;
+}
+/* 設定の札があるページは、本文の上を札の高さ分あける */
+.bar-hidden body:has(.set-tab) {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 32px);
+}
+
 /* ランチャーへ戻るボタン(ランチャーから開いた時だけ出る) */
 .back-btn {
   margin-left: -10px;
