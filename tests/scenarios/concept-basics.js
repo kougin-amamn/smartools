@@ -1,4 +1,4 @@
-/* コンセプト(docs/design-philosophy.md)の基本の試験。docs/concept-review.md の A-1・A-2・A-3。
+/* コンセプト(docs/service-concept.md・design-concept.md)の基本の試験。docs/concept-review.md の A-1・A-2・A-3。
    弱い文字のコントラストが 4.5 以上(ライト・ダーク)、ヘッダのボタンが 高さ 44px・幅 38px、動きを減らす設定で切り替えの演出が止まる。
    使い方: node tests/scenarios/concept-basics.js */
 const { launch, report, splitErrors } = require('../lib/harness');

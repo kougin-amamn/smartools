@@ -17,8 +17,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: var(--fn-bg);
+  border-radius: var(--shape-medium);
+  background: var(--secondary-container);
   overflow: hidden;
 }
 #cv {
@@ -42,8 +42,8 @@
 }
 .pill {
   padding: 9px 12px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 14px;
 }
 .pill.icon {
@@ -72,13 +72,13 @@
   width: 28px;
   height: 28px;
   padding: 0;
-  border: 2px solid var(--panel);
+  border: 2px solid var(--surface-container-low);
   border-radius: 50%;
-  box-shadow: 0 0 0 1px var(--sub);
+  box-shadow: 0 0 0 1px var(--on-surface-variant);
   cursor: pointer;
 }
 .swatch[aria-pressed='true'] {
-  box-shadow: 0 0 0 3px var(--func);
+  box-shadow: 0 0 0 3px var(--primary);
 }
 #color {
   width: 36px;
@@ -90,7 +90,7 @@
 .size,
 .size-val {
   font-size: 13px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .size-val {
   min-width: 3.2em;
@@ -98,7 +98,7 @@
 #size {
   flex: 1;
   max-width: 320px;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .status {
   margin: 0;

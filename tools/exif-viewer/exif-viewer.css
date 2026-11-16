@@ -11,8 +11,8 @@
 }
 .pill {
   padding: 11px 20px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 13px;
   width: 100%;
   text-align: center;
@@ -28,8 +28,8 @@
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
-  background: var(--panel);
-  border-radius: 14px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large);
   box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
 }
 table {
@@ -41,7 +41,7 @@ td {
   padding: 8px 10px;
   text-align: left;
   white-space: nowrap;
-  border-bottom: 1px solid var(--fn-bg);
+  border-bottom: 1px solid var(--secondary-container);
 }
 thead th {
   vertical-align: bottom;
@@ -51,11 +51,11 @@ thead th {
   position: sticky;
   left: 0;
   z-index: 1;
-  background: var(--panel);
-  color: var(--sub);
+  background: var(--surface-container-low);
+  color: var(--on-surface-variant);
   font-weight: 600;
   white-space: nowrap;
-  box-shadow: 1px 0 0 var(--fn-bg);
+  box-shadow: 1px 0 0 var(--secondary-container);
 }
 .photo-head {
   display: flex;
@@ -67,12 +67,12 @@ thead th {
   width: 48px;
   height: 48px;
   object-fit: cover;
-  border-radius: 8px;
-  background: var(--fn-bg);
+  border-radius: var(--shape-small);
+  background: var(--secondary-container);
 }
 .photo-head .fname {
-  font-size: 10px;
-  color: var(--text);
+  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
+  color: var(--on-surface);
   max-width: 70px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -80,22 +80,22 @@ thead th {
   white-space: nowrap;
 }
 td {
-  color: var(--text);
+  color: var(--on-surface);
   text-align: center;
 }
 td a {
-  color: var(--func);
+  color: var(--primary);
   text-decoration: none;
 }
 td.empty-cell {
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .empty {
   font-size: 11px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   padding: 10px 12px;
 }
 
 .note {
-  color: var(--text);
+  color: var(--on-surface);
 } /* このツールの注意書きは本文と同じ色 */

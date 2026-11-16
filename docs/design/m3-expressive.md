@@ -110,7 +110,7 @@ resource: "common/site.css"
 | `common/tool.css` | `.pill`・`.round` の形と押した時の動き、設定シートの角と出る動き |
 | `index.css` | カード・丸いボタン・選ぶ欄の角をトークンに |
 | `tools/calculator`・`stopwatch`・`kitchen-timer` の css | 角の丸さをトークンに、主なボタンを大きく |
-| `docs/design-philosophy.md`・`docs/ui.md`・`docs/log.md` | 考え方と決まりを M3E に |
+| `docs/design-concept.md`(当時は design-philosophy.md)・`docs/ui.md`・`docs/log.md` | 考え方と決まりを M3E に |
 
 ## 4. 制限事項と試験
 

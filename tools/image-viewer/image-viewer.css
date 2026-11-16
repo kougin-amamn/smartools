@@ -11,8 +11,8 @@
 }
 .pill {
   padding: 10px 18px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 13px;
   -webkit-tap-highlight-color: transparent;
 }
@@ -24,7 +24,7 @@
   width: 100%;
   aspect-ratio: 1/1;
   background: #111;
-  border-radius: 16px;
+  border-radius: var(--shape-large);
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(20, 20, 30, 0.15);
   touch-action: none;
@@ -80,7 +80,7 @@
   color: #fff;
   background: rgba(0, 0, 0, 0.4);
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--shape-full);
 }
 .viewer-wrap.is-fullscreen {
   position: fixed;
@@ -126,12 +126,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 .round.active {
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 #zoomSlider {
   flex: 1;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .thumb-strip {
   width: 100%;
@@ -144,7 +144,7 @@
   flex: none;
   width: 56px;
   height: 56px;
-  border-radius: 10px;
+  border-radius: var(--shape-medium);
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(20, 20, 30, 0.1);
@@ -155,7 +155,7 @@
   object-fit: cover;
 }
 .thumb-strip .thumb.active {
-  outline: 3px solid var(--func);
+  outline: 3px solid var(--primary);
   outline-offset: -3px;
 }
 .thumb-strip .thumb .remove {
@@ -168,7 +168,7 @@
   background: rgba(0, 0, 0, 0.55);
   border: none;
   color: #fff;
-  font-size: 10px;
+  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
   line-height: 16px;
   padding: 0;
 }

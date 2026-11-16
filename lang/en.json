@@ -1256,7 +1256,8 @@
         "次へ": "Next",
         "画像を追加": "Add images",
         "画像を追加してください": "Add some images",
-        "端末内の画像を追加してください(サーバーには送信されません)": "Add images from your device (they are not sent to any server)"
+        "端末内の画像を追加してください(サーバーには送信されません)": "Add images from your device (they are not sent to any server)",
+        "拡大": "Zoom"
       }
     },
     "music-player": {
@@ -1278,7 +1279,9 @@
         "タグを読み込み中…": "Reading tags…",
         "曲を再生できませんでした(ファイルが壊れているか、形式に対応していません)": "Could not play the song (the file is damaged or the format is not supported)",
         "曲を端末に保存できませんでした(次回は復元されません / 保存容量を確認してください)": "Could not save the song on this device (it will not be restored next time / check the storage space)",
-        "{番号} / {数}曲目": "{番号} / {数}"
+        "{番号} / {数}曲目": "{番号} / {数}",
+        "再生位置": "Position",
+        "音量": "Volume"
       }
     },
     "video-player": {
@@ -1296,7 +1299,9 @@
         "動画を追加してください": "Add some videos",
         "端末内の動画ファイルを追加してください(サーバーには送信されません)": "Add video files from your device (they are not sent to any server)",
         "動画を再生できませんでした(ファイルが壊れているか、形式に対応していません)": "Could not play the video (the file is damaged or the format is not supported)",
-        "{番号} / {数}本目": "{番号} / {数}"
+        "{番号} / {数}本目": "{番号} / {数}",
+        "再生位置": "Position",
+        "音量": "Volume"
       }
     },
     "voice-changer": {
@@ -1344,7 +1349,8 @@
         "6拍子": "6 beats",
         "タップでテンポ": "Tap tempo",
         "開始": "Start",
-        "停止": "Stop"
+        "停止": "Stop",
+        "テンポ": "Tempo"
       }
     },
     "piano": {

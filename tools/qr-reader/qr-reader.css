@@ -12,7 +12,7 @@
   width: 100%;
   aspect-ratio: 1/1;
   max-width: 300px;
-  border-radius: 20px;
+  border-radius: var(--shape-large-increased);
   overflow: hidden;
   background: #000;
 }
@@ -26,35 +26,35 @@ video {
   position: absolute;
   width: 28px;
   height: 28px;
-  border: 3px solid var(--func);
+  border: 3px solid var(--primary);
 }
 .corner.tl {
   top: 8px;
   left: 8px;
   border-right: none;
   border-bottom: none;
-  border-radius: 8px 0 0 0;
+  border-radius: var(--shape-small) 0 0 0;
 }
 .corner.tr {
   top: 8px;
   right: 8px;
   border-left: none;
   border-bottom: none;
-  border-radius: 0 8px 0 0;
+  border-radius: 0 var(--shape-small) 0 0;
 }
 .corner.bl {
   bottom: 8px;
   left: 8px;
   border-right: none;
   border-top: none;
-  border-radius: 0 0 0 8px;
+  border-radius: 0 0 0 var(--shape-small);
 }
 .corner.br {
   bottom: 8px;
   right: 8px;
   border-left: none;
   border-top: none;
-  border-radius: 0 0 8px 0;
+  border-radius: 0 0 var(--shape-small) 0;
 }
 .scan-line {
   position: absolute;
@@ -62,8 +62,8 @@ video {
   right: 8px;
   top: 8px;
   height: 2px;
-  background: var(--func);
-  box-shadow: 0 0 8px var(--func);
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
   animation: sweep 2.2s ease-in-out infinite;
 }
 @keyframes sweep {
@@ -85,8 +85,8 @@ video {
 }
 .result-card {
   width: 100%;
-  background: var(--panel);
-  border-radius: 18px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large-increased);
   padding: 16px;
   box-shadow: 0 10px 30px rgba(20, 20, 30, 0.1);
   display: flex;
@@ -95,11 +95,11 @@ video {
 }
 .result-label {
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .result-text {
   font-size: 15px;
-  color: var(--text);
+  color: var(--on-surface);
   word-break: break-all;
   max-height: 80px;
   overflow-y: auto;
@@ -112,8 +112,8 @@ video {
 }
 .pill {
   padding: 10px 16px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 13px;
   text-decoration: none;
   display: inline-flex;

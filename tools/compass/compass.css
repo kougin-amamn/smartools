@@ -28,7 +28,7 @@
   font-size: 56px;
   font-weight: 600;
   line-height: 1;
-  color: var(--text);
+  color: var(--on-surface);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
 }
@@ -36,22 +36,22 @@
   font-size: 0.5em;
   vertical-align: top;
   margin-left: 2px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .dir-label {
   margin-top: 6px;
   font-size: 15px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--on-surface);
 }
 .target-text {
   margin-top: 4px;
   font-size: 13px;
-  color: var(--accent);
+  color: var(--tertiary);
   font-weight: 600;
 }
 .target-text.on {
-  color: var(--func);
+  color: var(--primary);
 }
 /* 文字盤: 回るのは #dial、上の指標と中央の水準器は固定 */
 .compass {
@@ -82,26 +82,26 @@
   opacity: 0.8;
 }
 .compass .t10 {
-  stroke: var(--text);
+  stroke: var(--on-surface);
   stroke-width: 2;
 }
 .compass .t10.north {
-  stroke: var(--func);
+  stroke: var(--primary);
   stroke-width: 3;
 }
 .compass .num {
-  fill: var(--sub);
+  fill: var(--on-surface-variant);
   font-size: 13px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 .compass .card {
-  fill: var(--text);
+  fill: var(--on-surface);
   font-size: 24px;
   font-weight: 700;
 }
 .compass .card.north {
-  fill: var(--func);
+  fill: var(--primary);
 }
 .compass .inter {
   fill: var(--tick);
@@ -109,13 +109,13 @@
   font-weight: 600;
 }
 .compass .target {
-  fill: var(--accent);
+  fill: var(--tertiary);
 }
 .compass .lubber {
-  fill: var(--func);
+  fill: var(--primary);
 }
 .compass .lubber-line {
-  stroke: var(--func);
+  stroke: var(--primary);
   stroke-width: 2;
   stroke-linecap: round;
 }
@@ -134,11 +134,11 @@
   opacity: 0.4;
 }
 .compass .bubble {
-  fill: var(--func);
+  fill: var(--primary);
   opacity: 0.85;
 }
 .compass .bubble.off {
-  fill: var(--sub);
+  fill: var(--on-surface-variant);
   opacity: 0.5;
 }
 .status {
@@ -148,7 +148,7 @@
   line-height: 1.5;
 }
 .status.warn {
-  color: var(--danger);
+  color: var(--error);
 }
 .buttons {
   display: flex;
@@ -158,15 +158,15 @@
 }
 .pill {
   padding: 10px 20px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 14px;
   font-family: inherit;
   -webkit-tap-highlight-color: transparent;
 }
 .pill[aria-pressed='true'] {
-  background: var(--accent);
-  color: var(--accent-fg);
+  background: var(--tertiary);
+  color: var(--on-tertiary);
 }
 .note {
   font-size: 11px;

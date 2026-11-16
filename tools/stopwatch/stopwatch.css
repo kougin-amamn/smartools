@@ -12,7 +12,7 @@
 .time {
   font-size: 48px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--on-surface);
   letter-spacing: 0.5px;
 }
 .controls {
@@ -49,9 +49,9 @@
   background: var(--surface-container);
   border-radius: var(--shape-medium);
   font-size: 14px;
-  color: var(--text);
+  color: var(--on-surface);
   font-variant-numeric: tabular-nums;
 }
 .lap-row .lap-no {
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }

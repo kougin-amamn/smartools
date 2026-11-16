@@ -1,16 +1,14 @@
 /* カレンダーの見た目(配色は site.css のトークン) */
 :root {
-  --sun: #c93a3a;
+  --sun: var(--error);
   --sat: #3d5fae;
-  --taian: #5cc4b6;
+  --taian: var(--primary-container);
   --ichi: #e0a83a;
   --ten: #8a5ad0;
-  --cell: var(--panel);
+  --cell: var(--surface-container-low);
 }
 :root[data-theme='dark'] {
-  --sun: #ff7a7a;
   --sat: #8ea8ff;
-  --taian: #7fe0d2;
   --ichi: #f2c45a;
   --ten: #b892f0;
 }
@@ -43,7 +41,7 @@
   display: block;
   font-size: 12px;
   font-weight: 500;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .round {
   width: 40px;
@@ -63,7 +61,7 @@
   text-align: center;
   font-size: 12px;
   font-weight: 600;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   padding: 2px 0 4px;
 }
 .wd.sun {
@@ -77,9 +75,9 @@
   min-height: 64px;
   padding: 4px 4px 3px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--shape-small);
   background: var(--cell);
-  color: var(--text);
+  color: var(--on-surface);
   font: inherit;
   text-align: left;
   display: flex;
@@ -109,17 +107,17 @@
 .cell .lu,
 .cell .hn,
 .cell .sk {
-  font-size: 10px;
+  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
   line-height: 1.25;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .cell .rk.taian {
-  color: var(--func-fg);
+  color: var(--on-primary-container);
   background: var(--taian);
-  border-radius: 4px;
+  border-radius: var(--shape-extra-small);
   padding: 0 3px;
   align-self: flex-start;
   font-weight: 700;
@@ -129,7 +127,7 @@
   font-weight: 600;
 }
 .cell .sk {
-  color: var(--accent);
+  color: var(--tertiary);
 }
 .cell .moon {
   position: absolute;
@@ -161,7 +159,7 @@
 }
 .mk.taian {
   background: var(--taian);
-  border-radius: 2px;
+  border-radius: var(--shape-extra-small);
 }
 .mk.ichi {
   background: var(--ichi);
@@ -170,18 +168,18 @@
   background: var(--ten);
 }
 .cell.today {
-  border-color: var(--func);
-  box-shadow: inset 0 0 0 1px var(--func);
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
 }
 .cell.sel {
-  background: var(--fn-bg);
+  background: var(--secondary-container);
 }
 .legend {
   display: flex;
   gap: 14px;
   justify-content: center;
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .legend .mk {
   margin-right: 4px;
@@ -189,8 +187,8 @@
 
 /* 選んだ日の詳しい暦 */
 .detail {
-  background: var(--panel);
-  border-radius: 14px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large);
   padding: 14px 16px;
   box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
 }
@@ -206,7 +204,7 @@
   font-size: 14px;
 }
 .detail dt {
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .detail dd {
   margin: 0;
@@ -220,12 +218,12 @@
 .detail .tag {
   font-size: 12px;
   padding: 3px 9px;
-  border-radius: 999px;
-  background: var(--fn-bg);
+  border-radius: var(--shape-full);
+  background: var(--secondary-container);
 }
 .detail .tag.taian {
   background: var(--taian);
-  color: var(--func-fg);
+  color: var(--on-primary-container);
 }
 .detail .tag.ichi {
   background: var(--ichi);
@@ -237,7 +235,7 @@
 }
 .detail .tag.hol {
   background: var(--sun);
-  color: #fff;
+  color: var(--on-error);
 }
 
 /* 設定 */
@@ -260,11 +258,11 @@
 .opt input[type='checkbox'] {
   width: 18px;
   height: 18px;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .note {
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   line-height: 1.6;
   margin: 14px 0 0;
 }

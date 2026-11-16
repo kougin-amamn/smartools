@@ -12,10 +12,10 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: var(--panel);
+  background: var(--surface-container-low);
   box-shadow:
     0 10px 30px rgba(20, 20, 30, 0.15),
-    inset 0 0 0 10px var(--fn-bg);
+    inset 0 0 0 10px var(--secondary-container);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,13 +25,13 @@
 .count-val {
   font-size: 48px;
   font-weight: 800;
-  color: var(--text);
+  color: var(--on-surface);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 .count-label {
   font-size: 13px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   margin-top: 4px;
 }
 .stats {
@@ -41,28 +41,28 @@
 }
 .stat {
   flex: 1;
-  background: var(--panel);
-  border-radius: 12px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-medium);
   padding: 10px;
   text-align: center;
   box-shadow: 0 3px 12px rgba(20, 20, 30, 0.06);
 }
 .stat .label {
   display: block;
-  font-size: 10px;
-  color: var(--sub);
+  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
+  color: var(--on-surface-variant);
 }
 .stat .val {
   display: block;
   font-size: 15px;
   font-weight: 700;
-  color: var(--text);
+  color: var(--on-surface);
   margin-top: 2px;
 }
 .pill {
   padding: 13px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 15px;
   width: 100%;
   text-align: center;
@@ -77,7 +77,7 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   width: 100%;
   justify-content: center;
 }

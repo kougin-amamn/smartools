@@ -11,23 +11,23 @@ textarea {
   width: 100%;
   resize: none;
   border: none;
-  border-radius: 14px;
+  border-radius: var(--shape-large);
   padding: 12px 14px;
   font-size: 15px;
-  background: var(--panel);
-  color: var(--text);
+  background: var(--surface-container-low);
+  color: var(--on-surface);
   box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
   font-family: inherit;
 }
 textarea:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--tertiary);
   outline-offset: 2px;
 }
 .qr-box {
   width: 220px;
   height: 220px;
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: var(--shape-large);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,7 +35,7 @@ textarea:focus-visible {
 }
 .qr-box img,
 .qr-box canvas {
-  border-radius: 6px;
+  border-radius: var(--shape-small);
 }
 .actions {
   display: flex;
@@ -43,8 +43,8 @@ textarea:focus-visible {
 }
 .pill {
   padding: 10px 20px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 14px;
   -webkit-tap-highlight-color: transparent;
 }

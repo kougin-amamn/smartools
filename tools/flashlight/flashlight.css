@@ -15,8 +15,8 @@
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  background: var(--panel);
-  color: var(--sub);
+  background: var(--surface-container-low);
+  color: var(--on-surface-variant);
   box-shadow: 0 10px 30px rgba(20, 20, 30, 0.15);
   display: flex;
   align-items: center;
@@ -28,8 +28,8 @@
     box-shadow 0.15s ease;
 }
 .power.on {
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
   box-shadow: 0 10px 40px rgba(92, 196, 182, 0.55);
 }
 .status {

@@ -15,7 +15,7 @@
   aspect-ratio: 3/4;
   max-width: 360px;
   background: #111;
-  border-radius: 20px;
+  border-radius: var(--shape-large-increased);
   overflow: hidden;
   box-shadow: 0 12px 32px rgba(20, 20, 30, 0.2);
 }
@@ -83,16 +83,16 @@ video {
   -webkit-tap-highlight-color: transparent;
 }
 .round.active {
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .sliders {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: var(--panel);
-  border-radius: 14px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large);
   padding: 12px;
   box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
 }
@@ -101,7 +101,7 @@ video {
   align-items: center;
   gap: 10px;
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .slider-row span {
   width: 44px;
@@ -109,7 +109,7 @@ video {
 }
 .slider-row input {
   flex: 1;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 /* 横向き: 主役の縦横比(幅÷高さ)。並べ方は共通の tool.css */
 @media (orientation: landscape) and (max-height: 600px) {

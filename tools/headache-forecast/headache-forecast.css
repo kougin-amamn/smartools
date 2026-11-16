@@ -135,7 +135,7 @@
 }
 .chart .axis {
   fill: var(--on-surface-variant);
-  font-size: 10px;
+  font-size: 11px; /* 読める大きさの下限(M3 の小さなラベル) */
 }
 .chart .axis.day {
   font-weight: 700;
@@ -181,7 +181,7 @@
   display: inline-block;
   width: 14px;
   height: 10px;
-  border-radius: 2px;
+  border-radius: var(--shape-extra-small);
 }
 .swatch.level-1 {
   background: color-mix(in srgb, var(--tertiary) 30%, transparent);
@@ -264,7 +264,7 @@
 }
 .seg button {
   flex: 1;
-  height: 40px;
+  height: 44px;
   border: none;
   background: transparent;
   color: var(--on-surface);

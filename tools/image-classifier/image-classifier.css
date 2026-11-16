@@ -16,13 +16,13 @@
   justify-content: center;
   height: min(62dvh, 560px);
   min-height: 240px;
-  border-radius: 14px;
-  background: var(--fn-bg);
+  border-radius: var(--shape-large);
+  background: var(--secondary-container);
   overflow: hidden;
 }
 #cv {
   display: block;
-  border-radius: 6px;
+  border-radius: var(--shape-small);
 }
 /* iOS は display:none の video の映像を止めることがあるため、見えない大きさで置いておく */
 #video {
@@ -34,7 +34,7 @@
 }
 .placeholder {
   margin: 0 20px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   text-align: center;
   font-size: 14px;
 }
@@ -46,7 +46,7 @@
   justify-content: center;
   gap: 10px;
   padding: 18px 22px;
-  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  background: color-mix(in srgb, var(--surface-container-low) 92%, transparent);
   font-size: 14px;
 }
 .loader-title {
@@ -55,7 +55,7 @@
 }
 #elapsed {
   margin-left: 6px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-weight: 400;
   font-variant-numeric: tabular-nums;
 }
@@ -70,7 +70,7 @@
 .steps li {
   display: flex;
   gap: 8px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .steps li::before {
   content: '・';
@@ -78,22 +78,22 @@
   text-align: center;
 }
 .steps li.doing {
-  color: var(--text);
+  color: var(--on-surface);
   font-weight: 600;
 }
 .steps li.doing::before {
   content: '▶';
-  color: var(--func);
+  color: var(--primary);
 }
 .steps li.done {
-  color: var(--text);
+  color: var(--on-surface);
 }
 .steps li.done::before {
   content: '✓';
-  color: var(--func);
+  color: var(--primary);
 }
 .steps li.fail {
-  color: var(--danger);
+  color: var(--error);
 }
 .steps li.fail::before {
   content: '×';
@@ -104,7 +104,7 @@
 }
 .loader-note {
   margin: 0;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 12px;
 }
 .loader .pill {
@@ -118,8 +118,8 @@
 }
 .pill {
   padding: 10px 16px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 14px;
 }
 .status {
@@ -131,8 +131,8 @@
 }
 .result {
   padding: 12px 14px;
-  border-radius: 14px;
-  background: var(--panel);
+  border-radius: var(--shape-large);
+  background: var(--surface-container-low);
 }
 .result p {
   margin: 0;
@@ -147,19 +147,19 @@
 }
 .top .pct {
   margin-left: auto;
-  color: var(--func);
+  color: var(--primary);
   font-size: 20px;
   font-variant-numeric: tabular-nums;
 }
 .result.mid .top .pct {
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .result.low .top {
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 18px;
 }
 .top-en {
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 12px;
 }
 .hint {
@@ -191,8 +191,8 @@
 }
 .rank .bar {
   height: 8px;
-  border-radius: 4px;
-  background: var(--fn-bg);
+  border-radius: var(--shape-extra-small);
+  background: var(--secondary-container);
   overflow: hidden;
 }
 .rank .bar::before {
@@ -200,19 +200,19 @@
   display: block;
   width: var(--w);
   height: 100%;
-  background: var(--func);
+  background: var(--primary);
 }
 .rank .pc {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .classes {
   font-size: 13px;
 }
 .classes summary {
   cursor: pointer;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .classes p {
   margin: 6px 0 0;
@@ -233,10 +233,10 @@
 }
 .opt select {
   padding: 8px;
-  border-radius: 10px;
-  border: 1px solid var(--fn-bg);
-  background: var(--panel);
-  color: var(--text);
+  border-radius: var(--shape-medium);
+  border: 1px solid var(--secondary-container);
+  background: var(--surface-container-low);
+  color: var(--on-surface);
   font-size: 15px;
 }
 .slide {
@@ -246,7 +246,7 @@
 }
 .slide input {
   flex: 1;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .check {
   display: flex;
@@ -256,7 +256,7 @@
   font-size: 14px;
 }
 .check input {
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .slide span {
   min-width: 3em;

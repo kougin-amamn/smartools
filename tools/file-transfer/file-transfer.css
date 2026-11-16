@@ -16,8 +16,8 @@
   align-items: center;
   gap: 10px;
   padding: 16px;
-  border-radius: 16px;
-  background: var(--panel);
+  border-radius: var(--shape-large);
+  background: var(--surface-container-low);
   text-align: center;
 }
 .card p {
@@ -29,7 +29,7 @@
 }
 .sub,
 .label {
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 13px;
 }
 .row {
@@ -40,8 +40,8 @@
 }
 .pill {
   padding: 10px 16px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 14px;
   text-decoration: none;
 }
@@ -62,7 +62,7 @@
 /* QRコードは読み取りやすいよう、ダークでも白地にする */
 .qr {
   padding: 10px;
-  border-radius: 10px;
+  border-radius: var(--shape-medium);
   background: #fff;
   color: #333;
   font-size: 12px;
@@ -86,16 +86,16 @@
   gap: 10px;
   width: 100%;
   padding: 12px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--func) 18%, transparent);
+  border-radius: var(--shape-medium);
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
 }
 #codeIn {
   width: 9em;
   padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--fn-bg);
-  background: var(--bg);
-  color: var(--text);
+  border-radius: var(--shape-medium);
+  border: 1px solid var(--secondary-container);
+  background: var(--surface);
+  color: var(--on-surface);
   font-size: 22px;
   text-align: center;
   letter-spacing: 0.08em;
@@ -116,10 +116,10 @@
 }
 .link-state {
   font-size: 13px;
-  color: var(--func);
+  color: var(--primary);
 }
 .link-state.lost {
-  color: var(--danger);
+  color: var(--error);
 }
 .status {
   margin: 0;
@@ -142,8 +142,8 @@
   flex-direction: column;
   gap: 6px;
   padding: 10px 12px;
-  border-radius: 12px;
-  background: var(--panel);
+  border-radius: var(--shape-medium);
+  background: var(--surface-container-low);
   font-size: 14px;
 }
 .item .head {
@@ -155,14 +155,14 @@
 .item .dir {
   flex: none;
   padding: 1px 8px;
-  border-radius: 999px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  border-radius: var(--shape-full);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 12px;
 }
 .item.in .dir {
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .item .name {
   flex: 1;
@@ -173,20 +173,20 @@
 }
 .item .size {
   flex: none;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-variant-numeric: tabular-nums;
 }
 .item .bar {
   height: 6px;
-  border-radius: 3px;
-  background: var(--fn-bg);
+  border-radius: var(--shape-extra-small);
+  background: var(--secondary-container);
   overflow: hidden;
 }
 .item .bar span {
   display: block;
   width: 0;
   height: 100%;
-  background: var(--func);
+  background: var(--primary);
 }
 .item.ok .bar,
 .item.stopped .bar,
@@ -202,12 +202,12 @@
 .item .state {
   flex: 1;
   min-width: 10em;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 .item.failed .state {
-  color: var(--danger);
+  color: var(--error);
 }
 .item .btns {
   display: flex;
@@ -215,7 +215,7 @@
 }
 .empty {
   margin: 0;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 13px;
   text-align: center;
 }

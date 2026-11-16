@@ -20,8 +20,8 @@
 }
 .now-playing {
   width: 100%;
-  background: var(--panel);
-  border-radius: 20px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large-increased);
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -33,9 +33,9 @@
   width: 100%;
   max-width: 220px;
   aspect-ratio: 1/1;
-  border-radius: 16px;
+  border-radius: var(--shape-large);
   overflow: hidden;
-  background: var(--fn-bg);
+  background: var(--secondary-container);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,11 +47,11 @@
   object-fit: cover;
 }
 .art-placeholder {
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .track-title {
   font-size: 16px;
-  color: var(--text);
+  color: var(--on-surface);
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -60,7 +60,7 @@
 }
 .track-artist {
   font-size: 13px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -76,11 +76,11 @@
 }
 .seek-row input {
   flex: 1;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .time {
   font-size: 11px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   min-width: 34px;
 }
 .controls {
@@ -100,28 +100,28 @@
 .round.big {
   width: 72px; /* 主なボタンは大きく(M3 Expressive) */
   height: 72px;
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .round.active {
-  background: var(--accent);
-  color: var(--accent-fg);
+  background: var(--tertiary);
+  color: var(--on-tertiary);
 }
 .volume-row {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .volume-row input {
   flex: 1;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .pill {
   padding: 10px 18px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 13px;
   -webkit-tap-highlight-color: transparent;
 }
@@ -132,32 +132,32 @@
 .table-wrap {
   width: 100%;
   overflow-x: auto;
-  border-radius: 14px;
+  border-radius: var(--shape-large);
   box-shadow: 0 4px 14px rgba(20, 20, 30, 0.06);
 }
 .playlist-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--panel);
+  background: var(--surface-container-low);
   font-size: 12px;
 }
 .playlist-table th {
   text-align: left;
   padding: 8px 8px;
   font-size: 11px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-weight: 500;
-  border-bottom: 1px solid var(--fn-bg);
+  border-bottom: 1px solid var(--secondary-container);
   white-space: nowrap;
 }
 .playlist-table td {
   padding: 8px;
-  border-bottom: 1px solid var(--fn-bg);
+  border-bottom: 1px solid var(--secondary-container);
   vertical-align: middle;
 }
 .playlist-table tr.playing {
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .playlist-table tr.dragging {
   opacity: 0.5;
@@ -176,17 +176,17 @@
 }
 .playlist-table .handle-cell {
   cursor: grab;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   touch-action: none;
   width: 20px;
 }
 .playlist-table tr.playing .handle-cell {
-  color: var(--func-fg);
+  color: var(--on-primary);
 }
 .playlist-table .thumb-cell img {
   width: 26px;
   height: 26px;
-  border-radius: 6px;
+  border-radius: var(--shape-small);
   object-fit: cover;
   display: block;
 }

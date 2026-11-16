@@ -12,10 +12,10 @@
   width: 220px;
   height: 220px;
   border-radius: 50%;
-  background: var(--panel);
+  background: var(--surface-container-low);
   box-shadow:
     0 10px 30px rgba(20, 20, 30, 0.15),
-    inset 0 0 0 10px var(--fn-bg);
+    inset 0 0 0 10px var(--secondary-container);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,26 +25,26 @@
 .gauge-val {
   font-size: 44px;
   font-weight: 800;
-  color: var(--text);
+  color: var(--on-surface);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 .gauge-unit {
   font-size: 13px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   margin-top: 4px;
 }
 .gauge-phase {
   font-size: 12px;
-  color: var(--func);
+  color: var(--primary);
   margin-top: 10px;
   text-align: center;
   padding: 0 16px;
 }
 .pill {
   padding: 14px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 16px;
   width: 100%;
   text-align: center;
@@ -60,8 +60,8 @@
   gap: 8px;
 }
 .result-box {
-  background: var(--panel);
-  border-radius: 12px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-medium);
   padding: 10px;
   text-align: center;
   box-shadow: 0 3px 12px rgba(20, 20, 30, 0.06);
@@ -69,13 +69,13 @@
 .result-box .label {
   display: block;
   font-size: 11px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .result-box .val {
   display: block;
   font-size: 18px;
   font-weight: 700;
-  color: var(--text);
+  color: var(--on-surface);
   margin-top: 2px;
   font-variant-numeric: tabular-nums;
 }
@@ -86,5 +86,5 @@
   margin: 0;
 }
 .note a {
-  color: var(--func);
+  color: var(--primary);
 }

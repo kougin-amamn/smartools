@@ -2,8 +2,8 @@
 body {
   margin: 0;
   min-height: 100dvh;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--surface);
+  color: var(--on-surface);
   font-family:
     system-ui,
     -apple-system,
@@ -26,7 +26,7 @@ body {
 }
 .lead {
   margin: 4px 0 8px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 14px;
 }
 /* 一覧とランチャーの切り替え(左)と並び(右)を1行に置く。上の行を増やさないため。
@@ -41,7 +41,7 @@ body {
   gap: 8px;
   margin: 0 0 4px;
   padding: 8px 0;
-  background: var(--bg);
+  background: var(--surface);
 }
 /* 表示(左)と並び順(右)の選ぶ欄。小さな画面でも1行に収める */
 .choice {
@@ -49,7 +49,7 @@ body {
   align-items: center;
   gap: 4px;
   min-width: 0;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 13px;
 }
 .choice span {
@@ -59,6 +59,7 @@ body {
 .choice select {
   min-width: 0;
   max-width: 100%;
+  min-height: 44px;
   padding: 5px 10px;
   border: 0;
   border-radius: var(--shape-medium);
@@ -73,11 +74,11 @@ body {
 }
 .status {
   margin: 0 0 8px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 14px;
 }
 .status.error {
-  color: var(--danger);
+  color: var(--error);
 }
 
 /* 分類ごとのまとまり */
@@ -90,11 +91,11 @@ body {
   gap: 8px;
   margin: 0 0 10px;
   padding-bottom: 6px;
-  border-bottom: 2px solid var(--fn-bg);
+  border-bottom: 2px solid var(--secondary-container);
   font-size: 16px;
 }
 .cat-count {
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 13px;
   font-weight: 400;
 }
@@ -126,7 +127,7 @@ body {
   border-color: var(--outline-variant);
 }
 .card:focus-visible {
-  outline: 2px solid var(--func);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 .icon,
@@ -155,7 +156,7 @@ body {
 }
 .desc {
   margin: 2px 0 0;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 13px;
   /* 説明が長くてもカードの高さがそろうよう2行で切る */
   display: -webkit-box;
@@ -187,7 +188,7 @@ body {
   flex: none;
   align-self: flex-start;
   margin-left: auto;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 12px;
   white-space: nowrap;
 }

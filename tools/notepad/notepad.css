@@ -17,8 +17,8 @@
 }
 .pill {
   padding: 12px 18px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -33,22 +33,22 @@
   overflow-y: auto;
 }
 .note-row {
-  background: var(--panel);
-  border-radius: 14px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large);
   padding: 12px 14px;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
 }
 .note-row .title {
   font-size: 14px;
-  color: var(--text);
+  color: var(--on-surface);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .note-row .preview {
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -56,7 +56,7 @@
 }
 .note-row .date {
   font-size: 11px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   margin-top: 6px;
 }
 .status {
@@ -79,8 +79,8 @@
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -88,23 +88,23 @@
 }
 .saved-label {
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 #noteText {
   flex: 1;
   width: 100%;
   resize: none;
   border: none;
-  border-radius: 14px;
+  border-radius: var(--shape-large);
   padding: 14px;
   font-size: 15px;
   line-height: 1.6;
-  background: var(--panel);
-  color: var(--text);
+  background: var(--surface-container-low);
+  color: var(--on-surface);
   box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
   font-family: inherit;
 }
 #noteText:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--tertiary);
   outline-offset: 2px;
 }

@@ -89,7 +89,7 @@
 
           <div class="seek-row">
             <span class="time" id="curTime">0:00</span>
-            <input type="range" id="seekSlider" min="0" max="100" value="0" />
+            <input type="range" id="seekSlider" aria-label="再生位置" min="0" max="100" value="0" />
             <span class="time" id="durTime">0:00</span>
           </div>
 
@@ -179,6 +179,7 @@
             <input
               type="range"
               id="volumeSlider"
+              aria-label="音量"
               data-log="音量"
               min="0"
               max="1"

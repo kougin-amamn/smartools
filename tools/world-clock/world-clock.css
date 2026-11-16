@@ -24,7 +24,7 @@
 }
 .local-label {
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .local-time {
   font-size: 52px;
@@ -36,11 +36,11 @@
 .local-time small {
   font-size: 20px;
   font-weight: 700;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .local-date {
   font-size: 14px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   margin-top: 2px;
 }
 .list {
@@ -56,8 +56,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--panel);
-  border-radius: 14px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large);
   padding: 10px 8px 10px 14px;
 }
 .city .ico {
@@ -84,11 +84,11 @@
 }
 .city .meta {
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   margin-top: 2px;
 }
 .city .meta b {
-  color: var(--accent);
+  color: var(--tertiary);
   font-weight: 700;
 }
 .city .t {
@@ -103,21 +103,25 @@
 .city .hm small {
   font-size: 12px;
   font-weight: 700;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   margin-right: 2px;
 }
 .city .sc {
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .city .del {
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+  align-items: center;
   background: none;
   border: none;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   padding: 8px;
   cursor: pointer;
   display: flex;
-  border-radius: 8px;
+  border-radius: var(--shape-small);
 }
 .city .del svg {
   width: 16px;
@@ -125,7 +129,7 @@
 }
 .empty {
   text-align: center;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-size: 14px;
   padding: 12px 0;
 }
@@ -139,10 +143,10 @@
   min-width: 0;
   font-size: 15px;
   padding: 10px;
-  border-radius: 12px;
+  border-radius: var(--shape-medium);
   border: none;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-family: inherit;
 }
 .pill {
@@ -150,13 +154,13 @@
   font-size: 15px;
   font-weight: 700;
   font-family: inherit;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
 }
 .chk {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }

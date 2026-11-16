@@ -12,7 +12,7 @@
   width: 240px;
   height: 240px;
   border-radius: 50%;
-  background: var(--panel);
+  background: var(--surface-container-low);
   box-shadow: 0 10px 30px rgba(20, 20, 30, 0.12);
 }
 .crosshair {
@@ -23,7 +23,7 @@
 .crosshair::after {
   content: '';
   position: absolute;
-  background: var(--fn-bg);
+  background: var(--secondary-container);
 }
 .crosshair::before {
   left: 50%;
@@ -44,18 +44,18 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--tertiary);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   transition: background-color 0.15s ease;
 }
 .bubble.ok {
-  background: var(--func);
+  background: var(--primary);
 }
 .angles {
   font-size: 16px;
-  color: var(--text);
+  color: var(--on-surface);
   font-variant-numeric: tabular-nums;
 }
 .status {
@@ -64,8 +64,8 @@
 }
 .pill {
   padding: 10px 20px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 14px;
   -webkit-tap-highlight-color: transparent;
 }

@@ -17,8 +17,8 @@ html,
 body {
   height: 100%;
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--surface);
+  color: var(--on-surface);
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Sans', 'Yu Gothic', sans-serif;
 }
@@ -79,7 +79,7 @@ body {
 }
 .now .time {
   font-size: 14px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -88,8 +88,8 @@ body {
   position: relative;
   width: 100%;
   height: 56px;
-  background: var(--panel);
-  border-radius: 12px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-medium);
   overflow: hidden;
   touch-action: none;
   cursor: pointer;
@@ -106,7 +106,7 @@ body {
   top: 0;
   bottom: 0;
   width: 0;
-  background: color-mix(in srgb, var(--func) 28%, transparent);
+  background: color-mix(in srgb, var(--primary) 28%, transparent);
 }
 .wave .head {
   position: absolute;
@@ -114,7 +114,7 @@ body {
   bottom: 0;
   left: 0;
   width: 2px;
-  background: var(--func);
+  background: var(--primary);
 }
 
 .transport {
@@ -128,8 +128,8 @@ body {
   height: 52px;
   border: none;
   border-radius: 50%;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -147,8 +147,8 @@ body {
 .round.big {
   width: 80px; /* 主なボタンは大きく(M3 Expressive) */
   height: 80px;
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .round.big svg {
   width: 30px;
@@ -170,8 +170,8 @@ body {
 
 .panel {
   width: 100%;
-  background: var(--panel);
-  border-radius: 16px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large);
   padding: 6px 14px;
   box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
 }
@@ -180,7 +180,7 @@ body {
   flex-direction: column;
   gap: 8px;
   padding: 10px 0;
-  border-bottom: 1px solid var(--fn-bg);
+  border-bottom: 1px solid var(--secondary-container);
 }
 .opt:last-child {
   border-bottom: none;
@@ -188,12 +188,12 @@ body {
 .opt > label,
 .opt > .lbl {
   font-size: 13px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-weight: 600;
 }
 .opt input[type='range'] {
   width: 100%;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .row {
   display: flex;
@@ -209,8 +209,8 @@ body {
 .seg {
   display: flex;
   width: 100%;
-  background: var(--fn-bg);
-  border-radius: 999px;
+  background: var(--secondary-container);
+  border-radius: var(--shape-full);
   padding: 3px;
   gap: 3px;
 }
@@ -218,24 +218,24 @@ body {
   flex: 1;
   border: none;
   background: none;
-  color: var(--fn-fg);
+  color: var(--on-secondary-container);
   font-size: 14px;
   padding: 9px 8px;
-  border-radius: 999px;
+  border-radius: var(--shape-full);
   cursor: pointer;
 }
 .seg-btn.on {
-  background: var(--accent);
-  color: var(--accent-fg);
+  background: var(--tertiary);
+  color: var(--on-tertiary);
   font-weight: 600;
 }
 .mini {
   border: none;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 13px;
   padding: 7px 12px;
-  border-radius: 999px;
+  border-radius: var(--shape-full);
   cursor: pointer;
 }
 
@@ -248,22 +248,22 @@ body {
 .list-head h2 {
   margin: 0;
   font-size: 13px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .pill {
   border: none;
   cursor: pointer;
-  border-radius: 999px;
+  border-radius: var(--shape-full);
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 600;
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
   display: inline-flex;
   align-items: center;
 }
 .pill:focus-within {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--tertiary);
   outline-offset: 2px;
 }
 .tracks {
@@ -279,9 +279,9 @@ body {
   width: 100%;
   text-align: left;
   border: 2px solid transparent;
-  background: var(--panel);
-  color: var(--text);
-  border-radius: 12px;
+  background: var(--surface-container-low);
+  color: var(--on-surface);
+  border-radius: var(--shape-medium);
   padding: 10px 12px;
   font-size: 14px;
   cursor: pointer;
@@ -290,7 +290,7 @@ body {
   align-items: baseline;
 }
 .tracks button .no {
-  color: var(--sub);
+  color: var(--on-surface-variant);
   font-variant-numeric: tabular-nums;
   min-width: 1.6em;
 }
@@ -300,10 +300,10 @@ body {
   white-space: nowrap;
 }
 .tracks button.on {
-  border-color: var(--func);
+  border-color: var(--primary);
 }
 .tracks button.bad .nm {
-  color: var(--danger);
+  color: var(--error);
 }
 .status {
   font-size: 13px;
@@ -312,7 +312,7 @@ body {
 }
 .note {
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   line-height: 1.6;
   text-align: center;
 }

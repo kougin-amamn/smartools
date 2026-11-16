@@ -16,17 +16,17 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--fn-bg);
+  background: var(--secondary-container);
   transition:
     background-color 0.05s ease,
     transform 0.05s ease;
 }
 .beat-dots .dot.active {
-  background: var(--func);
+  background: var(--primary);
   transform: scale(1.25);
 }
 .beat-dots .dot.accent.active {
-  background: var(--accent);
+  background: var(--tertiary);
 }
 .bpm-row {
   display: flex;
@@ -45,16 +45,16 @@
 .bpm-num {
   font-size: 44px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--on-surface);
   font-variant-numeric: tabular-nums;
 }
 .bpm-label {
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 input[type='range'] {
   width: 100%;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .row-controls {
   display: flex;
@@ -63,18 +63,18 @@ input[type='range'] {
 }
 .pill {
   padding: 10px 14px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 13px;
   flex: 1;
   -webkit-tap-highlight-color: transparent;
 }
 select#beatsSelect {
   border: none;
-  border-radius: 999px;
+  border-radius: var(--shape-full);
   padding: 10px 14px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 13px;
 }
 .pill.primary {
@@ -87,6 +87,6 @@ select#beatsSelect {
 }
 .pill:focus-visible,
 .round:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--tertiary);
   outline-offset: 2px;
 }

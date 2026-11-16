@@ -16,7 +16,7 @@ body.ringing {
 @keyframes flash {
   0%,
   100% {
-    background: var(--bg);
+    background: var(--surface);
   }
   50% {
     background: var(--alert);
@@ -61,12 +61,12 @@ body.ringing {
 .time {
   font-size: 44px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--on-surface);
   letter-spacing: 0.5px;
 }
 .state {
   font-size: 14px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .adjust-row {
   display: flex;
@@ -102,7 +102,7 @@ body.ringing {
 }
 .adjust-row button:active:not(:disabled) {
   flex-grow: 1.45;
-  border-radius: 24px;
+  border-radius: var(--shape-extra-large);
 }
 .adjust-row button:disabled {
   opacity: 0.4;
@@ -151,7 +151,7 @@ body.ringing {
 }
 .icon-btn.secondary .glyph {
   font-size: 18px;
-  color: var(--fn-fg);
+  color: var(--on-secondary-container);
   line-height: 1;
 }
 .icon-btn.secondary {
@@ -163,7 +163,7 @@ body.ringing {
 .icon-btn .ico {
   width: 22px;
   height: 22px;
-  color: var(--fn-fg);
+  color: var(--on-secondary-container);
 }
 .icon-btn.primary .ico {
   width: 34px;

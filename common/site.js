@@ -469,7 +469,7 @@
         return;
       }
       var sc = document.createElement('script');
-      sc.src = 'https://cdn.jsdelivr.net/npm/eruda';
+      sc.src = 'https://cdn.jsdelivr.net/npm/eruda@3.4.3';
       sc.onload = function () {
         eruda.init();
         if (eruda._entryBtn) eruda._entryBtn.hide();

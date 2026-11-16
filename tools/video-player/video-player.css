@@ -11,8 +11,8 @@
 }
 .pill {
   padding: 10px 18px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 13px;
   -webkit-tap-highlight-color: transparent;
 }
@@ -24,7 +24,7 @@
   width: 100%;
   aspect-ratio: 16/9;
   background: #000;
-  border-radius: 14px;
+  border-radius: var(--shape-large);
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(20, 20, 30, 0.15);
 }
@@ -49,7 +49,7 @@ video {
 .track-title {
   width: 100%;
   font-size: 13px;
-  color: var(--text);
+  color: var(--on-surface);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -63,11 +63,11 @@ video {
 }
 .seek-row input {
   flex: 1;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .time {
   font-size: 11px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
   min-width: 34px;
 }
 .controls {
@@ -87,12 +87,12 @@ video {
 .round.big {
   width: 72px; /* 主なボタンは大きく(M3 Expressive) */
   height: 72px;
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .round.active {
-  background: var(--accent);
-  color: var(--accent-fg);
+  background: var(--tertiary);
+  color: var(--on-tertiary);
 }
 .sub-row {
   display: flex;
@@ -104,9 +104,9 @@ video {
   border: none;
   cursor: pointer;
   padding: 8px 12px;
-  border-radius: 999px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  border-radius: var(--shape-full);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 12px;
   display: flex;
   align-items: center;
@@ -118,11 +118,11 @@ video {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .volume-row input {
   flex: 1;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .playlist {
   width: 100%;
@@ -134,20 +134,20 @@ video {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--panel);
-  border-radius: 12px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-medium);
   padding: 8px 10px;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(20, 20, 30, 0.06);
 }
 .video-row.playing {
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .video-row .thumb {
   width: 56px;
   height: 32px;
-  border-radius: 6px;
+  border-radius: var(--shape-small);
   object-fit: cover;
   background: #000;
   flex: none;
@@ -191,7 +191,7 @@ video {
   right: 10px;
   z-index: 2;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--shape-full);
   padding: 8px 14px;
   background: rgba(0, 0, 0, 0.55);
   color: #fff;

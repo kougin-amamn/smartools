@@ -13,17 +13,17 @@ textarea {
   width: 100%;
   resize: none;
   border: none;
-  border-radius: 14px;
+  border-radius: var(--shape-large);
   padding: 14px;
   font-size: 15px;
   line-height: 1.6;
-  background: var(--panel);
-  color: var(--text);
+  background: var(--surface-container-low);
+  color: var(--on-surface);
   box-shadow: 0 4px 16px rgba(20, 20, 30, 0.08);
   font-family: inherit;
 }
 textarea:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--tertiary);
   outline-offset: 2px;
 }
 .row {
@@ -32,7 +32,7 @@ textarea:focus-visible {
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .row span:first-child {
   width: 60px;
@@ -40,15 +40,15 @@ textarea:focus-visible {
 }
 .row select {
   border: none;
-  border-radius: 999px;
+  border-radius: var(--shape-full);
   padding: 8px 12px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 13px;
 }
 .row input[type='range'] {
   flex: 1;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .row span:last-child {
   width: 36px;
@@ -63,8 +63,8 @@ textarea:focus-visible {
 }
 .pill {
   padding: 12px 20px;
-  background: var(--fn-bg);
-  color: var(--fn-fg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
   font-size: 14px;
   flex: 1;
   -webkit-tap-highlight-color: transparent;

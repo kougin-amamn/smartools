@@ -15,7 +15,7 @@
   aspect-ratio: 3/4;
   max-width: 340px;
   background: #000;
-  border-radius: 16px;
+  border-radius: var(--shape-large);
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(20, 20, 30, 0.2);
 }
@@ -53,22 +53,22 @@ video {
   -webkit-tap-highlight-color: transparent;
 }
 .round.active {
-  background: var(--func);
-  color: var(--func-fg);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .round.big {
   width: 80px; /* 主なボタンは大きく(M3 Expressive) */
   height: 80px;
   background: #fff;
-  border: 4px solid var(--fn-bg);
+  border: 4px solid var(--secondary-container);
 }
 .sliders {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: var(--panel);
-  border-radius: 14px;
+  background: var(--surface-container-low);
+  border-radius: var(--shape-large);
   padding: 12px;
   box-shadow: 0 4px 14px rgba(20, 20, 30, 0.08);
 }
@@ -77,7 +77,7 @@ video {
   align-items: center;
   gap: 10px;
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .slider-row span {
   width: 64px;
@@ -85,14 +85,14 @@ video {
 }
 .slider-row input {
   flex: 1;
-  accent-color: var(--func);
+  accent-color: var(--primary);
 }
 .toggle-row {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: var(--sub);
+  color: var(--on-surface-variant);
 }
 .captured-list {
   width: 100%;
@@ -104,7 +104,7 @@ video {
   width: 64px;
   height: 64px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: var(--shape-medium);
   flex: none;
   box-shadow: 0 2px 10px rgba(20, 20, 30, 0.1);
 }

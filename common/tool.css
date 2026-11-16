@@ -40,6 +40,7 @@ body {
 }
 /* ボタン: まるい形。押した時は common/press.js の波紋。キーボードで押した時だけ薄い色を重ねる(形は変えない) */
 .pill {
+  min-height: 44px; /* 押す所は 44px 以上(デザインコンセプト 3.3) */
   border: none;
   border-radius: var(--shape-full);
   cursor: pointer;
@@ -67,6 +68,8 @@ body {
   outline-offset: 2px;
 }
 .round {
+  min-width: 44px;
+  min-height: 44px;
   background: var(--secondary-container);
   border: none;
   border-radius: var(--shape-full);
@@ -239,4 +242,21 @@ body {
     height: min(var(--land-h), calc(var(--land-max-w, 52vw) / var(--land-ratio, 1)));
     aspect-ratio: var(--land-ratio, 1);
   }
+}
+/* 選ぶ欄と文字の入力欄も、押す所は 44px 以上 */
+main select,
+main input[type='text'],
+main input[type='search'],
+main input[type='number'],
+main input[type='url'] {
+  min-height: 44px;
+}
+/* 札(.chip)は見た目を小さいまま、押せる所だけ上下に広げる(M3 の chip と同じ考え。見た目 32px・押す所 44px) */
+.chip {
+  position: relative;
+}
+.chip::before {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
 }
