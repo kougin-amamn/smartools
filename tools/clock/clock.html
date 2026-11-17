@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>時計 | アナログとデジタルを切り替えられる時計</title>
+    <meta
+      name="description"
+      content="アナログとデジタルを切り替えられる時計。アナログは文字(ローマ数字・旧漢数字・干支・数字)・フレーム・おすすめテンプレート、デジタルは表示形式・文字色・背景色・フレームを選べ、設定は端末に保存されます。"
+    />
+    <meta property="og:title" content="時計 | アナログとデジタルを切り替えられる時計" />
+    <meta
+      property="og:description"
+      content="アナログとデジタルを切り替えられる時計。アナログは文字(ローマ数字・旧漢数字・干支・数字)・フレーム・おすすめテンプレート、デジタルは表示形式・文字色・背景色・フレームを選べ、設定は端末に保存されます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-clock.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./clock.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "時計",
+        "alternateName": ["Clock", "アナログ時計", "デジタル時計", "置き時計"],
+        "description": "アナログとデジタルを切り替えられる時計。アナログは文字(ローマ数字・旧漢数字・干支・数字)・フレーム・おすすめテンプレート、デジタルは表示形式・文字色・背景色・フレームを選べ、設定は端末に保存されます。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-clock.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">時計</h1>
+      <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+          />
+        </svg>
+      </button>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="clock-wrap" data-mode-view="analog">
+          <svg
+            id="clockSvg"
+            viewBox="0 0 200 200"
+            role="img"
+            aria-label="現在時刻のアナログ時計"
+          ></svg>
+        </div>
+        <div class="screen-wrap" data-mode-view="digital" hidden>
+          <div class="screen" id="screen" role="timer" aria-label="現在時刻">
+            <div class="clock" id="clock"></div>
+          </div>
+        </div>
+        <div class="warn" id="warn" data-mode-view="digital" hidden></div>
+      </div>
+    </main>
+    <div class="sheet" id="settings" hidden>
+      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="sheet-head">
+          <span id="settingsTitle">設定</span
+          ><button class="sheet-close" id="settingsClose" aria-label="設定を閉じる">×</button>
+        </div>
+        <div class="panel mode-panel">
+          <div class="opt">
+            <div class="lbl">表示</div>
+            <div class="seg" id="modeSeg" role="group" aria-label="表示">
+              <button type="button" class="seg-btn" data-mode="analog">アナログ</button>
+              <button type="button" class="seg-btn" data-mode="digital">デジタル</button>
+            </div>
+          </div>
+        </div>
+        <div class="mode-settings" data-mode-view="analog">
+          <div class="panel-title">おすすめテンプレート</div>
+          <div class="tpl-list" id="analogTplList"></div>
+
+          <div class="panel-title">詳細設定</div>
+          <div class="panel">
+            <div class="opt">
+              <label for="analogChars">文字</label
+              ><select id="analogChars" data-log="文字"></select>
+            </div>
+            <div class="opt">
+              <div class="lbl">文字の向き</div>
+              <div class="seg" id="analogOrientSeg" role="group" aria-label="文字の向き"></div>
+            </div>
+            <div class="opt">
+              <label for="analogSize">文字サイズ</label>
+              <div class="size-row">
+                <input type="range" id="analogSize" step="5" data-log="文字サイズ" /><span
+                  id="analogSizeVal"
+                ></span>
+              </div>
+            </div>
+            <div class="opt">
+              <label for="analogFont">文字フォント</label
+              ><select id="analogFont" data-log="文字フォント"></select>
+            </div>
+            <div class="opt">
+              <div class="lbl">文字色</div>
+              <div class="swatches" id="analogColorSw"></div>
+            </div>
+            <div class="opt">
+              <label for="analogEffect">文字の効果</label
+              ><select id="analogEffect" data-log="文字の効果"></select>
+            </div>
+            <div class="opt">
+              <label for="analogFrame">フレーム</label
+              ><select id="analogFrame" data-log="フレーム"></select>
+            </div>
+            <div class="opt" id="analogFwidthRow">
+              <label for="analogFwidth">フレーム幅</label>
+              <div class="size-row">
+                <input type="range" id="analogFwidth" step="1" data-log="フレーム幅" /><span
+                  id="analogFwidthVal"
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <button class="pill" id="analogResetBtn" data-log="アナログの初期設定に戻す">
+            初期設定に戻す
+          </button>
+        </div>
+        <div class="mode-settings" data-mode-view="digital" hidden>
+          <div class="panel">
+            <div class="opt">
+              <label for="digitalFormat">表示形式</label
+              ><select id="digitalFormat" data-log="表示形式"></select>
+            </div>
+            <div class="opt">
+              <div class="lbl">文字色</div>
+              <div class="swatches" id="digitalColorSw"></div>
+            </div>
+            <div class="opt">
+              <label for="digitalFont">文字フォント</label
+              ><select id="digitalFont" data-log="文字フォント"></select>
+            </div>
+            <div class="opt">
+              <label for="digitalSize">文字サイズ</label>
+              <div class="size-row">
+                <input type="range" id="digitalSize" step="5" data-log="文字サイズ" /><span
+                  id="digitalSizeVal"
+                ></span>
+              </div>
+            </div>
+            <div class="opt">
+              <div class="lbl">背景色</div>
+              <div class="swatches" id="digitalBgSw"></div>
+            </div>
+            <div class="opt">
+              <label for="digitalFrame">フレーム</label
+              ><select id="digitalFrame" data-log="フレーム"></select>
+            </div>
+          </div>
+
+          <button class="pill" id="digitalResetBtn" data-log="デジタルの初期設定に戻す">
+            初期設定に戻す
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="../../common/log.js"></script>
+    <script src="../../common/env.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.ToolKit && window.ToolKit.media) ||
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
+        );
+    </script>
+    <script src="./analog-clock-core.js"></script>
+    <script src="./digital-clock-core.js"></script>
+    <script src="./clock.js"></script>
+    <script src="./analog-clock.js"></script>
+    <script src="./digital-clock.js"></script>
+  </body>
+</html>

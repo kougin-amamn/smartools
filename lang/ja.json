@@ -101,13 +101,9 @@
       "title": "世界時計",
       "desc": "世界の都市の現在時刻"
     },
-    "analog-clock": {
-      "title": "アナログ時計",
-      "desc": "文字やフレームを選べるアナログ時計"
-    },
-    "digital-clock": {
-      "title": "デジタル時計",
-      "desc": "色やフォントを選べるデジタル時計"
+    "clock": {
+      "title": "時計",
+      "desc": "アナログとデジタルを切り替えられる時計"
     },
     "tally-counter": {
       "title": "数取器",

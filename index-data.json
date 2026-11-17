@@ -76,17 +76,10 @@
   },
   {
     "cat": "定番ツール",
-    "slug": "analog-clock",
-    "title": "アナログ時計",
-    "en": "Analog Clock",
-    "desc": "文字やフレームを選べるアナログ時計"
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "digital-clock",
-    "title": "デジタル時計",
-    "en": "Digital Clock",
-    "desc": "色やフォントを選べるデジタル時計"
+    "slug": "clock",
+    "title": "時計",
+    "en": "Clock",
+    "desc": "アナログとデジタルを切り替えられる時計"
   },
   {
     "cat": "定番ツール",
