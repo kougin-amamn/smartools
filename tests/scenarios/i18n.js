@@ -3,6 +3,7 @@
 const { launch, report, splitErrors } = require('../lib/harness');
 const en = require('../../lang/en.json');
 const FIRST_TOOL = require('../../index-data.json')[0];
+const JAPANESE_TITLE = require('../../lang/ja.json').tools[FIRST_TOOL.slug].title;
 
 (async () => {
   const site = await launch();
@@ -40,7 +41,7 @@ const FIRST_TOOL = require('../../index-data.json')[0];
     );
     expect(/^smartools \| Free/.test(await page.title()), '題名が英語でない');
     expect(
-      (await page.getAttribute('#list .card', 'data-log')) === FIRST_TOOL.title,
+      (await page.getAttribute('#list .card', 'data-log')) === JAPANESE_TITLE,
       'ログの名前(data-log)が日本語のままでない',
     );
 

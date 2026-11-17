@@ -13,7 +13,7 @@ status: stable
 1. `node scripts/new-tool.js <slug> <名称> <英名> [キャッチ] [説明]` でひな形を作る。
 2. `docs/design/<slug>.md` を書く(下の「設計書の範囲」)。
 3. 作る。計算は `<slug>-core.js` に分け、`tests/core/<slug>.test.js` を足す。
-4. アイコンの絵を描き、`index-data.json` に1行足す。
+4. アイコンの絵を描き、`index-data.json` に1行(slug・分類・札)、`lang/ja.json` と `lang/en.json` に名前と説明を足す。
 5. `node tests/core.js <slug>` と `node tests/smoke.js tools/<slug>` を通し、Prettier で整える。
 
 ## 設計書の範囲

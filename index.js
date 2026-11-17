@@ -26,16 +26,18 @@
       return text.split('{' + k + '}').join(vars[k]);
     }, fallback);
   }
-  /* その言語のツールの名前・説明・分類・注意の札にする。ログの名前(data-log)には日本語の名前 jaTitle を使う */
-  function translated(t) {
-    var copy = Object.assign({}, t, { jaTitle: t.title });
-    if (!window.I18n || I18n.language === 'ja') return copy;
-    copy.title = say('tools.' + t.slug + '.title', null, t.title);
-    copy.desc = say('tools.' + t.slug + '.desc', null, t.desc || '');
+  /* 一覧(index-data.json)は言語によらない slug・分類・札の名前だけを持つ。名前・説明・分類・札の文は
+     lang/<言語>.json から入れる(2026-11-17)。ログの名前(data-log)には日本語の名前 jaTitle を使う */
+  function translated(t, japanese) {
+    var copy = Object.assign({}, t);
+    copy.title = say('tools.' + t.slug + '.title', null, t.slug);
+    copy.desc = say('tools.' + t.slug + '.desc', null, '');
     copy.cat = say('categories.' + t.cat, null, t.cat);
     copy.tags = (t.tags || []).map(function (g) {
       return say('tags.' + g, null, g);
     });
+    var jaTool = japanese && japanese.tools && japanese.tools[t.slug];
+    copy.jaTitle = jaTool ? jaTool.title : copy.title;
     return copy;
   }
 
@@ -232,9 +234,22 @@
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
   });
-  Promise.all([toolsLoaded, window.I18n ? I18n.ready : null])
+  /* 日本語以外の画面でも、ログの名前は日本語にするため日本語の文を読む(読めない時は画面の名前) */
+  var japaneseLoaded =
+    window.I18n && I18n.language !== 'ja'
+      ? fetch('./lang/ja.json')
+          .then(function (r) {
+            return r.ok ? r.json() : null;
+          })
+          .catch(function () {
+            return null;
+          })
+      : null;
+  Promise.all([toolsLoaded, window.I18n ? I18n.ready : null, japaneseLoaded])
     .then(function (results) {
-      var tools = results[0].map(translated);
+      var tools = results[0].map(function (t) {
+        return translated(t, results[2]);
+      });
       allTools = tools;
       if (window.I18n && I18n.language !== 'ja')
         document.title = say('list.metaTitle', null, document.title);

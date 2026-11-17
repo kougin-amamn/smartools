@@ -46,12 +46,13 @@
       return { list: list, src: DATA };
     });
   }
-  /* 英語などの画面では、ツールの名前・説明・分類・注意の札をその言語にする(lang の tools・categories・tags) */
+  /* ツールの名前・説明・分類・注意の札の文を、その言語の lang/<言語>.json から入れる
+     (一覧の index-data.json は言語によらない slug・分類・札の名前だけを持つ。2026-11-17) */
   function translated(t) {
-    if (!window.I18n || I18n.language === 'ja') return t;
+    if (!window.I18n) return Object.assign({}, t, { title: t.slug, desc: '' });
     var copy = Object.assign({}, t);
-    copy.title = I18n.t('tools.' + t.slug + '.title', null, t.title);
-    copy.desc = I18n.t('tools.' + t.slug + '.desc', null, t.desc || '');
+    copy.title = I18n.t('tools.' + t.slug + '.title', null, t.slug);
+    copy.desc = I18n.t('tools.' + t.slug + '.desc', null, '');
     if (t.cat) copy.cat = I18n.t('categories.' + t.cat, null, t.cat);
     copy.tags = (t.tags || []).map(function (g) {
       return I18n.t('tags.' + g, null, g);

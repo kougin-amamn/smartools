@@ -54,6 +54,6 @@ for (const [rel, text] of Object.entries(files)) {
   console.log('作成 ' + rel);
 }
 console.log(
-  '次: 設計書を書く → アイコンの絵を描く → index-data.json に1行足す → node tests/smoke.js tools/' +
+  '次: 設計書を書く → アイコンの絵を描く → index-data.json に1行、lang/ja.json・en.json に名前と説明を足す → node tests/smoke.js tools/' +
     slug,
 );

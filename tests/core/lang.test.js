@@ -97,6 +97,10 @@ for (const f of files) {
   );
   tools.forEach((t) => {
     a.ok(lang.tools[t.slug], `${f} にツール ${t.slug} がある`);
+    /* 名前・説明は言語のファイルだけに書く(一覧は言語によらない。2026-11-17) */
+    ['title', 'en', 'desc'].forEach((k) =>
+      a.ok(!(k in t), `index-data.json の ${t.slug} に ${k} が無い`),
+    );
     a.ok(t.cat in lang.categories, `${f} に分類 ${t.cat} がある`);
     (t.tags || []).forEach((g) => a.ok(g in lang.tags, `${f} に注意の札 ${g} がある`));
   });

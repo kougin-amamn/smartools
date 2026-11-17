@@ -48,15 +48,16 @@ resource: "index-data.json"
 
 ## 一覧(index-data.json)
 
-1行1ツールの JSON(JS に埋め込まない)。新しいツールは自分の分類の並びに1行足す。
+1行1ツールの JSON(JS に埋め込まない)。**言語によらない情報だけ**を持つ(並び順・分類・札・slug。2026-11-17)。新しいツールは自分の分類の並びに1行足す。
 
 ```json
-{"cat": "定番ツール", "slug": "calculator", "title": "電卓", "en": "Calculator", "desc": "一言説明"}
+{"cat": "basic", "slug": "weather", "tags": ["needs-internet", "needs-location"]}
 ```
 
-- `en` は英名(ld+json の `alternateName` の1番目と同じ)。`tags` は任意(無ければ書かない)。`href` / `icon` は省くと `tools/<slug>/<slug>.html` と `tools/<slug>/app-icon-<slug>.svg`。
-- タグ: `要 カメラ` / `要 マイク` / `要 位置情報` / `要 センサー` / `要 https` / `要 外部通信`、ほかに短い注意書き。**「オフライン可」は付けない**(オフラインは目標にしない)。
-- 分類(この順): 定番ツール / センサー・カメラ活用 / QR・共有 / メディア / 情報・言語・テキスト / デザイン / 診断・開発
+- 名前と説明は `lang/<言語>.json` の `tools.<slug>.title` / `desc` だけに書く(日本語も `lang/ja.json`)。ここには書かない(試験 `tests/core/lang.test.js` が見る)。
+- `tags` は任意(無ければ書かない)。`href` / `icon` は省くと `tools/<slug>/<slug>.html` と `tools/<slug>/app-icon-<slug>.svg`。
+- 札(画面の文は `lang` の `tags`): `needs-camera`(要 カメラ) / `needs-microphone`(要 マイク) / `needs-location`(要 位置情報) / `needs-sensor`(要 センサー) / `needs-https`(要 https) / `needs-internet`(要 外部通信)。**「オフライン可」は付けない**(オフラインは目標にしない)。
+- 分類(この順。画面の文は `lang` の `categories`): `basic`(定番ツール) / `sensor-camera`(センサー・カメラ活用) / `qr-share`(QR・共有) / `media`(メディア) / `information-text`(情報・言語・テキスト) / `design`(デザイン) / `diagnostics`(診断・開発)
 - 一覧ページは分類ごとに出てきた順に並べ、カードに名称・説明・タグを出す(英名は出さない。多言語化で英語の画面があるため。2026-11-15)(カードは `data-log` に名称)。描画の作りは変えない。
 
 ## head と SEO
