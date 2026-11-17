@@ -1,4 +1,4 @@
-/* 方位磁石の画面。端末の向きセンサーの方位で文字盤と北を指す針を回し、向いている方角を大きな文字で出す。目標の方位も表示する。
+/* 方位磁石の画面。端末の向きセンサーの方位で文字盤と北を指す針を回し、向いている方角を大きな文字で出す。
    方位の計算は compass-core.js */
 (function () {
   'use strict';
@@ -9,15 +9,12 @@
   var dial = $('dial'),
     headingText = $('headingText'),
     dirLabel = $('dirLabel'),
-    targetTextEl = $('targetText'),
     statusText = $('statusText'),
-    startBtn = $('startBtn'),
-    targetBtn = $('targetBtn');
+    startBtn = $('startBtn');
   var NS = 'http://www.w3.org/2000/svg';
 
   var raw = null /* センサーの最新の方位 */,
     shown = null /* 文字盤に表示している方位(なめらかに追う) */,
-    target = null /* 目標の方位 */,
     level = { x: 0, y: 0, tilt: 0 },
     source = '',
     gotFirst = false,
@@ -26,7 +23,7 @@
     warned = false,
     history = []; /* 直近1秒の方位(ぶれの大きさを見る) */
 
-  /* 文字盤を作る: 面、45° ごとの短い線、東西南北の文字、北を指す針。目標の印もここに入れる */
+  /* 文字盤を作る: 面、15° ごとの目盛り、東西南北の文字、北を指す細い針 */
   function el(name, attrs, parent, text) {
     var e = document.createElementNS(NS, name);
     Object.keys(attrs).forEach(function (k) {
@@ -38,13 +35,13 @@
   }
   function buildDial() {
     el('circle', { class: 'face', r: 132 });
-    for (var d = 45; d < 360; d += 90)
+    for (var d = 0; d < 360; d += 15)
       el('line', {
-        class: 'tick',
+        class: 'tick' + (d % 45 === 0 ? ' major' : ''),
         x1: 0,
         y1: -126,
         x2: 0,
-        y2: -112,
+        y2: d % 45 === 0 ? -115 : -120,
         transform: 'rotate(' + d + ')',
       });
     var CARD = { 0: '北', 90: '東', 180: '南', 270: '西' };
@@ -64,17 +61,11 @@
         CARD[a],
       );
     });
-    el('path', { class: 'needle-north', d: 'M0 -80 L16 0 L-16 0 Z' });
-    el('path', { class: 'needle-south', d: 'M0 80 L16 0 L-16 0 Z' });
-    el('circle', { class: 'cap', r: 7 });
-    targetMark = el('path', {
-      class: 'target',
-      d: 'M0 -134 L9 -150 L-9 -150 Z',
-      visibility: 'hidden',
-    });
+    el('path', { class: 'needle-north', d: 'M0 -85 L7 0 L-7 0 Z' });
+    el('path', { class: 'needle-south', d: 'M0 85 L7 0 L-7 0 Z' });
+    el('circle', { class: 'cap', r: 6 });
   }
-  var targetMark = null,
-    cards = {}; /* 東西南北の文字(文字盤が回っても、文字は立てたままにする) */
+  var cards = {}; /* 回転中も東西南北の文字を正立させる */
 
   /* センサーの値を受け取る */
   function screenAngle() {
@@ -98,7 +89,7 @@
     checkAccuracy(e);
     if (!gotFirst) {
       gotFirst = true;
-      targetBtn.hidden = false;
+      document.querySelector('.app').classList.add('is-active');
       log(
         '方位を受信しました(' +
           { ios: 'iPhone のコンパス', absolute: '絶対方位', relative: '相対方位' }[source] +
@@ -128,8 +119,8 @@
     if (bad) {
       statusText.textContent =
         source === 'relative'
-          ? 'この端末では北の向きが正確に分かりません。端末を8の字にゆっくり振ると良くなることがあります'
-          : '方位が不安定です。端末を8の字にゆっくり振って、磁気センサーを補正してください';
+          ? '相対方位です。北の方向は特定できません'
+          : '方位が不安定です。端末を8の字に動かしてください';
       statusText.classList.add('warn');
       if (!warned) {
         warned = true;
@@ -143,10 +134,9 @@
             ')',
         );
       }
-    } else if (statusText.classList.contains('warn') || statusText.textContent) {
+    } else {
       statusText.classList.remove('warn');
-      statusText.textContent =
-        level.tilt > 15 ? '端末を水平に近づけると、方位が正確になります' : '';
+      statusText.textContent = level.tilt > 15 ? '端末を水平にしてください' : '';
     }
   }
 
@@ -164,13 +154,8 @@
     if (now - lastText > 120) {
       lastText = now;
       var h = Math.round(shown) % 360;
-      headingText.textContent = h + '°';
+      headingText.textContent = h;
       dirLabel.textContent = C.eightDirectionOf(shown);
-      if (target !== null) {
-        var t = C.targetText(shown, target, 2);
-        targetTextEl.textContent = '目標 ' + Math.round(target) + '° ・ ' + t;
-        targetTextEl.classList.toggle('on', t === '目標の方位です');
-      }
     }
   }
 
@@ -201,28 +186,6 @@
         typeof DeviceOrientationEvent === 'undefined'
           ? 'この端末・ブラウザは向きセンサーに対応していません。'
           : 'センサーの利用が許可されませんでした。https で開いているか確認してください。';
-  });
-
-  /* 目標の方位: 今の向きを目標にして、文字盤に印を付け、ずれを表示する。もう一度押すと解除 */
-  targetBtn.addEventListener('click', function () {
-    ToolKit.vibrate();
-    if (target === null && shown !== null) {
-      target = Math.round(shown) % 360;
-      targetMark.setAttribute('transform', 'rotate(' + target + ')');
-      targetMark.setAttribute('visibility', 'visible');
-      targetTextEl.hidden = false;
-      targetBtn.textContent = '目標を解除';
-      targetBtn.setAttribute('aria-pressed', 'true');
-      log('目標の方位を決めました(' + target + '° ' + C.dirLabel(target) + ')');
-    } else {
-      var was = target;
-      target = null;
-      targetMark.setAttribute('visibility', 'hidden');
-      targetTextEl.hidden = true;
-      targetBtn.textContent = 'この方位を目標にする';
-      targetBtn.setAttribute('aria-pressed', 'false');
-      if (was !== null) log('目標の方位を解除しました(' + was + '°)');
-    }
   });
 
   buildDial();
