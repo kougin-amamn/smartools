@@ -1,0 +1,15 @@
+const assert = require('assert');
+const C = require('../../tools/level/level-core');
+const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-8, `${actual} != ${expected}`);
+close(C.angle(0, 2.4, 0), 2.4);
+close(C.angle(0, 0, 0), 0);
+close(C.angle(2.4, 0, 90), 2.4);
+close(C.angle(2.4, 0, 270), -2.4);
+close(C.angle(0, 2.4, 180), -2.4);
+close(C.angle(90, 25, 0), 0);
+assert.equal(C.angle(null, 0, 0), null);
+assert.equal(C.angle(0, NaN, 0), null);
+close(C.difference(3.2, 2.4), .8);
+assert.equal(C.format(-.01), '0.0');
+assert.equal(C.format(2.4), '+2.4');
+assert.equal(C.format(-2.4), '-2.4');

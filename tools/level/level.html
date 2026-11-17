@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>水平器 | スマホを置くだけで傾きを確認</title>
+    <title>水平器 | 気泡と大きな角度で水平を確認</title>
     <meta
       name="description"
-      content="スマホの傾きセンサーで、前後・左右の傾きを泡と角度で表示する水平器です。水平になると泡の色が変わり、対応端末では振動でも知らせます。"
+      content="画面の左右方向の傾きを横長の気泡と大きな角度で表示します。端末の辺を棚などに当てて水平を確認でき、基準合わせにも対応しています。"
     />
-    <meta property="og:title" content="水平器 | スマホを置くだけで傾きを確認" />
+    <meta property="og:title" content="水平器 | 気泡と大きな角度で水平を確認" />
     <meta
       property="og:description"
-      content="スマホの傾きセンサーで、前後・左右の傾きを泡と角度で表示する水平器です。水平になると泡の色が変わり、対応端末では振動でも知らせます。"
+      content="画面の左右方向の傾きを横長の気泡と大きな角度で表示します。端末の辺を棚などに当てて水平を確認でき、基準合わせにも対応しています。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ja_JP" />
@@ -27,7 +27,7 @@
         "@type": "SoftwareApplication",
         "name": "水平器",
         "alternateName": ["Level", "水準器", "傾き測定"],
-        "description": "スマホの傾きセンサーで、前後・左右の傾きを泡と角度で表示する水平器です。水平になると泡の色が変わり、対応端末では振動でも知らせます。",
+        "description": "画面の左右方向の傾きを横長の気泡と大きな角度で表示します。端末の辺を棚などに当てて水平を確認でき、基準合わせにも対応しています。",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any (Webブラウザ)",
         "offers": {
@@ -42,19 +42,40 @@
     <header class="site-bar">
       <img src="./app-icon-level.svg" alt="" />
       <h1 style="margin: 0; font: inherit; flex: 1">水平器</h1>
+      <button class="dbg-btn" id="setBtn" aria-label="設定" title="設定">⚙</button>
     </header>
     <main class="content">
-      <div class="app" data-land="split">
-        <div class="level-outer" data-land-main id="levelOuter">
-          <div class="crosshair"></div>
-          <div class="bubble" id="bubble"></div>
+      <div class="app">
+        <div class="instrument" id="instrument">
+          <div class="level-outer" id="levelOuter" aria-hidden="true">
+            <span class="end-tick left"></span><span class="end-tick right"></span>
+            <div class="crosshair"></div>
+            <div class="bubble" id="bubble" hidden></div>
+          </div>
+          <div class="angles" id="angles" aria-label="傾き">—<span class="degree">°</span></div>
+          <div class="level-state" id="levelState" role="status"></div>
         </div>
-
-        <div class="angles" id="angles">前後 --° / 左右 --°</div>
-        <div class="status" id="statusText">開始ボタンをタップしてください</div>
-        <button class="pill primary" id="startBtn">水平器を開始</button>
+        <button class="pill calibrate" id="calibrateBtn" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 1v7m0 8v7M1 12h7m8 0h7"/></svg>
+          <span>基準合わせ</span>
+        </button>
+        <div class="status" id="statusText" role="status">傾きを取得しています…</div>
+        <button class="pill primary" id="startBtn" hidden>センサーを許可</button>
       </div>
     </main>
+    <div class="sheet" id="settings" hidden>
+      <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="sheet-head"><span id="settingsTitle">設定</span><button class="sheet-close" id="settingsClose" aria-label="設定を閉じる">×</button></div>
+        <div class="level-settings">
+          <p>画面の左右方向の傾きを測ります。端末の辺を棚や額縁に当ててください。</p>
+          <p>基準合わせは現在の傾きを0°にします。補正中は「基準一致」と表示します。画面を回転すると基準は解除されます。</p>
+          <button class="pill" id="resetBtn" disabled>基準を解除</button>
+          <label><input id="vibrationChk" type="checkbox" checked /> 水平を振動で通知</label>
+          <label>許容範囲 <select id="toleranceSelect"><option value="0.3">±0.3°</option><option value="0.5" selected>±0.5°</option><option value="1">±1.0°</option></select></label>
+          <p>精度は端末やケースに左右されます。基準合わせには水平が分かっている面を使ってください。</p>
+        </div>
+      </div>
+    </div>
     <script src="../../common/log.js"></script>
     <script src="../../common/env.js"></script>
     <script src="../../common/site.js"></script>
@@ -66,6 +87,7 @@
           '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
         );
     </script>
+    <script src="./level-core.js"></script>
     <script src="./level.js"></script>
   </body>
 </html>

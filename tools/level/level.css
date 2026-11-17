@@ -1,70 +1,25 @@
-.content {
-  justify-content: center;
-  padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
-}
-.app {
-  max-width: 320px;
-  align-items: center;
-  gap: 14px;
-}
-.level-outer {
-  position: relative;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: var(--surface-container-low);
-}
-.crosshair {
-  position: absolute;
-  inset: 0;
-}
-.crosshair::before,
-.crosshair::after {
-  content: '';
-  position: absolute;
-  background: var(--secondary-container);
-}
-.crosshair::before {
-  left: 50%;
-  top: 20px;
-  bottom: 20px;
-  width: 2px;
-  transform: translateX(-50%);
-}
-.crosshair::after {
-  top: 50%;
-  left: 20px;
-  right: 20px;
-  height: 2px;
-  transform: translateY(-50%);
-}
-.bubble {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--tertiary);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transition: background-color 0.15s ease;
-}
-.bubble.ok {
-  background: var(--primary);
-}
-.angles {
-  font-size: var(--type-body-large);
-  color: var(--on-surface);
-  font-variant-numeric: tabular-nums;
-}
-.status {
-  font-size: var(--type-body-medium);
-  min-height: 16px;
-}
-.pill {
-  padding: 10px 20px;
-  background: var(--secondary-container);
-  color: var(--on-secondary-container);
-  font-size: var(--type-body-medium);
-  -webkit-tap-highlight-color: transparent;
-}
+.content { justify-content: center; padding: 32px 24px max(24px, env(safe-area-inset-bottom)); }
+.app { max-width: 520px; align-items: center; gap: 22px; }
+.instrument { width: 100%; text-align: center; --level-ink: #004a7c; --level-track: #dce6f0; --level-bubble: #69afd0; }
+:root[data-theme='dark'] .instrument { --level-ink: #f2f6fa; --level-track: #343e49; --level-bubble: #78bfdc; }
+.instrument.is-level { --level-ink: #00846f; --level-track: #c3eee2; --level-bubble: #08ad91; }
+:root[data-theme='dark'] .instrument.is-level { --level-ink: #80f1d0; --level-track: #285a50; --level-bubble: #13c5a4; }
+.level-outer { position: relative; height: clamp(68px, 17vw, 84px); width: 100%; border-radius: 999px; background: var(--level-track); transition: background-color .18s; }
+.crosshair { position: absolute; top: 12%; bottom: 12%; left: calc(50% - 28px); width: 56px; border-inline: 2px solid var(--level-ink); box-sizing: border-box; }
+.end-tick { position: absolute; height: 22%; top: 39%; width: 2px; background: var(--level-ink); }
+.end-tick.left { left: 8%; } .end-tick.right { right: 8%; }
+.bubble { position: absolute; width: 64px; height: 38px; border-radius: 50%; left: calc(50% + var(--offset, 0) * (50% - 40px)); top: 50%; transform: translate(-50%, -50%); background: var(--level-bubble); transition: left .1s linear, background-color .18s; }
+.angles { margin-top: 26px; color: var(--level-ink); font-size: clamp(64px, 19vw, 112px); line-height: 1.15; font-weight: 650; letter-spacing: -.055em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.degree { font-size: .65em; vertical-align: top; position: relative; top: .12em; margin-left: .05em; }
+.level-state { min-height: 32px; margin-top: 8px; color: var(--level-ink); font-size: 22px; font-weight: 600; }
+.calibrate { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 56px; min-width: 230px; padding: 12px 24px; background: var(--secondary-container); color: var(--on-secondary-container); font-size: 20px; font-weight: 600; }
+.calibrate svg { width: 26px; height: 26px; stroke: currentColor; stroke-width: 1.6; fill: none; }
+.calibrate:disabled { opacity: .45; cursor: default; }
+.status { font-size: 14px; max-width: 420px; line-height: 1.6; }
+.status:empty { display: none; }
+.level-settings { display: grid; gap: 18px; padding: 12px 4px; line-height: 1.7; }
+.level-settings p { margin: 0; font-size: 14px; color: var(--sub); }
+.level-settings label { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.level-settings .pill { padding: 12px 20px; background: var(--secondary-container); color: var(--on-secondary-container); }
+@media (orientation: landscape) and (max-height: 520px) { .content { padding: 16px 24px; } .app { gap: 12px; max-width: 600px; } .angles { font-size: 70px; margin-top: 10px; } .level-outer { height: 60px; } .level-state { font-size: 18px; min-height: 24px; margin-top: 0; } .calibrate { min-height: 44px; padding: 8px 24px; } }
+@media (prefers-reduced-motion: reduce) { .bubble, .level-outer { transition: none; } }
