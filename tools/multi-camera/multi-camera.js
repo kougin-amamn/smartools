@@ -16,6 +16,11 @@
   const zoomSlider = document.getElementById('zoomSlider');
   const gridChk = document.getElementById('gridChk');
   const levelChk = document.getElementById('levelChk');
+  const nightModeChk = document.getElementById('nightModeChk');
+  const nightOptions = document.getElementById('nightOptions');
+  const adjustments = { normal: ['100', '100'], night: ['220', '120'] };
+  const adjustmentGroup = () => mode === 'night' ? 'night' : 'normal';
+  const readAdjustments = () => [brightnessSlider.value, contrastSlider.value];
   const mirrorChk = document.getElementById('mirrorChk');
 
   const switchCamBtn = document.getElementById('switchCamBtn');
@@ -35,7 +40,7 @@
 
   const MODE_FILTERS = {
     normal: '',
-    night: 'brightness(180%) contrast(115%)',
+    night: '',
     mono: 'grayscale(1)',
     sepia: 'sepia(1)',
     invert: 'invert(1)',
@@ -46,10 +51,12 @@
     const b = brightnessSlider.value,
       c = contrastSlider.value,
       s = saturateSlider.value;
-    return `${base} brightness(${b}%) contrast(${c}%) saturate(${s}%)`.trim();
+    const green = mode === 'night' && nightModeChk.checked
+      ? ' grayscale(1) sepia(1) hue-rotate(80deg) saturate(4)' : '';
+    return `${base} brightness(${b}%) contrast(${c}%) saturate(${s}%)${green}`.trim();
   }
 
-  function drawFrame() {
+  function renderFrame() {
     if (video.videoWidth) {
       const W = (canvas.width = video.videoWidth);
       const H = (canvas.height = video.videoHeight);
@@ -81,6 +88,10 @@
         ctx.restore();
       }
     }
+  }
+
+  function drawFrame() {
+    renderFrame();
     rafId = requestAnimationFrame(drawFrame);
   }
 
@@ -135,12 +146,28 @@
     }, 2200);
   }
 
+  function selectMode(next) {
+    if (!Object.prototype.hasOwnProperty.call(MODE_FILTERS, next)) return;
+    adjustments[adjustmentGroup()] = readAdjustments();
+    mode = next;
+    brightnessSlider.max = mode === 'night' ? '400' : '200';
+    [brightnessSlider.value, contrastSlider.value] = adjustments[adjustmentGroup()];
+    nightOptions.hidden = mode !== 'night';
+    [...modeRow.children].forEach((button) => {
+      const selected = button.dataset.mode === mode;
+      button.classList.toggle('active', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+    renderFrame();
+  }
+
+  selectMode(new URLSearchParams(window.location.search).get('mode') === 'night' ? 'night' : 'normal');
+
   modeRow.addEventListener('click', (e) => {
     const btn = e.target.closest('.chip');
     if (!btn) return;
     ToolKit.vibrate();
-    mode = btn.dataset.mode;
-    [...modeRow.children].forEach((c) => c.classList.toggle('active', c === btn));
+    selectMode(btn.dataset.mode);
     log(`モードを「${btn.textContent.trim()}」にしました`);
   });
 
@@ -175,6 +202,7 @@
 
   // 撮影(タイマー・連写)
   function captureOnce() {
+    renderFrame();
     shotCount += 1;
     const url = canvas.toDataURL('image/png');
     const a = document.createElement('a');

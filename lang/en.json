@@ -548,7 +548,7 @@
     },
     "multi-camera": {
       "title": "Multi Camera",
-      "desc": "Camera with filters and burst shots",
+      "desc": "Camera with night mode, filters and burst shooting",
       "text": {
         "カメラ切替": "Switch camera",
         "ライト": "Light",
@@ -571,21 +571,8 @@
         "水平ガイド": "Level guide",
         "白黒": "Black & white",
         "通常": "Normal",
-        "ズーム": "Zoom"
-      }
-    },
-    "night-camera": {
-      "title": "Night Camera",
-      "desc": "Camera that brightens dark scenes",
-      "text": {
-        "カメラ切替": "Switch camera",
-        "ライト": "Light",
-        "撮影": "Take photo",
-        "カメラを起動しています…": "Starting the camera…",
-        "明るさ": "Brightness",
-        "コントラスト": "Contrast",
-        "切り替えられるカメラが見つかりませんでした。": "No other camera to switch to.",
-        "暗視風(グリーンモノクロ)": "Night vision style (green mono)"
+        "ズーム": "Zoom",
+        "暗視風(グリーンモノクロ)": "Night vision effect (green monochrome)"
       }
     },
     "effect-camera": {

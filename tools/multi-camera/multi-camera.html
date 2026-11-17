@@ -26,7 +26,7 @@
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "多機能カメラ",
-        "alternateName": ["Multi Camera", "カメラ", "フィルターカメラ"],
+        "alternateName": ["Multi Camera", "カメラ", "フィルターカメラ", "ナイトカメラ"],
         "description": "ナイト・モノクロ・セピアなどのフィルター、明るさ・コントラスト・彩度・ズームの調整、グリッドと水平ガイド、セルフタイマーと5枚連写ができる多機能カメラです。撮った写真はPNGで保存できます。",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any (Webブラウザ)",
@@ -148,6 +148,7 @@
             ><input
               type="range"
               id="brightnessSlider"
+              aria-label="明るさ"
               data-log="明るさ"
               min="60"
               max="200"
@@ -159,6 +160,7 @@
             ><input
               type="range"
               id="contrastSlider"
+              aria-label="コントラスト"
               data-log="コントラスト"
               min="60"
               max="200"
@@ -170,6 +172,7 @@
             ><input
               type="range"
               id="saturateSlider"
+              aria-label="彩度"
               data-log="彩度"
               min="0"
               max="200"
@@ -181,6 +184,7 @@
             ><input
               type="range"
               id="zoomSlider"
+              aria-label="ズーム"
               data-log="ズーム"
               min="100"
               max="300"
@@ -189,6 +193,9 @@
           </div>
         </div>
 
+        <div id="nightOptions" hidden>
+          <label><input type="checkbox" id="nightModeChk" /> 暗視風(グリーンモノクロ)</label>
+        </div>
         <div class="toggle-row">
           <label><input type="checkbox" id="gridChk" /> グリッド線</label>
           <label><input type="checkbox" id="levelChk" /> 水平ガイド</label>

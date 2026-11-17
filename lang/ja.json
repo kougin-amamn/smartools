@@ -123,11 +123,7 @@
     },
     "multi-camera": {
       "title": "多機能カメラ",
-      "desc": "フィルターや連写のカメラ"
-    },
-    "night-camera": {
-      "title": "ナイトカメラ",
-      "desc": "暗い場所を明るく映すカメラ"
+      "desc": "ナイト・フィルター・連写のカメラ"
     },
     "effect-camera": {
       "title": "エフェクトカメラ",
