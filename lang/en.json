@@ -702,6 +702,40 @@
         "センサーの許可を取得できませんでした。もう一度お試しください。": "Could not request sensor access. Please try again."
       }
     },
+    "altimeter": {
+      "title": "Altimeter",
+      "desc": "Elevation above sea level and climb from a reference point",
+      "text": {
+        "高度計": "Altimeter",
+        "標高(海抜)": "Elevation (above sea level)",
+        "地面の高さ(地図のデータ)": "Ground height (map data)",
+        "測定を開始": "Start measuring",
+        "ここを基準にする": "Set as reference",
+        "基準を解除": "Clear reference",
+        "基準からの差": "From reference",
+        "基準を決めると出ます": "Set a reference to see this",
+        "GPS の高さの差": "Difference in GPS height",
+        "GPS の高さ": "GPS height",
+        "精度 —": "Accuracy —",
+        "精度 ±{値} m": "Accuracy ±{値} m",
+        "参考値": "Rough",
+        "高さの推移": "Height history",
+        "直近10分": "Last 10 min",
+        "測り始めると、ここに線が出ます": "A line appears here once measuring starts",
+        "GPS の高さの推移": "GPS height history",
+        "開始を押すと、位置情報の許可を求めます": "Press start to allow location access",
+        "標高は約 90m の網目の地図データの地面の高さで、建物の階や細かな起伏は出ません。基準からの差は GPS の高さ同士の差です。位置は標高を調べるために約 100m に丸めて Open-Meteo に送り、保存しません。標高データ: Copernicus DEM GLO-90(Open-Meteo)。": "Elevation is the ground height from map data on a grid of about 90 m, so building floors and small bumps are not shown. The difference from the reference is between GPS heights. To look up elevation, your position is rounded to about 100 m and sent to Open-Meteo; it is not saved. Elevation data: Copernicus DEM GLO-90 (Open-Meteo).",
+        "標高を調べられませんでした。通信を確かめてください": "Could not look up the elevation. Check your connection.",
+        "この端末では GPS の高さが取れません(標高だけ出します)": "This device does not report GPS height (showing elevation only)",
+        "高さの精度が低いので参考値です。空の開けた所で待つと良くなります": "Height accuracy is low, so this is rough. It improves in the open sky.",
+        "測っています(この端末は高さの精度を返しません)": "Measuring (this device does not report height accuracy)",
+        "測っています": "Measuring",
+        "位置情報の利用が許可されていません。ブラウザの設定で許可してください": "Location access is not allowed. Allow it in your browser settings.",
+        "位置情報を取れませんでした。空の開けた所でもう一度試してください": "Could not get your location. Try again in the open sky.",
+        "この端末・ブラウザは位置情報に対応していません": "This device or browser does not support location",
+        "位置を取っています…": "Getting your location…"
+      }
+    },
     "cycle-meter": {
       "title": "Cycle Meter",
       "desc": "Speed and distance by GPS",

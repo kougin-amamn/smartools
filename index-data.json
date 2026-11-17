@@ -1,409 +1,46 @@
 [
-  {
-    "cat": "定番ツール",
-    "slug": "calculator",
-    "title": "電卓",
-    "en": "Calculator",
-    "desc": "四則演算とパーセントの電卓"
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "notepad",
-    "title": "メモ帳",
-    "en": "Notepad",
-    "desc": "自動保存のメモ帳"
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "weather",
-    "title": "天気予報",
-    "en": "Weather",
-    "desc": "現在地や地名の天気と週間予報",
-    "tags": [
-      "要 外部通信",
-      "要 位置情報"
-    ]
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "headache-forecast",
-    "title": "頭痛予報",
-    "en": "Headache Forecast",
-    "desc": "気圧の下がり方から頭痛に注意したい時間を予報",
-    "tags": [
-      "要 外部通信",
-      "要 位置情報"
-    ]
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "flashlight",
-    "title": "懐中電灯",
-    "en": "Flashlight",
-    "desc": "スマホのライトを点灯",
-    "tags": [
-      "要 カメラ",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "stopwatch",
-    "title": "ストップウォッチ",
-    "en": "Stopwatch",
-    "desc": "1/100秒とラップのストップウォッチ"
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "kitchen-timer",
-    "title": "キッチンタイマー",
-    "en": "Kitchen Timer",
-    "desc": "ボタンで合わせるキッチンタイマー"
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "pomodoro-timer",
-    "title": "ポモドーロタイマー",
-    "en": "Pomodoro Timer",
-    "desc": "作業と休憩を切り替えるタイマー"
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "world-clock",
-    "title": "世界時計",
-    "en": "World Clock",
-    "desc": "世界の都市の現在時刻"
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "clock",
-    "title": "時計",
-    "en": "Clock",
-    "desc": "アナログとデジタルを切り替えられる時計"
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "tally-counter",
-    "title": "数取器",
-    "en": "Tally Counter",
-    "desc": "タップで数える数取器"
-  },
-  {
-    "cat": "定番ツール",
-    "slug": "calendar",
-    "title": "カレンダー",
-    "en": "Calendar",
-    "desc": "六曜・祝日・旧暦が分かる暦"
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "hand-mirror",
-    "title": "手鏡",
-    "en": "Hand Mirror",
-    "desc": "前面カメラの鏡",
-    "tags": [
-      "要 カメラ",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "multi-camera",
-    "title": "多機能カメラ",
-    "en": "Multi Camera",
-    "desc": "ナイト・フィルター・連写のカメラ",
-    "tags": [
-      "要 カメラ",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "effect-camera",
-    "title": "エフェクトカメラ",
-    "en": "Effect Camera",
-    "desc": "サーモ風・チルト・VHS・ブラウン管・グリッチなど",
-    "tags": [
-      "要 カメラ",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "lens-camera",
-    "title": "レンズカメラ",
-    "en": "Lens Camera",
-    "desc": "魚眼・広角・望遠・マクロなど13のレンズ",
-    "tags": [
-      "要 カメラ",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "compass",
-    "title": "方位磁石",
-    "en": "Compass",
-    "desc": "文字盤と細い針で方角と角度を確認",
-    "tags": [
-      "要 センサー",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "cycle-meter",
-    "title": "サイクルメーター",
-    "en": "Cycle Meter",
-    "desc": "GPSで速度と距離を計測",
-    "tags": [
-      "要 位置情報",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "altimeter",
-    "title": "高度計",
-    "en": "Altimeter",
-    "desc": "GPS高度と基準地点からの高度差",
-    "tags": [
-      "要 位置情報",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "level",
-    "title": "水平器",
-    "en": "Level",
-    "desc": "傾きを確認する水平器",
-    "tags": [
-      "要 センサー",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "light-meter",
-    "title": "照度計",
-    "en": "Light Meter",
-    "desc": "周りの明るさを測る",
-    "tags": [
-      "要 センサー",
-      "要 カメラ",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "noise-meter",
-    "title": "騒音計",
-    "en": "Noise Meter",
-    "desc": "音の大きさの目安を測る",
-    "tags": [
-      "要 マイク",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "step-counter",
-    "title": "万歩計",
-    "en": "Step Counter",
-    "desc": "歩数を数える万歩計",
-    "tags": [
-      "要 センサー",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "object-detector",
-    "title": "物体検出",
-    "en": "Object Detector",
-    "desc": "カメラや写真に写った物をAIで見つけて日本語で表示",
-    "tags": [
-      "要 外部通信"
-    ]
-  },
-  {
-    "cat": "センサー・カメラ活用",
-    "slug": "image-classifier",
-    "title": "画像分類",
-    "en": "Image Classifier",
-    "desc": "カメラや写真に写った物が何かをAIが1000種類から判定",
-    "tags": [
-      "要 外部通信"
-    ]
-  },
-  {
-    "cat": "QR・共有",
-    "slug": "qr-reader",
-    "title": "QRコードリーダー",
-    "en": "QR Code Reader",
-    "desc": "カメラでQRコードを読み取り",
-    "tags": [
-      "要 カメラ",
-      "要 https",
-      "要 外部通信"
-    ]
-  },
-  {
-    "cat": "QR・共有",
-    "slug": "qr-generator",
-    "title": "QRコード生成",
-    "en": "QR Code Generator",
-    "desc": "文字やURLからQRコードを作成",
-    "tags": [
-      "要 外部通信"
-    ]
-  },
-  {
-    "cat": "QR・共有",
-    "slug": "file-transfer",
-    "title": "ファイル転送",
-    "en": "File Transfer",
-    "desc": "番号かQRでつないで、スマホどうしでファイルを直接送る",
-    "tags": [
-      "要 https",
-      "要 外部通信"
-    ]
-  },
-  {
-    "cat": "メディア",
-    "slug": "exif-viewer",
-    "title": "写真情報(Exif)ビューア",
-    "en": "Exif Viewer",
-    "desc": "写真のExif情報を一覧表示",
-    "tags": [
-      "要 外部通信"
-    ]
-  },
-  {
-    "cat": "メディア",
-    "slug": "image-converter",
-    "title": "画像変換",
-    "en": "Image Converter",
-    "desc": "画像の形式を一括変換",
-    "tags": [
-      "要 外部通信"
-    ]
-  },
-  {
-    "cat": "メディア",
-    "slug": "image-editor",
-    "title": "画像編集",
-    "en": "Image Editor",
-    "desc": "写真を絵画風・ドット絵・印刷風・モザイクなどに"
-  },
-  {
-    "cat": "メディア",
-    "slug": "image-viewer",
-    "title": "画像ビューア",
-    "en": "Image Viewer",
-    "desc": "写真をまとめて表示"
-  },
-  {
-    "cat": "メディア",
-    "slug": "music-player",
-    "title": "音楽プレイヤー",
-    "en": "Music Player",
-    "desc": "端末の曲をプレイリストで再生"
-  },
-  {
-    "cat": "メディア",
-    "slug": "video-player",
-    "title": "動画プレイヤー",
-    "en": "Video Player",
-    "desc": "端末の動画を再生"
-  },
-  {
-    "cat": "メディア",
-    "slug": "voice-changer",
-    "title": "ボイスチェンジャー",
-    "en": "Voice Changer",
-    "desc": "声をリアルタイムで加工",
-    "tags": [
-      "要 マイク",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "メディア",
-    "slug": "voice-memo",
-    "title": "ボイスメモ",
-    "en": "Voice Memo",
-    "desc": "ワンタップで録音",
-    "tags": [
-      "要 マイク",
-      "要 https"
-    ]
-  },
-  {
-    "cat": "メディア",
-    "slug": "metronome",
-    "title": "メトロノーム",
-    "en": "Metronome",
-    "desc": "テンポと拍子のメトロノーム"
-  },
-  {
-    "cat": "メディア",
-    "slug": "piano",
-    "title": "ピアノ",
-    "en": "Piano",
-    "desc": "音色・録音・練習のピアノ"
-  },
-  {
-    "cat": "情報・言語・テキスト",
-    "slug": "ocr",
-    "title": "文字認識(OCR)",
-    "en": "OCR",
-    "desc": "画像の文字をテキストに",
-    "tags": [
-      "要 外部通信"
-    ]
-  },
-  {
-    "cat": "情報・言語・テキスト",
-    "slug": "text-to-speech",
-    "title": "音声読み上げ",
-    "en": "Text to Speech",
-    "desc": "文章を声で読み上げ"
-  },
-  {
-    "cat": "デザイン",
-    "slug": "paint",
-    "title": "ペイント",
-    "en": "Paint",
-    "desc": "指やペンで描く・塗りつぶし・写真に書き込み・PNG保存"
-  },
-  {
-    "cat": "デザイン",
-    "slug": "color-picker",
-    "title": "カラーピッカー",
-    "en": "Color Picker",
-    "desc": "色を選ぶ・カメラで判定・色名を調べる",
-    "tags": [
-      "要 外部通信",
-      "要 カメラ"
-    ]
-  },
-  {
-    "cat": "診断・開発",
-    "slug": "speed-test",
-    "title": "回線速度テスト",
-    "en": "Speed Test",
-    "desc": "回線の速度を測る",
-    "tags": [
-      "要 外部通信"
-    ]
-  },
-  {
-    "cat": "メディア",
-    "slug": "dj-turntable",
-    "title": "DJターンテーブル",
-    "en": "DJ Turntable",
-    "desc": "レコード盤で鳴らす音楽プレーヤー。指でスクラッチ、ピッチ調整もできる"
-  }
+  {"cat": "定番ツール", "slug": "calculator", "title": "電卓", "en": "Calculator", "desc": "四則演算とパーセントの電卓"},
+  {"cat": "定番ツール", "slug": "notepad", "title": "メモ帳", "en": "Notepad", "desc": "自動保存のメモ帳"},
+  {"cat": "定番ツール", "slug": "weather", "title": "天気予報", "en": "Weather", "desc": "現在地や地名の天気と週間予報", "tags": ["要 外部通信", "要 位置情報"]},
+  {"cat": "定番ツール", "slug": "headache-forecast", "title": "頭痛予報", "en": "Headache Forecast", "desc": "気圧の下がり方から頭痛に注意したい時間を予報", "tags": ["要 外部通信", "要 位置情報"]},
+  {"cat": "定番ツール", "slug": "flashlight", "title": "懐中電灯", "en": "Flashlight", "desc": "スマホのライトを点灯", "tags": ["要 カメラ", "要 https"]},
+  {"cat": "定番ツール", "slug": "stopwatch", "title": "ストップウォッチ", "en": "Stopwatch", "desc": "1/100秒とラップのストップウォッチ"},
+  {"cat": "定番ツール", "slug": "kitchen-timer", "title": "キッチンタイマー", "en": "Kitchen Timer", "desc": "ボタンで合わせるキッチンタイマー"},
+  {"cat": "定番ツール", "slug": "pomodoro-timer", "title": "ポモドーロタイマー", "en": "Pomodoro Timer", "desc": "作業と休憩を切り替えるタイマー"},
+  {"cat": "定番ツール", "slug": "world-clock", "title": "世界時計", "en": "World Clock", "desc": "世界の都市の現在時刻"},
+  {"cat": "定番ツール", "slug": "clock", "title": "時計", "en": "Clock", "desc": "アナログとデジタルを切り替えられる時計"},
+  {"cat": "定番ツール", "slug": "tally-counter", "title": "数取器", "en": "Tally Counter", "desc": "タップで数える数取器"},
+  {"cat": "定番ツール", "slug": "calendar", "title": "カレンダー", "en": "Calendar", "desc": "六曜・祝日・旧暦が分かる暦"},
+  {"cat": "センサー・カメラ活用", "slug": "hand-mirror", "title": "手鏡", "en": "Hand Mirror", "desc": "前面カメラの鏡", "tags": ["要 カメラ", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "multi-camera", "title": "多機能カメラ", "en": "Multi Camera", "desc": "ナイト・フィルター・連写のカメラ", "tags": ["要 カメラ", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "effect-camera", "title": "エフェクトカメラ", "en": "Effect Camera", "desc": "サーモ風・チルト・VHS・ブラウン管・グリッチなど", "tags": ["要 カメラ", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "lens-camera", "title": "レンズカメラ", "en": "Lens Camera", "desc": "魚眼・広角・望遠・マクロなど13のレンズ", "tags": ["要 カメラ", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "compass", "title": "方位磁石", "en": "Compass", "desc": "文字盤と細い針で方角と角度を確認", "tags": ["要 センサー", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "cycle-meter", "title": "サイクルメーター", "en": "Cycle Meter", "desc": "GPSで速度と距離を計測", "tags": ["要 位置情報", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "altimeter", "title": "高度計", "en": "Altimeter", "desc": "標高(海抜)と基準からの上り下り", "tags": ["要 位置情報", "要 外部通信", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "level", "title": "水平器", "en": "Level", "desc": "傾きを確認する水平器", "tags": ["要 センサー", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "light-meter", "title": "照度計", "en": "Light Meter", "desc": "周りの明るさを測る", "tags": ["要 センサー", "要 カメラ", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "noise-meter", "title": "騒音計", "en": "Noise Meter", "desc": "音の大きさの目安を測る", "tags": ["要 マイク", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "step-counter", "title": "万歩計", "en": "Step Counter", "desc": "歩数を数える万歩計", "tags": ["要 センサー", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "object-detector", "title": "物体検出", "en": "Object Detector", "desc": "カメラや写真に写った物をAIで見つけて日本語で表示", "tags": ["要 外部通信"]},
+  {"cat": "センサー・カメラ活用", "slug": "image-classifier", "title": "画像分類", "en": "Image Classifier", "desc": "カメラや写真に写った物が何かをAIが1000種類から判定", "tags": ["要 外部通信"]},
+  {"cat": "QR・共有", "slug": "qr-reader", "title": "QRコードリーダー", "en": "QR Code Reader", "desc": "カメラでQRコードを読み取り", "tags": ["要 カメラ", "要 https", "要 外部通信"]},
+  {"cat": "QR・共有", "slug": "qr-generator", "title": "QRコード生成", "en": "QR Code Generator", "desc": "文字やURLからQRコードを作成", "tags": ["要 外部通信"]},
+  {"cat": "QR・共有", "slug": "file-transfer", "title": "ファイル転送", "en": "File Transfer", "desc": "番号かQRでつないで、スマホどうしでファイルを直接送る", "tags": ["要 https", "要 外部通信"]},
+  {"cat": "メディア", "slug": "exif-viewer", "title": "写真情報(Exif)ビューア", "en": "Exif Viewer", "desc": "写真のExif情報を一覧表示", "tags": ["要 外部通信"]},
+  {"cat": "メディア", "slug": "image-converter", "title": "画像変換", "en": "Image Converter", "desc": "画像の形式を一括変換", "tags": ["要 外部通信"]},
+  {"cat": "メディア", "slug": "image-editor", "title": "画像編集", "en": "Image Editor", "desc": "写真を絵画風・ドット絵・印刷風・モザイクなどに"},
+  {"cat": "メディア", "slug": "image-viewer", "title": "画像ビューア", "en": "Image Viewer", "desc": "写真をまとめて表示"},
+  {"cat": "メディア", "slug": "music-player", "title": "音楽プレイヤー", "en": "Music Player", "desc": "端末の曲をプレイリストで再生"},
+  {"cat": "メディア", "slug": "video-player", "title": "動画プレイヤー", "en": "Video Player", "desc": "端末の動画を再生"},
+  {"cat": "メディア", "slug": "voice-changer", "title": "ボイスチェンジャー", "en": "Voice Changer", "desc": "声をリアルタイムで加工", "tags": ["要 マイク", "要 https"]},
+  {"cat": "メディア", "slug": "voice-memo", "title": "ボイスメモ", "en": "Voice Memo", "desc": "ワンタップで録音", "tags": ["要 マイク", "要 https"]},
+  {"cat": "メディア", "slug": "metronome", "title": "メトロノーム", "en": "Metronome", "desc": "テンポと拍子のメトロノーム"},
+  {"cat": "メディア", "slug": "piano", "title": "ピアノ", "en": "Piano", "desc": "音色・録音・練習のピアノ"},
+  {"cat": "情報・言語・テキスト", "slug": "ocr", "title": "文字認識(OCR)", "en": "OCR", "desc": "画像の文字をテキストに", "tags": ["要 外部通信"]},
+  {"cat": "情報・言語・テキスト", "slug": "text-to-speech", "title": "音声読み上げ", "en": "Text to Speech", "desc": "文章を声で読み上げ"},
+  {"cat": "デザイン", "slug": "paint", "title": "ペイント", "en": "Paint", "desc": "指やペンで描く・塗りつぶし・写真に書き込み・PNG保存"},
+  {"cat": "デザイン", "slug": "color-picker", "title": "カラーピッカー", "en": "Color Picker", "desc": "色を選ぶ・カメラで判定・色名を調べる", "tags": ["要 外部通信", "要 カメラ"]},
+  {"cat": "診断・開発", "slug": "speed-test", "title": "回線速度テスト", "en": "Speed Test", "desc": "回線の速度を測る", "tags": ["要 外部通信"]},
+  {"cat": "メディア", "slug": "dj-turntable", "title": "DJターンテーブル", "en": "DJ Turntable", "desc": "レコード盤で鳴らす音楽プレーヤー。指でスクラッチ、ピッチ調整もできる"}
 ]

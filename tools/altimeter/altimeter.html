@@ -1,1 +1,107 @@
-<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>高度計 | Smartools</title><meta name="description" content="GPS高度と基準地点からの高度差を確認する高度計"><link rel="stylesheet" href="../../common/site.css"><link rel="stylesheet" href="../../common/tool.css"><link rel="stylesheet" href="./altimeter.css"></head><body><header class="site-bar"><h1>高度計</h1></header><main class="content"><section class="alt-app"><div class="modes" role="group" aria-label="測定用途"><button id="outdoor" class="selected" aria-pressed="true">屋外</button><button id="indoor" aria-pressed="false">屋内</button></div><div class="reading"><p id="readingLabel">GPS高度（楕円体高）</p><div><output id="altitude">—</output><span class="unit">m</span></div><p id="quality" role="status">位置情報を待っています</p></div><div class="stats"><div><small>高度精度</small><strong id="accuracy">—</strong></div><div><small>基準からの高度差</small><strong id="difference">—</strong></div></div><div class="actions"><button id="baseline" disabled>現在地を基準にする</button><button id="retry" hidden>再試行</button></div><section class="chart-panel"><div class="chart-head"><span>高度の推移</span><small>直近5分</small></div><canvas id="chart" height="120" aria-label="GPS高度の推移" role="img"></canvas></section><details><summary>設定・測定について</summary><label>基準高度（m）<input id="baseInput" type="number" step="0.1" placeholder="手動で入力"></label><button id="setBase">基準高度を設定</button><button id="clearBase">基準を解除</button><p>GPS高度は海抜とは異なる楕円体高の場合があります。屋内ではGPSが不安定で、階数や小さな上下移動を正確に判定できません。位置座標は送信・保存しません。</p></details></section></main><script src="../../common/log.js"></script><script src="../../common/env.js"></script><script src="../../common/site.js"></script><script src="../../common/tool-kit.js"></script><script src="./altimeter.js"></script></body></html>
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>高度計 | 標高と高度差が分かる高度計</title>
+    <meta
+      name="description"
+      content="今いる場所の標高(海抜)と、GPS の高さで基準の地点からどれだけ上り下りしたかを見られる高度計。"
+    />
+    <meta property="og:title" content="高度計 | 標高と高度差が分かる高度計" />
+    <meta
+      property="og:description"
+      content="今いる場所の標高(海抜)と、GPS の高さで基準の地点からどれだけ上り下りしたかを見られる高度計。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content="../../og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./app-icon-altimeter.svg" />
+    <link rel="stylesheet" href="../../common/site.css" />
+    <link rel="stylesheet" href="../../common/tool.css" />
+    <link rel="stylesheet" href="./altimeter.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "高度計",
+        "alternateName": ["Altimeter", "標高計", "高度"],
+        "description": "今いる場所の標高(海抜)と、GPS の高さで基準の地点からどれだけ上り下りしたかを見られる高度計。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (Webブラウザ)",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-bar">
+      <img src="./app-icon-altimeter.svg" alt="" />
+      <h1 style="margin: 0; font: inherit; flex: 1">高度計</h1>
+    </header>
+    <main class="content">
+      <div class="app">
+        <div class="reading">
+          <div class="reading-label">標高(海抜)</div>
+          <div class="reading-value">
+            <output id="elevation">—</output><span class="unit">m</span>
+          </div>
+          <div class="reading-source">地面の高さ(地図のデータ)</div>
+        </div>
+
+        <div class="actions">
+          <button class="pill primary" id="startBtn">測定を開始</button>
+          <button class="pill primary" id="baseBtn" hidden>ここを基準にする</button>
+          <button class="pill" id="clearBtn" hidden>基準を解除</button>
+        </div>
+
+        <div class="cards">
+          <div class="card-box">
+            <div class="card-title">基準からの差</div>
+            <div class="card-value" id="difference">—</div>
+            <div class="card-sub" id="differenceSub">基準を決めると出ます</div>
+          </div>
+          <div class="card-box">
+            <div class="card-title">GPS の高さ</div>
+            <div class="card-value" id="gpsHeight">—</div>
+            <div class="card-sub">
+              <span id="accuracy">精度 —</span
+              ><span class="mark" id="qualityMark" hidden>参考値</span>
+            </div>
+          </div>
+        </div>
+
+        <section class="chart-box">
+          <h2>高さの推移<small>直近10分</small></h2>
+          <canvas id="chart" role="img" aria-label="GPS の高さの推移"></canvas>
+          <p class="chart-empty" id="chartEmpty">測り始めると、ここに線が出ます</p>
+        </section>
+
+        <p class="status" id="status" role="status">開始を押すと、位置情報の許可を求めます</p>
+        <p class="note">
+          標高は約 90m
+          の網目の地図データの地面の高さで、建物の階や細かな起伏は出ません。基準からの差は GPS
+          の高さ同士の差です。位置は標高を調べるために約 100m に丸めて Open-Meteo
+          に送り、保存しません。標高データ: Copernicus DEM GLO-90(Open-Meteo)。
+        </p>
+      </div>
+    </main>
+    <script src="../../common/log.js"></script>
+    <script src="../../common/env.js"></script>
+    <script src="../../common/site.js"></script>
+    <script src="../../common/tool-kit.js"></script>
+    <script>
+      (window.ToolKit && window.ToolKit.media) ||
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          '<p style="margin:16px;padding:12px 14px;border-radius:12px;background:#fdecec;color:#c93a3a;font:14px/1.6 sans-serif">共通ファイル(common/)を読み込めませんでした。https で配信したページ(または http://127.0.0.1 のローカルサーバー)で開いてください。</p>',
+        );
+    </script>
+    <script src="./altimeter-core.js"></script>
+    <script src="./altimeter.js"></script>
+  </body>
+</html>
