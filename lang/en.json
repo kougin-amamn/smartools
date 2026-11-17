@@ -698,12 +698,10 @@
       "desc": "Read direction and heading on a clear compass dial",
       "text": {
         "この端末・ブラウザは向きセンサーに対応していません。": "This device or browser does not support the orientation sensor.",
-        "センサーの利用が許可されませんでした。https で開いているか確認してください。": "Sensor access was not allowed. Check that the page is open over https.",
         "開始": "Start",
         "停止": "Stop",
         "停止しました": "Stopped",
         "方位の文字盤": "Compass dial",
-        "コンパスを開始": "Start compass",
         "北": "N",
         "北北東": "NNE",
         "北北西": "NNW",
@@ -724,14 +722,20 @@
         "端末を水平に持って回してください": "Hold the device flat and turn it",
         "方位": "heading",
         "現在の方位": "Current heading",
-        "端末を水平にして開始してください": "Hold the device flat and start",
         "使い方・測定について": "How to use and measurement notes",
         "画面の上が、今向いている方向です。色の付いた針と「北」が北の方向を示します。": "The top of the screen is the direction you are facing. The colored needle and N indicate north.",
         "端末を水平に持ってください。方位が不安定な時は、磁石・金属・電化製品から離れ、端末を8の字にゆっくり動かしてください。": "Hold the device flat. If the heading is unstable, move away from magnets, metal and appliances, then slowly move the device in a figure eight.",
         "方位の基準や精度は端末・ブラウザによって異なります。相対方位のみの場合は北の方向を特定できません。磁北と地図の北には地域によるずれがあります。": "Heading reference and accuracy depend on your device and browser. Relative heading cannot identify north. Magnetic north differs from map north by location.",
         "相対方位です。北の方向は特定できません": "Relative heading. North cannot be determined",
         "方位が不安定です。端末を8の字に動かしてください": "Heading unstable. Move the device in a figure eight",
-        "端末を水平にしてください": "Hold the device flat"
+        "端末を水平にしてください": "Hold the device flat",
+        "方位を取得しています…": "Reading heading…",
+        "センサーを許可": "Allow sensor access",
+        "方位を表示するにはセンサーの許可が必要です": "Allow sensor access to show your heading",
+        "センサーの利用にはHTTPS接続が必要です。": "Sensor access requires HTTPS.",
+        "センサーを準備できませんでした。ページを再読み込みしてください。": "Could not initialize the sensor. Reload the page.",
+        "センサーの利用が許可されませんでした。ブラウザの設定を確認してください。": "Sensor access was denied. Check your browser settings.",
+        "センサーの許可を取得できませんでした。もう一度お試しください。": "Could not request sensor access. Please try again."
       }
     },
     "cycle-meter": {

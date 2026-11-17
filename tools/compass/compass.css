@@ -93,7 +93,6 @@
   color: var(--error);
 }
 .start-slot {
-  min-height: 56px;
   margin-top: 8px;
 }
 .pill {

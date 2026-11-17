@@ -159,11 +159,14 @@
     }
   }
 
+  var started = false;
   function start() {
+    if (started) return;
+    started = true;
     var name =
       'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
     window.addEventListener(name, onOrientation);
-    startBtn.hidden = true;
+    $('permissionControls').hidden = true;
     statusText.textContent = '端末を水平に持って回してください';
     log('センサーを開始しました(' + name + ')');
     ToolKit.sensor.watchData(
@@ -179,15 +182,34 @@
     );
   }
   startBtn.addEventListener('click', async function () {
-    ToolKit.vibrate();
-    if (await ToolKit.sensor.permit('orientation')) start();
-    else
-      statusText.textContent =
-        typeof DeviceOrientationEvent === 'undefined'
-          ? 'この端末・ブラウザは向きセンサーに対応していません。'
-          : 'センサーの利用が許可されませんでした。https で開いているか確認してください。';
+    startBtn.disabled = true;
+    try {
+      if (await ToolKit.sensor.permit('orientation')) start();
+      else statusText.textContent = 'センサーの利用が許可されませんでした。ブラウザの設定を確認してください。';
+    } catch (e) {
+      statusText.textContent = 'センサーの許可を取得できませんでした。もう一度お試しください。';
+      log.warn('方位センサーの許可に失敗しました', e);
+    } finally {
+      startBtn.disabled = false;
+    }
   });
 
+  function initialize() {
+    if (!window.isSecureContext) {
+      statusText.textContent = 'センサーの利用にはHTTPS接続が必要です。';
+    } else if (typeof window.DeviceOrientationEvent === 'undefined') {
+      statusText.textContent = 'この端末・ブラウザは向きセンサーに対応していません。';
+    } else if (!window.ToolKit || !ToolKit.sensor) {
+      statusText.textContent = 'センサーを準備できませんでした。ページを再読み込みしてください。';
+    } else if (typeof window.DeviceOrientationEvent.requestPermission === 'function') {
+      $('permissionControls').hidden = false;
+      statusText.textContent = '方位を表示するにはセンサーの許可が必要です';
+    } else {
+      start();
+    }
+  }
+
   buildDial();
+  initialize();
   requestAnimationFrame(frame);
 })();
