@@ -695,7 +695,7 @@
     },
     "compass": {
       "title": "Compass",
-      "desc": "Rotating dial for direction, level and target bearing",
+      "desc": "Read direction and heading on a clear compass dial",
       "text": {
         "この端末・ブラウザは向きセンサーに対応していません。": "This device or browser does not support the orientation sensor.",
         "センサーの利用が許可されませんでした。https で開いているか確認してください。": "Sensor access was not allowed. Check that the page is open over https.",
@@ -703,11 +703,7 @@
         "停止": "Stop",
         "停止しました": "Stopped",
         "方位の文字盤": "Compass dial",
-        "この方位を目標にする": "Set this heading as the target",
         "コンパスを開始": "Start compass",
-        "磁気センサーの値なので、近くの磁石・金属・電化製品や端末によって誤差が出ます。表示は磁北(地図の北から日本ではおよそ7〜9°西)です。": "It uses the magnetic sensor, so nearby magnets, metal, appliances or the device itself can cause errors. It shows magnetic north (about 7–9° west of map north in Japan).",
-        "端末を水平に持って、開始を押してください": "Hold the device flat and press start",
-        "この端末では北の向きが正確に分かりません。端末を8の字にゆっくり振ると良くなることがあります": "This device cannot tell north accurately. Slowly waving it in a figure 8 may help",
         "北": "N",
         "北北東": "NNE",
         "北北西": "NNW",
@@ -724,16 +720,18 @@
         "西": "W",
         "西北西": "WNW",
         "西南西": "WSW",
-        "右へ {角度}": "{角度} right",
-        "左へ {角度}": "{角度} left",
-        "方位が不安定です。端末を8の字にゆっくり振って、磁気センサーを補正してください": "The heading is unstable. Slowly wave the device in a figure 8 to calibrate the magnetic sensor",
         "方位のデータが届きません。この端末には方位センサーが無いか、ブラウザが対応していない可能性があります。": "No heading data. This device may have no compass sensor, or the browser may not support it.",
-        "目標 {角度} ・ {差}": "Target {角度} ・ {差}",
-        "目標の方位です": "On target",
-        "目標を解除": "Clear target",
         "端末を水平に持って回してください": "Hold the device flat and turn it",
-        "端末を水平に近づけると、方位が正確になります": "Hold the device flatter for a more accurate heading",
-        "方位": "heading"
+        "方位": "heading",
+        "現在の方位": "Current heading",
+        "端末を水平にして開始してください": "Hold the device flat and start",
+        "使い方・測定について": "How to use and measurement notes",
+        "画面の上が、今向いている方向です。色の付いた針と「北」が北の方向を示します。": "The top of the screen is the direction you are facing. The colored needle and N indicate north.",
+        "端末を水平に持ってください。方位が不安定な時は、磁石・金属・電化製品から離れ、端末を8の字にゆっくり動かしてください。": "Hold the device flat. If the heading is unstable, move away from magnets, metal and appliances, then slowly move the device in a figure eight.",
+        "方位の基準や精度は端末・ブラウザによって異なります。相対方位のみの場合は北の方向を特定できません。磁北と地図の北には地域によるずれがあります。": "Heading reference and accuracy depend on your device and browser. Relative heading cannot identify north. Magnetic north differs from map north by location.",
+        "相対方位です。北の方向は特定できません": "Relative heading. North cannot be determined",
+        "方位が不安定です。端末を8の字に動かしてください": "Heading unstable. Move the device in a figure eight",
+        "端末を水平にしてください": "Hold the device flat"
       }
     },
     "cycle-meter": {

@@ -1,126 +1,144 @@
-/* 方位磁石の画面(北を指す針と、大きな方角の名前) */
+/* 文字盤、方角、角度をひとまとまりに配置する。配色は共通テーマに追従。 */
 .content {
   justify-content: center;
-  padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  padding: 28px 20px calc(env(safe-area-inset-bottom, 0px) + 24px);
 }
 .app {
-  max-width: 380px;
+  max-width: 420px;
   align-items: center;
-  gap: 16px;
+  gap: 0;
 }
-.readout {
-  text-align: center;
-  min-height: 96px;
-}
-.direction {
-  font-size: var(--type-display-medium);
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--on-surface);
-}
-.degree {
-  margin-top: 4px;
-  font-size: var(--type-title-large);
-  color: var(--on-surface-variant);
-  font-variant-numeric: tabular-nums;
-}
-.target-text {
-  margin-top: 4px;
-  font-size: var(--type-title-small);
-  font-weight: 500;
-  color: var(--tertiary);
-}
-.target-text.on {
-  color: var(--primary);
-}
-/* 文字盤: 回るのは #dial(針・東西南北・目盛り)。上の三角は固定で、端末の上の向き */
 .compass {
-  width: min(84vw, 320px);
-  height: auto;
   display: block;
+  width: min(100%, 380px);
+  height: auto;
+  flex-shrink: 0;
   overflow: visible;
 }
 .compass .face {
-  fill: var(--surface-container);
+  fill: var(--surface-container-low);
+  stroke: var(--outline-variant);
+  stroke-width: 1;
 }
 .compass .tick {
-  stroke: var(--outline);
-  stroke-width: 3;
-  stroke-linecap: round;
+  stroke: var(--on-surface-variant);
+  stroke-width: 1;
+}
+.compass .tick.major {
+  stroke-width: 1.7;
 }
 .compass .card {
   fill: var(--on-surface);
-  font-size: 30px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
 }
-.compass .card.north {
-  fill: var(--primary);
-}
+.compass .card.north,
 .compass .needle-north {
   fill: var(--primary);
 }
 .compass .needle-south {
-  fill: var(--surface);
-  stroke: var(--outline);
-  stroke-width: 2;
-  stroke-linejoin: round;
+  fill: var(--outline);
 }
 .compass .cap {
   fill: var(--surface);
   stroke: var(--outline);
-  stroke-width: 2;
-}
-.compass .target {
-  fill: var(--tertiary);
+  stroke-width: 1.5;
 }
 .compass .lubber {
-  fill: var(--on-surface);
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.readout {
+  text-align: center;
+  margin-top: 8px;
+}
+.direction {
+  min-height: 1.3em;
+  color: var(--primary);
+  font-size: clamp(28px, 7vw, 36px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.degree {
+  color: var(--on-surface);
+  font-size: clamp(64px, 17vw, 88px);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.degree-unit {
+  display: inline-block;
+  font-size: 0.55em;
+  vertical-align: top;
+  margin-top: 0.12em;
+  margin-left: 0.08em;
+}
+.controls {
+  width: 100%;
+  max-width: 360px;
+  margin-top: 20px;
+  text-align: center;
 }
 .status {
+  min-height: 3em;
   font-size: var(--type-body-medium);
-  min-height: 18px;
-  text-align: center;
   line-height: 1.5;
+  color: var(--on-surface-variant);
 }
 .status.warn {
   color: var(--error);
 }
-.buttons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
+.start-slot {
+  min-height: 56px;
+  margin-top: 8px;
 }
 .pill {
-  padding: 10px 20px;
-  background: var(--secondary-container);
-  color: var(--on-secondary-container);
-  font-size: var(--type-body-medium);
   font-family: inherit;
-  -webkit-tap-highlight-color: transparent;
 }
-.pill[aria-pressed='true'] {
-  background: var(--tertiary);
-  color: var(--on-tertiary);
-}
-.note {
+.compass-help {
+  margin-top: 12px;
+  color: var(--on-surface-variant);
   font-size: var(--type-body-small);
-  line-height: 1.6;
-  margin: 0;
-  text-align: center;
+  line-height: 1.7;
 }
-/* 横向き: 文字盤を左、数字とボタンを右に並べるのは共通の tool.css(data-land)。ここは文字盤の上限と文字の大きさだけ */
+.compass-help summary {
+  display: list-item;
+  width: fit-content;
+  margin: auto;
+  padding: 10px 12px;
+  min-height: 44px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.compass-help summary:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+.compass-help p {
+  text-align: left;
+  margin: 12px 0;
+}
+/* 開始前の針は実測値と誤認しないよう隠す。 */
+.app:not(.is-active) .needle-north,
+.app:not(.is-active) .needle-south {
+  visibility: hidden;
+}
+@media (max-height: 740px) and (orientation: portrait) {
+  .content { padding-top: 16px; padding-bottom: 16px; }
+  .compass { width: min(100%, 300px); }
+  .controls { margin-top: 12px; }
+  .degree { font-size: 64px; }
+}
 @media (orientation: landscape) and (max-height: 600px) {
-  .compass {
-    --land-max-w: 46vw;
-  }
-  .app {
-    max-width: 760px;
-  }
-  .readout {
-    min-height: 0;
-  }
-  .direction {
-    font-size: var(--type-display-small);
-  }
+  .compass { --land-max-w: 46vw; }
+  body .app[data-land='split'] { max-width: 760px; align-content: center; }
+  .readout { padding-top: 12px; }
+  .direction { font-size: 28px; }
+  .degree { font-size: 64px; }
+  .controls { margin-top: 12px; }
 }

@@ -17,7 +17,7 @@
   {"cat": "センサー・カメラ活用", "slug": "night-camera", "title": "ナイトカメラ", "en": "Night Camera", "desc": "暗い場所を明るく映すカメラ", "tags": ["要 カメラ", "要 https"]},
   {"cat": "センサー・カメラ活用", "slug": "effect-camera", "title": "エフェクトカメラ", "en": "Effect Camera", "desc": "サーモ風・チルト・VHS・ブラウン管・グリッチなど", "tags": ["要 カメラ", "要 https"]},
   {"cat": "センサー・カメラ活用", "slug": "lens-camera", "title": "レンズカメラ", "en": "Lens Camera", "desc": "魚眼・広角・望遠・マクロなど13のレンズ", "tags": ["要 カメラ", "要 https"]},
-  {"cat": "センサー・カメラ活用", "slug": "compass", "title": "方位磁石", "en": "Compass", "desc": "回る文字盤で方角・水平・目標の方位", "tags": ["要 センサー", "要 https"]},
+  {"cat": "センサー・カメラ活用", "slug": "compass", "title": "方位磁石", "en": "Compass", "desc": "文字盤と細い針で方角と角度を確認", "tags": ["要 センサー", "要 https"]},
   {"cat": "センサー・カメラ活用", "slug": "cycle-meter", "title": "サイクルメーター", "en": "Cycle Meter", "desc": "GPSで速度と距離を計測", "tags": ["要 位置情報", "要 https"]},
   {"cat": "センサー・カメラ活用", "slug": "level", "title": "水平器", "en": "Level", "desc": "傾きを確認する水平器", "tags": ["要 センサー", "要 https"]},
   {"cat": "センサー・カメラ活用", "slug": "light-meter", "title": "照度計", "en": "Light Meter", "desc": "周りの明るさを測る", "tags": ["要 センサー", "要 カメラ", "要 https"]},
