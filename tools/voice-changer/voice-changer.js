@@ -187,6 +187,16 @@
     if (outputGain) outputGain.gain.value = parseFloat(volumeSlider.value);
   });
 
+  /* 許可済みの時は「マイクをオン」(音を出すには押す操作が要るので、ボタンは残す)。まだなら「マイクを許可」 */
+  ToolKit.permissionStateOf('microphone').then((state) => {
+    if (state === 'granted') {
+      startBtn.textContent = 'マイクをオン';
+      statusText.textContent = '押すとマイクの声を変え始めます';
+    } else if (state === 'denied') {
+      statusText.textContent = 'マイクの利用が許可されていません。ブラウザの設定で許可してください';
+    }
+  });
+
   startBtn.addEventListener('click', async () => {
     ToolKit.vibrate();
     startBtn.disabled = true;

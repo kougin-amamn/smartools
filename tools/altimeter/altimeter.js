@@ -19,6 +19,7 @@
     statusEl = $('status');
 
   var HISTORY_MS = 10 * 60 * 1000;
+  var needsPermission = false; /* 許可がまだの時だけ「位置情報を許可」を出す */
   var watchId = null,
     last = null /* { h: GPS の高さ, a: 精度 } */,
     base = null,
@@ -41,7 +42,7 @@
     differenceEl.textContent = last && base !== null ? C.signedMetersOf(last.h - base) : '—';
     differenceSub.textContent = base !== null ? 'GPS の高さの差' : '基準を決めると出ます';
     var running = watchId !== null;
-    startBtn.hidden = running;
+    startBtn.hidden = running || !needsPermission;
     baseBtn.hidden = !running || base !== null;
     baseBtn.disabled = !last;
     clearBtn.hidden = base === null;
@@ -157,6 +158,7 @@
 
   function onError(e) {
     var denied = e && e.code === 1;
+    needsPermission = true;
     statusEl.textContent = denied
       ? '位置情報の利用が許可されていません。ブラウザの設定で許可してください'
       : '位置情報を取れませんでした。空の開けた所でもう一度試してください';
@@ -199,6 +201,24 @@
     ToolKit.vibrate();
     start();
   });
+
+  /* 開いた時: 許可済みならすぐ測る。まだなら「位置情報を許可」を出す(押すとブラウザが許可を求める) */
+  function initialize() {
+    var needHttps = Env.requireSecure('位置情報');
+    if (needHttps || !navigator.geolocation) {
+      statusEl.textContent = needHttps || 'この端末・ブラウザは位置情報に対応していません';
+      return;
+    }
+    ToolKit.permissionStateOf('geolocation').then(function (state) {
+      if (state === 'granted') return start();
+      needsPermission = true;
+      statusEl.textContent =
+        state === 'denied'
+          ? '位置情報の利用が許可されていません。ブラウザの設定で許可してください'
+          : '高さを測るには位置情報の許可が必要です';
+      render();
+    });
+  }
   baseBtn.addEventListener('click', function () {
     if (!last) return;
     base = last.h;
@@ -212,7 +232,11 @@
     render();
   });
   window.addEventListener('pagehide', stop);
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted && watchId === null) initialize();
+  });
   window.addEventListener('resize', drawChart);
 
   render();
+  initialize();
 })();

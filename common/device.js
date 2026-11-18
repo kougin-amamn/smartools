@@ -218,6 +218,19 @@
       },
     );
   }
+  /* 許可の今の状態(Permissions API)。'granted' / 'denied' / 'prompt'、調べられない端末は 'unknown'。
+     許可済みなら開いてすぐ動かし、まだなら「〇〇を許可」ボタンを出すのに使う(2026-11-18) */
+  function permissionStateOf(name) {
+    if (!navigator.permissions || !navigator.permissions.query) return Promise.resolve('unknown');
+    return navigator.permissions.query({ name: name }).then(
+      function (status) {
+        return status.state;
+      },
+      function () {
+        return 'unknown';
+      },
+    );
+  }
   /* データ待ち: ms ミリ秒たっても got() が true にならなければ onTimeout() を呼んでログを残す */
   function watchData(ms, got, onTimeout, name) {
     return setTimeout(function () {
@@ -238,4 +251,5 @@
   root.ToolKit.copyText = copyText;
   root.ToolKit.media = { open: open, stop: stop, size: size, torch: torch };
   root.ToolKit.sensor = { permit: permit, watchData: watchData };
+  root.ToolKit.permissionStateOf = permissionStateOf;
 })(this);

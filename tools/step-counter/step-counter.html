@@ -59,8 +59,10 @@
           </div>
         </div>
 
-        <button class="pill primary" id="startBtn">計測開始</button>
-        <button class="pill" id="stopBtn" hidden>計測停止</button>
+        <button class="pill primary" id="startBtn" data-texts="センサーを許可|再開" hidden>
+          センサーを許可
+        </button>
+        <button class="pill" id="stopBtn" hidden>一時停止</button>
         <label class="row chk"
           ><input type="checkbox" id="wakeLockChk" data-log="スリープ防止" />
           計測中は画面を消灯させない</label

@@ -40,6 +40,7 @@
     const { latitude, longitude, speed, accuracy } = pos.coords;
     const kmh = meter.update({ lat: latitude, lon: longitude, speed, accuracy, t: pos.timestamp });
     fixes++;
+    allowed = true;
     if (accuracy > C.ACCURACY_LIMIT) lowAcc++;
     if (fixes === 1) log(`位置情報を受信しました(精度 約${Math.round(accuracy)}m)`);
     statusText.textContent =
@@ -49,7 +50,11 @@
 
   function onError(err) {
     if (err.code === err.PERMISSION_DENIED) {
-      statusText.textContent = '位置情報の利用が許可されませんでした。';
+      stop();
+      allowed = false;
+      startStopBtn.textContent = elapsedMs ? '再開' : idleLabel();
+      statusText.textContent =
+        '位置情報の利用が許可されていません。ブラウザの設定で許可してください';
       log.warn('位置情報の利用が許可されませんでした');
     } else {
       statusText.textContent = '位置情報を取得できませんでした。';
@@ -58,6 +63,12 @@
         err && err.message,
       );
     }
+  }
+
+  /* 走行の記録の「開始」は自分で決める操作なので残す。ただし位置情報の許可がまだなら「位置情報を許可」にする */
+  var allowed = false;
+  function idleLabel() {
+    return allowed ? '開始' : '位置情報を許可';
   }
 
   function tick() {
@@ -113,8 +124,10 @@
     stop();
     meter.reset();
     elapsedMs = 0;
-    startStopBtn.textContent = '開始';
-    statusText.textContent = '開始ボタンをタップしてください';
+    startStopBtn.textContent = idleLabel();
+    statusText.textContent = allowed
+      ? '開始を押すと走行の記録を始めます'
+      : '速さを測るには位置情報の許可が必要です';
     render(0);
     log('リセットしました');
   }
@@ -131,4 +144,16 @@
   });
 
   render(0);
+  ToolKit.permissionStateOf('geolocation').then((state) => {
+    if (state === 'granted') {
+      allowed = true;
+      if (!running && !elapsedMs) {
+        startStopBtn.textContent = '開始';
+        statusText.textContent = '開始を押すと走行の記録を始めます';
+      }
+    } else if (state === 'denied') {
+      statusText.textContent =
+        '位置情報の利用が許可されていません。ブラウザの設定で許可してください';
+    }
+  });
 })();

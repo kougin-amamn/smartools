@@ -509,8 +509,11 @@
   }
 
   /* カメラ */
+  /* カメラのボタン: 許可がまだなら「カメラを許可」、許可済みなら「カメラをオン」、映している間は「カメラをオフ」 */
+  var cameraAllowed = false;
   function setCamUi(on) {
-    camBtn.textContent = on ? 'カメラ停止' : 'カメラ開始';
+    if (on) cameraAllowed = true;
+    camBtn.textContent = on ? 'カメラをオフ' : cameraAllowed ? 'カメラをオン' : 'カメラを許可';
     camBtn.classList.toggle('primary', !on);
     flipBtn.hidden = pauseBtn.hidden = !on;
     pauseBtn.textContent = '一時停止';
@@ -621,6 +624,11 @@
       },
     );
   }
+  ToolKit.permissionStateOf('camera').then(function (state) {
+    if (state !== 'granted') return;
+    cameraAllowed = true;
+    if (mode !== 'camera') setCamUi(false);
+  });
   camBtn.onclick = function () {
     if (mode === 'camera') stopCamera();
     else startCamera();

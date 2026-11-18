@@ -45,6 +45,7 @@
     const r = await ToolKit.media.open({ audio: true }, 'マイク');
     if (!r.stream) {
       statusText.textContent = r.message;
+      startStopBtn.textContent = 'マイクを許可';
       return;
     }
     stream = r.stream;
@@ -55,7 +56,7 @@
     source.connect(analyser);
 
     running = true;
-    startStopBtn.textContent = '停止';
+    startStopBtn.textContent = 'マイクをオフ';
     statusText.textContent = '計測中…';
     ToolKit.vibrate();
     loop();
@@ -70,8 +71,8 @@
     stream = null;
     audioCtx = null;
     analyser = null;
-    startStopBtn.textContent = '開始';
-    statusText.textContent = '停止しました';
+    startStopBtn.textContent = 'マイクをオン';
+    statusText.textContent = '止めました。マイクは使っていません';
     ToolKit.vibrate();
     log(
       `計測を停止しました(最小 ${fmt(st.min)} / 平均 ${fmt(S.avg())} / 最大 ${fmt(st.max)} / ${st.count}回)`,
@@ -86,6 +87,15 @@
 
   startStopBtn.addEventListener('click', () => {
     running ? stop() : start().catch((e) => log.error('計測の開始でエラーが発生しました', e));
+  });
+  /* 許可済みなら「マイクをオン」(音を扱うには押す操作が要るので、ボタンは残す)。まだなら「マイクを許可」のまま */
+  ToolKit.permissionStateOf('microphone').then((state) => {
+    if (state === 'granted') {
+      startStopBtn.textContent = 'マイクをオン';
+      statusText.textContent = '押すと測り始めます';
+    } else if (state === 'denied') {
+      statusText.textContent = 'マイクの利用が許可されていません。ブラウザの設定で許可してください';
+    }
   });
   resetBtn.addEventListener('click', () => {
     reset();

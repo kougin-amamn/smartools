@@ -50,8 +50,14 @@
         <div class="gauge"><div class="gauge-fill" id="gaugeFill"></div></div>
         <div class="label" id="labelText">-</div>
 
-        <div class="status" id="statusText">開始ボタンをタップしてください</div>
-        <button class="pill primary" id="startStopBtn" data-texts="開始|停止">開始</button>
+        <div class="status" id="statusText">明るさを測るにはカメラの許可が必要です</div>
+        <button
+          class="pill primary"
+          id="startStopBtn"
+          data-texts="カメラを許可|センサーを許可|カメラをオフ|カメラをオン|一時停止|再開"
+        >
+          カメラを許可
+        </button>
         <p class="note" id="noteText"></p>
         <div class="calib" id="calib" hidden>
           <label for="refLux">基準の明るさ(lx)</label>

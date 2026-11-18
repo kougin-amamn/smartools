@@ -71,6 +71,7 @@
       // iOS 13以降は押した時に許可を求める
       statusText.textContent =
         'モーションセンサーの利用が許可されませんでした。https で開いているか確認してください。';
+      startBtn.hidden = false;
       return;
     }
 
@@ -98,9 +99,10 @@
   function stop() {
     window.removeEventListener('devicemotion', onMotion);
     running = false;
+    startBtn.textContent = '再開';
     startBtn.hidden = false;
     stopBtn.hidden = true;
-    statusText.textContent = '';
+    statusText.textContent = '止めました';
     releaseWakeLock();
     log(
       `計測を停止しました(今回 ${(counter.getCount() - startSteps).toLocaleString()}歩 / 合計 ${summary()})`,
@@ -136,8 +138,14 @@
 
   if (typeof DeviceMotionEvent === 'undefined') {
     statusText.textContent = 'この端末・ブラウザはモーションセンサーに対応していません。';
-    startBtn.disabled = true;
     log.warn('この端末・ブラウザはモーションセンサーに対応していません');
+  } else if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    /* iPhone は押した時にしか許可を求められないので「センサーを許可」を出す */
+    startBtn.hidden = false;
+    statusText.textContent = '歩数を数えるにはセンサーの許可が必要です';
+  } else {
+    /* 許可の要らない端末は、開いてすぐ数え始める */
+    start().catch((e) => log.error('計測の開始でエラーが発生しました', e));
   }
   updateDisplay();
   log.started(`スリープ防止 ${'wakeLock' in navigator ? '対応' : '非対応'}`);

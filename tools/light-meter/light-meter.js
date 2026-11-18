@@ -9,6 +9,8 @@
   const noteText = document.getElementById('noteText');
 
   let running = false;
+  /* 照度センサーが無い端末はカメラで推定する。ボタンの名前(カメラをオン / 再開)を分けるのに使う */
+  let usingCamera = !('AmbientLightSensor' in window);
   let stream = null,
     video = null,
     canvas = null,
@@ -112,9 +114,11 @@
 
   async function startCameraFallback() {
     log('照度センサーが使えないため、カメラの明るさで推定します');
+    usingCamera = true;
     const r = await ToolKit.media.open({ video: { facingMode: 'environment' } }, 'カメラ');
     if (!r.stream) {
       statusText.textContent = r.message;
+      startStopBtn.textContent = 'カメラを許可';
       return;
     }
     stream = r.stream;
@@ -136,7 +140,7 @@
     warnedNoExpo = false;
     statusText.textContent = '計測中…';
     running = true;
-    startStopBtn.textContent = '停止';
+    startStopBtn.textContent = 'カメラをオフ';
     cameraLoop();
     log('計測を開始しました(カメラ推定)');
   }
@@ -161,7 +165,7 @@
       sensor.start();
       statusText.textContent = '計測中…';
       running = true;
-      startStopBtn.textContent = '停止';
+      startStopBtn.textContent = '一時停止';
       log('計測を開始しました(照度センサー / lx)');
     } catch (e) {
       log.warn('照度センサーを開始できませんでした', e);
@@ -191,8 +195,8 @@
     }
     ToolKit.media.stop(stream);
     stream = null;
-    startStopBtn.textContent = '開始';
-    statusText.textContent = '停止しました';
+    startStopBtn.textContent = usingCamera ? 'カメラをオン' : '再開';
+    statusText.textContent = usingCamera ? '止めました。カメラは使っていません' : '止めました';
     calib.hidden = true;
     ToolKit.vibrate();
     log(`計測を停止しました(最後の値 ${luxNum.textContent} ${luxUnit.textContent})`);
@@ -225,6 +229,19 @@
 
   startStopBtn.addEventListener('click', () => {
     running ? stop() : start().catch((e) => log.error('計測の開始でエラーが発生しました', e));
+  });
+  /* 許可済みなら開いてすぐ測る。まだなら「カメラを許可」(照度センサーの端末は「センサーを許可」)を出す */
+  if (!usingCamera) {
+    startStopBtn.textContent = 'センサーを許可';
+    statusText.textContent = '明るさを測るにはセンサーの許可が必要です';
+  }
+  ToolKit.permissionStateOf(usingCamera ? 'camera' : 'ambient-light-sensor').then((state) => {
+    if (state === 'granted' && !running)
+      start().catch((e) => log.error('計測の開始でエラーが発生しました', e));
+    else if (state === 'denied')
+      statusText.textContent =
+        (usingCamera ? 'カメラ' : 'センサー') +
+        'の利用が許可されていません。ブラウザの設定で許可してください';
   });
   log.started(`照度センサー ${'AmbientLightSensor' in window ? 'あり' : 'なし'}`);
 })();

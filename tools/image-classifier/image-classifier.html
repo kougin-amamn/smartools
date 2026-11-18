@@ -68,7 +68,7 @@
       <div class="app">
         <div class="view" id="view">
           <canvas id="cv" aria-label="判定に使う映像" hidden></canvas>
-          <p class="placeholder" id="placeholder">「カメラ開始」か「写真を開く」を押してください</p>
+          <p class="placeholder" id="placeholder">カメラを使うか、「写真を開く」を押してください</p>
           <div class="loader" id="loader" role="status" aria-live="polite">
             <p class="loader-title">AIの準備をしています <span id="elapsed">0.0秒</span></p>
             <ol class="steps" id="steps"></ol>
@@ -80,8 +80,13 @@
           <video id="video" playsinline muted></video>
         </div>
         <div class="row">
-          <button class="pill primary" type="button" id="camBtn" data-texts="カメラ開始|カメラ停止">
-            カメラ開始
+          <button
+            class="pill primary"
+            type="button"
+            id="camBtn"
+            data-texts="カメラを許可|カメラをオン|カメラをオフ"
+          >
+            カメラを許可
           </button>
           <button class="pill" type="button" id="flipBtn" hidden>カメラ切替</button>
           <button class="pill" type="button" id="pauseBtn" data-texts="一時停止|再開" hidden>
